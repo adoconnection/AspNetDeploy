@@ -38,6 +38,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MvcSiteMapProvider">
       <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.6.15\lib\net45\MvcSiteMapProvider.dll</HintPath>
@@ -45,6 +51,14 @@
     <Reference Include="MvcSiteMapProvider.WebActivator">
       <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.15\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="SharpSvn">
+      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpSvn.UI">
+      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -89,28 +103,49 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Resources\Layout\bootstrap-theme.css" />
+    <Content Include="Resources\Layout\bootstrap-theme.min.css" />
+    <Content Include="Resources\Layout\bootstrap.css" />
+    <Content Include="Resources\Layout\bootstrap.min.css" />
+    <Content Include="Resources\Layout\Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Resources\Layout\Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Resources\Layout\Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Resources\Layout\Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Resources\Layout\bootstrap-theme.css.map" />
+    <Content Include="Resources\Layout\bootstrap.css.map" />
     <Content Include="Mvc.sitemap" />
+    <EntityDeploy Include="Models\AspNetDeployEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AspNetDeployEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\AspNetDeployEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
+      <LastGenOutput>AspNetDeployEntities.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\AspNetDeployEntities.edmx.diagram">
+      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\AspNetDeployEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
+      <LastGenOutput>AspNetDeployEntities.cs</LastGenOutput>
+    </Content>
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Scripts\jquery-1.9.0.intellisense.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.9.0.js" />
-    <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <None Include="Resources\JavaScripts\jquery-1.9.0.intellisense.js" />
+    <Content Include="Resources\JavaScripts\bootstrap.js" />
+    <Content Include="Resources\JavaScripts\bootstrap.min.js" />
+    <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
+    <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
+    <Content Include="Resources\Layout\Images\Icons\VsClassProject.PNG" />
+    <Content Include="Resources\Layout\Images\Icons\VsConsoleProject.PNG" />
+    <Content Include="Resources\Layout\Images\Icons\VsWebProject.PNG" />
+    <Content Include="Resources\Layout\site.css" />
     <Content Include="Web.config" />
-    <Content Include="Scripts\jquery-1.9.0.min.map" />
+    <Content Include="Resources\JavaScripts\jquery-1.9.0.min.map" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
@@ -122,14 +157,62 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\SourcesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetDeployEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AspNetDeployEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetDeployEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetDeployEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Environment.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Group.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Machine.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MachineRole.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Project.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProjectConfigurationField.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProjectConfigurationValue.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SourceControl.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SourceControlExtender.cs" />
+    <Compile Include="Models\SourceControlInfo.cs" />
+    <Compile Include="Models\SourceControlProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Sources\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -139,8 +222,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VisualStudioSolutionInfo\VisualStudioSolutionInfo.csproj">
+      <Project>{DC15F994-0993-47E0-9D95-405D1F817B77}</Project>
+      <Name>VisualStudioSolutionInfo</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

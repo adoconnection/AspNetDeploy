@@ -1,0 +1,15 @@
+﻿
+.sourcesPage .project + .project
+{
+    margin-top: 8px;
+}
+
+
+
+.sourcesPage .project .name
+{
+    background-color: #F5F5F5;
+    padding: 15px;
+}
+
+
