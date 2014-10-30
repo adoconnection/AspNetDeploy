@@ -8,25 +8,69 @@
 }
 
 <div class="container">
-
-    @foreach (SourceControlInfo sourceControlInfo in this.ViewBag.SourceControlInfos)
+    
+    @foreach (SourceControl sourceControl in this.ViewBag.SourceControls)
     {
-        <h1><small>SVN</small> @sourceControlInfo.SourceControl.Name </h1>
+        <h1>
+            @Html.ActionLink(sourceControl.Name, "Details", new { id = sourceControl.Id })
+            @switch (sourceControl.Type)
+            {
+                case SourceControlType.Svn:
+                    <small>SVN</small>
+                    break;
+
+                case SourceControlType.Git:
+                <small>Git</small>
+                    break;
+
+                case SourceControlType.FileSystem:
+                <small>File system</small>
+                    break;
+
+                default:
+                <small>Other</small>
+                    break;
+            }
+        </h1>
+
         <hr />
 
-        IList<VisualStudioProject> visualStudioProjects = sourceControlInfo.Solutions.SelectMany(s => s.Projects).ToList();
-
-        foreach (VisualStudioProject project in visualStudioProjects.Where(p => p.Type == VisualStudioProjectType.Web))
+        switch (sourceControl.Type)
         {
-            <div class="row project">
-                <div class="col-sm-4">
-                    <div class="name">
-                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
-                        @project.Name
+            case SourceControlType.Svn:
+                foreach (Project project in sourceControl.Projects.Where(p => p.ProjectType == ProjectType.Web))
+                {
+                    <div class="row project">
+                        <div class="col-md-6">
+                            <div class="name">
+                                <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
+                                @project.Name
+                            </div>
+                        </div>
+                    </div>
+                }
+                break;
+
+            case SourceControlType.Git:
+
+                break;
+
+            case SourceControlType.FileSystem:
+                <div class="row project">
+                    <div class="col-md-6">
+                        <div class="name">
+                            <div>@sourceControl.GetStringProperty("Path")</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                
+                break;
+
+            default:
+                break;
         }
+
+        <br />
     }
 
 </div>

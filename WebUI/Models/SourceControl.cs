@@ -16,17 +16,17 @@ namespace WebUI.Models
     {
         public SourceControl()
         {
-            this.Project = new HashSet<Project>();
+            this.Projects = new HashSet<Project>();
             this.Properties = new HashSet<SourceControlProperty>();
             this.Group = new HashSet<Group>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public int TypeId { get; set; }
+        public SourceControlType Type { get; set; }
         public bool IsDeleted { get; set; }
     
-        public virtual ICollection<Project> Project { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<SourceControlProperty> Properties { get; set; }
         public virtual ICollection<Group> Group { get; set; }
     }

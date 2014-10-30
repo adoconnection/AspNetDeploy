@@ -17,16 +17,19 @@ namespace WebUI.Models
         public Project()
         {
             this.ProjectConfigurationField = new HashSet<ProjectConfigurationField>();
+            this.Bundles = new HashSet<Bundle>();
         }
     
         public int Id { get; set; }
         public int SourceControlId { get; set; }
         public string Name { get; set; }
         public string SolutionFile { get; set; }
-        public int ProjectTypeId { get; set; }
+        public ProjectType ProjectType { get; set; }
         public bool IsDeleted { get; set; }
+        public Nullable<System.Guid> Guid { get; set; }
     
         public virtual SourceControl SourceControl { get; set; }
         public virtual ICollection<ProjectConfigurationField> ProjectConfigurationField { get; set; }
+        public virtual ICollection<Bundle> Bundles { get; set; }
     }
 }

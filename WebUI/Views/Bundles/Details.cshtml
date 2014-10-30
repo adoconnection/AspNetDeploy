@@ -1,0 +1,106 @@
+﻿@using WebUI.Models
+
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Bundle bundle = this.ViewBag.Bundle;
+
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @bundle.Name
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>  
+    </h1>
+
+    <hr />
+
+    @RenderSteps(bundle, bundle.DeploymentSteps)
+
+
+
+</div>
+
+@helper RenderSteps(Bundle bundle, IEnumerable<DeploymentStep> steps)
+{
+    int stepCounter = 0;
+    
+    foreach (DeploymentStep deploymentStep in steps.OrderBy(ds => ds.OrderIndex))
+    {
+        stepCounter++;
+        
+        switch (deploymentStep.Type)
+        {
+            case DeploymentStepType.DeployWebSite:
+                @RednerDeployWebSiteStep(bundle, deploymentStep, stepCounter)
+                break;
+
+            case DeploymentStepType.RunPowerShellScript:
+                @RenderRunPowerShellScript(bundle, deploymentStep, stepCounter)
+                break;
+
+            case DeploymentStepType.CopyFiles:
+                @RenderCopyFiles(bundle, deploymentStep, stepCounter)
+                break;
+        }
+        <br/>
+    }
+}
+
+@helper RednerDeployWebSiteStep(Bundle bundle, DeploymentStep deploymentStep, int stepCounter)
+{
+    Project project = bundle.Projects.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
+
+    <h3>@(stepCounter). Deploy: @deploymentStep.GetStringProperty("IIS.SiteName") <small>IIS</small></h3>
+    <div class="row text-muted">
+        <div class="col-md-4">
+            <ul>
+                <li>Roles:
+                                
+                    @foreach (MachineRole role in deploymentStep.MachineRoles)
+                    {
+                        <span class="label label-default">@role.Name</span>
+                    }
+                </li>
+                <li>Source: @project.SourceControl.Name / @project.Name</li>
+                <li>Destination: @deploymentStep.GetStringProperty("IIS.DestinationPath")</li>
+                <li>Enabled AppOffilne page: @deploymentStep.GetStringProperty("EnabledAppOffilnePage")</li>
+                <li>Bindings:
+                    <ul>
+                                    
+                        @foreach (dynamic binding in deploymentStep.GetDynamicProperties("IIS.Binding"))
+                        {
+                            <li>@binding.type, @binding.port, @binding.host</li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
+@helper RenderRunPowerShellScript(Bundle bundle, DeploymentStep deploymentStep, int stepCounter)
+{
+    <h3>@(stepCounter). Script: @deploymentStep.GetStringProperty("Step.Title") <small>PowerShell</small></h3>
+}
+
+
+
+}
+
+@helper RenderCopyFiles(Bundle bundle, DeploymentStep deploymentStep, int stepCounter)
+{
+    <h3>@(stepCounter). Copy: @deploymentStep.GetStringProperty("Step.Title") <small>Copy</small></h3>
+}
+
+
+

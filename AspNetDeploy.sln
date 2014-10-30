@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudioSolutionInfo", "VisualStudioSolutionInfo\VisualStudioSolutionInfo.csproj", "{DC15F994-0993-47E0-9D95-405D1F817B77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvnHelper", "SvnHelper\SvnHelper.csproj", "{35AA51FC-2736-4A05-85D7-E1871667D568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DC15F994-0993-47E0-9D95-405D1F817B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC15F994-0993-47E0-9D95-405D1F817B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC15F994-0993-47E0-9D95-405D1F817B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35AA51FC-2736-4A05-85D7-E1871667D568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35AA51FC-2736-4A05-85D7-E1871667D568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35AA51FC-2736-4A05-85D7-E1871667D568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35AA51FC-2736-4A05-85D7-E1871667D568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

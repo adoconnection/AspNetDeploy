@@ -2,12 +2,16 @@
 @using System.Web.Mvc.Html
 @using MvcSiteMapProvider.Web.Html.Models
 
-<ul id="menu">
-    @foreach (var node in Model.Nodes) { 
-        <li>@Html.DisplayFor(m => node) 
-            @if (node.Children.Any()) {
+<ul class="nav navbar-nav">
+    @foreach (var node in Model.Nodes)
+    {
+        <li class="@(node.IsCurrentNode ? "active" : "")">
+            @Html.DisplayFor(m => node)
+
+            @*@if (node.Children.Any())
+            {
                 @Html.DisplayFor(m => node.Children)
-            }
+            }*@
         </li>
     }
 </ul>

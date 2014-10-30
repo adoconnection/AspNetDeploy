@@ -1,10 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
-  <!-- EF Runtime content -->
-  <edmx:Runtime>
-    <!-- SSDL content -->
-    <edmx:StorageModels>
-    <Schema Namespace="AspNetDeployModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <!-- EF Runtime content -->
+    <edmx:Runtime>
+        <!-- SSDL content -->
+        <edmx:StorageModels>
+        <Schema Namespace="AspNetDeployModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bundle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeploymentStep">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DeploymentStepId" Type="int" />
+          <Property Name="BundleId" Type="int" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeploymentStepProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DeploymentStepId" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeploymentStepToMachineRole">
+          <Key>
+            <PropertyRef Name="DeploymentStepId" />
+            <PropertyRef Name="MachineRoleId" />
+          </Key>
+          <Property Name="DeploymentStepId" Type="int" Nullable="false" />
+          <Property Name="MachineRoleId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Environment">
           <Key>
             <PropertyRef Name="Id" />
@@ -61,6 +96,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="SolutionFile" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="ProjectTypeId" Type="int" Nullable="false" />
+          <Property Name="Guid" Type="uniqueidentifier" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ProjectConfigurationField">
@@ -98,6 +134,14 @@
           <Property Name="EnvironmentId" Type="int" Nullable="false" />
           <Property Name="ProjectConfigurationValueId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ProjectToBundle">
+          <Key>
+            <PropertyRef Name="ProjectId" />
+            <PropertyRef Name="BundleId" />
+          </Key>
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="BundleId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="SourceControl">
           <Key>
             <PropertyRef Name="Id" />
@@ -124,6 +168,66 @@
           <Property Name="SourceControlId" Type="int" Nullable="false" />
           <Property Name="GroupId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_DeploymentStep_Bundle">
+          <End Role="Bundle" Type="Self.Bundle" Multiplicity="1" />
+          <End Role="DeploymentStep" Type="Self.DeploymentStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bundle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStep">
+              <PropertyRef Name="BundleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeploymentStep_DeploymentStep">
+          <End Role="DeploymentStep" Type="Self.DeploymentStep" Multiplicity="0..1" />
+          <End Role="DeploymentStep1" Type="Self.DeploymentStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeploymentStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStep1">
+              <PropertyRef Name="DeploymentStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeploymentStepProperty_DeploymentStep">
+          <End Role="DeploymentStep" Type="Self.DeploymentStep" Multiplicity="1" />
+          <End Role="DeploymentStepProperty" Type="Self.DeploymentStepProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeploymentStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStepProperty">
+              <PropertyRef Name="DeploymentStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeploymentStepToMachineRole_DeploymentStep">
+          <End Role="DeploymentStep" Type="Self.DeploymentStep" Multiplicity="1" />
+          <End Role="DeploymentStepToMachineRole" Type="Self.DeploymentStepToMachineRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeploymentStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStepToMachineRole">
+              <PropertyRef Name="DeploymentStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeploymentStepToMachineRole_MachineRole">
+          <End Role="MachineRole" Type="Self.MachineRole" Multiplicity="1" />
+          <End Role="DeploymentStepToMachineRole" Type="Self.DeploymentStepToMachineRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStepToMachineRole">
+              <PropertyRef Name="MachineRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MachineToEnvironment_Environment">
           <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
           <End Role="MachineToEnvironment" Type="Self.MachineToEnvironment" Multiplicity="*" />
@@ -244,6 +348,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProjectToBundle_Bundle">
+          <End Role="Bundle" Type="Self.Bundle" Multiplicity="1" />
+          <End Role="ProjectToBundle" Type="Self.ProjectToBundle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bundle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectToBundle">
+              <PropertyRef Name="BundleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectToBundle_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="ProjectToBundle" Type="Self.ProjectToBundle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectToBundle">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SourceControlProperty_SourceControl">
           <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
           <End Role="SourceControlProperty" Type="Self.SourceControlProperty" Multiplicity="*" />
@@ -281,6 +409,10 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="AspNetDeployModelStoreContainer">
+          <EntitySet Name="Bundle" EntityType="Self.Bundle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeploymentStep" EntityType="Self.DeploymentStep" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeploymentStepProperty" EntityType="Self.DeploymentStepProperty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeploymentStepToMachineRole" EntityType="Self.DeploymentStepToMachineRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Environment" EntityType="Self.Environment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Machine" EntityType="Self.Machine" Schema="dbo" store:Type="Tables" />
@@ -292,9 +424,30 @@
           <EntitySet Name="ProjectConfigurationFieldToProject" EntityType="Self.ProjectConfigurationFieldToProject" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectConfigurationValue" EntityType="Self.ProjectConfigurationValue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectConfigurationValueToEnvironment" EntityType="Self.ProjectConfigurationValueToEnvironment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectToBundle" EntityType="Self.ProjectToBundle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControl" EntityType="Self.SourceControl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlProperty" EntityType="Self.SourceControlProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlToGroup" EntityType="Self.SourceControlToGroup" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_DeploymentStep_Bundle" Association="Self.FK_DeploymentStep_Bundle">
+            <End Role="Bundle" EntitySet="Bundle" />
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeploymentStep_DeploymentStep" Association="Self.FK_DeploymentStep_DeploymentStep">
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
+            <End Role="DeploymentStep1" EntitySet="DeploymentStep" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeploymentStepProperty_DeploymentStep" Association="Self.FK_DeploymentStepProperty_DeploymentStep">
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
+            <End Role="DeploymentStepProperty" EntitySet="DeploymentStepProperty" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeploymentStepToMachineRole_DeploymentStep" Association="Self.FK_DeploymentStepToMachineRole_DeploymentStep">
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
+            <End Role="DeploymentStepToMachineRole" EntitySet="DeploymentStepToMachineRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeploymentStepToMachineRole_MachineRole" Association="Self.FK_DeploymentStepToMachineRole_MachineRole">
+            <End Role="MachineRole" EntitySet="MachineRole" />
+            <End Role="DeploymentStepToMachineRole" EntitySet="DeploymentStepToMachineRole" />
+          </AssociationSet>
           <AssociationSet Name="FK_MachineToEnvironment_Environment" Association="Self.FK_MachineToEnvironment_Environment">
             <End Role="Environment" EntitySet="Environment" />
             <End Role="MachineToEnvironment" EntitySet="MachineToEnvironment" />
@@ -335,6 +488,14 @@
             <End Role="ProjectConfigurationValue" EntitySet="ProjectConfigurationValue" />
             <End Role="ProjectConfigurationValueToEnvironment" EntitySet="ProjectConfigurationValueToEnvironment" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProjectToBundle_Bundle" Association="Self.FK_ProjectToBundle_Bundle">
+            <End Role="Bundle" EntitySet="Bundle" />
+            <End Role="ProjectToBundle" EntitySet="ProjectToBundle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectToBundle_Project" Association="Self.FK_ProjectToBundle_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectToBundle" EntitySet="ProjectToBundle" />
+          </AssociationSet>
           <AssociationSet Name="FK_SourceControlProperty_SourceControl" Association="Self.FK_SourceControlProperty_SourceControl">
             <End Role="SourceControl" EntitySet="SourceControl" />
             <End Role="SourceControlProperty" EntitySet="SourceControlProperty" />
@@ -349,358 +510,531 @@
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
-    <!-- CSDL content -->
-    <edmx:ConceptualModels>
-      <Schema Namespace="AspNetDeployModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Environment">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Machine" Relationship="Self.MachineToEnvironment" FromRole="Environment" ToRole="Machine" />
-          <NavigationProperty Name="ProjectConfigurationValue" Relationship="Self.ProjectConfigurationValueToEnvironment" FromRole="Environment" ToRole="ProjectConfigurationValue" />
-        </EntityType>
-        <EntityType Name="Group">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="SourceControl" Relationship="AspNetDeployModel.SourceControlToGroup" FromRole="Group" ToRole="SourceControl" />
-        </EntityType>
-        <EntityType Name="Machine">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PrivateKey" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="URL" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Environment" Relationship="Self.MachineToEnvironment" FromRole="Machine" ToRole="Environment" />
-          <NavigationProperty Name="MachineRole" Relationship="Self.MachineToMachineRole" FromRole="Machine" ToRole="MachineRole" />
-        </EntityType>
-        <EntityType Name="MachineRole">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Machine" Relationship="Self.MachineToMachineRole" FromRole="MachineRole" ToRole="Machine" />
-        </EntityType>
-        <EntityType Name="Project">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SourceControlId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="SolutionFile" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProjectTypeId" Type="Int32" Nullable="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="SourceControl" Relationship="Self.FK_Project_SourceControl" FromRole="Project" ToRole="SourceControl" />
-          <NavigationProperty Name="ProjectConfigurationField" Relationship="Self.ProjectConfigurationFieldToProject" FromRole="Project" ToRole="ProjectConfigurationField" />
-        </EntityType>
-        <EntityType Name="ProjectConfigurationField">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProjectId" Type="Int32" Nullable="false" />
-          <Property Name="TypeId" Type="Int32" Nullable="false" />
-          <Property Name="Key" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="IsSensitive" Type="Boolean" Nullable="false" />
-          <Property Name="ModeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ProjectConfigurationValue" Relationship="Self.FK_ProjectConfigurationValue_ProjectConfigurationField" FromRole="ProjectConfigurationField" ToRole="ProjectConfigurationValue" />
-          <NavigationProperty Name="Project" Relationship="Self.ProjectConfigurationFieldToProject" FromRole="ProjectConfigurationField" ToRole="Project" />
-        </EntityType>
-        <EntityType Name="ProjectConfigurationValue">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProjectConfigurationFieldId" Type="Int32" Nullable="false" />
-          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProjectConfigurationField" Relationship="Self.FK_ProjectConfigurationValue_ProjectConfigurationField" FromRole="ProjectConfigurationValue" ToRole="ProjectConfigurationField" />
-          <NavigationProperty Name="Environment" Relationship="Self.ProjectConfigurationValueToEnvironment" FromRole="ProjectConfigurationValue" ToRole="Environment" />
-        </EntityType>
-        <EntityType Name="SourceControl">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TypeId" Type="Int32" Nullable="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Project" Relationship="Self.FK_Project_SourceControl" FromRole="SourceControl" ToRole="Project" />
-          <NavigationProperty Name="Properties" Relationship="Self.FK_SourceControlProperty_SourceControl" FromRole="SourceControl" ToRole="SourceControlProperty" />
-          <NavigationProperty Name="Group" Relationship="AspNetDeployModel.SourceControlToGroup" FromRole="SourceControl" ToRole="Group" />
-        </EntityType>
-        <EntityType Name="SourceControlProperty">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SourceControlId" Type="Int32" Nullable="false" />
-          <Property Name="Key" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SourceControl" Relationship="Self.FK_SourceControlProperty_SourceControl" FromRole="SourceControlProperty" ToRole="SourceControl" />
-        </EntityType>
-        <Association Name="FK_Project_SourceControl">
-          <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
-          <End Role="Project" Type="Self.Project" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SourceControl">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Project">
-              <PropertyRef Name="SourceControlId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProjectConfigurationValue_ProjectConfigurationField">
-          <End Role="ProjectConfigurationField" Type="Self.ProjectConfigurationField" Multiplicity="1" />
-          <End Role="ProjectConfigurationValue" Type="Self.ProjectConfigurationValue" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProjectConfigurationField">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProjectConfigurationValue">
-              <PropertyRef Name="ProjectConfigurationFieldId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SourceControlProperty_SourceControl">
-          <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
-          <End Role="SourceControlProperty" Type="Self.SourceControlProperty" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SourceControl">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SourceControlProperty">
-              <PropertyRef Name="SourceControlId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="MachineToEnvironment">
-          <End Role="Environment" Type="Self.Environment" Multiplicity="*" />
-          <End Role="Machine" Type="Self.Machine" Multiplicity="*" />
-        </Association>
-        <Association Name="MachineToMachineRole">
-          <End Role="Machine" Type="Self.Machine" Multiplicity="*" />
-          <End Role="MachineRole" Type="Self.MachineRole" Multiplicity="*" />
-        </Association>
-        <Association Name="ProjectConfigurationFieldToProject">
-          <End Role="Project" Type="Self.Project" Multiplicity="*" />
-          <End Role="ProjectConfigurationField" Type="Self.ProjectConfigurationField" Multiplicity="*" />
-        </Association>
-        <Association Name="ProjectConfigurationValueToEnvironment">
-          <End Role="Environment" Type="Self.Environment" Multiplicity="*" />
-          <End Role="ProjectConfigurationValue" Type="Self.ProjectConfigurationValue" Multiplicity="*" />
-        </Association>
-        <EntityContainer Name="AspNetDeployEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Environment" EntityType="Self.Environment" />
-          <EntitySet Name="Group" EntityType="Self.Group" />
-          <EntitySet Name="Machine" EntityType="Self.Machine" />
-          <EntitySet Name="MachineRole" EntityType="Self.MachineRole" />
-          <EntitySet Name="Project" EntityType="Self.Project" />
-          <EntitySet Name="ProjectConfigurationField" EntityType="Self.ProjectConfigurationField" />
-          <EntitySet Name="ProjectConfigurationValue" EntityType="Self.ProjectConfigurationValue" />
-          <EntitySet Name="SourceControl" EntityType="Self.SourceControl" />
-          <EntitySet Name="SourceControlProperty" EntityType="Self.SourceControlProperty" />
-          <AssociationSet Name="FK_Project_SourceControl" Association="Self.FK_Project_SourceControl">
-            <End Role="SourceControl" EntitySet="SourceControl" />
-            <End Role="Project" EntitySet="Project" />
+        <!-- CSDL content -->
+        <edmx:ConceptualModels>
+            <Schema Namespace="AspNetDeployModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+                <EntityType Name="Environment">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <NavigationProperty Name="Machines" Relationship="Self.MachineToEnvironment" FromRole="Environment" ToRole="Machine" />
+                    <NavigationProperty Name="ProjectConfigurationValue" Relationship="Self.ProjectConfigurationValueToEnvironment" FromRole="Environment" ToRole="ProjectConfigurationValue" />
+                </EntityType>
+                <EntityType Name="Group">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+                    <NavigationProperty Name="SourceControl" Relationship="AspNetDeployModel.SourceControlToGroup" FromRole="Group" ToRole="SourceControl" />
+                </EntityType>
+                <EntityType Name="Machine">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="PrivateKey" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="URL" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+                    <NavigationProperty Name="Environments" Relationship="Self.MachineToEnvironment" FromRole="Machine" ToRole="Environment" />
+                    <NavigationProperty Name="MachineRoles" Relationship="Self.MachineToMachineRole" FromRole="Machine" ToRole="MachineRole" />
+                </EntityType>
+                <EntityType Name="MachineRole">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+                    <NavigationProperty Name="Machines" Relationship="Self.MachineToMachineRole" FromRole="MachineRole" ToRole="Machine" />
+          <NavigationProperty Name="DeploymentSteps" Relationship="AspNetDeployModel.DeploymentStepToMachineRole" FromRole="MachineRole" ToRole="DeploymentStep" />
+                </EntityType>
+                <EntityType Name="Project">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="SourceControlId" Type="Int32" Nullable="false" />
+                    <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="SolutionFile" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="ProjectType" Type="AspNetDeployModel.ProjectType" Nullable="false" />
+                    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+                    <NavigationProperty Name="SourceControl" Relationship="Self.FK_Project_SourceControl" FromRole="Project" ToRole="SourceControl" />
+                    <NavigationProperty Name="ProjectConfigurationField" Relationship="Self.ProjectConfigurationFieldToProject" FromRole="Project" ToRole="ProjectConfigurationField" />
+                    <NavigationProperty Name="Bundles" Relationship="AspNetDeployModel.ProjectToBundle" FromRole="Project" ToRole="Bundle" />
+          <Property Name="Guid" Type="Guid" />
+                </EntityType>
+                <EntityType Name="ProjectConfigurationField">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="ProjectId" Type="Int32" Nullable="false" />
+                    <Property Name="TypeId" Type="Int32" Nullable="false" />
+                    <Property Name="Key" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="IsSensitive" Type="Boolean" Nullable="false" />
+                    <Property Name="ModeId" Type="Int32" Nullable="false" />
+                    <NavigationProperty Name="ProjectConfigurationValue" Relationship="Self.FK_ProjectConfigurationValue_ProjectConfigurationField" FromRole="ProjectConfigurationField" ToRole="ProjectConfigurationValue" />
+                    <NavigationProperty Name="Project" Relationship="Self.ProjectConfigurationFieldToProject" FromRole="ProjectConfigurationField" ToRole="Project" />
+                </EntityType>
+                <EntityType Name="ProjectConfigurationValue">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="ProjectConfigurationFieldId" Type="Int32" Nullable="false" />
+                    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+                    <NavigationProperty Name="ProjectConfigurationField" Relationship="Self.FK_ProjectConfigurationValue_ProjectConfigurationField" FromRole="ProjectConfigurationValue" ToRole="ProjectConfigurationField" />
+                    <NavigationProperty Name="Environment" Relationship="Self.ProjectConfigurationValueToEnvironment" FromRole="ProjectConfigurationValue" ToRole="Environment" />
+                </EntityType>
+                <EntityType Name="SourceControl">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="Type" Type="AspNetDeployModel.SourceControlType" Nullable="false" />
+                    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+                    <NavigationProperty Name="Projects" Relationship="Self.FK_Project_SourceControl" FromRole="SourceControl" ToRole="Project" />
+                    <NavigationProperty Name="Properties" Relationship="Self.FK_SourceControlProperty_SourceControl" FromRole="SourceControl" ToRole="SourceControlProperty" />
+                    <NavigationProperty Name="Group" Relationship="AspNetDeployModel.SourceControlToGroup" FromRole="SourceControl" ToRole="Group" />
+                </EntityType>
+                <EntityType Name="SourceControlProperty">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="SourceControlId" Type="Int32" Nullable="false" />
+                    <Property Name="Key" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+                    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+                    <NavigationProperty Name="SourceControl" Relationship="Self.FK_SourceControlProperty_SourceControl" FromRole="SourceControlProperty" ToRole="SourceControl" />
+                </EntityType>
+                <Association Name="FK_Project_SourceControl">
+                    <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
+                    <End Role="Project" Type="Self.Project" Multiplicity="*" />
+                    <ReferentialConstraint>
+                        <Principal Role="SourceControl">
+                            <PropertyRef Name="Id" />
+                        </Principal>
+                        <Dependent Role="Project">
+                            <PropertyRef Name="SourceControlId" />
+                        </Dependent>
+                    </ReferentialConstraint>
+                </Association>
+                <Association Name="FK_ProjectConfigurationValue_ProjectConfigurationField">
+                    <End Role="ProjectConfigurationField" Type="Self.ProjectConfigurationField" Multiplicity="1" />
+                    <End Role="ProjectConfigurationValue" Type="Self.ProjectConfigurationValue" Multiplicity="*" />
+                    <ReferentialConstraint>
+                        <Principal Role="ProjectConfigurationField">
+                            <PropertyRef Name="Id" />
+                        </Principal>
+                        <Dependent Role="ProjectConfigurationValue">
+                            <PropertyRef Name="ProjectConfigurationFieldId" />
+                        </Dependent>
+                    </ReferentialConstraint>
+                </Association>
+                <Association Name="FK_SourceControlProperty_SourceControl">
+                    <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
+                    <End Role="SourceControlProperty" Type="Self.SourceControlProperty" Multiplicity="*" />
+                    <ReferentialConstraint>
+                        <Principal Role="SourceControl">
+                            <PropertyRef Name="Id" />
+                        </Principal>
+                        <Dependent Role="SourceControlProperty">
+                            <PropertyRef Name="SourceControlId" />
+                        </Dependent>
+                    </ReferentialConstraint>
+                </Association>
+                <Association Name="MachineToEnvironment">
+                    <End Role="Environment" Type="Self.Environment" Multiplicity="*" />
+                    <End Role="Machine" Type="Self.Machine" Multiplicity="*" />
+                </Association>
+                <Association Name="MachineToMachineRole">
+                    <End Role="Machine" Type="Self.Machine" Multiplicity="*" />
+                    <End Role="MachineRole" Type="Self.MachineRole" Multiplicity="*" />
+                </Association>
+                <Association Name="ProjectConfigurationFieldToProject">
+                    <End Role="Project" Type="Self.Project" Multiplicity="*" />
+                    <End Role="ProjectConfigurationField" Type="Self.ProjectConfigurationField" Multiplicity="*" />
+                </Association>
+                <Association Name="ProjectConfigurationValueToEnvironment">
+                    <End Role="Environment" Type="Self.Environment" Multiplicity="*" />
+                    <End Role="ProjectConfigurationValue" Type="Self.ProjectConfigurationValue" Multiplicity="*" />
+                </Association>
+                <EntityContainer Name="AspNetDeployEntities" annotation:LazyLoadingEnabled="true">
+                    <EntitySet Name="Environment" EntityType="Self.Environment" />
+                    <EntitySet Name="Group" EntityType="Self.Group" />
+                    <EntitySet Name="Machine" EntityType="Self.Machine" />
+                    <EntitySet Name="MachineRole" EntityType="Self.MachineRole" />
+                    <EntitySet Name="Project" EntityType="Self.Project" />
+                    <EntitySet Name="ProjectConfigurationField" EntityType="Self.ProjectConfigurationField" />
+                    <EntitySet Name="ProjectConfigurationValue" EntityType="Self.ProjectConfigurationValue" />
+                    <EntitySet Name="SourceControl" EntityType="Self.SourceControl" />
+                    <EntitySet Name="SourceControlProperty" EntityType="Self.SourceControlProperty" />
+                    <AssociationSet Name="FK_Project_SourceControl" Association="Self.FK_Project_SourceControl">
+                        <End Role="SourceControl" EntitySet="SourceControl" />
+                        <End Role="Project" EntitySet="Project" />
+                    </AssociationSet>
+                    <AssociationSet Name="FK_ProjectConfigurationValue_ProjectConfigurationField" Association="Self.FK_ProjectConfigurationValue_ProjectConfigurationField">
+                        <End Role="ProjectConfigurationField" EntitySet="ProjectConfigurationField" />
+                        <End Role="ProjectConfigurationValue" EntitySet="ProjectConfigurationValue" />
+                    </AssociationSet>
+                    <AssociationSet Name="FK_SourceControlProperty_SourceControl" Association="Self.FK_SourceControlProperty_SourceControl">
+                        <End Role="SourceControl" EntitySet="SourceControl" />
+                        <End Role="SourceControlProperty" EntitySet="SourceControlProperty" />
+                    </AssociationSet>
+                    <AssociationSet Name="MachineToEnvironment" Association="Self.MachineToEnvironment">
+                        <End Role="Environment" EntitySet="Environment" />
+                        <End Role="Machine" EntitySet="Machine" />
+                    </AssociationSet>
+                    <AssociationSet Name="MachineToMachineRole" Association="Self.MachineToMachineRole">
+                        <End Role="Machine" EntitySet="Machine" />
+                        <End Role="MachineRole" EntitySet="MachineRole" />
+                    </AssociationSet>
+                    <AssociationSet Name="ProjectConfigurationFieldToProject" Association="Self.ProjectConfigurationFieldToProject">
+                        <End Role="Project" EntitySet="Project" />
+                        <End Role="ProjectConfigurationField" EntitySet="ProjectConfigurationField" />
+                    </AssociationSet>
+                    <AssociationSet Name="ProjectConfigurationValueToEnvironment" Association="Self.ProjectConfigurationValueToEnvironment">
+                        <End Role="Environment" EntitySet="Environment" />
+                        <End Role="ProjectConfigurationValue" EntitySet="ProjectConfigurationValue" />
+                    </AssociationSet>
+                    <AssociationSet Name="SourceControlToGroup" Association="AspNetDeployModel.SourceControlToGroup">
+                        <End Role="Group" EntitySet="Group" />
+                        <End Role="SourceControl" EntitySet="SourceControl" />
+                    </AssociationSet>
+                    <EntitySet Name="Bundle" EntityType="AspNetDeployModel.Bundle" />
+                    <AssociationSet Name="ProjectToBundle" Association="AspNetDeployModel.ProjectToBundle">
+                        <End Role="Bundle" EntitySet="Bundle" />
+                        <End Role="Project" EntitySet="Project" />
+                    </AssociationSet>
+          <EntitySet Name="DeploymentStep" EntityType="AspNetDeployModel.DeploymentStep" />
+          <EntitySet Name="DeploymentStepProperty" EntityType="AspNetDeployModel.DeploymentStepProperty" />
+          <AssociationSet Name="FK_DeploymentStep_Bundle" Association="AspNetDeployModel.FK_DeploymentStep_Bundle">
+            <End Role="Bundle" EntitySet="Bundle" />
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProjectConfigurationValue_ProjectConfigurationField" Association="Self.FK_ProjectConfigurationValue_ProjectConfigurationField">
-            <End Role="ProjectConfigurationField" EntitySet="ProjectConfigurationField" />
-            <End Role="ProjectConfigurationValue" EntitySet="ProjectConfigurationValue" />
+          <AssociationSet Name="FK_DeploymentStep_DeploymentStep" Association="AspNetDeployModel.FK_DeploymentStep_DeploymentStep">
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
+            <End Role="DeploymentStep1" EntitySet="DeploymentStep" />
           </AssociationSet>
-          <AssociationSet Name="FK_SourceControlProperty_SourceControl" Association="Self.FK_SourceControlProperty_SourceControl">
-            <End Role="SourceControl" EntitySet="SourceControl" />
-            <End Role="SourceControlProperty" EntitySet="SourceControlProperty" />
+          <AssociationSet Name="FK_DeploymentStepProperty_DeploymentStep" Association="AspNetDeployModel.FK_DeploymentStepProperty_DeploymentStep">
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
+            <End Role="DeploymentStepProperty" EntitySet="DeploymentStepProperty" />
           </AssociationSet>
-          <AssociationSet Name="MachineToEnvironment" Association="Self.MachineToEnvironment">
-            <End Role="Environment" EntitySet="Environment" />
-            <End Role="Machine" EntitySet="Machine" />
-          </AssociationSet>
-          <AssociationSet Name="MachineToMachineRole" Association="Self.MachineToMachineRole">
-            <End Role="Machine" EntitySet="Machine" />
+          <AssociationSet Name="DeploymentStepToMachineRole" Association="AspNetDeployModel.DeploymentStepToMachineRole">
+            <End Role="DeploymentStep" EntitySet="DeploymentStep" />
             <End Role="MachineRole" EntitySet="MachineRole" />
           </AssociationSet>
-          <AssociationSet Name="ProjectConfigurationFieldToProject" Association="Self.ProjectConfigurationFieldToProject">
-            <End Role="Project" EntitySet="Project" />
-            <End Role="ProjectConfigurationField" EntitySet="ProjectConfigurationField" />
-          </AssociationSet>
-          <AssociationSet Name="ProjectConfigurationValueToEnvironment" Association="Self.ProjectConfigurationValueToEnvironment">
-            <End Role="Environment" EntitySet="Environment" />
-            <End Role="ProjectConfigurationValue" EntitySet="ProjectConfigurationValue" />
-          </AssociationSet>
-          <AssociationSet Name="SourceControlToGroup" Association="AspNetDeployModel.SourceControlToGroup">
-            <End Role="Group" EntitySet="Group" />
-            <End Role="SourceControl" EntitySet="SourceControl" />
-          </AssociationSet>
-        </EntityContainer>
-        <Association Name="SourceControlToGroup">
-          <End Type="AspNetDeployModel.Group" Role="Group" Multiplicity="*" />
-          <End Type="AspNetDeployModel.SourceControl" Role="SourceControl" Multiplicity="*" />
+                </EntityContainer>
+                <Association Name="SourceControlToGroup">
+                    <End Type="AspNetDeployModel.Group" Role="Group" Multiplicity="*" />
+                    <End Type="AspNetDeployModel.SourceControl" Role="SourceControl" Multiplicity="*" />
+                </Association>
+                <EntityType Name="Bundle">
+                    <Key>
+                        <PropertyRef Name="Id" />
+                    </Key>
+                    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+                    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+                    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+                    <NavigationProperty Name="Projects" Relationship="AspNetDeployModel.ProjectToBundle" FromRole="Bundle" ToRole="Project" />
+          <NavigationProperty Name="DeploymentSteps" Relationship="AspNetDeployModel.FK_DeploymentStep_Bundle" FromRole="Bundle" ToRole="DeploymentStep" />
+                </EntityType>
+                <Association Name="ProjectToBundle">
+                    <End Type="AspNetDeployModel.Bundle" Role="Bundle" Multiplicity="*" />
+                    <End Type="AspNetDeployModel.Project" Role="Project" Multiplicity="*" />
+                </Association>
+                <EnumType Name="SourceControlType">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="Svn" Value="1" />
+          <Member Name="Git" Value="2" />
+          <Member Name="FileSystem" Value="3" />
+        </EnumType>
+        <EnumType Name="ProjectType" >
+          <Member Name="Undefined" Value="0" />
+          <Member Name="Web" Value="1" />
+          <Member Name="Console" Value="2" />
+          <Member Name="Service" Value="3" />
+          <Member Name="ClassLibrary" Value="4" />
+          <Member Name="Deployment" Value="5" />
+          <Member Name="Database" Value="6" />
+        </EnumType>
+        <EntityType Name="DeploymentStep">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeploymentStepId" Type="Int32" />
+          <Property Name="BundleId" Type="Int32" Nullable="false" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="AspNetDeployModel.DeploymentStepType" Nullable="false" />
+          <NavigationProperty Name="Bundle" Relationship="AspNetDeployModel.FK_DeploymentStep_Bundle" FromRole="DeploymentStep" ToRole="Bundle" />
+          <NavigationProperty Name="ChildDeploymentSteps" Relationship="AspNetDeployModel.FK_DeploymentStep_DeploymentStep" FromRole="DeploymentStep" ToRole="DeploymentStep1" />
+          <NavigationProperty Name="ParentDeploymentStep" Relationship="AspNetDeployModel.FK_DeploymentStep_DeploymentStep" FromRole="DeploymentStep1" ToRole="DeploymentStep" />
+          <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_DeploymentStepProperty_DeploymentStep" FromRole="DeploymentStep" ToRole="DeploymentStepProperty" />
+          <NavigationProperty Name="MachineRoles" Relationship="AspNetDeployModel.DeploymentStepToMachineRole" FromRole="DeploymentStep" ToRole="MachineRole" />
+        </EntityType>
+        <EntityType Name="DeploymentStepProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeploymentStepId" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DeploymentStep" Relationship="AspNetDeployModel.FK_DeploymentStepProperty_DeploymentStep" FromRole="DeploymentStepProperty" ToRole="DeploymentStep" />
+        </EntityType>
+        <Association Name="FK_DeploymentStep_Bundle">
+          <End Type="AspNetDeployModel.Bundle" Role="Bundle" Multiplicity="1" />
+          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bundle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStep">
+              <PropertyRef Name="BundleId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:ConceptualModels>
-    <!-- C-S mapping content -->
-    <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="AspNetDeployModelStoreContainer" CdmEntityContainer="AspNetDeployEntities">
-          <EntitySetMapping Name="Environment">
-            <EntityTypeMapping TypeName="AspNetDeployModel.Environment">
-              <MappingFragment StoreEntitySet="Environment">
+        <Association Name="FK_DeploymentStep_DeploymentStep">
+          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeploymentStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStep1">
+              <PropertyRef Name="DeploymentStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DeploymentStepProperty_DeploymentStep">
+          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep" Multiplicity="1" />
+          <End Type="AspNetDeployModel.DeploymentStepProperty" Role="DeploymentStepProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeploymentStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeploymentStepProperty">
+              <PropertyRef Name="DeploymentStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DeploymentStepToMachineRole">
+          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep" Multiplicity="*" />
+          <End Type="AspNetDeployModel.MachineRole" Role="MachineRole" Multiplicity="*" />
+        </Association>
+        <EnumType Name="DeploymentStepType">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="DeployWebSite" Value="1" />
+          <Member Name="RunPowerShellScript" Value="2" />
+          <Member Name="CopyFiles" Value="3" />
+        </EnumType>
+            </Schema>
+        </edmx:ConceptualModels>
+        <!-- C-S mapping content -->
+        <edmx:Mappings>
+            <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+                <EntityContainerMapping StorageEntityContainer="AspNetDeployModelStoreContainer" CdmEntityContainer="AspNetDeployEntities">
+                    <EntitySetMapping Name="Environment">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.Environment">
+                            <MappingFragment StoreEntitySet="Environment">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="Group">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.Group">
+                            <MappingFragment StoreEntitySet="Group">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="Machine">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.Machine">
+                            <MappingFragment StoreEntitySet="Machine">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                                <ScalarProperty Name="PrivateKey" ColumnName="PrivateKey" />
+                                <ScalarProperty Name="URL" ColumnName="URL" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="MachineRole">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.MachineRole">
+                            <MappingFragment StoreEntitySet="MachineRole">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="Project">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.Project">
+                            <MappingFragment StoreEntitySet="Project">
+                                <ScalarProperty Name="Guid" ColumnName="Guid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                                <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                                <ScalarProperty Name="SolutionFile" ColumnName="SolutionFile" />
+                                <ScalarProperty Name="ProjectType" ColumnName="ProjectTypeId" />
+                                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="ProjectConfigurationField">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.ProjectConfigurationField">
+                            <MappingFragment StoreEntitySet="ProjectConfigurationField">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                                <ScalarProperty Name="Key" ColumnName="Key" />
+                                <ScalarProperty Name="IsSensitive" ColumnName="IsSensitive" />
+                                <ScalarProperty Name="ModeId" ColumnName="ModeId" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="ProjectConfigurationValue">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.ProjectConfigurationValue">
+                            <MappingFragment StoreEntitySet="ProjectConfigurationValue">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="ProjectConfigurationFieldId" ColumnName="ProjectConfigurationFieldId" />
+                                <ScalarProperty Name="Value" ColumnName="Value" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="SourceControl">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.SourceControl">
+                            <MappingFragment StoreEntitySet="SourceControl">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                                <ScalarProperty Name="Type" ColumnName="TypeId" />
+                                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <EntitySetMapping Name="SourceControlProperty">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlProperty">
+                            <MappingFragment StoreEntitySet="SourceControlProperty">
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                                <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
+                                <ScalarProperty Name="Key" ColumnName="Key" />
+                                <ScalarProperty Name="Value" ColumnName="Value" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <AssociationSetMapping Name="MachineToEnvironment" TypeName="AspNetDeployModel.MachineToEnvironment" StoreEntitySet="MachineToEnvironment">
+                        <EndProperty Name="Environment">
+                            <ScalarProperty Name="Id" ColumnName="EnvironmentId" />
+                        </EndProperty>
+                        <EndProperty Name="Machine">
+                            <ScalarProperty Name="Id" ColumnName="MachineId" />
+                        </EndProperty>
+                    </AssociationSetMapping>
+                    <AssociationSetMapping Name="MachineToMachineRole" TypeName="AspNetDeployModel.MachineToMachineRole" StoreEntitySet="MachineToMachineRole">
+                        <EndProperty Name="Machine">
+                            <ScalarProperty Name="Id" ColumnName="MachineId" />
+                        </EndProperty>
+                        <EndProperty Name="MachineRole">
+                            <ScalarProperty Name="Id" ColumnName="MachineRoleId" />
+                        </EndProperty>
+                    </AssociationSetMapping>
+                    <AssociationSetMapping Name="ProjectConfigurationFieldToProject" TypeName="AspNetDeployModel.ProjectConfigurationFieldToProject" StoreEntitySet="ProjectConfigurationFieldToProject">
+                        <EndProperty Name="Project">
+                            <ScalarProperty Name="Id" ColumnName="ProjectId" />
+                        </EndProperty>
+                        <EndProperty Name="ProjectConfigurationField">
+                            <ScalarProperty Name="Id" ColumnName="ProjectConfigurationFieldId" />
+                        </EndProperty>
+                    </AssociationSetMapping>
+                    <AssociationSetMapping Name="ProjectConfigurationValueToEnvironment" TypeName="AspNetDeployModel.ProjectConfigurationValueToEnvironment" StoreEntitySet="ProjectConfigurationValueToEnvironment">
+                        <EndProperty Name="Environment">
+                            <ScalarProperty Name="Id" ColumnName="EnvironmentId" />
+                        </EndProperty>
+                        <EndProperty Name="ProjectConfigurationValue">
+                            <ScalarProperty Name="Id" ColumnName="ProjectConfigurationValueId" />
+                        </EndProperty>
+                    </AssociationSetMapping>
+                    <AssociationSetMapping Name="SourceControlToGroup" TypeName="AspNetDeployModel.SourceControlToGroup" StoreEntitySet="SourceControlToGroup">
+                        <EndProperty Name="SourceControl">
+                            <ScalarProperty Name="Id" ColumnName="SourceControlId" />
+                        </EndProperty>
+                        <EndProperty Name="Group">
+                            <ScalarProperty Name="Id" ColumnName="GroupId" />
+                        </EndProperty>
+                    </AssociationSetMapping>
+                    <EntitySetMapping Name="Bundle">
+                        <EntityTypeMapping TypeName="AspNetDeployModel.Bundle">
+                            <MappingFragment StoreEntitySet="Bundle">
+                                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                                <ScalarProperty Name="Name" ColumnName="Name" />
+                                <ScalarProperty Name="Id" ColumnName="Id" />
+                            </MappingFragment>
+                        </EntityTypeMapping>
+                    </EntitySetMapping>
+                    <AssociationSetMapping Name="ProjectToBundle" TypeName="AspNetDeployModel.ProjectToBundle" StoreEntitySet="ProjectToBundle">
+                        <EndProperty Name="Project">
+                            <ScalarProperty Name="Id" ColumnName="ProjectId" />
+                        </EndProperty>
+                        <EndProperty Name="Bundle">
+                            <ScalarProperty Name="Id" ColumnName="BundleId" />
+                        </EndProperty>
+                    </AssociationSetMapping>
+          <EntitySetMapping Name="DeploymentStep">
+            <EntityTypeMapping TypeName="AspNetDeployModel.DeploymentStep">
+              <MappingFragment StoreEntitySet="DeploymentStep">
+                <ScalarProperty Name="Type" ColumnName="TypeId" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="BundleId" ColumnName="BundleId" />
+                <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Group">
-            <EntityTypeMapping TypeName="AspNetDeployModel.Group">
-              <MappingFragment StoreEntitySet="Group">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Machine">
-            <EntityTypeMapping TypeName="AspNetDeployModel.Machine">
-              <MappingFragment StoreEntitySet="Machine">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="PrivateKey" ColumnName="PrivateKey" />
-                <ScalarProperty Name="URL" ColumnName="URL" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MachineRole">
-            <EntityTypeMapping TypeName="AspNetDeployModel.MachineRole">
-              <MappingFragment StoreEntitySet="MachineRole">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Project">
-            <EntityTypeMapping TypeName="AspNetDeployModel.Project">
-              <MappingFragment StoreEntitySet="Project">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="SolutionFile" ColumnName="SolutionFile" />
-                <ScalarProperty Name="ProjectTypeId" ColumnName="ProjectTypeId" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProjectConfigurationField">
-            <EntityTypeMapping TypeName="AspNetDeployModel.ProjectConfigurationField">
-              <MappingFragment StoreEntitySet="ProjectConfigurationField">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <EntitySetMapping Name="DeploymentStepProperty">
+            <EntityTypeMapping TypeName="AspNetDeployModel.DeploymentStepProperty">
+              <MappingFragment StoreEntitySet="DeploymentStepProperty">
                 <ScalarProperty Name="Key" ColumnName="Key" />
-                <ScalarProperty Name="IsSensitive" ColumnName="IsSensitive" />
-                <ScalarProperty Name="ModeId" ColumnName="ModeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProjectConfigurationValue">
-            <EntityTypeMapping TypeName="AspNetDeployModel.ProjectConfigurationValue">
-              <MappingFragment StoreEntitySet="ProjectConfigurationValue">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ProjectConfigurationFieldId" ColumnName="ProjectConfigurationFieldId" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SourceControl">
-            <EntityTypeMapping TypeName="AspNetDeployModel.SourceControl">
-              <MappingFragment StoreEntitySet="SourceControl">
+                <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SourceControlProperty">
-            <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlProperty">
-              <MappingFragment StoreEntitySet="SourceControlProperty">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
-                <ScalarProperty Name="Key" ColumnName="Key" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="MachineToEnvironment" TypeName="AspNetDeployModel.MachineToEnvironment" StoreEntitySet="MachineToEnvironment">
-            <EndProperty Name="Environment">
-              <ScalarProperty Name="Id" ColumnName="EnvironmentId" />
-            </EndProperty>
-            <EndProperty Name="Machine">
-              <ScalarProperty Name="Id" ColumnName="MachineId" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="MachineToMachineRole" TypeName="AspNetDeployModel.MachineToMachineRole" StoreEntitySet="MachineToMachineRole">
-            <EndProperty Name="Machine">
-              <ScalarProperty Name="Id" ColumnName="MachineId" />
-            </EndProperty>
+          <AssociationSetMapping Name="DeploymentStepToMachineRole" TypeName="AspNetDeployModel.DeploymentStepToMachineRole" StoreEntitySet="DeploymentStepToMachineRole">
             <EndProperty Name="MachineRole">
               <ScalarProperty Name="Id" ColumnName="MachineRoleId" />
             </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="ProjectConfigurationFieldToProject" TypeName="AspNetDeployModel.ProjectConfigurationFieldToProject" StoreEntitySet="ProjectConfigurationFieldToProject">
-            <EndProperty Name="Project">
-              <ScalarProperty Name="Id" ColumnName="ProjectId" />
-            </EndProperty>
-            <EndProperty Name="ProjectConfigurationField">
-              <ScalarProperty Name="Id" ColumnName="ProjectConfigurationFieldId" />
+            <EndProperty Name="DeploymentStep">
+              <ScalarProperty Name="Id" ColumnName="DeploymentStepId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="ProjectConfigurationValueToEnvironment" TypeName="AspNetDeployModel.ProjectConfigurationValueToEnvironment" StoreEntitySet="ProjectConfigurationValueToEnvironment">
-            <EndProperty Name="Environment">
-              <ScalarProperty Name="Id" ColumnName="EnvironmentId" />
-            </EndProperty>
-            <EndProperty Name="ProjectConfigurationValue">
-              <ScalarProperty Name="Id" ColumnName="ProjectConfigurationValueId" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="SourceControlToGroup" TypeName="AspNetDeployModel.SourceControlToGroup" StoreEntitySet="SourceControlToGroup">
-            <EndProperty Name="SourceControl">
-              <ScalarProperty Name="Id" ColumnName="SourceControlId" />
-            </EndProperty>
-            <EndProperty Name="Group">
-              <ScalarProperty Name="Id" ColumnName="GroupId" />
-            </EndProperty>
-          </AssociationSetMapping>
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
-  </edmx:Runtime>
-  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
-    <Connection>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
-      </DesignerInfoPropertySet>
-    </Connection>
-    <Options>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-      </DesignerInfoPropertySet>
-    </Options>
-    <!-- Diagram content (shape and connector positions) -->
-    <Diagrams></Diagrams>
-  </Designer>
+                </EntityContainerMapping>
+            </Mapping>
+        </edmx:Mappings>
+    </edmx:Runtime>
+    <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+    <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+        <Connection>
+            <DesignerInfoPropertySet>
+                <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+            </DesignerInfoPropertySet>
+        </Connection>
+        <Options>
+            <DesignerInfoPropertySet>
+                <DesignerProperty Name="ValidateOnBuild" Value="true" />
+                <DesignerProperty Name="EnablePluralization" Value="false" />
+                <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+                <DesignerProperty Name="UseLegacyProvider" Value="false" />
+                <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+            </DesignerInfoPropertySet>
+        </Options>
+        <!-- Diagram content (shape and connector positions) -->
+        <Diagrams></Diagrams>
+    </Designer>
 </edmx:Edmx>

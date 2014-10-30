@@ -1,0 +1,48 @@
+﻿@using VisualStudioSolutionInfo
+@using WebUI.Models
+@using Environment = WebUI.Models.Environment
+
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "environmentsPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    @foreach (Environment environment in this.ViewBag.Environments)
+    {
+        <h1> @environment.Name </h1>
+        <hr />
+
+        foreach (Machine machine in environment.Machines)
+        {
+            <div class="row machine">
+                <div class="col-sm-8 col-md-6">
+                    <div class="name">
+                        <div class="roles pull-right">
+                            @foreach (MachineRole role in machine.MachineRoles)
+                            {
+                                <span class="label label-default">@role.Name</span>
+                            }
+                        </div>
+                        <div>
+                            <img src="~/Resources/Layout/Images/Icons/Server-Online.png" />
+                            @machine.Name
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col-sm-6">
+                    
+                </div>
+            </div>
+        }
+        <br/>
+    }
+
+</div>
+
+
+

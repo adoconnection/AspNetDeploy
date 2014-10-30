@@ -17,52 +17,39 @@ namespace WebUI.Controllers
         public ActionResult Index()
         {
             List<SourceControl> sourceControls = this.Entities.SourceControl
+                .Include("Projects")
                 .Include("Properties")
                 .Include("Group")
                 .ToList();
 
-            IList<SourceControlInfo> sourceControlInfos = new List<SourceControlInfo>();
-
-            foreach (SourceControl sourceControl in sourceControls)
-            {
-                using (SvnClient client = new SvnClient())
-                {
-                    NetworkCredential credential = new NetworkCredential(
-                        sourceControl.GetStringProperty("Login"),
-                        sourceControl.GetStringProperty("Password"));
-
-                    client.Authentication.DefaultCredentials = credential;
-
-                    string path = @"H:\AspNetDeployWorkingFolder\Sources\" + sourceControl.Id;
-
-                    if (!Directory.Exists(path))
-                    {
-                        client.CheckOut(new Uri(sourceControl.GetStringProperty("URL") + "/trunk"), path);    
-                    }
-                    else
-                    {
-                        client.Update(path);
-                    }
-                    
-                    VisualStudioSolutionParser parser = new VisualStudioSolutionParser();
-
-                    string[] solutions = Directory.GetFiles(path, "*.sln");
-
-                    IList<VisualStudioSolution> visualStudioSolutions = solutions.Select(parser.Parse).ToList();
-
-                    sourceControlInfos.Add(new SourceControlInfo()
-                    {
-                        SourceControl = sourceControl,
-                        Solutions = visualStudioSolutions
-                    });
-
-                }
-            }
-
-
-            this.ViewBag.SourceControlInfos = sourceControlInfos;
+            this.ViewBag.SourceControls = sourceControls;
 
             return this.View();
+        }
+
+        public ActionResult Details(int id)
+        {
+            SourceControl sourceControl = this.Entities.SourceControl
+                .Include("Projects")
+                .Include("Properties")
+                .Include("Group")
+                .First( sc => sc.Id == id);
+
+            this.ViewBag.SourceControl = sourceControl;
+
+            return this.View();
+        }
+
+        public ActionResult Add(SourceControlType sourceControlType = SourceControlType.Undefined)
+        {
+            if (sourceControlType == SourceControlType.Undefined)
+            {
+                return this.View("AddChooseSource");
+            }
+
+            this.ViewBag.SourceControlType = sourceControlType;
+
+            return this.View("AddConfigure");
         }
     }
 }

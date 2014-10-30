@@ -10,20 +10,12 @@
 namespace WebUI.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class MachineRole
+    public enum DeploymentStepType : int
     {
-        public MachineRole()
-        {
-            this.Machines = new HashSet<Machine>();
-            this.DeploymentSteps = new HashSet<DeploymentStep>();
-        }
-    
-        public int Id { get; set; }
-        public string Name { get; set; }
-    
-        public virtual ICollection<Machine> Machines { get; set; }
-        public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
+        Undefined = 0,
+        DeployWebSite = 1,
+        RunPowerShellScript = 2,
+        CopyFiles = 3
     }
 }

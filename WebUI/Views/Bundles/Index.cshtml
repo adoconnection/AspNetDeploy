@@ -1,0 +1,39 @@
+﻿@using WebUI.Models
+
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    @foreach (Bundle bundle in this.ViewBag.Bundles)
+    {
+        <h1> @Html.ActionLink(bundle.Name, "Details", new { id = bundle.Id }) </h1>
+        <hr />
+
+        foreach (Project project in bundle.Projects)
+        {
+            <div class="row machine">
+                <div class="col-sm-8 col-md-6">
+                    <div class="name">
+                        <div>
+                            @project.Name
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col-sm-6">
+                    
+                </div>
+            </div>
+        }
+        <br/>
+    }
+
+</div>
+
+
+

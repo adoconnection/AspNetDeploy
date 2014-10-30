@@ -51,6 +51,9 @@
     <Reference Include="MvcSiteMapProvider.WebActivator">
       <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.15\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharpSvn">
       <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.dll</HintPath>
     </Reference>
@@ -140,6 +143,10 @@
     <Content Include="Resources\JavaScripts\bootstrap.min.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
+    <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
+    <Content Include="Resources\Layout\Images\Icons\IIS.png" />
+    <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
+    <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
     <Content Include="Resources\Layout\Images\Icons\VsClassProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsConsoleProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsWebProject.PNG" />
@@ -157,6 +164,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BundlesController.cs" />
+    <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\SourcesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -176,6 +185,19 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Bundle.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeploymentStepExtender.cs" />
+    <Compile Include="Models\DeploymentStep.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeploymentStepProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeploymentStepType.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Environment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
@@ -198,12 +220,18 @@
     <Compile Include="Models\ProjectConfigurationValue.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProjectType.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SourceControl.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SourceControlExtender.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
     <Compile Include="Models\SourceControlProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SourceControlType.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -213,6 +241,12 @@
     <Content Include="packages.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Sources\Index.cshtml" />
+    <Content Include="Views\Environments\Index.cshtml" />
+    <Content Include="Views\Bundles\Index.cshtml" />
+    <Content Include="Views\Bundles\Details.cshtml" />
+    <Content Include="Views\Sources\Details.cshtml" />
+    <Content Include="Views\Sources\AddChooseSource.cshtml" />
+    <Content Include="Views\Sources\AddConfigure.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

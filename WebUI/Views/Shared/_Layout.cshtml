@@ -18,49 +18,11 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="/" class="navbar-brand">ASP.NET Deploy</a>
+                    <a href="/Sources" class="navbar-brand">ASP.NET Deploy</a>
                 </div>
                 <div class="navbar-collapse collapse">
 
-                    <ul class="nav navbar-nav">
-                        
-                       @* <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Документовед <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/Navigation/AuthorizeOnTarget" target="_blank">Авторизоваться на сайте</a></li>
-                                <li class="divider"></li>
-                                <li><a href="/Account/LogOut">Выйти</a></li>
-                            </ul>
-                        </li>*@
-
-                        <li class="active">
-
-                            <a href="#" title="Релизы">Sources</a>
-
-                        </li>
-                        <li class="">
-
-                            <a href="#" title="Меню">Меню</a>
-
-                        </li>
-                        <li class="">
-
-                            <a href="#" title="Страницы">Страницы</a>
-
-                        </li>
-                        <li class="">
-
-                            <a href="#" title="Блоки">Блоки</a>
-
-                        </li>
-                        <li class="">
-
-                            <a href="#" title="Ресурсы">Ресурсы</a>
-
-                        </li>
-                    </ul>
+                    @Html.MvcSiteMap().Menu(false)
 
 
                     <ul class="nav navbar-nav navbar-right">
@@ -68,7 +30,7 @@
                         <li><a href="/User/List">Пользователи</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="/Account/Avatar/1.jpg" class="img-circle avatar" />
+                            @*    <img src="/Account/Avatar/1.jpg" class="img-circle avatar" />*@
                                 Shade <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
@@ -83,10 +45,8 @@
             </div>
         </div>
         
-        <br />
-        <br />
-        <br />
-
-        @RenderBody()
+        <div class="pageWrapper">
+            @RenderBody()
+        </div>
     </body>
 </html>

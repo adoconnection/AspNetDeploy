@@ -34,5 +34,8 @@ namespace WebUI.Models
         public virtual DbSet<ProjectConfigurationValue> ProjectConfigurationValue { get; set; }
         public virtual DbSet<SourceControl> SourceControl { get; set; }
         public virtual DbSet<SourceControlProperty> SourceControlProperty { get; set; }
+        public virtual DbSet<Bundle> Bundle { get; set; }
+        public virtual DbSet<DeploymentStep> DeploymentStep { get; set; }
+        public virtual DbSet<DeploymentStepProperty> DeploymentStepProperty { get; set; }
     }
 }

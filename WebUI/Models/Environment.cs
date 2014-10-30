@@ -16,14 +16,14 @@ namespace WebUI.Models
     {
         public Environment()
         {
-            this.Machine = new HashSet<Machine>();
+            this.Machines = new HashSet<Machine>();
             this.ProjectConfigurationValue = new HashSet<ProjectConfigurationValue>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
-        public virtual ICollection<Machine> Machine { get; set; }
+        public virtual ICollection<Machine> Machines { get; set; }
         public virtual ICollection<ProjectConfigurationValue> ProjectConfigurationValue { get; set; }
     }
 }

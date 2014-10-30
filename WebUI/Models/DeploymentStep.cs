@@ -12,20 +12,25 @@ namespace WebUI.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Machine
+    public partial class DeploymentStep
     {
-        public Machine()
+        public DeploymentStep()
         {
-            this.Environments = new HashSet<Environment>();
+            this.ChildDeploymentSteps = new HashSet<DeploymentStep>();
+            this.Properties = new HashSet<DeploymentStepProperty>();
             this.MachineRoles = new HashSet<MachineRole>();
         }
     
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string PrivateKey { get; set; }
-        public string URL { get; set; }
+        public Nullable<int> DeploymentStepId { get; set; }
+        public int BundleId { get; set; }
+        public int OrderIndex { get; set; }
+        public DeploymentStepType Type { get; set; }
     
-        public virtual ICollection<Environment> Environments { get; set; }
+        public virtual Bundle Bundle { get; set; }
+        public virtual ICollection<DeploymentStep> ChildDeploymentSteps { get; set; }
+        public virtual DeploymentStep ParentDeploymentStep { get; set; }
+        public virtual ICollection<DeploymentStepProperty> Properties { get; set; }
         public virtual ICollection<MachineRole> MachineRoles { get; set; }
     }
 }
