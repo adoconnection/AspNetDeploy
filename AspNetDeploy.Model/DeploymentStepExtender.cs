@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     public partial class DeploymentStep
     {

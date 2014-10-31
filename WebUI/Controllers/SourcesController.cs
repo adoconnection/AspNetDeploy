@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Web.Configuration;
-using System.Web.Hosting;
 using System.Web.Mvc;
-using SharpSvn;
-using VisualStudioSolutionInfo;
-using WebUI.Models;
+using AspNetDeploy.Model;
 
-namespace WebUI.Controllers
+namespace AspNetDeploy.WebUI.Controllers
 {
     public class SourcesController : GenericController
     {
@@ -40,6 +33,7 @@ namespace WebUI.Controllers
             return this.View();
         }
 
+        [HttpGet]
         public ActionResult Add(SourceControlType sourceControlType = SourceControlType.Undefined)
         {
             if (sourceControlType == SourceControlType.Undefined)
@@ -50,6 +44,13 @@ namespace WebUI.Controllers
             this.ViewBag.SourceControlType = sourceControlType;
 
             return this.View("AddConfigure");
+        }
+
+        [HttpPost]
+        [ActionName("Add")]
+        public ActionResult AddPost(SourceControlType sourceControlType, string url)
+        {
+            return this.Content(sourceControlType + " "  +url);
         }
     }
 }

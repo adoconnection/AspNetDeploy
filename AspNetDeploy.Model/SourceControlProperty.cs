@@ -7,18 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class DeploymentStepProperty
+    public partial class SourceControlProperty
     {
         public int Id { get; set; }
-        public int DeploymentStepId { get; set; }
-        public string Value { get; set; }
+        public int SourceControlId { get; set; }
         public string Key { get; set; }
+        public string Value { get; set; }
     
-        public virtual DeploymentStep DeploymentStep { get; set; }
+        public virtual SourceControl SourceControl { get; set; }
     }
 }

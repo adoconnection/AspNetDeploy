@@ -7,23 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class ProjectConfigurationValue
+    public partial class DeploymentStepProperty
     {
-        public ProjectConfigurationValue()
-        {
-            this.Environment = new HashSet<Environment>();
-        }
-    
         public int Id { get; set; }
-        public int ProjectConfigurationFieldId { get; set; }
+        public int DeploymentStepId { get; set; }
         public string Value { get; set; }
+        public string Key { get; set; }
     
-        public virtual ProjectConfigurationField ProjectConfigurationField { get; set; }
-        public virtual ICollection<Environment> Environment { get; set; }
+        public virtual DeploymentStep DeploymentStep { get; set; }
     }
 }

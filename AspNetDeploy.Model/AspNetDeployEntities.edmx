@@ -29,8 +29,8 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DeploymentStepId" Type="int" Nullable="false" />
-          <Property Name="Value" Type="nvarchar(max)" />
           <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="DeploymentStepToMachineRole">
           <Key>

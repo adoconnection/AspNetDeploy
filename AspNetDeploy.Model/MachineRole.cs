@@ -7,27 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class SourceControl
+    public partial class MachineRole
     {
-        public SourceControl()
+        public MachineRole()
         {
-            this.Projects = new HashSet<Project>();
-            this.Properties = new HashSet<SourceControlProperty>();
-            this.Group = new HashSet<Group>();
+            this.Machines = new HashSet<Machine>();
+            this.DeploymentSteps = new HashSet<DeploymentStep>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public SourceControlType Type { get; set; }
-        public bool IsDeleted { get; set; }
     
-        public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<SourceControlProperty> Properties { get; set; }
-        public virtual ICollection<Group> Group { get; set; }
+        public virtual ICollection<Machine> Machines { get; set; }
+        public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
     }
 }

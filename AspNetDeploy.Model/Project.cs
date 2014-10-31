@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     using System.Collections.Generic;

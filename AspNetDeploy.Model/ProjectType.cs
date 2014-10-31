@@ -7,15 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     
-    public enum SourceControlType : int
+    public enum ProjectType : int
     {
         Undefined = 0,
-        Svn = 1,
-        Git = 2,
-        FileSystem = 3
+        Web = 1,
+        Console = 2,
+        Service = 3,
+        ClassLibrary = 4,
+        Deployment = 5,
+        Database = 6
     }
 }

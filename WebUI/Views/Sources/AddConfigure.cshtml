@@ -1,23 +1,65 @@
-﻿@using WebUI.Models
-
-
-@{
+﻿@{
     ViewBag.Title = "Index";
     ViewBag.PageClass = "sourcesPage";
 
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    SourceControlType sourceControlType = this.ViewBag.SourceControlType;
+    
 }
 
 <div class="container">
 
+    @switch (sourceControlType)
+    {
+        case SourceControlType.Svn:
+            <h1>Add SVN source</h1>
+            break;
+            
+        case SourceControlType.Git:
+            <h1>Add Git source</h1>
+            break;
+            
+        case SourceControlType.FileSystem:
+            <h1>Add file system source</h1>
+            break;
+    }
     
-    <h1>
-        Add source
-    </h1>
-        
     <hr />
     
-    
+    @switch (sourceControlType)
+    {
+        case SourceControlType.Svn:
+            <div class="row">
+                <div class="col-md-7">
+                    <form role="form" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">URL</label>
+                            <input type="text" name="url" class="form-control" id="exampleInputEmail1" placeholder="Enter SVN repo URL">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Login</label>
+                            <input type="text" name="login" class="form-control" id="exampleInputPassword1" placeholder="Login" style="max-width:200px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" style="max-width:200px;">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success btn-lg">Create</button>
+                    </form>
+                </div>
+            </div>
+
+            break;
+
+        case SourceControlType.Git:
+
+            break;
+
+        case SourceControlType.FileSystem:
+            break;
+    }
     
 
 </div>

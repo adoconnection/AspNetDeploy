@@ -7,18 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class SourceControlProperty
+    public partial class Environment
     {
-        public int Id { get; set; }
-        public int SourceControlId { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
+        public Environment()
+        {
+            this.Machines = new HashSet<Machine>();
+            this.ProjectConfigurationValue = new HashSet<ProjectConfigurationValue>();
+        }
     
-        public virtual SourceControl SourceControl { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    
+        public virtual ICollection<Machine> Machines { get; set; }
+        public virtual ICollection<ProjectConfigurationValue> ProjectConfigurationValue { get; set; }
     }
 }

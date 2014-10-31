@@ -7,15 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     
-    public enum DeploymentStepType : int
+    public enum SourceControlType : int
     {
         Undefined = 0,
-        DeployWebSite = 1,
-        RunPowerShellScript = 2,
-        CopyFiles = 3
+        Svn = 1,
+        Git = 2,
+        FileSystem = 3
     }
 }

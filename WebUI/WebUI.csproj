@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebUI</RootNamespace>
-    <AssemblyName>WebUI</AssemblyName>
+    <RootNamespace>AspNetDeploy.WebUI</RootNamespace>
+    <AssemblyName>AspNetDeploy.WebUI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -38,10 +38,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -118,23 +120,6 @@
     <Content Include="Resources\Layout\bootstrap-theme.css.map" />
     <Content Include="Resources\Layout\bootstrap.css.map" />
     <Content Include="Mvc.sitemap" />
-    <EntityDeploy Include="Models\AspNetDeployEntities.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AspNetDeployEntities.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\AspNetDeployEntities.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
-      <LastGenOutput>AspNetDeployEntities.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\AspNetDeployEntities.edmx.diagram">
-      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\AspNetDeployEntities.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
-      <LastGenOutput>AspNetDeployEntities.cs</LastGenOutput>
-    </Content>
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -171,69 +156,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AspNetDeployEntities.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AspNetDeployEntities.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetDeployEntities.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetDeployEntities.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AspNetDeployEntities.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Bundle.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DeploymentStepExtender.cs" />
-    <Compile Include="Models\DeploymentStep.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DeploymentStepProperty.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DeploymentStepType.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Environment.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Group.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Machine.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MachineRole.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Project.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProjectConfigurationField.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProjectConfigurationValue.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProjectType.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SourceControl.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SourceControlExtender.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
-    <Compile Include="Models\SourceControlProperty.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SourceControlType.cs">
-      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -261,9 +184,17 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
+      <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
+      <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VisualStudioSolutionInfo\VisualStudioSolutionInfo.csproj">
       <Project>{DC15F994-0993-47E0-9D95-405D1F817B77}</Project>
       <Name>VisualStudioSolutionInfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebUI.Bootstrapper\WebUI.Bootstrapper.csproj">
+      <Project>{4B65D3BA-D8F5-4ED6-86C0-D57202444EEC}</Project>
+      <Name>WebUI.Bootstrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

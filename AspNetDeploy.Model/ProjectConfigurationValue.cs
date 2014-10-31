@@ -7,24 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebUI.Models
+namespace AspNetDeploy.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Bundle
+    public partial class ProjectConfigurationValue
     {
-        public Bundle()
+        public ProjectConfigurationValue()
         {
-            this.Projects = new HashSet<Project>();
-            this.DeploymentSteps = new HashSet<DeploymentStep>();
+            this.Environment = new HashSet<Environment>();
         }
     
         public int Id { get; set; }
-        public string Name { get; set; }
-        public bool IsDeleted { get; set; }
+        public int ProjectConfigurationFieldId { get; set; }
+        public string Value { get; set; }
     
-        public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
+        public virtual ProjectConfigurationField ProjectConfigurationField { get; set; }
+        public virtual ICollection<Environment> Environment { get; set; }
     }
 }

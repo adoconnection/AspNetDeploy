@@ -1,8 +1,7 @@
-﻿using System;
-using System.Web.Mvc;
-using WebUI.Models;
+﻿using System.Web.Mvc;
+using AspNetDeploy.Model;
 
-namespace WebUI.Controllers
+namespace AspNetDeploy.WebUI.Controllers
 {
     public class GenericController : Controller
     {

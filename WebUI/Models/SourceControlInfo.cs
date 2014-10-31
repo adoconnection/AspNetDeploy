@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using AspNetDeploy.Model;
 using VisualStudioSolutionInfo;
 
-namespace WebUI.Models
+namespace AspNetDeploy.WebUI.Models
 {
     public class SourceControlInfo
     {
