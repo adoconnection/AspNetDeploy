@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpGit.UI</name>
+    </assembly>
+    <members>
+        <member name="T:SharpGit.UI.GitUI">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:SharpGit.UI.GitUI.Bind(SharpGit.GitClient,SharpGit.UI.GitUIBindArgs)">
+            <summary>
+            Binds the specified client to the user interface defined by args
+            </summary>
+            <param name="client">The client to bind.</param>
+            <param name="args">The args.</param>
+        </member>
+        <member name="M:SharpGit.UI.GitUI.Bind(SharpGit.GitClient,System.Windows.Forms.IWin32Window)">
+            <summary>
+            Binds the specified client to the user interface defined by args
+            </summary>
+            <param name="client">The client to bind.</param>
+            <param name="parentWindow">The parent window.</param>
+        </member>
+        <member name="T:SharpGit.UI.GitUIBindArgs">
+            <summary>
+            Argument container for <see cref="M:SharpGit.UI.GitUI.Bind(SharpGit.GitClient,SharpGit.UI.GitUIBindArgs)"/>
+            </summary>
+        </member>
+        <member name="M:SharpGit.UI.GitUIBindArgs.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SharpGit.UI.GitUIBindArgs"/> class.
+            </summary>
+        </member>
+        <member name="P:SharpGit.UI.GitUIBindArgs.ParentWindow">
+            <summary>
+            Gets or sets the parent window.
+            </summary>
+            <value>The parent window.</value>
+        </member>
+        <member name="P:SharpGit.UI.GitUIBindArgs.Synchronizer">
+            <summary>
+            Gets or sets the synchronizer.
+            </summary>
+            <value>The synchronizer.</value>
+        </member>
+        <member name="P:SharpGit.UI.GitUIBindArgs.HeaderImage">
+            <summary>
+            Gets or sets the header image.
+            </summary>
+            <value>The header image.</value>
+        </member>
+        <member name="P:SharpGit.UI.GitUIBindArgs.UIService">
+            <summary>
+            Gets or sets the UI service.
+            </summary>
+            <remarks>The UI service allows redirecting dialog processing to the specific UI service.
+            (You should use this within .Net development environments (Like MS Visual Studio) implementing this interface)</remarks>
+            <value>The UI service.</value>
+        </member>
+        <member name="P:SharpGit.UI.GitUIBindArgs.AutoScaleBaseSize">
+            <summary>
+            Gets or sets the size of the auto scale base.
+            </summary>
+            <value>The size of the auto scale base.</value>
+        </member>
+    </members>
+</doc>
