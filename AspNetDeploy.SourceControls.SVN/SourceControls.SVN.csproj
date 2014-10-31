@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F42DD6F1-CDC3-4C0E-B81F-91E9E446C626}</ProjectGuid>
+    <ProjectGuid>{A32D039E-8BE5-43BE-A2BE-C633F6A3C91E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AspNetDeploy.SourceControls.Git</RootNamespace>
-    <AssemblyName>AspNetDeploy.SourceControls.Git</AssemblyName>
+    <RootNamespace>AspNetDeploy.SourceControls.SVN</RootNamespace>
+    <AssemblyName>AspNetDeploy.SourceControls.SVN</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,11 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpGit">
-      <HintPath>..\packages\SharpGit-x64.0.2099.990.71\lib\net40\SharpGit.dll</HintPath>
+    <Reference Include="SharpSvn">
+      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.dll</HintPath>
     </Reference>
-    <Reference Include="SharpGit.UI">
-      <HintPath>..\packages\SharpGit-x64.0.2099.990.71\lib\net40\SharpGit.UI.dll</HintPath>
+    <Reference Include="SharpSvn.UI">
+      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,13 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GitSourceControlRepository.cs" />
+    <Compile Include="SvnSourceControlRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
+      <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
+      <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

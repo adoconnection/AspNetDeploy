@@ -1,8 +1,10 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.WebUI.Bootstrapper;
-using AspNetDeploy.WebUI.Controllers;
+using AspNetDeploy.WebUI.Mvc;
+using ObjectFactory;
 
 namespace AspNetDeploy.WebUI
 {
@@ -14,9 +16,9 @@ namespace AspNetDeploy.WebUI
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             ObjectFactoryConfigurator.Configure();
-            ObjectFactoryConfigurator.SetControllerFactory(ControllerBuilder.Current);
 
-            
+            ControllerBuilder.Current.SetControllerFactory(typeof(ControllerFactory)); 
+            Factory.GetInstance<ITaskRunner>().Initialize();
         }
     }
 }

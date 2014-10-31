@@ -1,17 +1,10 @@
-﻿using System.Collections.Generic;
-using AspNetDeploy.Model;
-using VisualStudioSolutionInfo;
+﻿using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Models
 {
     public class SourceControlInfo
     {
         public SourceControl SourceControl { get; set; }
-        public IList<VisualStudioSolution> Solutions { get; set; }
-
-        public SourceControlInfo()
-        {
-            this.Solutions = new List<VisualStudioSolution>();
-        }
+        public SourceControlState State { get; set; }
     }
 }

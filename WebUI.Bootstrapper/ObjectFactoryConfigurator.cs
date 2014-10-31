@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-using ObjectFactory;
+﻿using ObjectFactory;
 
 namespace AspNetDeploy.WebUI.Bootstrapper
 {
@@ -8,11 +7,6 @@ namespace AspNetDeploy.WebUI.Bootstrapper
         public static void Configure()
         {
             Factory.SetTypeResolver(new ObjectResolver());
-        }
-
-        public static void SetControllerFactory(ControllerBuilder current)
-        {
-            current.SetControllerFactory(typeof(ControllerFactory)); 
         }
     }
 }

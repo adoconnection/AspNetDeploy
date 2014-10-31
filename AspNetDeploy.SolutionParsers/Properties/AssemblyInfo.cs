@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SvnHelper")]
+[assembly: AssemblyTitle("AspNetDeploy.SolutionParsers")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SvnHelper")]
+[assembly: AssemblyProduct("AspNetDeploy.SolutionParsers")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("39a874a4-2d49-47c9-a068-6237b46b370d")]
+[assembly: Guid("841e691a-b5b2-4968-a4d4-309ff4df2fa8")]
 
 // Version information for an assembly consists of the following four values:
 //

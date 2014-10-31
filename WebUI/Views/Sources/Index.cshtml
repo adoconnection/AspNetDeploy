@@ -1,5 +1,4 @@
-﻿@using VisualStudioSolutionInfo
-
+﻿@using AspNetDeploy.WebUI.Models
 @{
     ViewBag.Title = "Index";
     ViewBag.PageClass = "sourcesPage";
@@ -8,14 +7,14 @@
 
 <div class="container">
     
-    @foreach (SourceControl sourceControl in this.ViewBag.SourceControls)
+    @foreach (SourceControlInfo sourceControlInfo in this.ViewBag.SourceControls)
     {
-        <h1>
-            @Html.ActionLink(sourceControl.Name, "Details", new { id = sourceControl.Id })
-            @switch (sourceControl.Type)
+        <h1 id="@("idSourceControl" + sourceControlInfo.SourceControl.Id)">
+            @Html.ActionLink(sourceControlInfo.SourceControl.Name, "Details", new { id = sourceControlInfo.SourceControl.Id })
+            @switch (sourceControlInfo.SourceControl.Type)
             {
                 case SourceControlType.Svn:
-                    <small>SVN</small>
+                <small>SVN</small>
                     break;
 
                 case SourceControlType.Git:
@@ -30,14 +29,40 @@
                 <small>Other</small>
                     break;
             }
+
+            @switch (sourceControlInfo.State)
+            {
+                case SourceControlState.Undefined:
+                <small class="state">...</small>
+                    break;
+
+                case SourceControlState.Idle:
+                <small class="state"></small>
+                    break;
+
+                case SourceControlState.Loading:
+                <small class="state">Loading.. </small>
+                    break;
+
+                case SourceControlState.Error:
+                <small class="state">Error</small>
+                    break;
+
+                case SourceControlState.Stopping:
+                <small>Stopping</small>
+                    break;
+
+                default:
+                <small class="state">?</small>
+                    break;
+            }
+            <img src="~/Resources/Layout/Images/vs-loading-colored.gif" style="height: 30px; display: @(sourceControlInfo.State == SourceControlState.Loading ? "inline" : "none")" />
         </h1>
 
-        <hr />
-
-        switch (sourceControl.Type)
+        switch (sourceControlInfo.SourceControl.Type)
         {
             case SourceControlType.Svn:
-                foreach (Project project in sourceControl.Projects.Where(p => p.ProjectType == ProjectType.Web))
+                foreach (Project project in sourceControlInfo.SourceControl.Projects.Where(p => p.ProjectType == ProjectType.Web))
                 {
                     <div class="row project">
                         <div class="col-md-6">
@@ -58,7 +83,7 @@
                 <div class="row project">
                     <div class="col-md-6">
                         <div class="name">
-                            <div>@sourceControl.GetStringProperty("Path")</div>
+                            <div>@sourceControlInfo.SourceControl.GetStringProperty("Path")</div>
                         </div>
                     </div>
                 </div>
@@ -73,6 +98,50 @@
     }
 
 </div>
+
+<script>
+
+    $(function() {
+
+        setInterval(function() {
+
+            $.ajax('@Url.Action("GetSourceControlStates")').success(function(data) {
+
+                for (var i = 0; i < data.length; i++)
+                {
+                    var header = $("#idSourceControl" + data[i].id);
+                    var small = header.find("small.state");
+                    var img = header.find("img");
+
+                    switch(data[i].state)
+                    {
+                        case 1:
+                            small.fadeOut('');
+                            img.fadeOut();
+                            break;
+
+                        case 2:
+                            small.fadeIn();
+                            small.text('Loading..');
+                            img.fadeIn();
+                            break;
+
+                        case 4:
+                            small.fadeIn();
+                            small.text('Error');
+                            img.fadeOut();
+                            break;
+                    }
+
+                }
+
+            });
+
+        }, 3000);
+
+    });
+
+</script>
 
 
 

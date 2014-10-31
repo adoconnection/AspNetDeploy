@@ -1,5 +1,4 @@
-﻿
-using AspNetDeploy.Bootstrapper;
+﻿using AspNetDeploy.Bootstrapper;
 using InnovativeManagementSystems.UnityIocContainer;
 
 namespace AspNetDeploy.WebUI.Bootstrapper

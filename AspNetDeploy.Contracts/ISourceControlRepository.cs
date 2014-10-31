@@ -1,7 +1,9 @@
-﻿namespace AspNetDeploy.Contracts
+﻿using AspNetDeploy.Model;
+
+namespace AspNetDeploy.Contracts
 {
     public interface ISourceControlRepository
     {
-        void LoadSources(string version, string path);
+        LoadSourcesResult LoadSources(SourceControl sourceControl, string version, string path);
     }
 }

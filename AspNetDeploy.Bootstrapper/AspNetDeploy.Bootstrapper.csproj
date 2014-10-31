@@ -47,13 +47,21 @@
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.SourceControls\AspNetDeploy.SourceControls.csproj">
+    <ProjectReference Include="..\AspNetDeploy.SolutionParsers\SolutionParsers.csproj">
+      <Project>{72F78680-6241-41E3-9593-C0BF8F67CF85}</Project>
+      <Name>SolutionParsers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.SourceControls\SourceControls.csproj">
       <Project>{2F548CB9-6147-4CFB-B1F6-BE5C0259D675}</Project>
-      <Name>AspNetDeploy.SourceControls</Name>
+      <Name>SourceControls</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
       <Name>ObjectFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThreadHostedTaskRunner\ThreadHostedTaskRunner.csproj">
+      <Project>{940D1369-A1DA-4025-A9C4-64A760891626}</Project>
+      <Name>ThreadHostedTaskRunner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

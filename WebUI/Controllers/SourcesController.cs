@@ -1,12 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using AspNetDeploy.WebUI.Models;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
     public class SourcesController : GenericController
     {
+        private ITaskRunner taskRunner;
+
+        public SourcesController(ITaskRunner taskRunner)
+        {
+            this.taskRunner = taskRunner;
+        }
+
         public ActionResult Index()
         {
             List<SourceControl> sourceControls = this.Entities.SourceControl
@@ -15,9 +24,34 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Group")
                 .ToList();
 
-            this.ViewBag.SourceControls = sourceControls;
+            this.ViewBag.SourceControls = sourceControls.Select( 
+                sc => new SourceControlInfo
+                {
+                    SourceControl = sc,
+                    State = this.taskRunner.GetSourceControlState(sc.Id)
+                })
+                .ToList();
 
             return this.View();
+        }
+
+        public ActionResult GetSourceControlStates()
+        {
+            List<SourceControl> sourceControls = this.Entities.SourceControl
+                .Include("Projects")
+                .Include("Properties")
+                .Include("Group")
+                .ToList();
+
+            var states = sourceControls.Select(
+                sc => new 
+                {
+                    id = sc.Id,
+                    state = this.taskRunner.GetSourceControlState(sc.Id)
+                })
+                .ToList();
+
+            return this.Json(states, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Details(int id)

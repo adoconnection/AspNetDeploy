@@ -84,6 +84,7 @@
     <Compile Include="Group.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="LoadSourcesResult.cs" />
     <Compile Include="Machine.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -99,10 +100,12 @@
     <Compile Include="ProjectConfigurationValue.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="ProjectState.cs" />
     <Compile Include="ProjectType.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionType.cs" />
     <Compile Include="SourceControl.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -110,6 +113,7 @@
     <Compile Include="SourceControlProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="SourceControlState.cs" />
     <Compile Include="SourceControlType.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>

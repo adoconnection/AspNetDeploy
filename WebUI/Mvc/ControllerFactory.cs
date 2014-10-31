@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using ObjectFactory;
 
-namespace AspNetDeploy.WebUI.Bootstrapper
+namespace AspNetDeploy.WebUI.Mvc
 {
     public class ControllerFactory : DefaultControllerFactory
     {

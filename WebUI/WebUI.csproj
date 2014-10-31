@@ -132,6 +132,8 @@
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
     <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
+    <Content Include="Resources\Layout\Images\vs-loading-colored.gif" />
+    <Content Include="Resources\Layout\Images\vs-loading.gif" />
     <Content Include="Resources\Layout\Images\Icons\VsClassProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsConsoleProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsWebProject.PNG" />
@@ -157,6 +159,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\SourceControlInfo.cs" />
+    <Compile Include="Mvc\ControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,13 +187,17 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
+      <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
+      <Name>AspNetDeploy.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VisualStudioSolutionInfo\VisualStudioSolutionInfo.csproj">
-      <Project>{DC15F994-0993-47E0-9D95-405D1F817B77}</Project>
-      <Name>VisualStudioSolutionInfo</Name>
+    <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
+      <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
+      <Name>ObjectFactory</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebUI.Bootstrapper\WebUI.Bootstrapper.csproj">
       <Project>{4B65D3BA-D8F5-4ED6-86C0-D57202444EEC}</Project>

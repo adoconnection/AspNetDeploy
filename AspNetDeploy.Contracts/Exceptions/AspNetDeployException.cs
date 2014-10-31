@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace AspNetDeploy.Contracts
+namespace AspNetDeploy.Contracts.Exceptions
 {
     public class AspNetDeployException : Exception
     {
