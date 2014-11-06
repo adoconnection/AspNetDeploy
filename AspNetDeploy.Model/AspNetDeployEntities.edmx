@@ -134,6 +134,15 @@
           <Property Name="EnvironmentId" Type="int" Nullable="false" />
           <Property Name="ProjectConfigurationValueId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ProjectProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="ProjectToBundle">
           <Key>
             <PropertyRef Name="ProjectId" />
@@ -348,6 +357,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProjectProperty_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="ProjectProperty" Type="Self.ProjectProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectProperty">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProjectToBundle_Bundle">
           <End Role="Bundle" Type="Self.Bundle" Multiplicity="1" />
           <End Role="ProjectToBundle" Type="Self.ProjectToBundle" Multiplicity="*" />
@@ -424,6 +445,7 @@
           <EntitySet Name="ProjectConfigurationFieldToProject" EntityType="Self.ProjectConfigurationFieldToProject" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectConfigurationValue" EntityType="Self.ProjectConfigurationValue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectConfigurationValueToEnvironment" EntityType="Self.ProjectConfigurationValueToEnvironment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectProperty" EntityType="Self.ProjectProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectToBundle" EntityType="Self.ProjectToBundle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControl" EntityType="Self.SourceControl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlProperty" EntityType="Self.SourceControlProperty" Schema="dbo" store:Type="Tables" />
@@ -487,6 +509,10 @@
           <AssociationSet Name="FK_ProjectConfigurationValueToEnvironment_ProjectConfigurationValue" Association="Self.FK_ProjectConfigurationValueToEnvironment_ProjectConfigurationValue">
             <End Role="ProjectConfigurationValue" EntitySet="ProjectConfigurationValue" />
             <End Role="ProjectConfigurationValueToEnvironment" EntitySet="ProjectConfigurationValueToEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectProperty_Project" Association="Self.FK_ProjectProperty_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectProperty" EntitySet="ProjectProperty" />
           </AssociationSet>
           <AssociationSet Name="FK_ProjectToBundle_Bundle" Association="Self.FK_ProjectToBundle_Bundle">
             <End Role="Bundle" EntitySet="Bundle" />
@@ -565,6 +591,7 @@
                     <NavigationProperty Name="ProjectConfigurationField" Relationship="Self.ProjectConfigurationFieldToProject" FromRole="Project" ToRole="ProjectConfigurationField" />
                     <NavigationProperty Name="Bundles" Relationship="AspNetDeployModel.ProjectToBundle" FromRole="Project" ToRole="Bundle" />
           <Property Name="Guid" Type="Guid" />
+          <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_ProjectProperty_Project" FromRole="Project" ToRole="ProjectProperty" />
                 </EntityType>
                 <EntityType Name="ProjectConfigurationField">
                     <Key>
@@ -728,6 +755,11 @@
             <End Role="DeploymentStep" EntitySet="DeploymentStep" />
             <End Role="MachineRole" EntitySet="MachineRole" />
           </AssociationSet>
+          <EntitySet Name="ProjectProperty" EntityType="AspNetDeployModel.ProjectProperty" />
+          <AssociationSet Name="FK_ProjectProperty_Project" Association="AspNetDeployModel.FK_ProjectProperty_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectProperty" EntitySet="ProjectProperty" />
+          </AssociationSet>
                 </EntityContainer>
                 <Association Name="SourceControlToGroup">
                     <End Type="AspNetDeployModel.Group" Role="Group" Multiplicity="*" />
@@ -833,6 +865,28 @@
           <Member Name="RunPowerShellScript" Value="2" />
           <Member Name="CopyFiles" Value="3" />
         </EnumType>
+        <EntityType Name="ProjectProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Project" Relationship="AspNetDeployModel.FK_ProjectProperty_Project" FromRole="ProjectProperty" ToRole="Project" />
+        </EntityType>
+        <Association Name="FK_ProjectProperty_Project">
+          <End Type="AspNetDeployModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="AspNetDeployModel.ProjectProperty" Role="ProjectProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectProperty">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -1014,6 +1068,16 @@
               <ScalarProperty Name="Id" ColumnName="DeploymentStepId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ProjectProperty">
+            <EntityTypeMapping TypeName="AspNetDeployModel.ProjectProperty">
+              <MappingFragment StoreEntitySet="ProjectProperty">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
                 </EntityContainerMapping>
             </Mapping>
         </edmx:Mappings>

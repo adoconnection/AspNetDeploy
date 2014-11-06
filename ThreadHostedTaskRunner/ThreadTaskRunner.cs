@@ -4,24 +4,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using ObjectFactory;
 
 namespace ThreadHostedTaskRunner
 {
     public class ThreadTaskRunner : ITaskRunner
     {
-        private static ISourceControlRepositoryFactory SourceControlRepositoryFactory;
-
-        private static ConcurrentDictionary<int, SourceControlJob> SourceControlWorkers = new ConcurrentDictionary<int, SourceControlJob>();
-        private static ConcurrentDictionary<int, BackgroundWorker> ProjectWorkers = new ConcurrentDictionary<int, BackgroundWorker>();
-
         private readonly Timer Timer = new Timer(TimerCallback);
 
-        public ThreadTaskRunner(ISourceControlRepositoryFactory sourceControlRepositoryFactory)
-        {
-            SourceControlRepositoryFactory = sourceControlRepositoryFactory;
-        }
 
         public void Initialize()
         {
@@ -34,12 +28,17 @@ namespace ThreadHostedTaskRunner
 
         public SourceControlState GetSourceControlState(int sourceControlId)
         {
-            return SourceControlWorkers.GetOrAdd(sourceControlId, i => new SourceControlJob(SourceControlRepositoryFactory)).Status;
+            return TaskRunnerContext.GetSourceControlState(sourceControlId);
         }
 
         public ProjectState GetProjectState(int projectId)
         {
-            return ProjectState.Idle;
+            return TaskRunnerContext.GetProjectState(projectId);
+        }
+
+        public BundleState GetBundleState(int bundleId)
+        {
+            return TaskRunnerContext.GetBundleState(bundleId);
         }
 
         public void Shutdown()
@@ -52,17 +51,53 @@ namespace ThreadHostedTaskRunner
 
             List<SourceControl> sourceControls = entities.SourceControl
                 .Include("Properties")
+                .Include("Projects.Bundles")
                 .ToList();
 
-            foreach (SourceControl sourceControl in sourceControls)
+            Parallel.ForEach(sourceControls, sourceControl =>
             {
-                SourceControlJob sourceControlJob = SourceControlWorkers.GetOrAdd(sourceControl.Id, i => new SourceControlJob(SourceControlRepositoryFactory));
-
-                if (sourceControlJob.Status == SourceControlState.Idle)
+                if (sourceControl.Projects.Any(p => TaskRunnerContext.GetProjectState(p.Id) != ProjectState.Idle))
                 {
-                    sourceControlJob.Start(sourceControl);
+                    return;
                 }
-            }
+
+                if (sourceControl.Projects.SelectMany( p => p.Bundles).Distinct().Any(b => TaskRunnerContext.GetBundleState(b.Id) != BundleState.Idle))
+                {
+                    return;
+                }
+
+                if (TaskRunnerContext.GetSourceControlState(sourceControl.Id) == SourceControlState.Idle)
+                {
+                    TaskRunnerContext.SetSourceControlState(sourceControl.Id, SourceControlState.Loading);
+                    SourceControlJob job = new SourceControlJob();
+                    job.Start(sourceControl.Id);
+                }
+            });
+
+
+            List<Bundle> bundles = entities.Bundle
+                .Include("Projects.SourceControl")
+                .ToList();
+
+            Parallel.ForEach(bundles, bundle =>
+            {
+                if (bundle.Projects.Any(p => TaskRunnerContext.GetProjectState(p.Id) != ProjectState.Idle))
+                {
+                    return;
+                }
+
+                if (bundle.Projects.Any(p => TaskRunnerContext.GetSourceControlState(p.SourceControl.Id) != SourceControlState.Idle))
+                {
+                    return;
+                }
+
+                if (TaskRunnerContext.GetBundleState(bundle.Id) == BundleState.Idle)
+                {
+                    
+                }
+
+
+            });
         }
 
     }

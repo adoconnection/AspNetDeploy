@@ -18,6 +18,7 @@ namespace AspNetDeploy.Model
         {
             this.ProjectConfigurationField = new HashSet<ProjectConfigurationField>();
             this.Bundles = new HashSet<Bundle>();
+            this.Properties = new HashSet<ProjectProperty>();
         }
     
         public int Id { get; set; }
@@ -31,5 +32,6 @@ namespace AspNetDeploy.Model
         public virtual SourceControl SourceControl { get; set; }
         public virtual ICollection<ProjectConfigurationField> ProjectConfigurationField { get; set; }
         public virtual ICollection<Bundle> Bundles { get; set; }
+        public virtual ICollection<ProjectProperty> Properties { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using AspNetDeploy.Contracts;
@@ -21,17 +22,49 @@ namespace AspNetDeploy.SourceControls.SVN
 
                 if (!Directory.Exists(path))
                 {
-                    Directory.CreateDirectory(path);
-
-                    client.CheckOut(new Uri(sourceControl.GetStringProperty("URL") + "/trunk"), path);
-                    return LoadSourcesResult.HasChanges;
+                    return this.LoadSourcesFromScratch(sourceControl, path, client);
                 }
                 
-                SvnUpdateResult result;
-                client.Update(path , out result);
-
-                return result.HasRevision ? LoadSourcesResult.HasChanges : LoadSourcesResult.NoChanges;
+                return this.LoadSourcesWithUpdate(path, client);
             }
+        }
+
+        private LoadSourcesResult LoadSourcesWithUpdate(string path, SvnClient client)
+        {
+            SvnUpdateResult result;
+            try
+            {
+                client.Update(path, out result);
+            }
+            catch (SvnWorkingCopyLockException e)
+            {
+                client.CleanUp(path);
+                client.Update(path, out result);
+            }
+
+            SvnInfoEventArgs info;
+            client.GetInfo(path, out info);
+
+            return new LoadSourcesResult
+            {
+                RevisionId = info.LastChangeRevision.ToString(CultureInfo.InvariantCulture)
+            };
+        }
+
+        private LoadSourcesResult LoadSourcesFromScratch(SourceControl sourceControl, string path, SvnClient client)
+        {
+            SvnUpdateResult result;
+            Directory.CreateDirectory(path);
+
+            client.CheckOut(new Uri(sourceControl.GetStringProperty("URL") + "/trunk"), path, out result);
+
+            SvnInfoEventArgs info;
+            client.GetInfo(path, out info);
+
+            return new LoadSourcesResult
+            {
+                RevisionId = info.LastChangeRevision.ToString(CultureInfo.InvariantCulture)
+            };
         }
     }
 }

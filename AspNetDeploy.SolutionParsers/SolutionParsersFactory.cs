@@ -11,7 +11,7 @@ namespace AspNetDeploy.SolutionParsers
         {
             switch (solutionType)
             {
-                case SolutionType.VisualStudio2013:
+                case SolutionType.VisualStudio:
                     return new VisualStudio2013SolutionParser();
 
                 default:

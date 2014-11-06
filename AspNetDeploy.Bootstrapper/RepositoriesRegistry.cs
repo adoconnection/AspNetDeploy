@@ -1,4 +1,5 @@
-﻿using AspNetDeploy.Contracts;
+﻿using AspNetDeploy.BuildServices;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.SolutionParsers;
 using AspNetDeploy.SourceControls;
 using ObjectFactory;
@@ -13,6 +14,7 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<ISourceControlRepositoryFactory, SourceControlRepositoryFactory>(LifecycleType.Application);
             this.Map<ISolutionParsersFactory, SolutionParsersFactory>(LifecycleType.Application);
             this.Map<ITaskRunner, ThreadTaskRunner>(LifecycleType.Application);
+            this.Map<IBuildServiceFactory, BuildServiceFactory>(LifecycleType.Application);
         }
     }
 }

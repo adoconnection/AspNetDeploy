@@ -1,9 +1,7 @@
 ﻿namespace AspNetDeploy.Model
 {
-    public enum LoadSourcesResult
+    public class LoadSourcesResult
     {
-        Undefined = 0,
-        HasChanges = 1,
-        NoChanges = 2
+        public string RevisionId { get; set; }
     }
 }

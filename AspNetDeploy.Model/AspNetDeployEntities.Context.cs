@@ -37,5 +37,6 @@ namespace AspNetDeploy.Model
         public virtual DbSet<Bundle> Bundle { get; set; }
         public virtual DbSet<DeploymentStep> DeploymentStep { get; set; }
         public virtual DbSet<DeploymentStepProperty> DeploymentStepProperty { get; set; }
+        public virtual DbSet<ProjectProperty> ProjectProperty { get; set; }
     }
 }

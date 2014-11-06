@@ -3,9 +3,10 @@
     public enum SourceControlState
     {
         Undefined = 0,
-        Idle = 1,
-        Loading = 2,
-        Stopping = 3,
-        Error = 4
+        Idle = 10,
+        PreparingToLoad = 20,
+        Loading = 21,
+        Stopping = 30,
+        Error = 40
     }
 }

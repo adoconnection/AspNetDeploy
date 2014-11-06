@@ -1,21 +1,20 @@
-﻿using System.ComponentModel;
-using AspNetDeploy.Contracts;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Model;
+using ObjectFactory;
 
 namespace ThreadHostedTaskRunner
 {
     public class SourceControlJob
     {
-        private readonly ISourceControlRepositoryFactory repositoryFactory;
-
-        public SourceControlState Status { get; set; }
+        private int sourceControlId;
 
         public BackgroundWorker Worker { get; set; }
 
-        public SourceControlJob(ISourceControlRepositoryFactory repositoryFactory)
+        public SourceControlJob()
         {
-            this.repositoryFactory = repositoryFactory;
-            this.Status = SourceControlState.Idle;
             this.Worker = new BackgroundWorker();
             this.Worker.WorkerSupportsCancellation = true;
             this.Worker.DoWork += Worker_DoWork;
@@ -23,11 +22,10 @@ namespace ThreadHostedTaskRunner
             this.Worker.ProgressChanged += Worker_ProgressChanged;
         }
 
-        public void Start(SourceControl sourceControl)
+        public void Start(int sourceControlId)
         {
-            this.Status = SourceControlState.Loading;
-
-            this.Worker.RunWorkerAsync(sourceControl);
+            this.sourceControlId = sourceControlId;
+            this.Worker.RunWorkerAsync();
         }
 
         void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -37,23 +35,25 @@ namespace ThreadHostedTaskRunner
 
         void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Error != null)
-            {
-                this.Status = SourceControlState.Error;
-            }
-            else
-            {
-                this.Status = SourceControlState.Idle;    
-            }
-            
+            TaskRunnerContext.SetSourceControlState(
+                this.sourceControlId, 
+                e.Error == null 
+                    ? SourceControlState.Idle 
+                    : SourceControlState.Error);
         }
 
         void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            SourceControl sourceControl = (SourceControl)e.Argument;
+            SourceControlManager sourceControlManager = Factory.GetInstance<SourceControlManager>();
+            UpdateAndParseResult updateAndParseResult = sourceControlManager.UpdateAndParse(sourceControlId);
 
-            ISourceControlRepository repository = repositoryFactory.Create(sourceControl.Type);
-            e.Result = repository.LoadSources(sourceControl, "trunk", string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\trunk", sourceControl.Id));
+            if (updateAndParseResult.HasChanges)
+            {
+                foreach (int projectId in updateAndParseResult.Projects)
+                {
+                    TaskRunnerContext.NeedToBuildProject(projectId, true);
+                }
+            }
         }
     }
 }

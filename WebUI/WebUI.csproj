@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Layout\Images\favicon.ico" />
     <Content Include="Resources\Layout\bootstrap-theme.css" />
     <Content Include="Resources\Layout\bootstrap-theme.min.css" />
     <Content Include="Resources\Layout\bootstrap.css" />
@@ -132,6 +133,7 @@
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
     <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
+    <Content Include="Resources\Layout\Images\Icons\VsSolution.png" />
     <Content Include="Resources\Layout\Images\vs-loading-colored.gif" />
     <Content Include="Resources\Layout\Images\vs-loading.gif" />
     <Content Include="Resources\Layout\Images\Icons\VsClassProject.PNG" />

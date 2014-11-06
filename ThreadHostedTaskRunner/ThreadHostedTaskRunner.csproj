@@ -42,11 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IContinuousIntegrationLogger.cs" />
     <Compile Include="SourceControlJob.cs" />
+    <Compile Include="TaskRunnerContext.cs" />
     <Compile Include="ThreadTaskRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.ContinuousIntegration\ContinuousIntegration.csproj">
+      <Project>{BD2B7DB5-C23E-4D5E-943C-0150FE1E91D9}</Project>
+      <Name>ContinuousIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
@@ -54,6 +60,10 @@
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
+      <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
+      <Name>ObjectFactory</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

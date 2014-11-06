@@ -30,6 +30,8 @@
         <AssociationConnector Association="AspNetDeployModel.FK_DeploymentStep_DeploymentStep" />
         <AssociationConnector Association="AspNetDeployModel.FK_DeploymentStepProperty_DeploymentStep" />
         <AssociationConnector Association="AspNetDeployModel.DeploymentStepToMachineRole" />
+        <EntityTypeShape EntityType="AspNetDeployModel.ProjectProperty" Width="1.5" PointX="2.25" PointY="5.875" />
+        <AssociationConnector Association="AspNetDeployModel.FK_ProjectProperty_Project" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

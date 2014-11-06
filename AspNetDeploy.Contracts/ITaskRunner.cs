@@ -12,6 +12,8 @@ namespace AspNetDeploy.Contracts
 
         ProjectState GetProjectState(int projectId);
 
+        BundleState GetBundleState(int bundleId);
+
         void Shutdown();
     }
 }
