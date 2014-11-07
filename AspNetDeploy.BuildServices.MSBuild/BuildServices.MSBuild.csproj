@@ -31,25 +31,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MSBuildBuildService.cs" />
     <Compile Include="MSBuildLogger.cs" />
+    <Compile Include="NugetPackageRestorer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
+      <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
+      <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BuildServices.NuGet\BuildServices.NuGet.csproj">
+      <Project>{F91D4165-BA2F-4C06-9BE7-2662C0EA7B0E}</Project>
+      <Name>BuildServices.NuGet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

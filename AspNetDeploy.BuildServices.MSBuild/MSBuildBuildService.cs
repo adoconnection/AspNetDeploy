@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Model;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Logging;
 
 namespace AspNetDeploy.BuildServices.MSBuild
 {
     public class MSBuildBuildService : IBuildService
     {
-        public void Build(string solutionFilePath, IContinuousIntegrationLogger logger)
+        public BuildSolutionResult Build(string solutionFilePath, Action<string> projectBuildStarted, Action<string, bool> projectBuildComplete)
         {
             ProjectCollection projectCollection = new ProjectCollection();
 
@@ -18,12 +22,21 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 {"Platform", "Any CPU"}
             };
 
-            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "Build" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "ReBuild" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
-            buildParameters.Loggers = new List<ILogger> {new MSBuildLogger(logger)};
+            buildParameters.Loggers = new List<ILogger>
+            {
+                new NugetPackageRestorer(Path.GetDirectoryName(solutionFilePath)),
+                new MSBuildLogger(projectBuildStarted, projectBuildComplete)
+            };
 
             BuildResult buildResult = BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
+
+            return new BuildSolutionResult
+            {
+                IsSuccess = buildResult.OverallResult == BuildResultCode.Success
+            };
         }
     }
 }

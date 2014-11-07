@@ -95,6 +95,7 @@
           <Property Name="SourceControlId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="SolutionFile" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="ProjectFile" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="ProjectTypeId" Type="int" Nullable="false" />
           <Property Name="Guid" Type="uniqueidentifier" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
@@ -592,6 +593,7 @@
                     <NavigationProperty Name="Bundles" Relationship="AspNetDeployModel.ProjectToBundle" FromRole="Project" ToRole="Bundle" />
           <Property Name="Guid" Type="Guid" />
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_ProjectProperty_Project" FromRole="Project" ToRole="ProjectProperty" />
+          <Property Name="ProjectFile" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
                 </EntityType>
                 <EntityType Name="ProjectConfigurationField">
                     <Key>
@@ -793,6 +795,7 @@
           <Member Name="ClassLibrary" Value="4" />
           <Member Name="Deployment" Value="5" />
           <Member Name="Database" Value="6" />
+          <Member Name="Test" Value="7" />
         </EnumType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -931,7 +934,8 @@
                     <EntitySetMapping Name="Project">
                         <EntityTypeMapping TypeName="AspNetDeployModel.Project">
                             <MappingFragment StoreEntitySet="Project">
-                                <ScalarProperty Name="Guid" ColumnName="Guid" />
+                                <ScalarProperty Name="ProjectFile" ColumnName="ProjectFile" />
+                <ScalarProperty Name="Guid" ColumnName="Guid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                                 <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
                                 <ScalarProperty Name="Name" ColumnName="Name" />

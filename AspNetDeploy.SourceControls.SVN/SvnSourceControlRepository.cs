@@ -32,6 +32,7 @@ namespace AspNetDeploy.SourceControls.SVN
         private LoadSourcesResult LoadSourcesWithUpdate(string path, SvnClient client)
         {
             SvnUpdateResult result;
+
             try
             {
                 client.Update(path, out result);

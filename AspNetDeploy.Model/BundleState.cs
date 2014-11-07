@@ -3,10 +3,11 @@
     public enum BundleState
     {
         Undefined = 0,
-        Idle = 1,
-        Loading = 2,
-        Building = 3,
-        Testing = 4,
-        Deploying = 5
+        Idle = 10,
+        Loading = 20,
+        BuildQueued = 30,
+        Building = 31,
+        Testing = 40,
+        Deploying = 50
     }
 }

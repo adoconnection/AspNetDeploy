@@ -72,13 +72,56 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
 
         private void DetermineProjectType(VisualStudioSolutionProject visualStudioProject, XDocument xDocument, XNamespace fileNamespace)
         {
+            string typeGuid = visualStudioProject.TypeGuid.ToString();
+
+
             if (xDocument.Descendants(fileNamespace + "UseIISExpress").Any())
             {
                 visualStudioProject.Type = ProjectType.Web;
+
+                if (typeGuid == "E3E379DF-F4C6-4180-9B81-6769533ABE47")
+                {
+                    visualStudioProject.MvcVersion = 4;
+                }
+                else if (typeGuid == "E53F8FEA-EAE0-44A6-8774-FFD645390401")
+                {
+                    visualStudioProject.MvcVersion = 3;
+                }
+                else if (typeGuid == "F85E285D-A4E0-4152-9332-AB1D724D3325")
+                {
+                    visualStudioProject.MvcVersion = 2;
+                }
+                else if (typeGuid == "603C0E0B-DB56-11DC-BE95-000D561079B0")
+                {
+                    visualStudioProject.MvcVersion = 1;
+                }
+                else
+                {
+                    /*IEnumerable<XElement> mvcReference = xDocument.Descendants("Reference").Where(e => e.Attribute("Include") != null && e.Attribute("Include").Value == "System.Web.Mvc");
+
+                    if(mvcReference)*/
+                }
             }
-            else if (visualStudioProject.TypeGuid.ToString() == "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC")
+            else
             {
-                visualStudioProject.Type = ProjectType.ClassLibrary;
+                switch (typeGuid)
+                {
+                    case "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC":
+                        visualStudioProject.Type = ProjectType.ClassLibrary;
+                        break;
+
+                    case "A9ACE9BB-CECE-4E62-9AA4-C7E7C5BD2124":
+                        visualStudioProject.Type = ProjectType.Database;
+                        break;
+
+                    case "3AC096D0-A1C2-E12C-1390-A8335801FDAB":
+                        visualStudioProject.Type = ProjectType.Test;
+                        break;
+
+                    case "349C5851-65DF-11DA-9384-00065B846F21":
+                        visualStudioProject.Type = ProjectType.Web;
+                        break;
+                }
             }
         }
     }

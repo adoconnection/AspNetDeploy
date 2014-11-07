@@ -65,6 +65,7 @@ namespace AspNetDeploy.ContinuousIntegration
                     else
                     {
                         project.IsDeleted = false;
+                        project.ProjectFile = parsedProject.ProjectFile;
                         project.SolutionFile = Path.GetFileName(solutionFile);
                     }
                 }
@@ -77,6 +78,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         project.SourceControlId = sourceControl.Id;
                         project.Guid = parsedProject.Guid;
                         project.Name = parsedProject.Name;
+                        project.ProjectFile = parsedProject.ProjectFile;
                         project.ProjectType = parsedProject.Type;
                         project.IsDeleted = false;
                         project.SolutionFile = Path.GetFileName(solutionFile);

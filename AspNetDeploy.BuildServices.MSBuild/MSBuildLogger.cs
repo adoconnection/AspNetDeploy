@@ -1,20 +1,19 @@
 ﻿using System;
-using AspNetDeploy.Contracts;
 using Microsoft.Build.Framework;
 
 namespace AspNetDeploy.BuildServices.MSBuild
 {
     public class MSBuildLogger : ILogger
     {
+        private readonly Action<string> projectBuildStarted;
+        private readonly Action<string, bool> projectBuildComplete;
         public LoggerVerbosity Verbosity { get; set; }
         public string Parameters { get; set; }
 
-        private readonly int sourceControlId;
-        private readonly IContinuousIntegrationLogger logger;
-
-        public MSBuildLogger(IContinuousIntegrationLogger logger)
+        public MSBuildLogger(Action<string> projectBuildStarted, Action<string, bool> projectBuildComplete)
         {
-            this.logger = logger;
+            this.projectBuildStarted = projectBuildStarted;
+            this.projectBuildComplete = projectBuildComplete;
         }
 
         public void Initialize(IEventSource eventSource)
@@ -26,26 +25,22 @@ namespace AspNetDeploy.BuildServices.MSBuild
 
         private void EventSourceOnProjectStarted(object sender, ProjectStartedEventArgs projectStartedEventArgs)
         {
-            if (projectStartedEventArgs.ProjectFile.EndsWith(".sln"))
+            if (projectStartedEventArgs.ProjectFile.EndsWith(".sln", StringComparison.InvariantCultureIgnoreCase))
             {
-                logger.SolutionBuildStarted(projectStartedEventArgs.ProjectFile);
+                return;
             }
 
+            this.projectBuildStarted(projectStartedEventArgs.ProjectFile);
         }
 
         private void EventSourceOnProjectFinished(object sender, ProjectFinishedEventArgs projectFinishedEventArgs)
         {
-            if (projectFinishedEventArgs.ProjectFile.EndsWith(".sln"))
+            if (projectFinishedEventArgs.ProjectFile.EndsWith(".sln", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (projectFinishedEventArgs.Succeeded)
-                {
-                    logger.SolutionBuildComplete(projectFinishedEventArgs.ProjectFile);
-                }
-                else
-                {
-                    logger.SolutionBuildFailed(projectFinishedEventArgs.ProjectFile);
-                }
+                return;
             }
+
+            this.projectBuildComplete(projectFinishedEventArgs.ProjectFile, projectFinishedEventArgs.Succeeded);
 
         }
 

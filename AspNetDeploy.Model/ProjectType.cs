@@ -19,6 +19,7 @@ namespace AspNetDeploy.Model
         Service = 3,
         ClassLibrary = 4,
         Deployment = 5,
-        Database = 6
+        Database = 6,
+        Test = 7
     }
 }

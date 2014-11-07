@@ -1,9 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace AspNetDeploy.Model
 {
     public partial class SourceControl
     {
+        public DateTime GetDateTimeProperty(string key, DateTime defaultValue)
+        {
+            string stringProperty = this.GetStringProperty(key);
+
+            if (string.IsNullOrEmpty(stringProperty))
+            {
+                return defaultValue;
+            }
+
+            return DateTime.Parse(stringProperty);
+        }
+
         public int GetIntProperty(string key, int defaultValue)
         {
             string stringProperty = this.GetStringProperty(key);

@@ -3,6 +3,7 @@ using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using AspNetDeploy.SourceControls.Git;
 using AspNetDeploy.SourceControls.SVN;
+using SourceControls.FileSystem;
 
 namespace AspNetDeploy.SourceControls
 {
@@ -17,6 +18,9 @@ namespace AspNetDeploy.SourceControls
 
                 case SourceControlType.Git:
                     return new GitSourceControlRepository();
+
+                case SourceControlType.FileSystem:
+                    return new FileSystemSourceControlRepository();
 
                 default:
                     throw new AspNetDeployException("Unknown SourceControlType: " + type);

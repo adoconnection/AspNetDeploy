@@ -1,9 +1,10 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using AspNetDeploy.Model;
 
 namespace AspNetDeploy.Contracts
 {
     public interface IBuildService
     {
-        void Build(string solutionFilePath, IContinuousIntegrationLogger logger);
+        BuildSolutionResult Build(string solutionFilePath, Action<string> projectBuildStarted, Action<string, bool> projectBuildComplete);
     }
 }

@@ -134,6 +134,7 @@
     <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
     <Content Include="Resources\Layout\Images\Icons\VsSolution.png" />
+    <Content Include="Resources\Layout\Images\Icons\VsTestProject.png" />
     <Content Include="Resources\Layout\Images\vs-loading-colored.gif" />
     <Content Include="Resources\Layout\Images\vs-loading.gif" />
     <Content Include="Resources\Layout\Images\Icons\VsClassProject.PNG" />
@@ -160,6 +161,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BundleInfo.cs" />
+    <Compile Include="Models\ProjectInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
     <Compile Include="Mvc\ControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -65,6 +65,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="BuildSolutionResult.cs" />
     <Compile Include="Bundle.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>

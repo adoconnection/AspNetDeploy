@@ -1,5 +1,4 @@
-﻿
-using AspNetDeploy.BuildServices.MSBuild;
+﻿using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 

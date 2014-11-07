@@ -9,7 +9,7 @@ namespace AspNetDeploy.WebUI.Controllers
 {
     public class SourcesController : GenericController
     {
-        private ITaskRunner taskRunner;
+        private readonly ITaskRunner taskRunner;
 
         public SourcesController(ITaskRunner taskRunner)
         {
@@ -28,6 +28,14 @@ namespace AspNetDeploy.WebUI.Controllers
                 sc => new SourceControlInfo
                 {
                     SourceControl = sc,
+                    ProjectsInfo = sc.Projects
+                        .Select( p =>
+                            new ProjectInfo
+                            {
+                                Project = p,
+                                ProjectState = this.taskRunner.GetProjectState(p.Id)
+                            })
+                        .ToList(),
                     State = this.taskRunner.GetSourceControlState(sc.Id)
                 })
                 .ToList();

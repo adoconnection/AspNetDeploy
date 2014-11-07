@@ -28,6 +28,7 @@ namespace AspNetDeploy.Model
         public ProjectType ProjectType { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<System.Guid> Guid { get; set; }
+        public string ProjectFile { get; set; }
     
         public virtual SourceControl SourceControl { get; set; }
         public virtual ICollection<ProjectConfigurationField> ProjectConfigurationField { get; set; }

@@ -59,6 +59,10 @@
       <Project>{A32D039E-8BE5-43BE-A2BE-C633F6A3C91E}</Project>
       <Name>SourceControls.SVN</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SourceControls.FileSystem\SourceControls.FileSystem.csproj">
+      <Project>{F0FEBF20-BEBF-4BD0-9819-D4EA212F773B}</Project>
+      <Name>SourceControls.FileSystem</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
