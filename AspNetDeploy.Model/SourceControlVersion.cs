@@ -12,19 +12,20 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Bundle
+    public partial class SourceControlVersion
     {
-        public Bundle()
+        public SourceControlVersion()
         {
-            this.BundleVersions = new HashSet<BundleVersion>();
-            this.Projects = new HashSet<Project>();
+            this.ProjectVersions = new HashSet<ProjectVersion>();
+            this.Properties = new HashSet<SourceControlVersionProperty>();
         }
     
         public int Id { get; set; }
+        public int SourceControlId { get; set; }
         public string Name { get; set; }
-        public bool IsDeleted { get; set; }
     
-        public virtual ICollection<BundleVersion> BundleVersions { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
+        public virtual SourceControl SourceControl { get; set; }
+        public virtual ICollection<SourceControlVersionProperty> Properties { get; set; }
     }
 }

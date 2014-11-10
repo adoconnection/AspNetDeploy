@@ -18,7 +18,8 @@ namespace AspNetDeploy.WebUI
             ObjectFactoryConfigurator.Configure();
 
             ControllerBuilder.Current.SetControllerFactory(typeof(ControllerFactory)); 
-            Factory.GetInstance<ITaskRunner>().Initialize();
+            
+            //Factory.GetInstance<ITaskRunner>().Initialize();
         }
     }
 }

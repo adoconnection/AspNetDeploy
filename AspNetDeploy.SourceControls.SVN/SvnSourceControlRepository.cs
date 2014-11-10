@@ -10,11 +10,11 @@ namespace AspNetDeploy.SourceControls.SVN
 {
     public class SvnSourceControlRepository : ISourceControlRepository
     {
-        public LoadSourcesResult LoadSources(SourceControl sourceControl, string version, string path)
+        public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
         {
             NetworkCredential credentials = new NetworkCredential(
-                        sourceControl.GetStringProperty("Login"),
-                        sourceControl.GetStringProperty("Password"));
+                        sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                        sourceControlVersion.SourceControl.GetStringProperty("Password"));
 
             using (SvnClient client = new SvnClient())
             {
@@ -22,7 +22,7 @@ namespace AspNetDeploy.SourceControls.SVN
 
                 if (!Directory.Exists(path))
                 {
-                    return this.LoadSourcesFromScratch(sourceControl, path, client);
+                    return this.LoadSourcesFromScratch(sourceControlVersion, path, client);
                 }
                 
                 return this.LoadSourcesWithUpdate(path, client);
@@ -37,7 +37,7 @@ namespace AspNetDeploy.SourceControls.SVN
             {
                 client.Update(path, out result);
             }
-            catch (SvnWorkingCopyLockException e)
+            catch (SvnWorkingCopyException e)
             {
                 client.CleanUp(path);
                 client.Update(path, out result);
@@ -52,12 +52,14 @@ namespace AspNetDeploy.SourceControls.SVN
             };
         }
 
-        private LoadSourcesResult LoadSourcesFromScratch(SourceControl sourceControl, string path, SvnClient client)
+        private LoadSourcesResult LoadSourcesFromScratch(SourceControlVersion sourceControlVersion, string path, SvnClient client)
         {
             SvnUpdateResult result;
             Directory.CreateDirectory(path);
 
-            client.CheckOut(new Uri(sourceControl.GetStringProperty("URL") + "/trunk"), path, out result);
+            string uriString = sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL");
+
+            client.CheckOut(new Uri(uriString), path, out result);
 
             SvnInfoEventArgs info;
             client.GetInfo(path, out info);

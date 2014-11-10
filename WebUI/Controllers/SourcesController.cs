@@ -19,24 +19,28 @@ namespace AspNetDeploy.WebUI.Controllers
         public ActionResult Index()
         {
             List<SourceControl> sourceControls = this.Entities.SourceControl
-                .Include("Projects")
+                .Include("SourceControlVersions.Properties")
+                .Include("SourceControlVersions.ProjectVersions")
                 .Include("Properties")
-                .Include("Group")
                 .ToList();
 
             this.ViewBag.SourceControls = sourceControls.Select( 
                 sc => new SourceControlInfo
                 {
                     SourceControl = sc,
-                    ProjectsInfo = sc.Projects
-                        .Select( p =>
-                            new ProjectInfo
+                    SourceControlVersionsInfo = sc.SourceControlVersions.Select( scv => new SourceControlVersionInfo()
+                    {
+                        SourceControlVersion = scv,
+                        State = this.taskRunner.GetSourceControlState(scv.Id),
+                        ProjectVersionsInfo = scv.ProjectVersions
+                        .Select(pv =>
+                            new ProjectVersionInfo
                             {
-                                Project = p,
-                                ProjectState = this.taskRunner.GetProjectState(p.Id)
+                                ProjectVersion = pv,
+                                ProjectState = this.taskRunner.GetProjectState(pv.Id)
                             })
-                        .ToList(),
-                    State = this.taskRunner.GetSourceControlState(sc.Id)
+                        .ToList()
+                    }).ToList(),
                 })
                 .ToList();
 

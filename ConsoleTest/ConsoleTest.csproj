@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{940D1369-A1DA-4025-A9C4-64A760891626}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{066BF48B-C1D2-4967-BAED-52E8CBE2B5C0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ThreadHostedTaskRunner</RootNamespace>
-    <AssemblyName>ThreadHostedTaskRunner</AssemblyName>
+    <RootNamespace>ConsoleTest</RootNamespace>
+    <AssemblyName>ConsoleTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,8 +22,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,6 +37,16 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpSvn, Version=1.8991.3359.105, Culture=neutral, PublicKeyToken=d729672594885a28, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpSvn.UI">
+      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.UI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,14 +56,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildProjectJob.cs" />
-    <Compile Include="IContinuousIntegrationLogger.cs" />
-    <Compile Include="ITrigger.cs" />
-    <Compile Include="SourceControlJob.cs" />
-    <Compile Include="SourceControlTrigger.cs" />
-    <Compile Include="TaskRunnerContext.cs" />
-    <Compile Include="ThreadTaskRunner.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.ContinuousIntegration\ContinuousIntegration.csproj">
@@ -67,6 +79,14 @@
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
       <Name>ObjectFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThreadHostedTaskRunner\ThreadHostedTaskRunner.csproj">
+      <Project>{940D1369-A1DA-4025-A9C4-64A760891626}</Project>
+      <Name>ThreadHostedTaskRunner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebUI.Bootstrapper\WebUI.Bootstrapper.csproj">
+      <Project>{4B65D3BA-D8F5-4ED6-86C0-D57202444EEC}</Project>
+      <Name>WebUI.Bootstrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -24,17 +24,17 @@ namespace ThreadHostedTaskRunner
 
         public SourceControlState GetSourceControlState(int sourceControlId)
         {
-            return TaskRunnerContext.GetSourceControlState(sourceControlId);
+            return TaskRunnerContext.GetSourceControlVersionState(sourceControlId);
         }
 
         public ProjectState GetProjectState(int projectId)
         {
-            return TaskRunnerContext.GetProjectState(projectId);
+            return TaskRunnerContext.GetProjectVersionState(projectId);
         }
 
         public BundleState GetBundleState(int bundleId)
         {
-            return TaskRunnerContext.GetBundleState(bundleId);
+            return TaskRunnerContext.GetBundleVersionState(bundleId);
         }
 
         public void Shutdown()
@@ -55,11 +55,11 @@ namespace ThreadHostedTaskRunner
             IsTimerRunning = false;
         }
 
-        private static void ProcessTasks()
+        public static void ProcessTasks()
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
-            ProcessProjects(entities);
+            //ProcessProjects(entities);
             ProcessSourceControls(entities);
         }
 
@@ -73,17 +73,17 @@ namespace ThreadHostedTaskRunner
 
             Parallel.ForEach(bundles, bundle =>
             {
-                if (bundle.Projects.Any(p => TaskRunnerContext.GetProjectState(p.Id) != ProjectState.Idle))
+                if (bundle.Projects.Any(p => TaskRunnerContext.GetProjectVersionState(p.Id) != ProjectState.Idle))
                 {
                     return;
                 }
 
-                if (bundle.Projects.Any(p => TaskRunnerContext.GetSourceControlState(p.SourceControl.Id) != SourceControlState.Idle))
+                if (bundle.Projects.Any(p => TaskRunnerContext.GetSourceControlVersionState(p.SourceControl.Id) != SourceControlState.Idle))
                 {
                     return;
                 }
 
-                if (TaskRunnerContext.GetBundleState(bundle.Id) == BundleState.Idle)
+                if (TaskRunnerContext.GetBundleVersionState(bundle.Id) == BundleState.Idle)
                 {
                     foreach (SourceControl sourceControl in bundle.Projects.Select( p => p.SourceControl))
                     {
@@ -91,25 +91,25 @@ namespace ThreadHostedTaskRunner
                         {
                             foreach (Project project in sourceControl.Projects)
                             {
-                                TaskRunnerContext.NeedToBuildProject(project.Id, true);
+                                TaskRunnerContext.SetNeedToBuildProject(project.Id, true);
                             }
                         }
                     }
 
-                    foreach (Project project in bundle.Projects.Where( p => TaskRunnerContext.NeedToBuildProject(p.Id)))
+                    foreach (Project project in bundle.Projects.Where( p => TaskRunnerContext.GetNeedToBuildProject(p.Id)))
                     {
-                        TaskRunnerContext.SetProjectState(project.Id, ProjectState.QueuedToBuild);
+                        TaskRunnerContext.SetProjectVersionState(project.Id, ProjectState.QueuedToBuild);
 
                         foreach (Bundle projectBundle in project.Bundles)
                         {
-                            TaskRunnerContext.SetBundleState(projectBundle.Id, BundleState.BuildQueued);
+                            TaskRunnerContext.SetBundleVersionState(projectBundle.Id, BundleState.BuildQueued);
                         }
 
                         projectsToBuild.Add(project);
                     }
                 }
             });
-
+/*
             var pairs = projectsToBuild.Select(p => new {p.SourceControl, p.SolutionFile, p.Bundles}).Distinct().ToList();
 
             foreach (var pair in pairs)
@@ -119,37 +119,44 @@ namespace ThreadHostedTaskRunner
 
                 foreach (Bundle bundle in pair.Bundles)
                 {
-                    TaskRunnerContext.SetBundleState(bundle.Id, BundleState.Building);
+                    TaskRunnerContext.SetBundleVersionState(bundle.Id, BundleState.Building);
                 }
-            }
+            }*/
         }
 
         private static void ProcessSourceControls(AspNetDeployEntities entities)
         {
-            List<SourceControl> sourceControls = entities.SourceControl
+            List<SourceControlVersion> sourceControlVersions = entities.SourceControlVersion
+                .Include("ProjectVersions")
                 .Include("Properties")
-                .Include("Projects.Bundles")
+                .Include("ProjectVersions.BundleVersions")
+                .Include("SourceControl.Properties")
                 .ToList();
 
-            Parallel.ForEach(sourceControls, sourceControl =>
+            foreach (SourceControlVersion sourceControlVersion in sourceControlVersions)
             {
-                if (sourceControl.Projects.Any(p => TaskRunnerContext.GetProjectState(p.Id) != ProjectState.Idle))
+                IList<BundleVersion> bundleVersions = sourceControlVersion.ProjectVersions.SelectMany(p => p.BundleVersions).Distinct().ToList();
+
+                if (TaskRunnerContext.GetSourceControlVersionState(sourceControlVersion.Id) != SourceControlState.Idle)
                 {
                     return;
                 }
 
-                if (sourceControl.Projects.SelectMany(p => p.Bundles).Distinct().Any(b => TaskRunnerContext.GetBundleState(b.Id) != BundleState.Idle))
+                if (bundleVersions.Any(b => TaskRunnerContext.GetBundleVersionState(b.Id) != BundleState.Idle))
                 {
                     return;
                 }
+                    
+                TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Loading);
 
-                if (TaskRunnerContext.GetSourceControlState(sourceControl.Id) == SourceControlState.Idle)
+                foreach (BundleVersion bundleVersion in bundleVersions)
                 {
-                    TaskRunnerContext.SetSourceControlState(sourceControl.Id, SourceControlState.Loading);
-                    SourceControlJob job = new SourceControlJob();
-                    job.Start(sourceControl.Id);
+                    TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Loading);
                 }
-            });
+
+                SourceControlJob job = new SourceControlJob();
+                job.Start(sourceControlVersion.Id);
+            }
         }
     }
 }

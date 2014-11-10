@@ -17,13 +17,14 @@ namespace AspNetDeploy.Model
         public Environment()
         {
             this.Machines = new HashSet<Machine>();
-            this.ProjectConfigurationValue = new HashSet<ProjectConfigurationValue>();
+            this.Publication = new HashSet<Publication>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
+        public int OrderIndex { get; set; }
     
         public virtual ICollection<Machine> Machines { get; set; }
-        public virtual ICollection<ProjectConfigurationValue> ProjectConfigurationValue { get; set; }
+        public virtual ICollection<Publication> Publication { get; set; }
     }
 }

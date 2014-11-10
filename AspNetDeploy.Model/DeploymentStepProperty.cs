@@ -16,8 +16,8 @@ namespace AspNetDeploy.Model
     {
         public int Id { get; set; }
         public int DeploymentStepId { get; set; }
-        public string Value { get; set; }
         public string Key { get; set; }
+        public string Value { get; set; }
     
         public virtual DeploymentStep DeploymentStep { get; set; }
     }

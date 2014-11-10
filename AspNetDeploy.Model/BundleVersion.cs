@@ -12,19 +12,22 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Bundle
+    public partial class BundleVersion
     {
-        public Bundle()
+        public BundleVersion()
         {
-            this.BundleVersions = new HashSet<BundleVersion>();
-            this.Projects = new HashSet<Project>();
+            this.DeploymentStep = new HashSet<DeploymentStep>();
+            this.ProjectVersions = new HashSet<ProjectVersion>();
+            this.Package = new HashSet<Package>();
         }
     
         public int Id { get; set; }
+        public int BundleId { get; set; }
         public string Name { get; set; }
-        public bool IsDeleted { get; set; }
     
-        public virtual ICollection<BundleVersion> BundleVersions { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual Bundle Bundle { get; set; }
+        public virtual ICollection<DeploymentStep> DeploymentStep { get; set; }
+        public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
+        public virtual ICollection<Package> Package { get; set; }
     }
 }

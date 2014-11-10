@@ -1,4 +1,5 @@
 ﻿@using AspNetDeploy.WebUI.Models
+@using Environment = AspNetDeploy.Model.Environment
 @{
     ViewBag.Title = "Index";
     ViewBag.PageClass = "bundlesPage";
@@ -12,40 +13,21 @@
         <h1>
             @Html.ActionLink(bundleInfo.Bundle.Name, "Details", new { id = bundleInfo.Bundle.Id })
             
-            @switch (bundleInfo.State)
-            {
-                case BundleState.Undefined:
-                    <small class="state">...</small>
-                    break;
-
-                case BundleState.Idle:
-                    <small class="state"></small>
-                    break;
-
-                case BundleState.Loading:
-                    <small class="state">Loading.. </small>
-                    <img src="~/Resources/Layout/Images/vs-loading-colored.gif" style="height: 30px; " />
-                    break;
-
-                case BundleState.BuildQueued:
-                case BundleState.Building:
-                    <small class="state">Building</small>
-                    <img src="~/Resources/Layout/Images/vs-loading-colored.gif" style="height: 30px; " />
-                    break;
-
-                case BundleState.Testing:
-                    <small>Testing</small>
-                    <img src="~/Resources/Layout/Images/vs-loading-colored.gif" style="height: 30px; " />
-                    break;
-
-                default:
-                    <small class="state">? @bundleInfo.State</small>
-                    break;
-            }
         </h1>
         <hr />
+        
+        foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo)
+        {
+            <h3>@bundleVersionInfo.BundleVersion.Name</h3>
+        
+            foreach (Environment environment in this.ViewBag.Environments)
+            {
+                <div>@environment.Name –</div>     
+            }
+        }
+        
 
-        foreach (ProjectInfo projectInfo in bundleInfo.ProjectsInfo)
+       @* foreach (ProjectVersionInfo projectInfo in bundleInfo.ProjectsInfo)
         {
             <div class="row machine">
                 <div class="col-sm-8 col-md-6">
@@ -60,7 +42,8 @@
                 </div>
             </div>
         }
-        <br/>
+        *@
+    <br />
     }
 
 </div>

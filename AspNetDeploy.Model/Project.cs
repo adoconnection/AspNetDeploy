@@ -16,23 +16,19 @@ namespace AspNetDeploy.Model
     {
         public Project()
         {
-            this.ProjectConfigurationField = new HashSet<ProjectConfigurationField>();
-            this.Bundles = new HashSet<Bundle>();
             this.Properties = new HashSet<ProjectProperty>();
+            this.ProjectVersions = new HashSet<ProjectVersion>();
+            this.Bundles = new HashSet<Bundle>();
         }
     
         public int Id { get; set; }
         public int SourceControlId { get; set; }
         public string Name { get; set; }
-        public string SolutionFile { get; set; }
-        public ProjectType ProjectType { get; set; }
-        public bool IsDeleted { get; set; }
-        public Nullable<System.Guid> Guid { get; set; }
-        public string ProjectFile { get; set; }
+        public System.Guid Guid { get; set; }
     
         public virtual SourceControl SourceControl { get; set; }
-        public virtual ICollection<ProjectConfigurationField> ProjectConfigurationField { get; set; }
-        public virtual ICollection<Bundle> Bundles { get; set; }
         public virtual ICollection<ProjectProperty> Properties { get; set; }
+        public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
+        public virtual ICollection<Bundle> Bundles { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace AspNetDeploy.SourceControls.Git
 {
     public class GitSourceControlRepository : ISourceControlRepository
     {
-        public LoadSourcesResult LoadSources(SourceControl sourceControl, string version, string path)
+        public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
         {
             throw new System.NotImplementedException();
         }

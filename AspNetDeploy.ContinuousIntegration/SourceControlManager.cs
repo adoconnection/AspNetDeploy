@@ -17,37 +17,51 @@ namespace AspNetDeploy.ContinuousIntegration
             this.solutionParsersFactory = solutionParsersFactory;
         }
 
-        public UpdateAndParseResult UpdateAndParse(int sourceControlId)
+        public UpdateAndParseResult UpdateAndParse(int sourceControlVersionId)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
-            SourceControl sourceControl = entities.SourceControl.Include("Properties").First(sc => sc.Id == sourceControlId);
+            SourceControlVersion sourceControlVersion = entities.SourceControlVersion
+                .Include("Properties")
+                .Include("SourceControl.Properties")
+                .First(svc => svc.Id == sourceControlVersionId);
 
-            string sourcesFolder = string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\trunk", sourceControl.Id);
-            LoadSourcesResult loadSourcesResult = this.LoadSources(sourceControl, sourcesFolder);
+            SourceControl sourceControl = sourceControlVersion.SourceControl;
 
-            if (loadSourcesResult.RevisionId == sourceControl.GetStringProperty("Revision"))
+            string sourcesFolder = string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\{1}", sourceControl.Id, sourceControlVersion.Id);
+            LoadSourcesResult loadSourcesResult = this.LoadSources(sourceControlVersion, sourcesFolder);
+
+            /*if (loadSourcesResult.RevisionId == sourceControlVersion.GetStringProperty("Revision"))
             {
                 return new UpdateAndParseResult();
-            }
+            }*/
 
-            sourceControl.SetStringProperty("Revision", loadSourcesResult.RevisionId);
+            sourceControlVersion.SetStringProperty("Revision", loadSourcesResult.RevisionId);
             entities.SaveChanges();
 
             IList<string> solutionFiles = this.ListSolutionFiles(sourcesFolder);
-            this.UpdateProjects(solutionFiles, sourceControl, entities);
+            this.UpdateProjects(solutionFiles, sourceControlVersion, entities);
 
             entities.SaveChanges();
 
             return new UpdateAndParseResult
             {
                 HasChanges = true,
-                Projects = entities.Project.Where(p => p.SourceControlId == sourceControl.Id).Select( p => p.Id).ToList()
+                Projects = entities.Project.Where(p => p.SourceControlId == sourceControlVersion.Id).Select( p => p.Id).ToList()
             };
         }
 
-        private void UpdateProjects(IEnumerable<string> solutionFiles, SourceControl sourceControl, AspNetDeployEntities entities)
+        private void UpdateProjects(IEnumerable<string> solutionFiles, SourceControlVersion sourceControlVersion, AspNetDeployEntities entities)
         {
-            IList<Project> existingProjects = entities.Project.Where(p => p.SourceControlId == sourceControl.Id).ToList();
+            //bool isHead = sourceControlVersion.GetBoolProperty("IsHeadVersion");
+
+            IList<Project> existingProjects = entities.Project
+                .Include("ProjectVersions")
+                .Where(p => p.SourceControlId == sourceControlVersion.SourceControlId).ToList();
+
+            List<ProjectVersion> existingProjectVersions = existingProjects
+                .SelectMany(p => p.ProjectVersions)
+                .Where(pv => pv.SourceControlVersionId == sourceControlVersion.Id)
+                .ToList();
 
             foreach (string solutionFile in solutionFiles)
             {
@@ -56,34 +70,62 @@ namespace AspNetDeploy.ContinuousIntegration
 
                 foreach (Project project in existingProjects)
                 {
+                    ProjectVersion projectVersion = existingProjectVersions.FirstOrDefault(pv => pv.ProjectId == project.Id);
                     ISolutionProject parsedProject = parsedProjects.FirstOrDefault(sp => sp.Guid == project.Guid);
 
                     if (parsedProject == null)
                     {
-                        project.IsDeleted = true;
+                        if (projectVersion != null)
+                        {
+                            projectVersion.IsDeleted = true;
+                        }
+                        else
+                        {
+                            //continue;
+                        }
                     }
                     else
                     {
-                        project.IsDeleted = false;
-                        project.ProjectFile = parsedProject.ProjectFile;
-                        project.SolutionFile = Path.GetFileName(solutionFile);
+                        if (projectVersion == null)
+                        {
+                            projectVersion = new ProjectVersion();
+                            projectVersion.Project = project;
+                            projectVersion.SourceControlVersion = sourceControlVersion;
+                            entities.ProjectVersion.Add(projectVersion);
+                        }
+
+                        projectVersion.Name = parsedProject.Name;
+                        projectVersion.ProjectFile = parsedProject.ProjectFile;
+                        projectVersion.ProjectType = parsedProject.Type;
+                        projectVersion.IsDeleted = false;
+                        projectVersion.SolutionFile = Path.GetFileName(solutionFile);
                     }
                 }
 
                 foreach (ISolutionProject parsedProject in parsedProjects)
                 {
-                    if (existingProjects.All(p => p.Guid != parsedProject.Guid))
+                    if (existingProjects.Any(p => p.Guid == parsedProject.Guid))
                     {
-                        Project project = new Project();
-                        project.SourceControlId = sourceControl.Id;
-                        project.Guid = parsedProject.Guid;
-                        project.Name = parsedProject.Name;
-                        project.ProjectFile = parsedProject.ProjectFile;
-                        project.ProjectType = parsedProject.Type;
-                        project.IsDeleted = false;
-                        project.SolutionFile = Path.GetFileName(solutionFile);
-                        entities.Project.Add(project);
+                        continue;
                     }
+
+                    Project project = new Project();
+                    project.SourceControlId = sourceControlVersion.SourceControl.Id;
+                    entities.Project.Add(project);
+
+                    project.Guid = parsedProject.Guid;
+                    project.Name = parsedProject.Name;
+
+                    ProjectVersion projectVersion = new ProjectVersion();
+                    projectVersion.Project = project;
+                    projectVersion.SourceControlVersion = sourceControlVersion;
+                    entities.ProjectVersion.Add(projectVersion);
+
+                    projectVersion.Name = parsedProject.Name;
+                    projectVersion.ProjectFile = parsedProject.ProjectFile;
+                    projectVersion.ProjectType = parsedProject.Type;
+                    projectVersion.IsDeleted = false;
+                    projectVersion.SolutionFile = Path.GetFileName(solutionFile);
                 }
             }
         }
@@ -93,10 +135,10 @@ namespace AspNetDeploy.ContinuousIntegration
             return Directory.GetFiles(sourcesFolder, "*.sln", SearchOption.TopDirectoryOnly).ToList();
         }
 
-        private LoadSourcesResult LoadSources(SourceControl sourceControl, string sourcesFolder)
+        private LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string sourcesFolder)
         {
-            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControl.Type);
-            return repository.LoadSources(sourceControl, "trunk", sourcesFolder);
+            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            return repository.LoadSources(sourceControlVersion, sourcesFolder);
         }
     }
 }

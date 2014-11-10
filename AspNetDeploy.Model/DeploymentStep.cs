@@ -16,20 +16,20 @@ namespace AspNetDeploy.Model
     {
         public DeploymentStep()
         {
-            this.ChildDeploymentSteps = new HashSet<DeploymentStep>();
+            this.ChildSteps = new HashSet<DeploymentStep>();
             this.Properties = new HashSet<DeploymentStepProperty>();
             this.MachineRoles = new HashSet<MachineRole>();
         }
     
         public int Id { get; set; }
         public Nullable<int> DeploymentStepId { get; set; }
-        public int BundleId { get; set; }
+        public int BundleVersionId { get; set; }
         public int OrderIndex { get; set; }
         public DeploymentStepType Type { get; set; }
     
-        public virtual Bundle Bundle { get; set; }
-        public virtual ICollection<DeploymentStep> ChildDeploymentSteps { get; set; }
-        public virtual DeploymentStep ParentDeploymentStep { get; set; }
+        public virtual BundleVersion BundleVersion { get; set; }
+        public virtual ICollection<DeploymentStep> ChildSteps { get; set; }
+        public virtual DeploymentStep Parent { get; set; }
         public virtual ICollection<DeploymentStepProperty> Properties { get; set; }
         public virtual ICollection<MachineRole> MachineRoles { get; set; }
     }

@@ -12,18 +12,15 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class ProjectConfigurationValue
+    public partial class Publication
     {
-        public ProjectConfigurationValue()
-        {
-            this.Environment = new HashSet<Environment>();
-        }
-    
         public int Id { get; set; }
-        public int ProjectConfigurationFieldId { get; set; }
-        public string Value { get; set; }
+        public int PackageId { get; set; }
+        public int EnvironmentId { get; set; }
+        public System.DateTime CreatedDate { get; set; }
+        public int ResultId { get; set; }
     
-        public virtual ProjectConfigurationField ProjectConfigurationField { get; set; }
-        public virtual ICollection<Environment> Environment { get; set; }
+        public virtual Environment Environment { get; set; }
+        public virtual Package Package { get; set; }
     }
 }

@@ -18,7 +18,8 @@ namespace AspNetDeploy.Model
         {
             this.Projects = new HashSet<Project>();
             this.Properties = new HashSet<SourceControlProperty>();
-            this.Group = new HashSet<Group>();
+            this.SourceControlVersions = new HashSet<SourceControlVersion>();
+            this.Groups = new HashSet<Group>();
         }
     
         public int Id { get; set; }
@@ -28,6 +29,7 @@ namespace AspNetDeploy.Model
     
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<SourceControlProperty> Properties { get; set; }
-        public virtual ICollection<Group> Group { get; set; }
+        public virtual ICollection<SourceControlVersion> SourceControlVersions { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

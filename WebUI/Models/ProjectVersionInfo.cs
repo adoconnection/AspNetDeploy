@@ -2,9 +2,9 @@
 
 namespace AspNetDeploy.WebUI.Models
 {
-    public class ProjectInfo
+    public class ProjectVersionInfo
     {
-        public Project Project { get; set; }
+        public ProjectVersion ProjectVersion { get; set; }
         public ProjectState ProjectState { get; set; }
     }
 }

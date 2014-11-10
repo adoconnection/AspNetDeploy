@@ -19,17 +19,23 @@ namespace AspNetDeploy.WebUI.Controllers
         public ActionResult Index()
         {
             List<Bundle> bundles = this.Entities.Bundle
-                .Include("Projects")
+                .Include("BundleVersions.ProjectVersions")
                 .ToList();
+
+            this.ViewBag.Environments = this.Entities.Environment.ToList();
 
             this.ViewBag.Bundles = bundles.Select( b => new BundleInfo
             {
                 Bundle = b,
-                State = this.taskRunner.GetBundleState(b.Id),
-                ProjectsInfo = b.Projects.Select( p => new ProjectInfo
+                BundleVersionsInfo = b.BundleVersions.Select( bv => new BundleVersionInfo()
                 {
-                    Project = p,
-                    ProjectState = this.taskRunner.GetProjectState(p.Id)
+                    BundleVersion = bv,
+                    State = this.taskRunner.GetBundleState(b.Id),
+                    ProjectsVersionsInfo = bv.ProjectVersions.Select( pv => new ProjectVersionInfo
+                    {
+                        ProjectVersion = pv,
+                        ProjectState = this.taskRunner.GetProjectState(pv.Id)
+                    }).ToList()
                 }).ToList()
             }).ToList();
 

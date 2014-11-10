@@ -25,18 +25,22 @@ namespace AspNetDeploy.Model
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Bundle> Bundle { get; set; }
+        public virtual DbSet<BundleVersion> BundleVersion { get; set; }
+        public virtual DbSet<DeploymentStep> DeploymentStep { get; set; }
+        public virtual DbSet<DeploymentStepProperty> DeploymentStepProperty { get; set; }
         public virtual DbSet<Environment> Environment { get; set; }
         public virtual DbSet<Group> Group { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MachineRole> MachineRole { get; set; }
         public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<ProjectConfigurationField> ProjectConfigurationField { get; set; }
-        public virtual DbSet<ProjectConfigurationValue> ProjectConfigurationValue { get; set; }
+        public virtual DbSet<ProjectProperty> ProjectProperty { get; set; }
+        public virtual DbSet<ProjectVersion> ProjectVersion { get; set; }
         public virtual DbSet<SourceControl> SourceControl { get; set; }
         public virtual DbSet<SourceControlProperty> SourceControlProperty { get; set; }
-        public virtual DbSet<Bundle> Bundle { get; set; }
-        public virtual DbSet<DeploymentStep> DeploymentStep { get; set; }
-        public virtual DbSet<DeploymentStepProperty> DeploymentStepProperty { get; set; }
-        public virtual DbSet<ProjectProperty> ProjectProperty { get; set; }
+        public virtual DbSet<SourceControlVersion> SourceControlVersion { get; set; }
+        public virtual DbSet<SourceControlVersionProperty> SourceControlVersionProperty { get; set; }
+        public virtual DbSet<Package> Package { get; set; }
+        public virtual DbSet<Publication> Publication { get; set; }
     }
 }

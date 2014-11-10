@@ -12,22 +12,24 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class ProjectConfigurationField
+    public partial class ProjectVersion
     {
-        public ProjectConfigurationField()
+        public ProjectVersion()
         {
-            this.ProjectConfigurationValue = new HashSet<ProjectConfigurationValue>();
-            this.Project = new HashSet<Project>();
+            this.BundleVersions = new HashSet<BundleVersion>();
         }
     
         public int Id { get; set; }
         public int ProjectId { get; set; }
-        public int TypeId { get; set; }
-        public string Key { get; set; }
-        public bool IsSensitive { get; set; }
-        public int ModeId { get; set; }
+        public int SourceControlVersionId { get; set; }
+        public ProjectType ProjectType { get; set; }
+        public string SolutionFile { get; set; }
+        public string ProjectFile { get; set; }
+        public bool IsDeleted { get; set; }
+        public string Name { get; set; }
     
-        public virtual ICollection<ProjectConfigurationValue> ProjectConfigurationValue { get; set; }
-        public virtual ICollection<Project> Project { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual SourceControlVersion SourceControlVersion { get; set; }
+        public virtual ICollection<BundleVersion> BundleVersions { get; set; }
     }
 }

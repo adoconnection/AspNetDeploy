@@ -16,14 +16,14 @@ namespace AspNetDeploy.Model
     {
         public MachineRole()
         {
-            this.Machines = new HashSet<Machine>();
             this.DeploymentSteps = new HashSet<DeploymentStep>();
+            this.Machines = new HashSet<Machine>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
-        public virtual ICollection<Machine> Machines { get; set; }
         public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
+        public virtual ICollection<Machine> Machines { get; set; }
     }
 }

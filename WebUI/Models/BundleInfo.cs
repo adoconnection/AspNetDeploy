@@ -6,7 +6,6 @@ namespace AspNetDeploy.WebUI.Models
     public class BundleInfo
     {
         public Bundle Bundle { get; set; }
-        public BundleState State { get; set; }
-        public IList<ProjectInfo> ProjectsInfo { get; set; }
+        public IList<BundleVersionInfo> BundleVersionsInfo { get; set; }
     }
 }

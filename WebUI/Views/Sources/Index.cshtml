@@ -30,105 +30,123 @@
                     break;
             }
 
-            @switch (sourceControlInfo.State)
+        </h1>
+
+        <hr />
+
+    <div class="row">
+        @foreach (SourceControlVersionInfo sourceControlVersionInfo in sourceControlInfo.SourceControlVersionsInfo)
+        {
+            IEnumerable<IGrouping<string, ProjectVersionInfo>> groups = sourceControlVersionInfo.ProjectVersionsInfo.GroupBy(pvs => pvs.ProjectVersion.SolutionFile);
+            
+            <div class="col-sm-6">
+                <h3>@sourceControlVersionInfo.SourceControlVersion.Name</h3>
+
+                @foreach (IGrouping<string, ProjectVersionInfo> group in groups)
+                {
+                            foreach (ProjectVersionInfo projectVersionInfo in group.OrderBy( p => p.ProjectVersion.Name))
+                            {
+                                bool hasWeb = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Web);
+                                bool hasTest = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Test);
+
+                                if (hasWeb || hasTest)
+                                {
+                                    <div>
+                                        @if (hasWeb)
+                                        {
+                                            <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
+                                        }
+                                        @if (hasTest)
+                                        {
+                                            <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
+                                        }
+
+                                        @projectVersionInfo.ProjectVersion.Name
+                                    </div>
+                                }
+                            }
+                        @*<div class="col-sm-6">
+                            <img src="~/Resources/Layout/Images/Icons/VsSolution.png" />
+                            @group.Key
+                        </div>*@
+                }
+            </div>
+
+        }
+    </div>
+
+
+
+        @*switch (sourceControlInfo.SourceControl.Type)
             {
-                case SourceControlState.Undefined:
-                    <small class="state">...</small>
+                case SourceControlType.Svn:
+
+                    IEnumerable<ProjectVersionInfo> projectsInfo = sourceControlInfo.ProjectsInfo;
+                    IEnumerable<IGrouping<string, ProjectVersionInfo>> groupedProjects = projectsInfo.GroupBy(p => p.Project.SolutionFile);
+
+                    foreach (var group in groupedProjects)
+                    {
+                        <h5><img src="~/Resources/Layout/Images/Icons/VsSolution.png" /> @group.Key</h5>
+
+                        foreach (ProjectVersionInfo projectInfo in group.Where(p => p.Project.ProjectType == ProjectType.Web))
+                        {
+                            <div class="row project">
+                                <div class="col-md-6">
+                                    <div class="name">
+                                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.png" />
+                                        @projectInfo.Project.Name – @projectInfo.ProjectState
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    @foreach (Bundle bundle in projectInfo.Project.Bundles)
+                                    {
+                                        <p>@bundle.Name</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        foreach (ProjectVersionInfo projectInfo in group.Where(p => p.Project.ProjectType == ProjectType.Test))
+                        {
+                            <div class="row project">
+                                <div class="col-md-6">
+                                    <div class="name">
+                                        <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
+                                        @projectInfo.Project.Name – @projectInfo.ProjectState
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    @foreach (Bundle bundle in projectInfo.Project.Bundles)
+                                    {
+                                        <p>@bundle.Name</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+
+
+
+                    }
                     break;
 
-                case SourceControlState.Idle:
-                <small class="state"></small>
+                case SourceControlType.Git:
+
                     break;
 
-                case SourceControlState.Loading:
-                <small class="state">Loading.. </small>
-                    break;
+                case SourceControlType.FileSystem:
+                <div class="row project">
+                    <div class="col-md-6">
+                        <div class="name">
+                            <div>@sourceControlInfo.SourceControl.GetStringProperty("Path")</div>
+                        </div>
+                    </div>
+                </div>
 
-                case SourceControlState.Error:
-                <small class="state">Error</small>
-                    break;
-
-                case SourceControlState.Stopping:
-                <small>Stopping</small>
                     break;
 
                 default:
-                <small class="state">?</small>
                     break;
-            }
-            <img src="~/Resources/Layout/Images/vs-loading-colored.gif" style="height: 30px; display: @(sourceControlInfo.State == SourceControlState.Loading ? "inline" : "none")" />
-        </h1>
-
-        switch (sourceControlInfo.SourceControl.Type)
-        {
-            case SourceControlType.Svn:
-
-                IEnumerable<ProjectInfo> projectsInfo = sourceControlInfo.ProjectsInfo;
-                IEnumerable<IGrouping<string, ProjectInfo>> groupedProjects = projectsInfo.GroupBy(p => p.Project.SolutionFile);
-
-                foreach (var group in groupedProjects)
-                {
-                    <h5><img src="~/Resources/Layout/Images/Icons/VsSolution.png" /> @group.Key</h5>
-
-                    foreach (ProjectInfo projectInfo in group.Where(p => p.Project.ProjectType == ProjectType.Web))
-                    {
-                        <div class="row project">
-                            <div class="col-md-6">
-                                <div class="name">
-                                    <img src="~/Resources/Layout/Images/Icons/VsWebProject.png" />
-                                    @projectInfo.Project.Name – @projectInfo.ProjectState
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                @foreach (Bundle bundle in projectInfo.Project.Bundles)
-                                {
-                                    <p>@bundle.Name</p>
-                                }
-                            </div>
-                        </div>
-                    }
-                    foreach (ProjectInfo projectInfo in group.Where(p => p.Project.ProjectType == ProjectType.Test))
-                    {
-                        <div class="row project">
-                            <div class="col-md-6">
-                                <div class="name">
-                                    <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
-                                    @projectInfo.Project.Name – @projectInfo.ProjectState
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                @foreach (Bundle bundle in projectInfo.Project.Bundles)
-                                {
-                                    <p>@bundle.Name</p>
-                                }
-                            </div>
-                        </div>
-                    }
-
-
-
-
-                }
-                break;
-
-            case SourceControlType.Git:
-
-                break;
-
-            case SourceControlType.FileSystem:
-            <div class="row project">
-                <div class="col-md-6">
-                    <div class="name">
-                        <div>@sourceControlInfo.SourceControl.GetStringProperty("Path")</div>
-                    </div>
-                </div>
-            </div>
-
-                break;
-
-            default:
-                break;
-        }
+            }*@
 
         <br />
     }
@@ -136,50 +154,50 @@
 </div>
 @*
 
-<script>
+    <script>
 
-    $(function ()
-    {
-
-        setInterval(function ()
+        $(function ()
         {
 
-            $.ajax('@Url.Action("GetSourceControlStates")').success(function (data)
+            setInterval(function ()
             {
 
-                for (var i = 0; i < data.length; i++)
+                $.ajax('@Url.Action("GetSourceControlStates")').success(function (data)
                 {
-                    var header = $("#idSourceControl" + data[i].id);
-                    var small = header.find("small.state");
-                    var img = header.find("img");
 
-                    switch (data[i].state)
+                    for (var i = 0; i < data.length; i++)
                     {
-                        case 1:
-                            small.fadeOut('');
-                            img.fadeOut();
-                            break;
+                        var header = $("#idSourceControl" + data[i].id);
+                        var small = header.find("small.state");
+                        var img = header.find("img");
 
-                        case 2:
-                            small.fadeIn();
-                            small.text('Loading..');
-                            img.fadeIn();
-                            break;
+                        switch (data[i].state)
+                        {
+                            case 1:
+                                small.fadeOut('');
+                                img.fadeOut();
+                                break;
 
-                        case 4:
-                            small.fadeIn();
-                            small.text('Error');
-                            img.fadeOut();
-                            break;
+                            case 2:
+                                small.fadeIn();
+                                small.text('Loading..');
+                                img.fadeIn();
+                                break;
+
+                            case 4:
+                                small.fadeIn();
+                                small.text('Error');
+                                img.fadeOut();
+                                break;
+                        }
+
                     }
 
-                }
+                });
 
-            });
+            }, 3000);
 
-        }, 3000);
+        });
 
-    });
-
-</script>
+    </script>
 *@

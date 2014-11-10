@@ -129,9 +129,11 @@
     <Content Include="Resources\JavaScripts\bootstrap.min.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
+    <Content Include="Resources\Layout\Images\Icons\box16.png" />
     <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
     <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
+    <Content Include="Resources\Layout\Images\Icons\new16.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
     <Content Include="Resources\Layout\Images\Icons\VsSolution.png" />
     <Content Include="Resources\Layout\Images\Icons\VsTestProject.png" />
@@ -162,8 +164,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BundleInfo.cs" />
-    <Compile Include="Models\ProjectInfo.cs" />
+    <Compile Include="Models\BundleVersionInfo.cs" />
+    <Compile Include="Models\ProjectVersionInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
+    <Compile Include="Models\SourceControlVersionInfo.cs" />
     <Compile Include="Mvc\ControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

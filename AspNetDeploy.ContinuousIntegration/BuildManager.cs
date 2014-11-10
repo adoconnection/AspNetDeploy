@@ -16,9 +16,9 @@ namespace AspNetDeploy.ContinuousIntegration
             this.buildServiceFactory = buildServiceFactory;
         }
 
-        public void Build(int sourceControlId, string solutionFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
+        public void Build(int sourceControlVersionId, string solutionFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
         {
-            string sourcesFolder = string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\trunk", sourceControlId);
+            string sourcesFolder = string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\trunk", sourceControlVersionId);
             IBuildService buildService = buildServiceFactory.Create(SolutionType.VisualStudio);
 
             AspNetDeployEntities entities = new AspNetDeployEntities();
@@ -27,26 +27,26 @@ namespace AspNetDeploy.ContinuousIntegration
                 Path.Combine(sourcesFolder, solutionFileName),
                 projectFileName =>
                 {
-                    Project project = entities.Project
-                        .Where(p => p.SourceControlId == sourceControlId)
+                    ProjectVersion projectVersion = entities.ProjectVersion
+                        .Where(p => p.SourceControlVersionId == sourceControlVersionId)
                         .ToList()
                         .FirstOrDefault(p => Path.Combine(sourcesFolder, p.ProjectFile).ToLowerInvariant() == projectFileName.ToLowerInvariant());
 
-                    if (project != null)
+                    if (projectVersion != null)
                     {
-                        projectBuildStarted(project.Id);
+                        projectBuildStarted(projectVersion.Id);
                     }
                 },
                 (projectFileName, success) =>
                 {
-                    Project project = entities.Project
-                        .Where(p => p.SourceControlId == sourceControlId)
+                    ProjectVersion projectVersion = entities.ProjectVersion
+                        .Where(p => p.SourceControlVersionId == sourceControlVersionId)
                         .ToList()
                         .FirstOrDefault(p => Path.Combine(sourcesFolder, p.ProjectFile).ToLowerInvariant() == projectFileName.ToLowerInvariant());
 
-                    if (project != null)
+                    if (projectVersion != null)
                     {
-                        projectBuildComplete(project.Id, success);
+                        projectBuildComplete(projectVersion.Id, success);
                     }
                 });
         }

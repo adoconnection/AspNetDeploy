@@ -9,7 +9,7 @@ namespace ThreadHostedTaskRunner
 {
     public class SourceControlJob
     {
-        private int sourceControlId;
+        private int sourceControlVersionId;
 
         public BackgroundWorker Worker { get; set; }
 
@@ -24,7 +24,7 @@ namespace ThreadHostedTaskRunner
 
         public void Start(int sourceControlId)
         {
-            this.sourceControlId = sourceControlId;
+            this.sourceControlVersionId = sourceControlId;
             this.Worker.RunWorkerAsync();
         }
 
@@ -35,8 +35,8 @@ namespace ThreadHostedTaskRunner
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            TaskRunnerContext.SetSourceControlState(
-                this.sourceControlId, 
+            TaskRunnerContext.SetSourceControlVersionState(
+                this.sourceControlVersionId, 
                 e.Error == null 
                     ? SourceControlState.Idle 
                     : SourceControlState.Error);
@@ -45,13 +45,13 @@ namespace ThreadHostedTaskRunner
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             SourceControlManager sourceControlManager = Factory.GetInstance<SourceControlManager>();
-            UpdateAndParseResult updateAndParseResult = sourceControlManager.UpdateAndParse(this.sourceControlId);
+            UpdateAndParseResult updateAndParseResult = sourceControlManager.UpdateAndParse(this.sourceControlVersionId);
 /*
             if (updateAndParseResult.HasChanges)
             {
                 foreach (int projectId in updateAndParseResult.Projects)
                 {
-                    TaskRunnerContext.NeedToBuildProject(projectId, true);
+                    TaskRunnerContext.SetNeedToBuildProject(projectId, true);
                 }
             }*/
         }

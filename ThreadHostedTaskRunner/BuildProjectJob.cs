@@ -57,17 +57,17 @@ namespace ThreadHostedTaskRunner
             buildManager.Build(
                 this.sourceControlId, 
                 solutionFileName,
-                projectId => TaskRunnerContext.SetProjectState(projectId, ProjectState.Building),
+                projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building),
                 (projectId, isSuccess) =>
                 {
-                    TaskRunnerContext.SetProjectState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
-                    TaskRunnerContext.NeedToBuildProject(projectId, false);
+                    TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
+                    TaskRunnerContext.SetNeedToBuildProject(projectId, false);
 
                     foreach (Bundle bundle in projects.First(p => p.Id == projectId).Bundles)
                     {
-                        if (TaskRunnerContext.GetBundleState(bundle.Id) == BundleState.Building && bundle.Projects.All(p => TaskRunnerContext.GetProjectState(p.Id) == ProjectState.Idle))
+                        if (TaskRunnerContext.GetBundleVersionState(bundle.Id) == BundleState.Building && bundle.Projects.All(p => TaskRunnerContext.GetProjectVersionState(p.Id) == ProjectState.Idle))
                         {
-                            TaskRunnerContext.SetBundleState(bundle.Id, BundleState.Idle);
+                            TaskRunnerContext.SetBundleVersionState(bundle.Id, BundleState.Idle);
                         }
 
                     }
