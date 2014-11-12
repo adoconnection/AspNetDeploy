@@ -1,0 +1,132 @@
+﻿@using Environment = AspNetDeploy.Model.Environment
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    IList<Environment> environments = this.ViewBag.Environments;
+    BundleVersion bundleVersion = this.ViewBag.BundleVersion;
+
+
+    IList<Package> orderedPackages = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).ToList();
+    Package latestPackage = orderedPackages.FirstOrDefault();
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>
+    </h1>
+
+    <hr />
+    
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation"><a href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
+        <li role="presentation" class="active"><a href="#">Packages & Publications</a></li>
+    </ul>
+       
+    <hr />
+
+    <h3>Latest package</h3>
+
+    @if (latestPackage != null)
+    {
+        <p>@latestPackage.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @latestPackage.CreatedDate.ToLocalTime().ToString("H:mm")</p>
+    }
+    else
+    {
+        <p>no packages</p>
+    }
+    
+    <br/>
+    
+    <h3>Environments</h3>
+    <div class="row">
+        <div class="col-sm-3">
+            <h4>&nbsp;</h4>
+            <hr />
+        </div>
+        @foreach (Environment environment in environments)
+        {
+            <div class="col-sm-3">
+                <h4>@environment.Name</h4>
+                <hr/>
+            </div>
+        }
+    </div>
+    
+    @{
+        int packageIndex = 0;
+    }
+
+    @foreach (Package package in orderedPackages)
+    {
+        packageIndex++;
+        
+        <div class="row">
+            <div class="col-sm-3">
+                <p>@packageIndex – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm")</p>
+            </div>
+            @foreach (Environment environment in environments)
+            {
+                List<Publication> publications = package.Publications.Where(p => p.EnvironmentId == environment.Id).ToList();
+                
+                    
+                <div class="col-sm-3">
+                    
+                    @if (publications.Count == 0)
+                    {
+                        <p>–</p>
+                    }
+                    else
+                    {
+                        foreach (Publication publication in publications.OrderByDescending(p => p.CreatedDate))
+                        {
+                            <p>@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @publication.CreatedDate.ToLocalTime().ToString("H:mm")</p>
+                        }
+                    }
+
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+@helper ProjectGroup(BundleVersion bundleVersion, string name, ProjectType projectType)
+{
+    <h3>@name</h3>
+
+    if (bundleVersion.ProjectVersions.Any(pv => pv.ProjectType.HasFlag(projectType)))
+    {
+        foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions.Where(pv => pv.ProjectType.HasFlag(projectType)))
+        {
+            <div class="row">
+                <div class="col-sm-6">
+                    @if (projectVersion.ProjectType.HasFlag(ProjectType.Web))
+                    {
+                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG"/>
+                    }
+                    else if (projectVersion.ProjectType.HasFlag(ProjectType.Test))
+                    {
+                        <img src="~/Resources/Layout/Images/Icons/VsTestProject.PNG"/>
+                    }
+                    <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersion.Id })">@projectVersion.Name @projectVersion.SourceControlVersion.Name</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>–</div>
+    }
+    <br />
+}

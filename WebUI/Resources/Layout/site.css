@@ -48,6 +48,11 @@ H3 a:hover
     text-decoration: none;
 }
 
+.pageWrapper .nav-pills a
+{
+    border-bottom: none;
+}
+
 .environmentsPage .machine + .machine,
 .sourcesPage .project + .project
 {

@@ -17,14 +17,20 @@
             <div class="col-md-2 text-right">
                 <button class="btn btn-default btn-lg">Configure</button>
             </div>
-        </div>  
+        </div>
     </h1>
 
     <hr />
 
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation"><a href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
+        <li role="presentation" class="active"><a href="#">Deployment process</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+    </ul>
+    
+    <hr />
+
     @RenderSteps(bundleVersion, bundleVersion.DeploymentSteps)
-
-
 
 </div>
 
@@ -89,10 +95,6 @@
 @helper RenderRunPowerShellScript(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
     <h3>@(stepCounter). Script: @deploymentStep.GetStringProperty("Step.Title") <small>PowerShell</small></h3>
-}
-
-
-
 }
 
 @helper RenderCopyFiles(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)

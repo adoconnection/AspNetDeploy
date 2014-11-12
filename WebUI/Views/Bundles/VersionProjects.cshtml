@@ -22,6 +22,14 @@
 
     <hr />
 
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation" class="active"><a href="#">Projects</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+    </ul>
+
+    <hr />
+
     @ProjectGroup(bundleVersion, "Web projects", ProjectType.Web)
     @ProjectGroup(bundleVersion, "Test projects", ProjectType.Test)
 
@@ -41,11 +49,11 @@
                 <div class="col-sm-6">
                     @if (projectVersion.ProjectType.HasFlag(ProjectType.Web))
                     {
-                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG"/>
+                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
                     }
                     else if (projectVersion.ProjectType.HasFlag(ProjectType.Test))
                     {
-                        <img src="~/Resources/Layout/Images/Icons/VsTestProject.PNG"/>
+                        <img src="~/Resources/Layout/Images/Icons/VsTestProject.PNG" />
                     }
                     <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersion.Id })">@projectVersion.Name @projectVersion.SourceControlVersion.Name</a>
                 </div>

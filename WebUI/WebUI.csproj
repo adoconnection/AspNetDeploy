@@ -187,6 +187,7 @@
     <Content Include="Views\Bundles\VersionDeployment.cshtml" />
     <Content Include="Views\Bundles\VersionProjects.cshtml" />
     <Content Include="Views\ProjectVersions\Details.cshtml" />
+    <Content Include="Views\Bundles\VersionPackages.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
