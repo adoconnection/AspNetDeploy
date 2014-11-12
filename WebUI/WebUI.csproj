@@ -129,6 +129,7 @@
     <Content Include="Resources\JavaScripts\bootstrap.min.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
+    <Content Include="Resources\Layout\Images\Icons\box16-2.png" />
     <Content Include="Resources\Layout\Images\Icons\box16.png" />
     <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
@@ -159,6 +160,7 @@
     <Compile Include="Controllers\BundlesController.cs" />
     <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\ProjectVersionsController.cs" />
     <Compile Include="Controllers\SourcesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -182,6 +184,9 @@
     <Content Include="Views\Sources\Details.cshtml" />
     <Content Include="Views\Sources\AddChooseSource.cshtml" />
     <Content Include="Views\Sources\AddConfigure.cshtml" />
+    <Content Include="Views\Bundles\VersionDeployment.cshtml" />
+    <Content Include="Views\Bundles\VersionProjects.cshtml" />
+    <Content Include="Views\ProjectVersions\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

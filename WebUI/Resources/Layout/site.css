@@ -8,6 +8,7 @@ H2 a,
 H3 a
 {
     color: #000;
+    border-bottom: none;
 }
 H1 a:hover,
 H2 a:hover,
@@ -15,6 +16,7 @@ H3 a:hover
 {
     text-decoration: none;
 }
+
 
 .btn
 {
@@ -25,6 +27,25 @@ H3 a:hover
 .pageWrapper
 {
     margin-top: 70px;
+}
+
+.pageWrapper a
+{
+    color: #000;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.pageWrapper h1 a,
+.pageWrapper h2 a,
+.pageWrapper h3 a
+{
+    border-bottom: none;
+}
+
+.pageWrapper a:hover
+{
+    border-bottom: 1px solid #b3b3b3;
+    text-decoration: none;
 }
 
 .environmentsPage .machine + .machine,

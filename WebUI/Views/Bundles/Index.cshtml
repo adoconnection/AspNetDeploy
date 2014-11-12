@@ -7,6 +7,7 @@
 }
 
 <div class="container">
+    
 
     @foreach (BundleInfo bundleInfo in this.ViewBag.Bundles)
     {
@@ -18,7 +19,9 @@
         
         foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo)
         {
-            <h3>@bundleVersionInfo.BundleVersion.Name</h3>
+            <h3>
+                @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionProjects", new { id = bundleVersionInfo.BundleVersion.Id })
+            </h3>
         
             foreach (Environment environment in this.ViewBag.Environments)
             {

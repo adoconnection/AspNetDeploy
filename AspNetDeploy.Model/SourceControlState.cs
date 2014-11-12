@@ -4,9 +4,10 @@
     {
         Undefined = 0,
         Idle = 10,
-        PreparingToLoad = 20,
+        LoadingQueued = 20,
         Loading = 21,
         Stopping = 30,
-        Error = 40
+        Error = 40,
+        LockedByBundle = 100
     }
 }

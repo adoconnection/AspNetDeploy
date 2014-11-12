@@ -16,9 +16,9 @@ namespace AspNetDeploy.Model
     {
         public BundleVersion()
         {
-            this.DeploymentStep = new HashSet<DeploymentStep>();
+            this.DeploymentSteps = new HashSet<DeploymentStep>();
             this.ProjectVersions = new HashSet<ProjectVersion>();
-            this.Package = new HashSet<Package>();
+            this.Packages = new HashSet<Package>();
         }
     
         public int Id { get; set; }
@@ -26,8 +26,8 @@ namespace AspNetDeploy.Model
         public string Name { get; set; }
     
         public virtual Bundle Bundle { get; set; }
-        public virtual ICollection<DeploymentStep> DeploymentStep { get; set; }
+        public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
         public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
-        public virtual ICollection<Package> Package { get; set; }
+        public virtual ICollection<Package> Packages { get; set; }
     }
 }

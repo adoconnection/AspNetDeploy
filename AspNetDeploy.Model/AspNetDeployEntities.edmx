@@ -788,9 +788,9 @@
           <Property Name="BundleId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Bundle" Relationship="AspNetDeployModel.FK_BundleVersion_Bundle" FromRole="BundleVersion" ToRole="Bundle" />
-          <NavigationProperty Name="DeploymentStep" Relationship="AspNetDeployModel.FK_DeploymentStep_BundleVersion" FromRole="BundleVersion" ToRole="DeploymentStep" />
+          <NavigationProperty Name="DeploymentSteps" Relationship="AspNetDeployModel.FK_DeploymentStep_BundleVersion" FromRole="BundleVersion" ToRole="DeploymentStep" />
           <NavigationProperty Name="ProjectVersions" Relationship="AspNetDeployModel.ProjectVersionToBundleVersion" FromRole="BundleVersion" ToRole="ProjectVersion" />
-          <NavigationProperty Name="Package" Relationship="AspNetDeployModel.FK_Package_BundleVersion" FromRole="BundleVersion" ToRole="Package" />
+          <NavigationProperty Name="Packages" Relationship="AspNetDeployModel.FK_Package_BundleVersion" FromRole="BundleVersion" ToRole="Package" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -1103,7 +1103,7 @@
           <Property Name="BundleVersionId" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="BundleVersion" Relationship="AspNetDeployModel.FK_Package_BundleVersion" FromRole="Package" ToRole="BundleVersion" />
-          <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Package" ToRole="Publication" />
+          <NavigationProperty Name="Publications" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Package" ToRole="Publication" />
         </EntityType>
         <EntityType Name="Publication">
           <Key>

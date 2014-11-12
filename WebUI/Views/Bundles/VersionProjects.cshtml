@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    BundleVersion bundleVersion = this.ViewBag.BundleVersion;
+
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>
+    </h1>
+
+    <hr />
+
+    @ProjectGroup(bundleVersion, "Web projects", ProjectType.Web)
+    @ProjectGroup(bundleVersion, "Test projects", ProjectType.Test)
+
+
+
+</div>
+
+@helper ProjectGroup(BundleVersion bundleVersion, string name, ProjectType projectType)
+{
+    <h3>@name</h3>
+
+    if (bundleVersion.ProjectVersions.Any(pv => pv.ProjectType.HasFlag(projectType)))
+    {
+        foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions.Where(pv => pv.ProjectType.HasFlag(projectType)))
+        {
+            <div class="row">
+                <div class="col-sm-6">
+                    @if (projectVersion.ProjectType.HasFlag(ProjectType.Web))
+                    {
+                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG"/>
+                    }
+                    else if (projectVersion.ProjectType.HasFlag(ProjectType.Test))
+                    {
+                        <img src="~/Resources/Layout/Images/Icons/VsTestProject.PNG"/>
+                    }
+                    <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersion.Id })">@projectVersion.Name @projectVersion.SourceControlVersion.Name</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>–</div>
+    }
+    <br />
+}

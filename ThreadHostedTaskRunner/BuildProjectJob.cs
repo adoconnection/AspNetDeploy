@@ -49,8 +49,8 @@ namespace ThreadHostedTaskRunner
                 .Include("Properties")
                 .First(sc => sc.Id == sourceControlId);
 
-            List<Project> projects = entities.Project
-                .Include("Bundles")
+            List<ProjectVersion> projectVersions = entities.ProjectVersion
+                .Include("Project")
                 .ToList();
 
             BuildManager buildManager = Factory.GetInstance<BuildManager>();
@@ -61,15 +61,13 @@ namespace ThreadHostedTaskRunner
                 (projectId, isSuccess) =>
                 {
                     TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
-                    TaskRunnerContext.SetNeedToBuildProject(projectId, false);
 
-                    foreach (Bundle bundle in projects.First(p => p.Id == projectId).Bundles)
+                    foreach (BundleVersion bundleVersion in projectVersions.First(p => p.Id == projectId).BundleVersions)
                     {
-                        if (TaskRunnerContext.GetBundleVersionState(bundle.Id) == BundleState.Building && bundle.Projects.All(p => TaskRunnerContext.GetProjectVersionState(p.Id) == ProjectState.Idle))
+                        if (TaskRunnerContext.GetBundleVersionState(bundleVersion.Id) == BundleState.Building && bundleVersion.ProjectVersions.All(p => TaskRunnerContext.GetProjectVersionState(p.Id) == ProjectState.Idle))
                         {
-                            TaskRunnerContext.SetBundleVersionState(bundle.Id, BundleState.Idle);
+                            TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Idle);
                         }
-
                     }
 
                 });

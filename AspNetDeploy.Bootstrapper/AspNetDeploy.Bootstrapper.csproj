@@ -59,9 +59,17 @@
       <Project>{2F548CB9-6147-4CFB-B1F6-BE5C0259D675}</Project>
       <Name>SourceControls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
+      <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
+      <Name>LocalEnvironment</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
       <Name>ObjectFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Packagers\Packagers.csproj">
+      <Project>{35A84719-3B24-4D84-B632-B741AB9607BD}</Project>
+      <Name>Packagers</Name>
     </ProjectReference>
     <ProjectReference Include="..\ThreadHostedTaskRunner\ThreadHostedTaskRunner.csproj">
       <Project>{940D1369-A1DA-4025-A9C4-64A760891626}</Project>

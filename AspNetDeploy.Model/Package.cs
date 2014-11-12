@@ -16,7 +16,7 @@ namespace AspNetDeploy.Model
     {
         public Package()
         {
-            this.Publication = new HashSet<Publication>();
+            this.Publications = new HashSet<Publication>();
         }
     
         public int Id { get; set; }
@@ -24,6 +24,6 @@ namespace AspNetDeploy.Model
         public System.DateTime CreatedDate { get; set; }
     
         public virtual BundleVersion BundleVersion { get; set; }
-        public virtual ICollection<Publication> Publication { get; set; }
+        public virtual ICollection<Publication> Publications { get; set; }
     }
 }

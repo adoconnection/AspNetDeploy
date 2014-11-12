@@ -20,7 +20,7 @@ namespace AspNetDeploy.WebUI.Controllers
         {
             List<SourceControl> sourceControls = this.Entities.SourceControl
                 .Include("SourceControlVersions.Properties")
-                .Include("SourceControlVersions.ProjectVersions")
+                .Include("SourceControlVersions.ProjectVersions.BundleVersions")
                 .Include("Properties")
                 .ToList();
 
@@ -47,6 +47,20 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.View();
         }
 
+        public ActionResult ProjectVersionDetails(int id)
+        {
+            ProjectVersion projectVersion = this.Entities.ProjectVersion
+                .Include("Project")
+                .Include("BundleVersions")
+                .Include("SourceControlVersion.Properties")
+                .Include("SourceControlVersion.SourceControl.Properties")
+                .First(pv => pv.Id == id);
+
+            this.ViewBag.ProjectVersion = projectVersion;
+
+            return this.View();
+        }
+/*
         public ActionResult GetSourceControlStates()
         {
             List<SourceControl> sourceControls = this.Entities.SourceControl
@@ -64,14 +78,13 @@ namespace AspNetDeploy.WebUI.Controllers
                 .ToList();
 
             return this.Json(states, JsonRequestBehavior.AllowGet);
-        }
+        }*/
 
         public ActionResult Details(int id)
         {
             SourceControl sourceControl = this.Entities.SourceControl
-                .Include("Projects")
+                .Include("SourceControlVersions.Properties")
                 .Include("Properties")
-                .Include("Group")
                 .First( sc => sc.Id == id);
 
             this.ViewBag.SourceControl = sourceControl;

@@ -58,7 +58,7 @@
             break;
     }
     
-
+    
 </div>
 
 
@@ -74,6 +74,19 @@
     </dl>
 
     <hr />
+    
+    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
+    {
+        <h3>@sourceControlVersion.Name</h3>
+        <dl class="dl-horizontal">
+            <dt>URL</dt>
+            <dd>@sourceControlVersion.GetStringProperty("URL")</dd>
+            <dt>Revision</dt>
+            <dd>@sourceControl.GetStringProperty("Revision")</dd>
+        </dl>
+
+        <hr />
+    }
 }
 
 @helper RenderFileSystem(SourceControl sourceControl)

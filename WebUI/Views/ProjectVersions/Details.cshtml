@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "projectPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ProjectVersion projectVersion = this.ViewBag.ProjectVersion;
+}
+
+<div class="container">
+
+    
+    <h1>
+        <small>@projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name /</small>
+        @projectVersion.Name
+        <small>Project</small>
+    </h1>
+
+    <hr />
+    
+    @if (projectVersion.BundleVersions.Count > 0)
+    {
+        <h3>In bundles</h3>
+        <ul>
+            @foreach (BundleVersion bundleVersion in projectVersion.BundleVersions)
+            {
+                <li><a href="@Url.Action("VersionProjects", "Bundles", new { id = bundleVersion.Id })">@bundleVersion.Bundle.Name, @bundleVersion.Name</a></li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Not in bundles</p>
+    }
+
+    <br/>
+
+    <h3>Settings</h3>
+    @if (projectVersion.Project.GetBoolProperty("NotForDeployment"))
+    {
+        <p>Not for deployment – <a href="@Url.Action("MarkProjectForDeployment", new { id = projectVersion.Id})">Mark Eligible for deployment</a></p>
+    }
+    else
+    {
+        <p>Eligible for deployment – <a href="@Url.Action("MarkProjectNotForDeployment", new { id = projectVersion.Id})">Mark Not for deployment</a></p>
+    }
+</div>

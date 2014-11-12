@@ -43,6 +43,9 @@
     <Compile Include="IBuildService.cs" />
     <Compile Include="IBuildServiceFactory.cs" />
     <Compile Include="IContinuousIntegrationLogger.cs" />
+    <Compile Include="IPathServices.cs" />
+    <Compile Include="IProjectPackagerFactory.cs" />
+    <Compile Include="IProjectPackager.cs" />
     <Compile Include="ISolutionParser.cs" />
     <Compile Include="ISolutionParsersFactory.cs" />
     <Compile Include="ISolutionProject.cs" />

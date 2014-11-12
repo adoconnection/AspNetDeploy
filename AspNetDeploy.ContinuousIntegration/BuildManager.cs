@@ -10,18 +10,22 @@ namespace AspNetDeploy.ContinuousIntegration
     public class BuildManager
     {
         private readonly IBuildServiceFactory buildServiceFactory;
+        private readonly IPathServices pathServices;
 
-        public BuildManager(IBuildServiceFactory buildServiceFactory)
+        public BuildManager(IBuildServiceFactory buildServiceFactory, IPathServices pathServices)
         {
             this.buildServiceFactory = buildServiceFactory;
+            this.pathServices = pathServices;
         }
 
         public void Build(int sourceControlVersionId, string solutionFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
         {
-            string sourcesFolder = string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\trunk", sourceControlVersionId);
-            IBuildService buildService = buildServiceFactory.Create(SolutionType.VisualStudio);
-
             AspNetDeployEntities entities = new AspNetDeployEntities();
+
+            SourceControlVersion sourceControlVersion = entities.SourceControlVersion.Include("SourceControl").First( scv => scv.Id == sourceControlVersionId);
+
+            string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControl.Id, sourceControlVersion.Id);
+            IBuildService buildService = buildServiceFactory.Create(SolutionType.VisualStudio);
 
             buildService.Build(
                 Path.Combine(sourcesFolder, solutionFileName),

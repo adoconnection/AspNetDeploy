@@ -54,5 +54,36 @@ namespace AspNetDeploy.WebUI.Controllers
 
             return this.View();
         }
+
+        public ActionResult VersionProjects(int id)
+        {
+            BundleVersion bundleVersion = this.Entities.BundleVersion
+                .Include("Bundle")
+                .Include("ProjectVersions.Project.Properties")
+                .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
+                .Include("DeploymentSteps.Properties")
+                .Include("DeploymentSteps.MachineRoles")
+                .Include("Packages.Publications.Environment.Machines")
+                .First( b => b.Id == id);
+
+            this.ViewBag.BundleVersion = bundleVersion;
+
+            return this.View();
+        }
+        public ActionResult VersionDeployment(int id)
+        {
+            BundleVersion bundleVersion = this.Entities.BundleVersion
+                .Include("Bundle")
+                .Include("ProjectVersions.Project.Properties")
+                .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
+                .Include("DeploymentSteps.Properties")
+                .Include("DeploymentSteps.MachineRoles")
+                .Include("Packages.Publications.Environment.Machines")
+                .First( b => b.Id == id);
+
+            this.ViewBag.BundleVersion = bundleVersion;
+
+            return this.View();
+        }
     }
 }

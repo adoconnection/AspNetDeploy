@@ -10,11 +10,13 @@ namespace AspNetDeploy.ContinuousIntegration
     {
         private readonly ISourceControlRepositoryFactory sourceControlRepositoryFactory;
         private readonly ISolutionParsersFactory solutionParsersFactory;
+        private readonly IPathServices pathServices;
 
-        public SourceControlManager(ISourceControlRepositoryFactory sourceControlRepositoryFactory, ISolutionParsersFactory solutionParsersFactory)
+        public SourceControlManager(ISourceControlRepositoryFactory sourceControlRepositoryFactory, ISolutionParsersFactory solutionParsersFactory, IPathServices pathServices)
         {
             this.sourceControlRepositoryFactory = sourceControlRepositoryFactory;
             this.solutionParsersFactory = solutionParsersFactory;
+            this.pathServices = pathServices;
         }
 
         public UpdateAndParseResult UpdateAndParse(int sourceControlVersionId)
@@ -27,7 +29,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
             SourceControl sourceControl = sourceControlVersion.SourceControl;
 
-            string sourcesFolder = string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\{1}", sourceControl.Id, sourceControlVersion.Id);
+            string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControl.Id, sourceControlVersion.Id);
             LoadSourcesResult loadSourcesResult = this.LoadSources(sourceControlVersion, sourcesFolder);
 
             /*if (loadSourcesResult.RevisionId == sourceControlVersion.GetStringProperty("Revision"))

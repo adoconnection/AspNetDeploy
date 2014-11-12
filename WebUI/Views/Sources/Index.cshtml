@@ -44,7 +44,7 @@
 
                 @foreach (IGrouping<string, ProjectVersionInfo> group in groups)
                 {
-                            foreach (ProjectVersionInfo projectVersionInfo in group.OrderBy( p => p.ProjectVersion.Name))
+                            foreach (ProjectVersionInfo projectVersionInfo in group.OrderBy( p => p.ProjectVersion.ProjectType).ThenBy( p => p.ProjectVersion.Name))
                             {
                                 bool hasWeb = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Web);
                                 bool hasTest = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Test);
@@ -52,16 +52,27 @@
                                 if (hasWeb || hasTest)
                                 {
                                     <div>
-                                        @if (hasWeb)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
-                                        }
-                                        @if (hasTest)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
-                                        }
+                                        <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersionInfo.ProjectVersion.Id })">
+                                            @if (hasWeb)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
+                                            }
+                                            @if (hasTest)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
+                                            }
 
-                                        @projectVersionInfo.ProjectVersion.Name
+                                            @projectVersionInfo.ProjectVersion.Name
+
+                                            @if (projectVersionInfo.ProjectVersion.BundleVersions.Count > 0)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/box16-2.png" />
+                                            }
+                                            else if (!projectVersionInfo.ProjectVersion.Project.GetBoolProperty("NotForDeployment"))
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/new16.png" />
+                                            }
+                                        </a>
                                     </div>
                                 }
                             }
