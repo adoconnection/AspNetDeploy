@@ -1,4 +1,6 @@
-﻿@{
+﻿@using MvcSiteMapProvider.Reflection
+@using Newtonsoft.Json.Linq
+@{
     ViewBag.Title = "Index";
     ViewBag.PageClass = "bundlesPage";
 
@@ -31,6 +33,10 @@
     <hr />
 
     @RenderSteps(bundleVersion, bundleVersion.DeploymentSteps)
+    
+    <hr/>
+    
+    <a class="btn btn-default" href="@Url.Action("AddStep", "BundleVersionDeployment", new { id = bundleVersion.Id})">Add step</a>
 
 </div>
 
@@ -49,24 +55,49 @@
                 break;
 
             case DeploymentStepType.RunPowerShellScript:
-                @RenderRunPowerShellScript(bundleVersion, deploymentStep, stepCounter)
+            @RenderRunPowerShellScript(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.CopyFiles:
-                @RenderCopyFiles(bundleVersion, deploymentStep, stepCounter)
+            @RenderCopyFilesStep(bundleVersion, deploymentStep, stepCounter)
+                break;
+
+            case DeploymentStepType.Configuration:
+            @RenderConfigurationStep(bundleVersion, deploymentStep, stepCounter)
                 break;
         }
+        
         <br/>
     }
+}
+
+@helper RenderControlButtons(BundleVersion bundleVersion, DeploymentStep deploymentStep)
+{
+    <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+        <img src="~/Resources/Layout/Images/Icons/down16.png" />
+    </a>
+    <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+        <img src="~/Resources/Layout/Images/Icons/up16.png" />
+    </a>
+    <a class="btn btn-default" href="@Url.Action("EditStep", "BundleVersionDeployment", new { id = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+        <img src="~/Resources/Layout/Images/Icons/settings16.png" />
+    </a>
 }
 
 @helper RednerDeployWebSiteStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
     ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
 
-    <h3>@(stepCounter). Deploy: @deploymentStep.GetStringProperty("IIS.SiteName") <small>IIS</small></h3>
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Deploy: @deploymentStep.GetStringProperty("IIS.SiteName") <small>IIS</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
     <div class="row text-muted">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <ul>
                 <li>Roles:
                                 
@@ -94,12 +125,97 @@
 
 @helper RenderRunPowerShellScript(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
-    <h3>@(stepCounter). Script: @deploymentStep.GetStringProperty("Step.Title") <small>PowerShell</small></h3>
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Script: @deploymentStep.GetStringProperty("Step.Title") <small>PowerShell</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
 }
 
-@helper RenderCopyFiles(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
+@helper RenderCopyFilesStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
-    <h3>@(stepCounter). Copy: @deploymentStep.GetStringProperty("Step.Title") <small>Copy</small></h3>
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Copy: @deploymentStep.GetStringProperty("Step.Title") <small>Copy</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
+}
+
+
+
+
+@helper RenderConfigurationStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
+{
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Config: @deploymentStep.GetStringProperty("Step.Title") <small>Configuration</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
+    <div class="row text-muted">
+        <div class="col-md-12">
+            <ul>
+                @foreach (string file in deploymentStep.GetStringProperties("File"))
+                {
+                    <li>File: @file</li>
+                }
+                <li>
+                    <div>settings</div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @foreach (dynamic node in deploymentStep.GetDynamicProperty("SetValues").Properties())
+                            {
+                                @ConfigurationRecursiveWriter(node)
+                            }
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+}
+
+@helper ConfigurationRecursiveWriter(dynamic node)
+{
+    if (node is JArray)
+    {
+        foreach (dynamic item in node.Children())
+        {
+            @ConfigurationRecursiveWriter(item)
+        }
+
+        return;
+    }
+
+    <div>
+        
+        @if (node is JProperty)
+        {
+            @node.Name
+    
+            if (node.Value is JValue)
+            {
+                @: : <pre>@node.Value</pre>
+            }
+        }
+
+        @foreach (dynamic item in node.Children())
+        {
+            <div style="margin-left: 20px;">
+                @ConfigurationRecursiveWriter(item)
+            </div>
+        }
+    </div>
+
 }
 
 

@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    BundleVersion bundleVersion = this.ViewBag.BundleVersion;
+
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>
+    </h1>
+
+    <hr />
+
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation"><a href="@Url.Action("VersionProjects", "Bundles", new { id = bundleVersion.Id })">Projects</a></li>
+        <li role="presentation" class="active"><a href="#">Deployment process</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionPackages", "Bundles", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+    </ul>
+    
+    <hr />
+    
+    <h3>Add step</h3>
+    
+    <p>
+        <a href="#" class="btn btn-default btn-lg">Web project deployment step</a>
+    </p>
+    <p>
+        <a href="#" class="btn btn-default btn-lg">Configuration step</a><br />    
+    </p>
+    
+
+</div>

@@ -21,6 +21,7 @@ namespace AspNetDeploy.Model
         ClassLibrary = 8,
         Deployment = 16,
         Database = 32,
-        Test = 64
+        Test = 64,
+        WindowsApplication = 128
     }
 }

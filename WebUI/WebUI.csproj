@@ -108,6 +108,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\JavaScripts\Ace\ace.js" />
+    <Content Include="Resources\JavaScripts\Ace\autocomplete.js" />
+    <Content Include="Resources\JavaScripts\Ace\autocomplete\popup.js" />
+    <Content Include="Resources\JavaScripts\Ace\autocomplete\text_completer.js" />
+    <Content Include="Resources\JavaScripts\Ace\autocomplete\util.js" />
+    <Content Include="Resources\JavaScripts\Common.js" />
+    <Content Include="Resources\JavaScripts\Editor.js" />
+    <Content Include="Resources\JavaScripts\Ace\ext-searchbox.js" />
+    <Content Include="Resources\JavaScripts\Ace\language_tools.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-csharp.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-html.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-json.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-scss.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-sql.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-text.js" />
+    <Content Include="Resources\JavaScripts\Ace\mode-xml.js" />
+    <Content Include="Resources\JavaScripts\Ace\snippets.js" />
+    <Content Include="Resources\JavaScripts\Ace\theme-textmate.js" />
+    <Content Include="Resources\JavaScripts\shortcut.js" />
     <Content Include="Resources\Layout\Images\favicon.ico" />
     <Content Include="Resources\Layout\bootstrap-theme.css" />
     <Content Include="Resources\Layout\bootstrap-theme.min.css" />
@@ -131,11 +150,14 @@
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
     <Content Include="Resources\Layout\Images\Icons\box16-2.png" />
     <Content Include="Resources\Layout\Images\Icons\box16.png" />
+    <Content Include="Resources\Layout\Images\Icons\down16.png" />
     <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
     <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
     <Content Include="Resources\Layout\Images\Icons\new16.png" />
+    <Content Include="Resources\Layout\Images\Icons\settings16.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
+    <Content Include="Resources\Layout\Images\Icons\up16.png" />
     <Content Include="Resources\Layout\Images\Icons\VsSolution.png" />
     <Content Include="Resources\Layout\Images\Icons\VsTestProject.png" />
     <Content Include="Resources\Layout\Images\vs-loading-colored.gif" />
@@ -158,6 +180,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BundlesController.cs" />
+    <Compile Include="Controllers\BundleVersionDeploymentController.cs" />
     <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\ProjectVersionsController.cs" />
@@ -165,8 +188,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Binding.cs" />
     <Compile Include="Models\BundleInfo.cs" />
     <Compile Include="Models\BundleVersionInfo.cs" />
+    <Compile Include="Models\ConfigDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentStepModel.cs" />
+    <Compile Include="Models\WebSiteDeploymentStepModel.cs" />
     <Compile Include="Models\ProjectVersionInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
     <Compile Include="Models\SourceControlVersionInfo.cs" />
@@ -188,6 +215,11 @@
     <Content Include="Views\Bundles\VersionProjects.cshtml" />
     <Content Include="Views\ProjectVersions\Details.cshtml" />
     <Content Include="Views\Bundles\VersionPackages.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\AddStep.cshtml" />
+    <Content Include="Views\Shared\BindingEditor.cshtml" />
+    <Content Include="Views\Shared\RoleEditor.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditConfigStep.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditWebsiteStep.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -197,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Resources\JavaScripts\Ace\snippets\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

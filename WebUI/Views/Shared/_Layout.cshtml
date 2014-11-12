@@ -7,7 +7,8 @@
         <link href="~/Resources/Layout/site.css" rel="stylesheet" />
         <script src="~/Resources/JavaScripts/jquery-1.9.0.min.js"></script>
         <script src="~/Resources/JavaScripts/bootstrap.min.js"></script>
-        @RenderSection("head", required: false)
+        <script src="~/Resources/JavaScripts/Common.js"></script>
+        @RenderSection("Scripts", false)
     </head>
     <body class="@this.ViewBag.PageClass">
         

@@ -164,20 +164,22 @@ namespace ThreadHostedTaskRunner
                 TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Loading);
             }
 
-            Parallel.ForEach(sourceControlVersions, sourceControlVersion =>
-            {
-                TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Loading);
+            sourceControlVersions
+                .AsParallel()
+                .ForAll(sourceControlVersion =>
+                {
+                    TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Loading);
 
-                try
-                {
-                    (new SourceControlJob(sourceControlVersion.Id)).Start();
-                    TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Idle);
-                }
-                catch (Exception e)
-                {
-                    TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
-                }
-            });
+                    try
+                    {
+                        (new SourceControlJob(sourceControlVersion.Id)).Start();
+                        TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Idle);
+                    }
+                    catch (Exception e)
+                    {
+                        TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
+                    }
+                });
 
             foreach (BundleVersion bundleVersion in bundleVersions)
             {

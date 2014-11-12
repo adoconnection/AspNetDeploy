@@ -12,6 +12,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="IsSingleInstance" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BundleVersion">
           <Key>
@@ -763,12 +764,14 @@
           <Member Name="Deployment" Value="16" />
           <Member Name="Database" Value="32" />
           <Member Name="Test" Value="64" />
+          <Member Name="WindowsApplication" Value="128" />
         </EnumType>
         <EnumType Name="DeploymentStepType">
           <Member Name="Undefined" Value="0" />
           <Member Name="DeployWebSite" Value="1" />
           <Member Name="RunPowerShellScript" Value="2" />
           <Member Name="CopyFiles" Value="3" />
+          <Member Name="Configuration" Value="4" />
         </EnumType>
         <EntityType Name="Bundle">
           <Key>
@@ -779,6 +782,7 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BundleVersions" Relationship="AspNetDeployModel.FK_BundleVersion_Bundle" FromRole="Bundle" ToRole="BundleVersion" />
           <NavigationProperty Name="Projects" Relationship="AspNetDeployModel.ProjectToBundle" FromRole="Bundle" ToRole="Project" />
+          <Property Name="IsSingleInstance" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="BundleVersion">
           <Key>
@@ -1162,6 +1166,7 @@
           <EntitySetMapping Name="Bundle">
             <EntityTypeMapping TypeName="AspNetDeployModel.Bundle">
               <MappingFragment StoreEntitySet="Bundle">
+                <ScalarProperty Name="IsSingleInstance" ColumnName="IsSingleInstance" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

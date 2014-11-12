@@ -29,6 +29,7 @@ namespace AspNetDeploy.Model
 
             return JsonConvert.DeserializeObject(stringProperty);
         }
+        
 
         public IList<dynamic> GetDynamicProperties(string key)
         {
@@ -50,6 +51,21 @@ namespace AspNetDeploy.Model
         public IList<string> GetStringProperties(string key)
         {
             return this.Properties.Where(p => p.Key.ToLower() == key.ToLower()).Select( p => p.Value).ToList();
+        }
+
+        public void SetStringProperty(string key, string value)
+        {
+            DeploymentStepProperty property = this.Properties.FirstOrDefault(p => p.Key.ToLower() == key.ToLower());
+
+            if (property == null)
+            {
+                property = new DeploymentStepProperty();
+                property.DeploymentStep = this;
+                property.Key = key;
+                this.Properties.Add(property);
+            }
+
+            property.Value = value;
         }
     }
 }

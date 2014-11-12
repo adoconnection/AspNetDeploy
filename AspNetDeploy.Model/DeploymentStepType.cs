@@ -16,6 +16,7 @@ namespace AspNetDeploy.Model
         Undefined = 0,
         DeployWebSite = 1,
         RunPowerShellScript = 2,
-        CopyFiles = 3
+        CopyFiles = 3,
+        Configuration = 4
     }
 }

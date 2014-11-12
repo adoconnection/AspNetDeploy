@@ -18,10 +18,10 @@ namespace ConsoleTest
         {
             ObjectFactoryConfigurator.Configure();
 
-            PackageManager packageManager = Factory.GetInstance<PackageManager>();
-            packageManager.PackageBundle(4);
+            //PackageManager packageManager = Factory.GetInstance<PackageManager>();
+            //packageManager.PackageBundle(4);
 
-            //RunScheduler();
+            RunScheduler();
 
             Console.WriteLine("Complete");
             Console.ReadKey();

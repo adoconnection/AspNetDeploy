@@ -88,7 +88,17 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
 
             string typeGuid = visualStudioProject.TypeGuid.ToString();
 
-            if (xDocument.Descendants(fileNamespace + "UseIISExpress").Any())
+            XElement outputTypeElement = xDocument.Descendants(fileNamespace + "OutputType").FirstOrDefault();
+
+            if (outputTypeElement != null && outputTypeElement.Value == "Exe")
+            {
+                visualStudioProject.Type |= ProjectType.Console;
+            }
+            else if (outputTypeElement != null && outputTypeElement.Value == "WinExe")
+            {
+                visualStudioProject.Type |= ProjectType.WindowsApplication;
+            }
+            else if (xDocument.Descendants(fileNamespace + "UseIISExpress").Any())
             {
                 visualStudioProject.Type |= ProjectType.Web;
 

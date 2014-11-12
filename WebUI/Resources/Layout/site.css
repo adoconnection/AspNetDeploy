@@ -1,6 +1,7 @@
 ﻿body
 {
     overflow-y: scroll;
+    margin-bottom: 100px;
 }
 
 H1 a,
@@ -10,9 +11,9 @@ H3 a
     color: #000;
     border-bottom: none;
 }
-H1 a:hover,
-H2 a:hover,
-H3 a:hover
+H1 > a:hover,
+H2 > a:hover,
+H3 > a:hover
 {
     text-decoration: none;
 }
@@ -35,9 +36,9 @@ H3 a:hover
     border-bottom: 1px solid #e1e1e1;
 }
 
-.pageWrapper h1 a,
-.pageWrapper h2 a,
-.pageWrapper h3 a
+.pageWrapper h1 > a,
+.pageWrapper h2 > a,
+.pageWrapper h3 > a
 {
     border-bottom: none;
 }

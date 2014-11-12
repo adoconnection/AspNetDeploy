@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="61eaa0c85af947d68e243b5492cf8488" Name="Diagram1">
-        <EntityTypeShape EntityType="AspNetDeployModel.Bundle" Width="1.5" PointX="10.25" PointY="11.125" />
+        <EntityTypeShape EntityType="AspNetDeployModel.Bundle" Width="1.5" PointX="10.125" PointY="10.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.BundleVersion" Width="1.5" PointX="7.25" PointY="10.25" />
         <EntityTypeShape EntityType="AspNetDeployModel.DeploymentStep" Width="2" PointX="3.75" PointY="10.5" />
         <EntityTypeShape EntityType="AspNetDeployModel.DeploymentStepProperty" Width="2.375" PointX="0.5" PointY="10.5" />
