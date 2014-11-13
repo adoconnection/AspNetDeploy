@@ -26,6 +26,7 @@ namespace AspNetDeploy.Model
         public string Name { get; set; }
         public SourceControlType Type { get; set; }
         public bool IsDeleted { get; set; }
+        public int OrderIndex { get; set; }
     
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<SourceControlProperty> Properties { get; set; }

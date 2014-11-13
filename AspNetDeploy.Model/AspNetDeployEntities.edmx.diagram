@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="61eaa0c85af947d68e243b5492cf8488" Name="Diagram1">
         <EntityTypeShape EntityType="AspNetDeployModel.Bundle" Width="1.5" PointX="10.125" PointY="10.375" />
-        <EntityTypeShape EntityType="AspNetDeployModel.BundleVersion" Width="1.5" PointX="7.25" PointY="10.25" />
+        <EntityTypeShape EntityType="AspNetDeployModel.BundleVersion" Width="1.5" PointX="7.25" PointY="10.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.DeploymentStep" Width="2" PointX="3.75" PointY="10.5" />
         <EntityTypeShape EntityType="AspNetDeployModel.DeploymentStepProperty" Width="2.375" PointX="0.5" PointY="10.5" />
         <EntityTypeShape EntityType="AspNetDeployModel.Environment" Width="1.5" PointX="7.25" PointY="19" />
@@ -16,9 +16,9 @@
         <EntityTypeShape EntityType="AspNetDeployModel.Project" Width="1.5" PointX="10.125" PointY="7.125" />
         <EntityTypeShape EntityType="AspNetDeployModel.ProjectProperty" Width="1.5" PointX="12.375" PointY="7.25" />
         <EntityTypeShape EntityType="AspNetDeployModel.ProjectVersion" Width="1.875" PointX="7" PointY="6.625" />
-        <EntityTypeShape EntityType="AspNetDeployModel.SourceControl" Width="1.5" PointX="10.125" PointY="3.5" />
+        <EntityTypeShape EntityType="AspNetDeployModel.SourceControl" Width="1.5" PointX="10.125" PointY="3.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.SourceControlProperty" Width="1.5" PointX="12.25" PointY="3.625" />
-        <EntityTypeShape EntityType="AspNetDeployModel.SourceControlVersion" Width="2" PointX="7.125" PointY="3.5" />
+        <EntityTypeShape EntityType="AspNetDeployModel.SourceControlVersion" Width="2" PointX="7.125" PointY="3.25" />
         <EntityTypeShape EntityType="AspNetDeployModel.SourceControlVersionProperty" Width="2.625" PointX="3.875" PointY="3.375" />
         <AssociationConnector Association="AspNetDeployModel.FK_BundleVersion_Bundle" />
         <AssociationConnector Association="AspNetDeployModel.FK_DeploymentStep_BundleVersion" />
@@ -37,7 +37,7 @@
         <AssociationConnector Association="AspNetDeployModel.ProjectToBundle" />
         <AssociationConnector Association="AspNetDeployModel.ProjectVersionToBundleVersion" />
         <AssociationConnector Association="AspNetDeployModel.SourceControlToGroup" />
-        <EntityTypeShape EntityType="AspNetDeployModel.Package" Width="1.5" PointX="7.25" PointY="13.375" />
+        <EntityTypeShape EntityType="AspNetDeployModel.Package" Width="1.5" PointX="7.25" PointY="13.5" />
         <EntityTypeShape EntityType="AspNetDeployModel.Publication" Width="1.5" PointX="7.25" PointY="16" />
         <AssociationConnector Association="AspNetDeployModel.FK_Package_BundleVersion" />
         <AssociationConnector Association="AspNetDeployModel.FK_Publication_Environment" />

@@ -55,7 +55,7 @@
                     {
                         <img src="~/Resources/Layout/Images/Icons/VsTestProject.PNG" />
                     }
-                    <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersion.Id })">@projectVersion.Name @projectVersion.SourceControlVersion.Name</a>
+                    <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersion.Id })">@projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name @projectVersion.SourceControlVersion.Name</a>
                 </div>
             </div>
         }

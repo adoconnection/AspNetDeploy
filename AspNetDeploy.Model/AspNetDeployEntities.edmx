@@ -13,6 +13,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="IsSingleInstance" Type="bit" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="BundleVersion">
           <Key>
@@ -21,6 +22,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BundleId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -170,6 +172,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="TypeId" Type="int" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlProperty">
           <Key>
@@ -195,6 +198,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SourceControlId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -772,6 +776,8 @@
           <Member Name="RunPowerShellScript" Value="2" />
           <Member Name="CopyFiles" Value="3" />
           <Member Name="Configuration" Value="4" />
+          <Member Name="UpdateHostsFile" Value="5" />
+          <Member Name="RunSQLScript" Value="6" />
         </EnumType>
         <EntityType Name="Bundle">
           <Key>
@@ -783,6 +789,7 @@
           <NavigationProperty Name="BundleVersions" Relationship="AspNetDeployModel.FK_BundleVersion_Bundle" FromRole="Bundle" ToRole="BundleVersion" />
           <NavigationProperty Name="Projects" Relationship="AspNetDeployModel.ProjectToBundle" FromRole="Bundle" ToRole="Project" />
           <Property Name="IsSingleInstance" Type="Boolean" Nullable="false" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="BundleVersion">
           <Key>
@@ -795,6 +802,7 @@
           <NavigationProperty Name="DeploymentSteps" Relationship="AspNetDeployModel.FK_DeploymentStep_BundleVersion" FromRole="BundleVersion" ToRole="DeploymentStep" />
           <NavigationProperty Name="ProjectVersions" Relationship="AspNetDeployModel.ProjectVersionToBundleVersion" FromRole="BundleVersion" ToRole="ProjectVersion" />
           <NavigationProperty Name="Packages" Relationship="AspNetDeployModel.FK_Package_BundleVersion" FromRole="BundleVersion" ToRole="Package" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -911,6 +919,7 @@
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_SourceControlProperty_SourceControl" FromRole="SourceControl" ToRole="SourceControlProperty" />
           <NavigationProperty Name="SourceControlVersions" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControl" FromRole="SourceControl" ToRole="SourceControlVersion" />
           <NavigationProperty Name="Groups" Relationship="AspNetDeployModel.SourceControlToGroup" FromRole="SourceControl" ToRole="Group" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlProperty">
           <Key>
@@ -932,6 +941,7 @@
           <NavigationProperty Name="ProjectVersions" Relationship="AspNetDeployModel.FK_ProjectVersion_SourceControlVersion" FromRole="SourceControlVersion" ToRole="ProjectVersion" />
           <NavigationProperty Name="SourceControl" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControl" FromRole="SourceControlVersion" ToRole="SourceControl" />
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_SourceControlVersionProperty_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersionProperty" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -1166,6 +1176,7 @@
           <EntitySetMapping Name="Bundle">
             <EntityTypeMapping TypeName="AspNetDeployModel.Bundle">
               <MappingFragment StoreEntitySet="Bundle">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="IsSingleInstance" ColumnName="IsSingleInstance" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -1176,6 +1187,7 @@
           <EntitySetMapping Name="BundleVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.BundleVersion">
               <MappingFragment StoreEntitySet="BundleVersion">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="BundleId" ColumnName="BundleId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -1276,6 +1288,7 @@
           <EntitySetMapping Name="SourceControl">
             <EntityTypeMapping TypeName="AspNetDeployModel.SourceControl">
               <MappingFragment StoreEntitySet="SourceControl">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Type" ColumnName="TypeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -1296,6 +1309,7 @@
           <EntitySetMapping Name="SourceControlVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlVersion">
               <MappingFragment StoreEntitySet="SourceControlVersion">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

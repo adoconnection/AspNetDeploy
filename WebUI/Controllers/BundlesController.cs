@@ -20,6 +20,7 @@ namespace AspNetDeploy.WebUI.Controllers
         {
             List<Bundle> bundles = this.Entities.Bundle
                 .Include("BundleVersions.ProjectVersions")
+                .OrderBy( b => b.OrderIndex)
                 .ToList();
 
             this.ViewBag.Environments = this.Entities.Environment.ToList();

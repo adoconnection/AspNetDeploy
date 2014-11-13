@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using AspNetDeploy.Model;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AspNetDeploy.WebUI.Models
 {
     public class WebSiteDeploymentStepModel : DeploymentStepModel
     {
-        public BundleVersion ProjectVersion { get; set; }
+        public string SiteName { get; set; }
+        [Required]
+        public int ProjectId { get; set; }
         public string Destination { get; set; }
-
-        [UIHint("BindingEditor")]
-        public IEnumerable<Binding> Bindings { get; set; }
+        public string BindingsJson { get; set; }
     }
 }

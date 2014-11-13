@@ -23,6 +23,7 @@ namespace AspNetDeploy.Model
         public int Id { get; set; }
         public int SourceControlId { get; set; }
         public string Name { get; set; }
+        public int OrderIndex { get; set; }
     
         public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
         public virtual SourceControl SourceControl { get; set; }

@@ -26,7 +26,7 @@
 
     <ul class="nav nav-pills" role="tablist">
         <li role="presentation"><a href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
-        <li role="presentation" class="active"><a href="#">Deployment process</a></li>
+        <li role="presentation" class="active"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
         <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
     </ul>
     
@@ -34,7 +34,10 @@
 
     @RenderSteps(bundleVersion, bundleVersion.DeploymentSteps)
     
-    <hr/>
+    @if (bundleVersion.DeploymentSteps.Count > 0)
+    {
+        <hr />
+    }
     
     <a class="btn btn-default" href="@Url.Action("AddStep", "BundleVersionDeployment", new { id = bundleVersion.Id})">Add step</a>
 
@@ -73,11 +76,11 @@
 
 @helper RenderControlButtons(BundleVersion bundleVersion, DeploymentStep deploymentStep)
 {
-    <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-        <img src="~/Resources/Layout/Images/Icons/down16.png" />
-    </a>
     <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
         <img src="~/Resources/Layout/Images/Icons/up16.png" />
+    </a>
+    <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+        <img src="~/Resources/Layout/Images/Icons/down16.png" />
     </a>
     <a class="btn btn-default" href="@Url.Action("EditStep", "BundleVersionDeployment", new { id = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
         <img src="~/Resources/Layout/Images/Icons/settings16.png" />
@@ -106,7 +109,7 @@
                         <span class="label label-default">@role.Name</span>
                     }
                 </li>
-                <li>Source: @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
+                <li>Project: @projectVersion.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
                 <li>Destination: @deploymentStep.GetStringProperty("IIS.DestinationPath")</li>
                 <li>Enabled AppOffilne page: @deploymentStep.GetStringProperty("EnabledAppOffilnePage")</li>
                 <li>Bindings:
@@ -168,15 +171,27 @@
                     <li>File: @file</li>
                 }
                 <li>
+                    Roles:
+
+                    @foreach (MachineRole role in deploymentStep.MachineRoles)
+                    {
+                        <span class="label label-default">@role.Name</span>
+                    }
+                </li>
+                <li>
                     <div>settings</div>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            @foreach (dynamic node in deploymentStep.GetDynamicProperty("SetValues").Properties())
-                            {
-                                @ConfigurationRecursiveWriter(node)
-                            }
+                    
+                    @if (deploymentStep.GetDynamicProperty("SetValues") != null)
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                @foreach (dynamic node in deploymentStep.GetDynamicProperty("SetValues").Properties())
+                                {
+                                    @ConfigurationRecursiveWriter(node)
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
                 </li>
 
             </ul>

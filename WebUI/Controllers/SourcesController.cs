@@ -22,6 +22,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("SourceControlVersions.Properties")
                 .Include("SourceControlVersions.ProjectVersions.BundleVersions")
                 .Include("Properties")
+                .OrderBy(b => b.OrderIndex)
                 .ToList();
 
             this.ViewBag.SourceControls = sourceControls.Select( 

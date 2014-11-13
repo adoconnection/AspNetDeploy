@@ -17,6 +17,8 @@ namespace AspNetDeploy.Model
         DeployWebSite = 1,
         RunPowerShellScript = 2,
         CopyFiles = 3,
-        Configuration = 4
+        Configuration = 4,
+        UpdateHostsFile = 5,
+        RunSQLScript = 6
     }
 }

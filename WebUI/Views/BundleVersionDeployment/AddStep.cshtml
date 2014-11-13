@@ -33,10 +33,10 @@
     <h3>Add step</h3>
     
     <p>
-        <a href="#" class="btn btn-default btn-lg">Web project deployment step</a>
+        <a href="@Url.Action("AddStep", new { id = bundleVersion.Id, deploymentStepType = DeploymentStepType.DeployWebSite })" class="btn btn-default btn-lg">Web project deployment step</a>
     </p>
     <p>
-        <a href="#" class="btn btn-default btn-lg">Configuration step</a><br />    
+        <a href="@Url.Action("AddStep", new { id = bundleVersion.Id, deploymentStepType = DeploymentStepType.Configuration })" class="btn btn-default btn-lg">Configuration step</a>
     </p>
     
 

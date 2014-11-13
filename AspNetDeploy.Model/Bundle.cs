@@ -24,6 +24,7 @@ namespace AspNetDeploy.Model
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsSingleInstance { get; set; }
+        public int OrderIndex { get; set; }
     
         public virtual ICollection<BundleVersion> BundleVersions { get; set; }
         public virtual ICollection<Project> Projects { get; set; }

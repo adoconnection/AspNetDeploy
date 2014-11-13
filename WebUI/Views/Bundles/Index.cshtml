@@ -23,10 +23,40 @@
                 @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionProjects", new { id = bundleVersionInfo.BundleVersion.Id })
             </h3>
         
-            foreach (Environment environment in this.ViewBag.Environments)
-            {
-                <div>@environment.Name –</div>     
-            }
+            <div class="row">
+                <div class="col-sm-6">
+                    @if (bundleVersionInfo.BundleVersion.ProjectVersions.Count == 0)
+                    {
+                        <a href="@Url.Action("AddStep", "BundleVersionDeployment", new { id = bundleVersionInfo.BundleVersion.Id, deploymentStepType = DeploymentStepType.DeployWebSite })">Add project</a>
+                    }
+                    else
+                    {
+                        foreach (ProjectVersion projectVersion in bundleVersionInfo.BundleVersion.ProjectVersions)
+                        {
+                            <div>@projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-4">
+                    @foreach (Environment environment in this.ViewBag.Environments)
+                    {
+                        List<Publication> publications = bundleVersionInfo.BundleVersion.Packages.SelectMany( p => p.Publications).ToList();
+                        Publication publication = publications.OrderByDescending( p => p.CreatedDate).FirstOrDefault( p => p.Environment == environment);
+
+                        if (publication == null)
+                        {
+                            <div>@environment.Name – <small class="text-muted">none</small></div>
+                        }
+                        else
+                        {
+                            <div>@environment.Name – @publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @publication.CreatedDate.ToLocalTime().ToString("H:mm")</div>
+                        }
+
+                    }
+                </div>
+            </div>
+        
+            
         }
         
 

@@ -6,7 +6,7 @@ namespace AspNetDeploy.Model
 {
     public partial class DeploymentStep
     {
-        public int GetIntProperty(string key, int defaultValue)
+        public int GetIntProperty(string key, int defaultValue = 0)
         {
             string stringProperty = this.GetStringProperty(key);
 

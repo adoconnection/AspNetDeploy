@@ -24,6 +24,7 @@ namespace AspNetDeploy.Model
         public int Id { get; set; }
         public int BundleId { get; set; }
         public string Name { get; set; }
+        public int OrderIndex { get; set; }
     
         public virtual Bundle Bundle { get; set; }
         public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
