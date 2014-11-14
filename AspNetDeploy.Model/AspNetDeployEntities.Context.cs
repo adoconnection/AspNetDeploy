@@ -42,5 +42,7 @@ namespace AspNetDeploy.Model
         public virtual DbSet<SourceControlVersionProperty> SourceControlVersionProperty { get; set; }
         public virtual DbSet<Package> Package { get; set; }
         public virtual DbSet<Publication> Publication { get; set; }
+        public virtual DbSet<BundleVersionProperty> BundleVersionProperty { get; set; }
+        public virtual DbSet<ProjectVersionProperty> ProjectVersionProperty { get; set; }
     }
 }

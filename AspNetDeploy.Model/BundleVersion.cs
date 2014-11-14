@@ -19,16 +19,19 @@ namespace AspNetDeploy.Model
             this.DeploymentSteps = new HashSet<DeploymentStep>();
             this.ProjectVersions = new HashSet<ProjectVersion>();
             this.Packages = new HashSet<Package>();
+            this.Properties = new HashSet<BundleVersionProperty>();
         }
     
         public int Id { get; set; }
         public int BundleId { get; set; }
         public string Name { get; set; }
         public int OrderIndex { get; set; }
+        public bool IsHead { get; set; }
     
         public virtual Bundle Bundle { get; set; }
         public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }
         public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
         public virtual ICollection<Package> Packages { get; set; }
+        public virtual ICollection<BundleVersionProperty> Properties { get; set; }
     }
 }

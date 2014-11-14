@@ -10,7 +10,9 @@
         Building = 31,
         TestingQueued = 40,
         Testing = 41,
-        DeployingQueued = 50,
-        Deploying = 51
+        PackagingQueued = 50,
+        Packaging = 51,
+        DeployingQueued = 60,
+        Deploying = 61
     }
 }

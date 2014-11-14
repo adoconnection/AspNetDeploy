@@ -36,11 +36,22 @@ H3 > a:hover
     border-bottom: 1px solid #e1e1e1;
 }
 
+.loadingIcon
+{
+    height: 16px;
+}
+
 .pageWrapper h1 > a,
 .pageWrapper h2 > a,
 .pageWrapper h3 > a
 {
     border-bottom: none;
+}
+.pageWrapper h1 .loadingIcon,
+.pageWrapper h2 .loadingIcon,
+.pageWrapper h3 .loadingIcon
+{
+    height: 22px;
 }
 
 .pageWrapper a:hover

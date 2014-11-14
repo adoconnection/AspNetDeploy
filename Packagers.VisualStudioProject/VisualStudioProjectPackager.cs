@@ -41,7 +41,11 @@ namespace Packagers.VisualStudioProject
         private static void AddProjectDirectory(ZipFile zipFile, string projectRootFolder, string directory)
         {
             string directoryPath = Path.Combine(projectRootFolder, directory);
-            zipFile.AddDirectory(directoryPath, directory);
+
+            if (Directory.Exists(directoryPath))
+            {
+                zipFile.AddDirectory(directoryPath, directory);
+            }
         }
 
         private static void AddProjectFile(ZipFile zipFile, string projectRootFolder, string file)
@@ -49,7 +53,10 @@ namespace Packagers.VisualStudioProject
             string filePath = Path.Combine(projectRootFolder, file);
             string directoryPathInArchive = Path.GetDirectoryName(file);
 
-            zipFile.AddFile(filePath, directoryPathInArchive);
+            if (File.Exists(filePath))
+            {
+                zipFile.AddFile(filePath, directoryPathInArchive);
+            }
         }
     }
 }

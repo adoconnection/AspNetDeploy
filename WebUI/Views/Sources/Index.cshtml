@@ -29,7 +29,7 @@
                 <small>Other</small>
                     break;
             }
-
+            
         </h1>
 
         <hr />
@@ -40,7 +40,21 @@
             IEnumerable<IGrouping<string, ProjectVersionInfo>> groups = sourceControlVersionInfo.ProjectVersionsInfo.GroupBy(pvs => pvs.ProjectVersion.SolutionFile);
             
             <div class="col-sm-6">
-                <h3>@sourceControlVersionInfo.SourceControlVersion.Name</h3>
+                <h3>
+                    @sourceControlVersionInfo.SourceControlVersion.Name
+
+                    @if (sourceControlVersionInfo.SourceControlVersion.IsHead)
+                    {
+                        <small>Head</small>
+                    }
+                    
+                    <span id="@("idSourceControlVersion" + sourceControlVersionInfo.SourceControlVersion.Id)">    
+                        <small class="status" style="display: none;"></small>
+                        <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                    </span>
+                    
+
+                </h3>
 
                 @foreach (IGrouping<string, ProjectVersionInfo> group in groups)
                 {
@@ -77,6 +91,11 @@
                                     {
                                         <img src="~/Resources/Layout/Images/Icons/new16.png" />
                                     }
+                                    
+                                    <span id="@("idProjectVersion" + projectVersionInfo.ProjectVersion.Id)">
+                                        <small class="status text-muted" style="display: none;"></small>
+                                        <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                    </span>
                                 </a>
                             </div>
                         }
@@ -91,129 +110,101 @@
         }
     </div>
 
-
-
-        @*switch (sourceControlInfo.SourceControl.Type)
-            {
-                case SourceControlType.Svn:
-
-                    IEnumerable<ProjectVersionInfo> projectsInfo = sourceControlInfo.ProjectsInfo;
-                    IEnumerable<IGrouping<string, ProjectVersionInfo>> groupedProjects = projectsInfo.GroupBy(p => p.Project.SolutionFile);
-
-                    foreach (var group in groupedProjects)
-                    {
-                        <h5><img src="~/Resources/Layout/Images/Icons/VsSolution.png" /> @group.Key</h5>
-
-                        foreach (ProjectVersionInfo projectInfo in group.Where(p => p.Project.ProjectType == ProjectType.Web))
-                        {
-                            <div class="row project">
-                                <div class="col-md-6">
-                                    <div class="name">
-                                        <img src="~/Resources/Layout/Images/Icons/VsWebProject.png" />
-                                        @projectInfo.Project.Name – @projectInfo.ProjectState
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    @foreach (Bundle bundle in projectInfo.Project.Bundles)
-                                    {
-                                        <p>@bundle.Name</p>
-                                    }
-                                </div>
-                            </div>
-                        }
-                        foreach (ProjectVersionInfo projectInfo in group.Where(p => p.Project.ProjectType == ProjectType.Test))
-                        {
-                            <div class="row project">
-                                <div class="col-md-6">
-                                    <div class="name">
-                                        <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
-                                        @projectInfo.Project.Name – @projectInfo.ProjectState
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    @foreach (Bundle bundle in projectInfo.Project.Bundles)
-                                    {
-                                        <p>@bundle.Name</p>
-                                    }
-                                </div>
-                            </div>
-                        }
-
-
-
-
-                    }
-                    break;
-
-                case SourceControlType.Git:
-
-                    break;
-
-                case SourceControlType.FileSystem:
-                <div class="row project">
-                    <div class="col-md-6">
-                        <div class="name">
-                            <div>@sourceControlInfo.SourceControl.GetStringProperty("Path")</div>
-                        </div>
-                    </div>
-                </div>
-
-                    break;
-
-                default:
-                    break;
-            }*@
-
         <br />
     }
 
 </div>
-@*
 
-    <script>
+<script>
 
-        $(function ()
+    $(function ()
+    {
+        function updateStatuses()
         {
-
-            setInterval(function ()
+            var sourceControlStates =
             {
+                "Idle": {
+                    loadingIcon: false,
+                    text: ''
+                },
+                "LoadingQueued": {
+                    loadingIcon: false,
+                    text: 'Loading queued'
+                },
+                "Loading": {
+                    loadingIcon: true,
+                    text: 'Loading'
+                },
+                "Stopping": {
+                    loadingIcon: true,
+                    text: 'Stopping'
+                },
+                "Error": {
+                    loadingIcon: false,
+                    text: 'Error'
+                }
+            }
 
-                $.ajax('@Url.Action("GetSourceControlStates")').success(function (data)
+            var projectStates =
+            {
+                "Idle": {
+                    loadingIcon: false,
+                    text: ''
+                },
+                "QueuedToBuild": {
+                    loadingIcon: false,
+                    text: 'Build queued'
+                },
+                "Building": {
+                    loadingIcon: true,
+                    text: 'Building'
+                },
+                "Stopping": {
+                    loadingIcon: true,
+                    text: 'Stopping'
+                },
+                "Error": {
+                    loadingIcon: false,
+                    text: 'Error'
+                }
+            }
+
+            function updateStatus(element, newState)
+            {
+                var loadingIcon = element.find('.loadingIcon');
+                var statusBox = element.find('.status');
+
+                if (newState.text == statusBox.data('text'))
                 {
+                    return;
+                }
 
-                    for (var i = 0; i < data.length; i++)
+                statusBox.data('text', newState.text);
+
+                loadingIcon[newState.loadingIcon ? 'fadeIn' : 'fadeOut']();
+                statusBox[newState.text ? 'fadeIn' : 'fadeOut']().text(newState.text || '');
+            }
+
+            $.post('@Url.Action("GetSourceControlStates")').success(function (data)
+            {
+                for (var i = 0; i < data.length; i++)
+                {
+                    var item = data[i];
+                    updateStatus($("#idSourceControlVersion" + item.id), sourceControlStates[item.state]);
+
+                    for (var j = 0; j < item.projects.length; j++)
                     {
-                        var header = $("#idSourceControl" + data[i].id);
-                        var small = header.find("small.state");
-                        var img = header.find("img");
-
-                        switch (data[i].state)
-                        {
-                            case 1:
-                                small.fadeOut('');
-                                img.fadeOut();
-                                break;
-
-                            case 2:
-                                small.fadeIn();
-                                small.text('Loading..');
-                                img.fadeIn();
-                                break;
-
-                            case 4:
-                                small.fadeIn();
-                                small.text('Error');
-                                img.fadeOut();
-                                break;
-                        }
-
+                        var project = item.projects[j];
+                        updateStatus($("#idProjectVersion" + project.id), projectStates[project.state]);
                     }
+                }
 
-                });
+            });
+        }
 
-            }, 3000);
+        updateStatuses();
+        setInterval(updateStatuses, 3000);
 
-        });
+    });
 
-    </script>
-*@
+</script>

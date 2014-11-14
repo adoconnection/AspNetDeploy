@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using Microsoft.VisualBasic;
+using ThreadHostedTaskRunner.Jobs;
 
 namespace ThreadHostedTaskRunner
 {
@@ -16,7 +17,7 @@ namespace ThreadHostedTaskRunner
 
         public void Initialize()
         {
-            Timer.Change(new TimeSpan(0, 0, 10), new TimeSpan(0, 0, 30));
+            Timer.Change(new TimeSpan(0, 0, 10), new TimeSpan(0, 0, 10));
         }
 
         public void WatchForSources()
@@ -62,92 +63,74 @@ namespace ThreadHostedTaskRunner
 
             TakeSources(entities);
             BuildProjects(entities);
+            PackageBundles(entities);
             
+        }
+
+        private static void PackageBundles(AspNetDeployEntities entities)
+        {
+            List<BundleVersion> bundleVersions = entities.BundleVersion
+                .Include("ProjectVersions.SourceControlVersion.Properties")
+                .ToList();
+
+            List<ProjectVersion> projectVersions = bundleVersions
+                .SelectMany(scv => scv.ProjectVersions)
+                .Where(pv => 
+                        pv.ProjectType.HasFlag(ProjectType.WindowsApplication) || 
+                        pv.ProjectType.HasFlag(ProjectType.Service) ||
+                        pv.ProjectType.HasFlag(ProjectType.Console) ||
+                        pv.ProjectType.HasFlag(ProjectType.Web)
+                )
+                .Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastPackageRevision"))
+                .ToList();
+
+            List<BundleVersion> bundleVersionsToPack = projectVersions.SelectMany( pv => pv.BundleVersions).Distinct().ToList();
+
+            bundleVersionsToPack.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Packaging));
+
+            bundleVersionsToPack.ForEach(bundleVersion =>
+            {
+                PackageJob job = new PackageJob();
+                job.Start(bundleVersion.Id);
+
+            });
+
+            bundleVersionsToPack.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
         }
 
         private static void BuildProjects(AspNetDeployEntities entities)
         {
             List<BundleVersion> bundleVersions = entities.BundleVersion
-                .Include("Bundle")
-                .Include("ProjectVersions.SourceControlVersion")
-                .Where( bv => bv.ProjectVersions.Any())
+                .Include("ProjectVersions.SourceControlVersion.Properties")
                 .ToList();
 
-            foreach (BundleVersion bundleVersion in bundleVersions)
-            {
-                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Building);
-
-                foreach (var pair in bundleVersion.ProjectVersions.Select(pv => new { pv.SolutionFile, pv.SourceControlVersion }).Distinct())
-                {
-                    BuildProjectJob job = new BuildProjectJob();
-                    job.Start(pair.SourceControlVersion.Id, pair.SolutionFile);
-                }
-
-                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Idle);
-            }
-        }
-
-    /*    private static void ProcessProjects(AspNetDeployEntities entities)
-        {
-            List<Bundle> bundles = entities.Bundle
-                .Include("Projects.SourceControl.Properties")
+            List<ProjectVersion> projectVersions = bundleVersions
+                .SelectMany( scv=> scv.ProjectVersions)
+                .Where(pv => 
+                    (
+                        pv.ProjectType.HasFlag(ProjectType.WindowsApplication) || 
+                        pv.ProjectType.HasFlag(ProjectType.Service) ||
+                        pv.ProjectType.HasFlag(ProjectType.Console) ||
+                        pv.ProjectType.HasFlag(ProjectType.Web)
+                    ))
+                .Where(pv => 
+                    pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
                 .ToList();
 
-            List<Project> projectsToBuild = new List<Project>();
+            bundleVersions.ForEach( bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building));
 
-            Parallel.ForEach(bundles, bundle =>
-            {
-                if (bundle.Projects.Any(p => TaskRunnerContext.GetProjectVersionState(p.Id) != ProjectState.Idle))
-                {
-                    return;
-                }
-
-                if (bundle.Projects.Any(p => TaskRunnerContext.GetSourceControlVersionState(p.SourceControl.Id) != SourceControlState.Idle))
-                {
-                    return;
-                }
-
-                if (TaskRunnerContext.GetBundleVersionState(bundle.Id) == BundleState.Idle)
-                {
-                    foreach (SourceControl sourceControl in bundle.Projects.Select( p => p.SourceControl))
-                    {
-                        if (sourceControl.GetStringProperty("Revision") != sourceControl.GetStringProperty("LastBuildRevision"))
-                        {
-                            foreach (Project project in sourceControl.Projects)
-                            {
-                                TaskRunnerContext.SetNeedToBuildProject(project.Id, true);
-                            }
-                        }
-                    }
-
-                    foreach (Project project in bundle.Projects.Where( p => TaskRunnerContext.GetNeedToBuildProject(p.Id)))
-                    {
-                        TaskRunnerContext.SetProjectVersionState(project.Id, ProjectState.QueuedToBuild);
-
-                        foreach (Bundle projectBundle in project.Bundles)
-                        {
-                            TaskRunnerContext.SetBundleVersionState(projectBundle.Id, BundleState.BuildQueued);
-                        }
-
-                        projectsToBuild.Add(project);
-                    }
-                }
-            });*/
-/*
-            var pairs = projectsToBuild.Select(p => new {p.SourceControl, p.SolutionFile, p.Bundles}).Distinct().ToList();
-
-            foreach (var pair in pairs)
+            foreach (var pair in projectVersions.Select(pv => new { pv.SolutionFile, pv.SourceControlVersion }).Distinct())
             {
                 BuildProjectJob job = new BuildProjectJob();
-                job.Start(pair.SourceControl.Id, pair.SolutionFile);
-
-                foreach (Bundle bundle in pair.Bundles)
-                {
-                    TaskRunnerContext.SetBundleVersionState(bundle.Id, BundleState.Building);
-                }
+                job.Start(
+                    pair.SourceControlVersion.Id, 
+                    pair.SolutionFile, 
+                    (projectId, isSuccess) => TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error));
             }
+
+            bundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
         }
-*/
+
         private static void TakeSources(AspNetDeployEntities entities)
         {
             List<SourceControlVersion> sourceControlVersions = entities.SourceControlVersion
@@ -165,8 +148,7 @@ namespace ThreadHostedTaskRunner
             }
 
             sourceControlVersions
-                .AsParallel()
-                .ForAll(sourceControlVersion =>
+                .ForEach(sourceControlVersion =>
                 {
                     TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Loading);
 

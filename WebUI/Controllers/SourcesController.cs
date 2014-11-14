@@ -61,25 +61,27 @@ namespace AspNetDeploy.WebUI.Controllers
 
             return this.View();
         }
-/*
+
+        [HttpPost]
         public ActionResult GetSourceControlStates()
         {
-            List<SourceControl> sourceControls = this.Entities.SourceControl
-                .Include("Projects")
-                .Include("Properties")
-                .Include("Group")
-                .ToList();
+            List<SourceControlVersion> sourceControlVersions = this.Entities.SourceControlVersion.ToList();
 
-            var states = sourceControls.Select(
-                sc => new 
+            var states = sourceControlVersions.Select(
+                scv => new 
                 {
-                    id = sc.Id,
-                    state = this.taskRunner.GetSourceControlState(sc.Id)
+                    id = scv.Id,
+                    state = this.taskRunner.GetSourceControlState(scv.Id).ToString(),
+                    projects = scv.ProjectVersions.Select(pv => new
+                    {
+                        id = pv.Id,
+                        state = this.taskRunner.GetProjectState(pv.Id).ToString()
+                    }).ToList()
                 })
                 .ToList();
 
             return this.Json(states, JsonRequestBehavior.AllowGet);
-        }*/
+        }
 
         public ActionResult Details(int id)
         {

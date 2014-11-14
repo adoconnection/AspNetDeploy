@@ -48,13 +48,22 @@ namespace AspNetDeploy.ContinuousIntegration
                    
                     IProjectPackager projectPackager = projectPackagerFactory.Create(projectVersion.ProjectType);
 
-                    projectPackager.Package(projectPath, projectPackagePath);
-                    zipFile.AddFile(projectPackagePath, projectVersion.Id + "-" + projectVersion.SourceControlVersion.GetStringProperty("Revision") + ".zip");
+                    if (!File.Exists(projectPackagePath))
+                    {
+                        projectPackager.Package(projectPath, projectPackagePath); 
+                    }
+                    
+                    zipFile.AddFile(projectPackagePath, "/");
                 }
 
                 zipFile.Save(this.pathServices.GetBundlePackagePath(bundleVersionId, package.Id));
             }
 
+            foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)
+            {
+                string projectPackagePath = this.pathServices.GetProjectPackagePath(projectVersion.Id, projectVersion.SourceControlVersion.GetStringProperty("Revision"));
+                File.Delete(projectPackagePath);
+            }
         }
     }
 }

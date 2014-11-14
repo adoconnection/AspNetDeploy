@@ -73,12 +73,11 @@
         
         <div class="row">
             <div class="col-sm-3">
-                <p>@packageIndex – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm")</p>
+                <p>@packageIndex – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm") <small class="text-muted">(@package.Id)</small></p>
             </div>
             @foreach (Environment environment in environments)
             {
                 List<Publication> publications = package.Publications.Where(p => p.EnvironmentId == environment.Id).ToList();
-                
                     
                 <div class="col-sm-3">
                     

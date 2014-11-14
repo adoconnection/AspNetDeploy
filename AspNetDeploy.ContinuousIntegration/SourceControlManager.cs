@@ -32,10 +32,10 @@ namespace AspNetDeploy.ContinuousIntegration
             string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControl.Id, sourceControlVersion.Id);
             LoadSourcesResult loadSourcesResult = this.LoadSources(sourceControlVersion, sourcesFolder);
 
-            /*if (loadSourcesResult.RevisionId == sourceControlVersion.GetStringProperty("Revision"))
+            if (loadSourcesResult.RevisionId == sourceControlVersion.GetStringProperty("Revision"))
             {
                 return new UpdateAndParseResult();
-            }*/
+            }
 
             sourceControlVersion.SetStringProperty("Revision", loadSourcesResult.RevisionId);
             entities.SaveChanges();

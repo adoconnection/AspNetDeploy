@@ -13,7 +13,6 @@
     {
         <h1>
             @Html.ActionLink(bundleInfo.Bundle.Name, "Details", new { id = bundleInfo.Bundle.Id })
-            
         </h1>
         <hr />
         
@@ -21,6 +20,17 @@
         {
             <h3>
                 @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionProjects", new { id = bundleVersionInfo.BundleVersion.Id })
+
+                @if (bundleVersionInfo.BundleVersion.IsHead)
+                {
+                    <small>Head</small>
+                }
+                
+                <span id="@("idBundleVersion" + bundleVersionInfo.BundleVersion.Id)">
+                    <small class="status" style="display: none;"></small>
+                    <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                </span>
+
             </h3>
         
             <div class="row">
@@ -33,7 +43,13 @@
                     {
                         foreach (ProjectVersion projectVersion in bundleVersionInfo.BundleVersion.ProjectVersions)
                         {
-                            <div>@projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</div>
+                            <div>
+                                @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name
+                                <span id="@("idProjectVersion" + projectVersion.Id)">
+                                    <small class="status text-muted" style="display: none;"></small>
+                                    <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                </span>
+                            </div>
                         }
                     }
                 </div>
@@ -81,5 +97,120 @@
 
 </div>
 
+<script>
 
+    $(function ()
+    {
+        function updateStatuses()
+        {
+            var bundleStates =
+            {
+                "Idle": {
+                    loadingIcon: false,
+                    text: ''
+                },
+                "LoadingQueued": {
+                    loadingIcon: false,
+                    text: 'Loading queued'
+                },
+                "Loading": {
+                    loadingIcon: true,
+                    text: 'Loading'
+                },
+                "BuildQueued": {
+                    loadingIcon: false,
+                    text: 'Building queued'
+                },
+                "Building": {
+                    loadingIcon: true,
+                    text: 'Building'
+                },
+                "TestingQueued": {
+                    loadingIcon: false,
+                    text: 'Testing queued'
+                },
+                "Testing": {
+                    loadingIcon: true,
+                    text: 'Testing'
+                },
+                "PackagingQueued": {
+                    loadingIcon: false,
+                    text: 'Packaging queued'
+                },
+                "Packaging": {
+                    loadingIcon: true,
+                    text: 'Packaging'
+                },
+                "DeployingQueued": {
+                    loadingIcon: false,
+                    text: 'Deploying queued'
+                },
+                "Deploying": {
+                    loadingIcon: true,
+                    text: 'Deploying'
+                }
+            }
 
+            var projectStates =
+            {
+                "Idle": {
+                    loadingIcon: false,
+                    text: ''
+                },
+                "QueuedToBuild": {
+                    loadingIcon: false,
+                    text: 'Build queued'
+                },
+                "Building": {
+                    loadingIcon: true,
+                    text: 'Building'
+                },
+                "Stopping": {
+                    loadingIcon: true,
+                    text: 'Stopping'
+                },
+                "Error": {
+                    loadingIcon: false,
+                    text: 'Error'
+                }
+            }
+
+            function updateStatus(element, newState)
+            {
+                var loadingIcon = element.find('.loadingIcon');
+                var statusBox = element.find('.status');
+
+                if (newState.text == statusBox.data('text'))
+                {
+                    return;
+                }
+
+                statusBox.data('text', newState.text);
+
+                loadingIcon[newState.loadingIcon ? 'fadeIn' : 'fadeOut']();
+                statusBox[newState.text ? 'fadeIn' : 'fadeOut']().text(newState.text || '');
+            }
+
+            $.post('@Url.Action("GetBundleStates")').success(function (data)
+            {
+                for (var i = 0; i < data.length; i++)
+                {
+                    var item = data[i];
+                    updateStatus($("#idBundleVersion" + item.id), bundleStates[item.state]);
+
+                    for (var j = 0; j < item.projects.length; j++)
+                    {
+                        var project = item.projects[j];
+                        updateStatus($("#idProjectVersion" + project.id), projectStates[project.state]);
+                    }
+                }
+
+            });
+        }
+
+        updateStatuses();
+        setInterval(updateStatuses, 3000);
+
+    });
+
+</script>

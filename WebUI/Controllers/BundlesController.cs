@@ -105,5 +105,28 @@ namespace AspNetDeploy.WebUI.Controllers
 
             return this.View();
         }
+
+        [HttpPost]
+        public ActionResult GetBundleStates()
+        {
+            List<BundleVersion> bundleVersions = this.Entities.BundleVersion
+                .Include("ProjectVersions")
+                .ToList();
+
+            var states = bundleVersions.Select(
+                bv => new
+                {
+                    id = bv.Id,
+                    state = this.taskRunner.GetBundleState(bv.Id).ToString(),
+                    projects = bv.ProjectVersions.Select(pv => new
+                    {
+                        id = pv.Id,
+                        state = this.taskRunner.GetProjectState(pv.Id).ToString()
+                    }).ToList()
+                })
+                .ToList();
+
+            return this.Json(states, JsonRequestBehavior.AllowGet);
+        }
     }
 }

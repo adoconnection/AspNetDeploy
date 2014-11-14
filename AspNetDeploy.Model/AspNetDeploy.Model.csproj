@@ -73,6 +73,9 @@
     <Compile Include="BundleVersion.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="BundleVersionProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="ContinuousIntegrationLoggerEvent.cs" />
     <Compile Include="DeploymentStep.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
@@ -113,6 +116,10 @@
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="ProjectVersion.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectVersionExtender.cs" />
+    <Compile Include="ProjectVersionProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

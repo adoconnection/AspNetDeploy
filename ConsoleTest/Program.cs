@@ -14,6 +14,8 @@ namespace ConsoleTest
 {
     class Program
     {
+        private static bool WorkerComplete = false;
+
         static void Main(string[] args)
         {
             ObjectFactoryConfigurator.Configure();
@@ -34,7 +36,11 @@ namespace ConsoleTest
             BackgroundWorker worker = new BackgroundWorker();
 
             worker.DoWork += (sender, eventArgs) => ThreadTaskRunner.ProcessTasks();
-            worker.RunWorkerCompleted += (sender, eventArgs) => Console.WriteLine("Worker Complete");
+            worker.RunWorkerCompleted += (sender, eventArgs) =>
+            {
+                Console.WriteLine("Worker Complete");
+                WorkerComplete = true;
+            };
             worker.RunWorkerAsync();
 
             AspNetDeployEntities entities = new AspNetDeployEntities();
@@ -62,11 +68,19 @@ namespace ConsoleTest
 
                 foreach (ProjectVersion projectVersion in projectVersions.Where(p => TaskRunnerContext.GetProjectVersionState(p.Id) != ProjectState.Idle))
                 {
-                    Console.WriteLine(projectVersion.Id + " - " + projectVersion.Project.Name + " - " + TaskRunnerContext.GetProjectVersionState(projectVersion.Id));
+                    Console.WriteLine(
+                        projectVersion.SourceControlVersion.SourceControl.Name + "/ " +  
+                        projectVersion.SourceControlVersion.Name + "/ " +  
+                        projectVersion.Id + " - " + projectVersion.Project.Name + " - " + TaskRunnerContext.GetProjectVersionState(projectVersion.Id));
                 }
 
-                if (sourceControls.All(scv => TaskRunnerContext.GetSourceControlVersionState(scv.Id) == SourceControlState.Idle) &&
+                /*if (sourceControls.All(scv => TaskRunnerContext.GetSourceControlVersionState(scv.Id) == SourceControlState.Idle) &&
                     bundleVersions.All(bv => TaskRunnerContext.GetBundleVersionState(bv.Id) == BundleState.Idle))
+                {
+                    break;
+                }*/
+
+                if (WorkerComplete)
                 {
                     break;
                 }

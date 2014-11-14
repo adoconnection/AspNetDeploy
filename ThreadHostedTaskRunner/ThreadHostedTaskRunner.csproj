@@ -42,13 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildProjectJob.cs" />
-    <Compile Include="IContinuousIntegrationLogger.cs" />
-    <Compile Include="ITrigger.cs" />
-    <Compile Include="SourceControlJob.cs" />
-    <Compile Include="SourceControlTrigger.cs" />
+    <Compile Include="Jobs\BuildProjectJob.cs" />
+    <Compile Include="Jobs\PackageJob.cs" />
+    <Compile Include="Jobs\SourceControlJob.cs" />
     <Compile Include="TaskRunnerContext.cs" />
-    <Compile Include="TaskRunnerContext2.cs" />
     <Compile Include="ThreadTaskRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

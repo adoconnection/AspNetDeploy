@@ -3,7 +3,7 @@ using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Model;
 using ObjectFactory;
 
-namespace ThreadHostedTaskRunner
+namespace ThreadHostedTaskRunner.Jobs
 {
     public class SourceControlJob
     {
