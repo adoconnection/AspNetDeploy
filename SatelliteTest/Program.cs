@@ -62,10 +62,7 @@ namespace SatelliteTest
                     {ip: '127.0.0.1', domain: 'testing-1.local'},
                     {ip: '127.0.0.2', domain: 'testing-2.local'}
                 ]
-            }"), new Dictionary<string, object>
-            {
-                {"BackgroundCMS.TargetAuthorizeUrl", "http://omg.ru"}
-            });
+            }"));
 
             operation.Run();
             Console.WriteLine("UPDATED");

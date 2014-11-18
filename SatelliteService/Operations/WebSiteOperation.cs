@@ -20,7 +20,7 @@ namespace SatelliteService.Operations
             this.packageRepository = packageRepository;
         }
 
-        public void Configure(dynamic configuration, Dictionary<string, object> variables)
+        public void Configure(dynamic configuration)
         {
             this.configuration = configuration;
         }

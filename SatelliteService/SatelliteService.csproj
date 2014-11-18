@@ -58,6 +58,7 @@
     <Compile Include="IDeploymentService.cs" />
     <Compile Include="IUploadService.cs" />
     <Compile Include="Operations\ConfigOperation.cs" />
+    <Compile Include="Operations\CopyFilesOperation.cs" />
     <Compile Include="Operations\Operation.cs" />
     <Compile Include="Operations\UpdateHostsOperation.cs" />
     <Compile Include="Operations\WebSiteOperation.cs" />

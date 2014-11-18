@@ -18,10 +18,9 @@ namespace SatelliteService.Operations
         {
         }
 
-        public void Configure(dynamic configuration, IDictionary<string, object> variables)
+        public void Configure(dynamic configuration)
         {
             this.configuration = configuration;
-            base.Configure(variables);
         }
 
         public override void Run()

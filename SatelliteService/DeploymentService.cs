@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +18,6 @@ namespace SatelliteService
         private readonly IPathRepository pathRepository;
         private IList<Operation> queuedOperations;
         private IList<Operation> completedOperations;
-        private Dictionary<string, object> variables;
 
         public DeploymentService()
         {
@@ -31,18 +29,18 @@ namespace SatelliteService
             return this.activePublicationId == 0;
         }
 
-        public bool BeginPublication(int publicationId, Dictionary<string, object> variables)
+        public bool BeginPublication(int publicationId)
         {
-            if (this.activePublicationId == 0)
+            if (this.activePublicationId != 0)
             {
-                this.activePublicationId = publicationId;
-                this.queuedOperations = new List<Operation>();
-                this.completedOperations = new List<Operation>();
-                this.variables = variables ?? new Dictionary<string, object>();
-                return true;
+                return false;
             }
 
-            return false;
+            this.activePublicationId = publicationId;
+            this.queuedOperations = new List<Operation>();
+            this.completedOperations = new List<Operation>();
+
+            return true;
         }
 
         public void Commit()
@@ -70,6 +68,8 @@ namespace SatelliteService
             {
                 operation.Rollback();
             }
+
+            this.activePublicationId = 0;
         }
 
         public void ResetPackage()
@@ -91,7 +91,7 @@ namespace SatelliteService
         public void DeployWebSite(string jsonConfig)
         {
             WebSiteOperation operation = Factory.GetInstance<WebSiteOperation>();
-            operation.Configure(JsonConvert.DeserializeObject(jsonConfig), this.variables);
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
 
             this.queuedOperations.Add(operation);
         }
@@ -99,7 +99,7 @@ namespace SatelliteService
         public void ProcessConfigFile(string jsonConfig)
         {
             ConfigOperation operation = Factory.GetInstance<ConfigOperation>();
-            operation.Configure(JsonConvert.DeserializeObject(jsonConfig), this.variables);
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
 
             this.queuedOperations.Add(operation);
         }

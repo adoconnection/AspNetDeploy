@@ -1,5 +1,8 @@
-﻿using AspNetDeploy.Contracts;
+﻿using System;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using GitSharp;
+using GitSharp.Commands;
 
 namespace AspNetDeploy.SourceControls.Git
 {
@@ -7,12 +10,26 @@ namespace AspNetDeploy.SourceControls.Git
     {
         public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
         {
-            throw new System.NotImplementedException();
-        }
+            Repository repository;
 
-        public void LoadSources(string version, string path)
-        {
-            throw new System.NotImplementedException();
+            if (Repository.IsValid(path))
+            {
+                repository = new Repository(path);
+
+            }
+            else
+            {
+                CloneCommand command = new CloneCommand
+                {
+                    Source = sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL"),
+                    GitDirectory = path,
+                    
+                };
+                
+                command.Execute();
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

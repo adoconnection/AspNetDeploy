@@ -16,10 +16,9 @@ namespace SatelliteService.Operations
         {
         }
 
-        public void Configure(dynamic configuration, IDictionary<string, object> variables)
+        public void Configure(dynamic configuration)
         {
             this.configuration = configuration;
-            base.Configure(variables);
         }
 
         public override void Run()
@@ -32,7 +31,7 @@ namespace SatelliteService.Operations
             XmlDocument source = new XmlDocument();
             source.LoadXml((string)configuration.content);
 
-            XmlMerger xmlMerger = new XmlMerger(target, this.Variables);
+            XmlMerger xmlMerger = new XmlMerger(target, new Dictionary<string, object>());
             xmlMerger.ApplyChanges(source);
 
             target.Save((string)configuration.file);
