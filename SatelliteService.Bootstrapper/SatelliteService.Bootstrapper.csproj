@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{16F91492-7FA9-49DF-BB7D-4D5D27147942}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SatelliteService.Bootstrapper</RootNamespace>
+    <AssemblyName>SatelliteService.Bootstrapper</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ObjectFactoryConfigurator.cs" />
+    <Compile Include="ObjectResolver.cs" />
+    <Compile Include="PrimaryRegistry.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
+      <Project>{f5cbaa93-c1c9-43c5-9ab6-8ac2f9db7741}</Project>
+      <Name>ObjectFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService.Contracts\SatelliteService.Contracts.csproj">
+      <Project>{CC40CDCA-E692-4F7C-86F8-F4FA586B6CBB}</Project>
+      <Name>SatelliteService.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService.LocalBackups\SatelliteService.LocalBackups.csproj">
+      <Project>{54D20752-2482-4C6A-98B9-D0635F3731F9}</Project>
+      <Name>SatelliteService.LocalBackups</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService.LocalEnvironment\SatelliteService.LocalEnvironment.csproj">
+      <Project>{197267FA-CD51-41F1-A4BB-7860967B0D99}</Project>
+      <Name>SatelliteService.LocalEnvironment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService.Packages\SatelliteService.Packages.csproj">
+      <Project>{91C808E0-B351-43EF-9738-9AF6FC9DFD39}</Project>
+      <Name>SatelliteService.Packages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnityIocContainer\UnityIocContainer.csproj">
+      <Project>{E5FE3E6F-8C55-4348-9337-BB953F4143BB}</Project>
+      <Name>UnityIocContainer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

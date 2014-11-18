@@ -109,7 +109,7 @@
                         <span class="label label-default">@role.Name</span>
                     }
                 </li>
-                <li>Project: @projectVersion.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
+                <li>Project: @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
                 <li>Destination: @deploymentStep.GetStringProperty("IIS.DestinationPath")</li>
                 <li>Enabled AppOffilne page: @deploymentStep.GetStringProperty("EnabledAppOffilnePage")</li>
                 <li>Bindings:
