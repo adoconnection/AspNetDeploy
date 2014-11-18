@@ -19,6 +19,7 @@ namespace SatelliteService
         private readonly IPathRepository pathRepository;
         private IList<Operation> queuedOperations;
         private IList<Operation> completedOperations;
+        private Dictionary<string, object> variables;
 
         public DeploymentService()
         {
@@ -30,13 +31,14 @@ namespace SatelliteService
             return this.activePublicationId == 0;
         }
 
-        public bool BeginPublication(int publicationId)
+        public bool BeginPublication(int publicationId, Dictionary<string, object> variables)
         {
             if (this.activePublicationId == 0)
             {
                 this.activePublicationId = publicationId;
                 this.queuedOperations = new List<Operation>();
                 this.completedOperations = new List<Operation>();
+                this.variables = variables ?? new Dictionary<string, object>();
                 return true;
             }
 
@@ -89,7 +91,7 @@ namespace SatelliteService
         public void DeployWebSite(string jsonConfig)
         {
             WebSiteOperation operation = Factory.GetInstance<WebSiteOperation>();
-            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig), this.variables);
 
             this.queuedOperations.Add(operation);
         }
@@ -97,7 +99,7 @@ namespace SatelliteService
         public void ProcessConfigFile(string jsonConfig)
         {
             ConfigOperation operation = Factory.GetInstance<ConfigOperation>();
-            operation.Configure(JsonConvert.DeserializeObject(jsonConfig), new Dictionary<string, object>());
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig), this.variables);
 
             this.queuedOperations.Add(operation);
         }

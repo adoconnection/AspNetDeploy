@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Administration;
 using SatelliteService.Contracts;
@@ -19,7 +20,7 @@ namespace SatelliteService.Operations
             this.packageRepository = packageRepository;
         }
 
-        public void Configure(dynamic configuration)
+        public void Configure(dynamic configuration, Dictionary<string, object> variables)
         {
             this.configuration = configuration;
         }

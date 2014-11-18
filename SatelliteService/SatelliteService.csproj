@@ -59,7 +59,7 @@
     <Compile Include="IUploadService.cs" />
     <Compile Include="Operations\ConfigOperation.cs" />
     <Compile Include="Operations\Operation.cs" />
-    <Compile Include="Operations\UploadPackage.cs" />
+    <Compile Include="Operations\UpdateHostsOperation.cs" />
     <Compile Include="Operations\WebSiteOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UploadService.cs" />

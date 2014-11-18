@@ -9,10 +9,10 @@ namespace SatelliteService.Operations
 {
     public class ConfigOperation : Operation
     {
-         private dynamic configuration;
-         private Guid? backupConfigGuid = null;
+        private dynamic configuration;
+        private Guid? backupConfigGuid = null;
 
-         public ConfigOperation(IBackupRepository backupRepository) : base(backupRepository)
+        public ConfigOperation(IBackupRepository backupRepository) : base(backupRepository)
         {
         }
 

@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
 
 namespace SatelliteService
 {
@@ -9,7 +10,7 @@ namespace SatelliteService
         bool IsReady();
 
         [OperationContract]
-        bool BeginPublication(int publicationId);
+        bool BeginPublication(int publicationId, Dictionary<string, object> variables);
 
         [OperationContract]
         void Commit();

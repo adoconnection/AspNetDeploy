@@ -34,7 +34,7 @@ namespace SatelliteTest
             Console.ReadKey();
 */
 
-            ConfigOperation configOperation = new ConfigOperation(backupRepository);
+            /*ConfigOperation configOperation = new ConfigOperation(backupRepository);
 
             configOperation.Configure(JsonConvert.DeserializeObject(@"
             {
@@ -53,13 +53,25 @@ namespace SatelliteTest
             }"), new Dictionary<string, object>
             {
                 {"BackgroundCMS.TargetAuthorizeUrl", "http://omg.ru"}
+            });*/
+
+            UpdateHostsOperation operation = new UpdateHostsOperation(backupRepository);
+            operation.Configure(JsonConvert.DeserializeObject(@"
+            {
+                add : [
+                    {ip: '127.0.0.1', domain: 'testing-1.local'},
+                    {ip: '127.0.0.2', domain: 'testing-2.local'}
+                ]
+            }"), new Dictionary<string, object>
+            {
+                {"BackgroundCMS.TargetAuthorizeUrl", "http://omg.ru"}
             });
 
-            configOperation.Run();
+            operation.Run();
             Console.WriteLine("UPDATED");
             Console.ReadKey();
 
-            configOperation.Rollback();
+            operation.Rollback();
             Console.WriteLine("REVERTED");
             Console.ReadKey();
 

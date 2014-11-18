@@ -127,7 +127,7 @@ namespace AspNetDeploy.WebUI.Controllers
                     BundleVersionId = deploymentStep.BundleVersionId,
                     SiteName = deploymentStep.GetStringProperty("IIS.SiteName"),
                     ProjectId = deploymentStep.GetIntProperty("ProjectId"),
-                    Destination = deploymentStep.GetStringProperty("IIS.Bindings"),
+                    Destination = deploymentStep.GetStringProperty("IIS.DestinationPath"),
                     Roles = string.Join(", ", deploymentStep.MachineRoles.Select( mr => mr.Name))
                 };
 
