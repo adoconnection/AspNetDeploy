@@ -3,6 +3,7 @@ using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
+    [ValidateInput(false)]
     public class GenericController : Controller
     {
         protected AspNetDeployEntities Entities { get; private set; }

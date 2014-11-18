@@ -14,6 +14,6 @@ namespace SatelliteService.Contracts
 
         void RestoreDirectory(Guid guid, string path = null);
 
-        object RestoreObject(Guid guid);
+        T RestoreObject<T>(Guid guid);
     }
 }

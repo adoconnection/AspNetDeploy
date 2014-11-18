@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using ObjectFactory;
@@ -33,7 +34,36 @@ namespace SatelliteTest
             Console.ReadKey();
 */
 
-            WebSiteOperation webSiteOperation = new WebSiteOperation(backupRepository, new PackageRepository(pathRepository.GetPackagePath(6)));
+            ConfigOperation configOperation = new ConfigOperation(backupRepository);
+
+            configOperation.Configure(JsonConvert.DeserializeObject(@"
+            {
+                file : 'H:\\AspNetDeploySatelliteWorkingFolder\\TestFolder\\Project15\\Web.config',
+                content : '
+                    <configuration>
+                        <system.web>
+                            <compilation debug=""false"" />
+                        </system.web>
+                        <appSettings childNodesKeyName=""key"">
+                            <add key=""Site.Version"" value=""1.2"" />
+                            <add key=""BackgroundCMS.TargetAuthorizeUrl"" value=""{var:BackgroundCMS.TargetAuthorizeUrl}"" />
+                        </appSettings>
+                    </configuration>
+                '
+            }"), new Dictionary<string, object>
+            {
+                {"BackgroundCMS.TargetAuthorizeUrl", "http://omg.ru"}
+            });
+
+            configOperation.Run();
+            Console.WriteLine("UPDATED");
+            Console.ReadKey();
+
+            configOperation.Rollback();
+            Console.WriteLine("REVERTED");
+            Console.ReadKey();
+
+            /*WebSiteOperation webSiteOperation = new WebSiteOperation(backupRepository, new PackageRepository(pathRepository.GetPackagePath(6)));
 
 
             webSiteOperation.Configure(JsonConvert.DeserializeObject(@"
@@ -53,6 +83,9 @@ namespace SatelliteTest
             }"));
 
             webSiteOperation.Run();
+            webSiteOperation.Rollback();*/
+
+
 
             /*if (Directory.Exists(@"H:\AspNetDeploySatelliteWorkingFolder\TestFolder"))
             {

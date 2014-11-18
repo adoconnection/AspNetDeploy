@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Ionic.Zip;
+using Newtonsoft.Json;
 using SatelliteService.Contracts;
 
 namespace SatelliteService.LocalBackups
@@ -13,6 +14,8 @@ namespace SatelliteService.LocalBackups
         public Guid StoreObject(object obj)
         {
             Guid guid = Guid.NewGuid();
+
+            /*File.WriteAllText(this.GetBackupFileContentPath(guid), JsonConvert.SerializeObject(obj));*/
 
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream stream = new FileStream(this.GetBackupFileContentPath(guid), FileMode.Create, FileAccess.Write))
@@ -66,12 +69,14 @@ namespace SatelliteService.LocalBackups
             }
         }
 
-        public object RestoreObject(Guid guid)
+        public T RestoreObject<T>(Guid guid)
         {
+            /*return JsonConvert.DeserializeObject<T>(File.ReadAllText(this.GetBackupFileContentPath(guid)));*/
+
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream stream = new FileStream(this.GetBackupFileContentPath(guid), FileMode.Open, FileAccess.Read))
             {
-                return formatter.Deserialize(stream);
+                return (T)formatter.Deserialize(stream);
             }
         }
 

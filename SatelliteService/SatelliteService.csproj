@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="DeploymentService.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
+    <Compile Include="Helpers\XmlMerger.cs" />
     <Compile Include="IDeploymentService.cs" />
     <Compile Include="IUploadService.cs" />
     <Compile Include="Operations\ConfigOperation.cs" />

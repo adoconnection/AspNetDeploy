@@ -179,9 +179,11 @@
                     }
                 </li>
                 <li>
-                    <div>settings</div>
+                    <div>content</div>
                     
-                    @if (deploymentStep.GetDynamicProperty("SetValues") != null)
+                    <pre>@deploymentStep.GetStringProperty("SetValues")</pre>
+@*
+                    @if ( != null)
                     {
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -191,7 +193,7 @@
                                 }
                             </div>
                         </div>
-                    }
+                    }*@
                 </li>
 
             </ul>

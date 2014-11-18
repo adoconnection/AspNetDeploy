@@ -97,7 +97,7 @@ namespace SatelliteService
         public void ProcessConfigFile(string jsonConfig)
         {
             ConfigOperation operation = Factory.GetInstance<ConfigOperation>();
-            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig), new Dictionary<string, object>());
 
             this.queuedOperations.Add(operation);
         }

@@ -1,6 +1,8 @@
 ﻿Common.namespace("Studio").Editor = function () {
-    var XmlMode = ace.require("ace/mode/xml").Mode;
-    var JsonMode = ace.require("ace/mode/json").Mode;
+    var modes = {
+        "xml" : ace.require("ace/mode/xml").Mode,
+        "json" : ace.require("ace/mode/json").Mode
+    }
     var languageTools = ace.require("ace/ext/language_tools");
 
     var pThis = this;
@@ -22,7 +24,8 @@
         aceEditor.setHighlightActiveLine('checked');
         aceEditor.setHighlightSelectedWord(true);
         aceEditor.setDisplayIndentGuides(true);
-        aceEditor.getSession().setMode(new JsonMode());
+
+        aceEditor.getSession().setMode(new modes[pThis.parameters.mode || 'xml']);
         aceEditor.renderer.setShowPrintMargin(false);
         aceEditor.setReadOnly(params.readOnly == undefined ? false : params.readOnly);
         aceEditor.getSession().on('change', function () {

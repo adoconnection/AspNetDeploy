@@ -27,7 +27,7 @@ namespace SatelliteService.Operations
         public override void Run()
         {
             this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string)this.configuration.destination);
-
+            
             DirectoryHelper.DeleteContents((string)this.configuration.destination);
 
             packageRepository.ExtractProject(
@@ -37,6 +37,8 @@ namespace SatelliteService.Operations
             using (ServerManager serverManager = new ServerManager())
             {
                 Site site = this.Site(serverManager, (string) this.configuration.siteName);
+                //this.backupSiteConfigurationGuid = this.BackupRepository.StoreObject(site);
+
                 ApplicationPool applicationPool = this.ApplicationPool(serverManager, (string) this.configuration.applicationPoolName);
                 Application application = this.Application(serverManager, site, (string)this.configuration.destination);
 
@@ -104,6 +106,20 @@ namespace SatelliteService.Operations
             {
                 this.BackupRepository.RestoreDirectory(this.backupDirectoryGuid.Value);
             }
+
+            /*if (this.backupSiteConfigurationGuid.HasValue)
+            {
+                using (ServerManager serverManager = new ServerManager())
+                {
+                    Site site = serverManager.Sites[(string) configuration.siteName];
+                    Site restoredSite = this.BackupRepository.RestoreObject<Site>(this.backupSiteConfigurationGuid.Value);
+
+                    serverManager.Sites.Remove(site);
+                    serverManager.Sites.Add(restoredSite);
+                    serverManager.CommitChanges();
+                }
+            }*/
+
         }
     }
 }
