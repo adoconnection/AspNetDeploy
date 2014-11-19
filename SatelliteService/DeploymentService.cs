@@ -16,8 +16,8 @@ namespace SatelliteService
         private int activePublicationId;
 
         private readonly IPathRepository pathRepository;
-        private IList<Operation> queuedOperations;
-        private IList<Operation> completedOperations;
+        private IList<Operation> queuedOperations = new List<Operation>();
+        private IList<Operation> completedOperations = new List<Operation>();
 
         public DeploymentService()
         {

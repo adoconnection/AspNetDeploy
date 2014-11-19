@@ -14,13 +14,19 @@ namespace AspNetDeploy.Model
     
     public partial class Publication
     {
+        public Publication()
+        {
+            this.MachinePublication = new HashSet<MachinePublication>();
+        }
+    
         public int Id { get; set; }
         public int PackageId { get; set; }
         public int EnvironmentId { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public int ResultId { get; set; }
+        public PublicationResult Result { get; set; }
     
         public virtual Environment Environment { get; set; }
         public virtual Package Package { get; set; }
+        public virtual ICollection<MachinePublication> MachinePublication { get; set; }
     }
 }

@@ -18,13 +18,20 @@ namespace AspNetDeploy.Model
         {
             this.Machines = new HashSet<Machine>();
             this.Publication = new HashSet<Publication>();
+            this.Properties = new HashSet<EnvironmentProperty>();
+            this.PreviousEnvironment = new HashSet<Environment>();
+            this.NextEnvironment = new HashSet<Environment>();
+            this.DataFieldValues = new HashSet<DataFieldValue>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public int OrderIndex { get; set; }
     
         public virtual ICollection<Machine> Machines { get; set; }
         public virtual ICollection<Publication> Publication { get; set; }
+        public virtual ICollection<EnvironmentProperty> Properties { get; set; }
+        public virtual ICollection<Environment> PreviousEnvironment { get; set; }
+        public virtual ICollection<Environment> NextEnvironment { get; set; }
+        public virtual ICollection<DataFieldValue> DataFieldValues { get; set; }
     }
 }

@@ -51,6 +51,10 @@
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.DeploymentServices\DeploymentServices.csproj">
+      <Project>{6192E2D0-88B7-4ED5-B556-19A7959D1788}</Project>
+      <Name>DeploymentServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.SolutionParsers\SolutionParsers.csproj">
       <Project>{72F78680-6241-41E3-9593-C0BF8F67CF85}</Project>
       <Name>SolutionParsers</Name>

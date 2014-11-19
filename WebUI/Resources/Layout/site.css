@@ -68,7 +68,7 @@ H3 > a:hover
 .environmentsPage .machine + .machine,
 .sourcesPage .project + .project
 {
-    margin-top: 8px;
+    margin-top: 3px;
 }
 
 
@@ -77,7 +77,7 @@ H3 > a:hover
 .sourcesPage .project .name
 {
     background-color: #F5F5F5;
-    padding: 15px;
+    padding: 8px;
 }
 
 

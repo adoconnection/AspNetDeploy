@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using SatelliteService;
@@ -12,7 +13,7 @@ namespace SatelliteHost
         {
             ObjectFactoryConfigurator.Configure();
 
-            Uri httpUrl = new Uri("http://localhost:8090/AspNetDeploySatellite/DeploymentService");
+            Uri httpUrl = new Uri(ConfigurationManager.AppSettings["ServiceURI"]);
 
             ServiceHost host = new ServiceHost(typeof(DeploymentService), httpUrl);
            
@@ -24,9 +25,9 @@ namespace SatelliteHost
             host.AddServiceEndpoint(typeof(IDeploymentService), wsHttpBinding, "");
 
             ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
-            //serviceMetadataBehavior.HttpGetEnabled = true;
+            serviceMetadataBehavior.HttpGetEnabled = true;
             host.Description.Behaviors.Add(serviceMetadataBehavior);
-            //Start the Service
+            
             host.Open();
 
             Console.WriteLine("Running");

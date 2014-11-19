@@ -43,6 +43,8 @@
     <Compile Include="IBuildService.cs" />
     <Compile Include="IBuildServiceFactory.cs" />
     <Compile Include="IContinuousIntegrationLogger.cs" />
+    <Compile Include="IDeploymentAgent.cs" />
+    <Compile Include="IDeploymentAgentFactory.cs" />
     <Compile Include="IPathServices.cs" />
     <Compile Include="IProjectPackagerFactory.cs" />
     <Compile Include="IProjectPackager.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="ISourceControlRepository.cs" />
     <Compile Include="ISourceControlRepositoryFactory.cs" />
     <Compile Include="ITaskRunner.cs" />
+    <Compile Include="IVariableService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

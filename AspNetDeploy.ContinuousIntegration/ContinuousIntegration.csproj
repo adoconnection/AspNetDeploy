@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildManager.cs" />
+    <Compile Include="DeploymentManager.cs" />
     <Compile Include="PackageManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceControlManager.cs" />

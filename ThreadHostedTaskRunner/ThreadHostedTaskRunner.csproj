@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jobs\BuildProjectJob.cs" />
+    <Compile Include="Jobs\DeploymentJob.cs" />
     <Compile Include="Jobs\PackageJob.cs" />
     <Compile Include="Jobs\SourceControlJob.cs" />
     <Compile Include="TaskRunnerContext.cs" />

@@ -73,10 +73,17 @@
     <Compile Include="BundleVersion.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="BundleVersionExtender.cs" />
     <Compile Include="BundleVersionProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="ContinuousIntegrationLoggerEvent.cs" />
+    <Compile Include="DataField.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataFieldValue.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="DeploymentStep.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -90,6 +97,9 @@
     <Compile Include="Environment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="EnvironmentProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Group.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -98,9 +108,19 @@
     <Compile Include="Machine.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="MachinePublication.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MachinePublicationLog.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MachinePublicationProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="MachineRole.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="MachineState.cs" />
     <Compile Include="Package.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -124,6 +144,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publication.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublicationResult.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="SolutionType.cs" />

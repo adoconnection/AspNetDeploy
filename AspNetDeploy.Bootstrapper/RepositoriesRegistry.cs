@@ -1,5 +1,6 @@
 ﻿using AspNetDeploy.BuildServices;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.DeploymentServices;
 using AspNetDeploy.SolutionParsers;
 using AspNetDeploy.SourceControls;
 using LocalEnvironment;
@@ -19,6 +20,7 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<IBuildServiceFactory, BuildServiceFactory>(LifecycleType.Application);
             this.Map<IProjectPackagerFactory, ProjectPackagerFactory>(LifecycleType.Application);
             this.Map<IPathServices, PathServices>(LifecycleType.Application);
+            this.Map<IDeploymentAgentFactory, DeploymentAgentFactory>(LifecycleType.Application);
         }
     }
 }

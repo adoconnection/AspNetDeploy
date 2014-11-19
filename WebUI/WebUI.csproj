@@ -153,8 +153,12 @@
     <Content Include="Resources\Layout\Images\Icons\down16.png" />
     <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
+    <Content Include="Resources\Layout\Images\Icons\server-ok32.png" />
     <Content Include="Resources\Layout\Images\Icons\Server-Online.png" />
     <Content Include="Resources\Layout\Images\Icons\new16.png" />
+    <Content Include="Resources\Layout\Images\Icons\server-problem32.png" />
+    <Content Include="Resources\Layout\Images\Icons\server-warning32.png" />
+    <Content Include="Resources\Layout\Images\Icons\server32.png" />
     <Content Include="Resources\Layout\Images\Icons\settings16.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
     <Content Include="Resources\Layout\Images\Icons\up16.png" />

@@ -9,7 +9,7 @@ namespace ThreadHostedTaskRunner.Jobs
 {
     public class BuildProjectJob
     {
-        public void Start(int sourceControlVersionId, string solutionFileName, Action<int, bool> projectBuildComplete)
+        public void Start(int sourceControlVersionId, string solutionFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
@@ -21,7 +21,7 @@ namespace ThreadHostedTaskRunner.Jobs
             buildManager.Build(
                 sourceControlVersionId,
                 solutionFileName,
-                projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building),
+                projectBuildStarted,
                 (projectVersionId, isSuccess) =>
                 {
                     projectBuildComplete(projectVersionId, isSuccess);

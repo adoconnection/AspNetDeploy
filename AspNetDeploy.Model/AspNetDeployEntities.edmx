@@ -34,6 +34,49 @@
           <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="DataField">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="IsSensitive" Type="bit" Nullable="false" />
+          <Property Name="ModeId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataFieldToBundleVersion">
+          <Key>
+            <PropertyRef Name="DataFieldId" />
+            <PropertyRef Name="BundleVersionId" />
+          </Key>
+          <Property Name="DataFieldId" Type="int" Nullable="false" />
+          <Property Name="BundleVersionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataFieldValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataFieldId" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="DataFieldValueToEnvironment">
+          <Key>
+            <PropertyRef Name="EnvironmentId" />
+            <PropertyRef Name="DataFieldValueId" />
+          </Key>
+          <Property Name="EnvironmentId" Type="int" Nullable="false" />
+          <Property Name="DataFieldValueId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataFieldValueToMachine">
+          <Key>
+            <PropertyRef Name="MachineId" />
+            <PropertyRef Name="DataFieldValueId" />
+          </Key>
+          <Property Name="MachineId" Type="int" Nullable="false" />
+          <Property Name="DataFieldValueId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
             <PropertyRef Name="Id" />
@@ -67,7 +110,15 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="OrderIndex" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EnvironmentProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EnvironmentId" Type="int" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -83,8 +134,38 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="PrivateKey" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="PublicKey" Type="nvarchar" MaxLength="4000" Nullable="false" />
           <Property Name="URL" Type="nvarchar" MaxLength="4000" />
+        </EntityType>
+        <EntityType Name="MachinePublication">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PublicationId" Type="int" Nullable="false" />
+          <Property Name="MachineId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="StateId" Type="int" Nullable="false" />
+          <Property Name="CompletedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MachinePublicationLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachinePublicationId" Type="int" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="DeploymentStepId" Type="int" />
+        </EntityType>
+        <EntityType Name="MachinePublicationProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachinePublicationId" Type="int" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="MachineRole">
           <Key>
@@ -108,6 +189,14 @@
           </Key>
           <Property Name="MachineId" Type="int" Nullable="false" />
           <Property Name="MachineRoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NextEnvironment">
+          <Key>
+            <PropertyRef Name="SourceEnvironmentId" />
+            <PropertyRef Name="NextEnvironmentId" />
+          </Key>
+          <Property Name="SourceEnvironmentId" Type="int" Nullable="false" />
+          <Property Name="NextEnvironmentId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Package">
           <Key>
@@ -253,6 +342,78 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DataFieldToBundleVersion_BundleVersion">
+          <End Role="BundleVersion" Type="Self.BundleVersion" Multiplicity="1" />
+          <End Role="DataFieldToBundleVersion" Type="Self.DataFieldToBundleVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BundleVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldToBundleVersion">
+              <PropertyRef Name="BundleVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataFieldToBundleVersion_DataField">
+          <End Role="DataField" Type="Self.DataField" Multiplicity="1" />
+          <End Role="DataFieldToBundleVersion" Type="Self.DataFieldToBundleVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataField">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldToBundleVersion">
+              <PropertyRef Name="DataFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataFieldValue_DataField">
+          <End Role="DataField" Type="Self.DataField" Multiplicity="1" />
+          <End Role="DataFieldValue" Type="Self.DataFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataField">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldValue">
+              <PropertyRef Name="DataFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataFieldValueToEnvironment_DataFieldValue">
+          <End Role="DataFieldValue" Type="Self.DataFieldValue" Multiplicity="1" />
+          <End Role="DataFieldValueToEnvironment" Type="Self.DataFieldValueToEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataFieldValue">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldValueToEnvironment">
+              <PropertyRef Name="DataFieldValueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataFieldValueToMachine_DataFieldValue">
+          <End Role="DataFieldValue" Type="Self.DataFieldValue" Multiplicity="1" />
+          <End Role="DataFieldValueToMachine" Type="Self.DataFieldValueToMachine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataFieldValue">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldValueToMachine">
+              <PropertyRef Name="DataFieldValueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataFieldValueToMachine_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="1" />
+          <End Role="DataFieldValueToMachine" Type="Self.DataFieldValueToMachine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldValueToMachine">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DeploymentStep_BundleVersion">
           <End Role="BundleVersion" Type="Self.BundleVersion" Multiplicity="1" />
           <End Role="DeploymentStep" Type="Self.DeploymentStep" Multiplicity="*" />
@@ -313,6 +474,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_EnvironmentProperty_Environment">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="EnvironmentProperty" Type="Self.EnvironmentProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentProperty">
+              <PropertyRef Name="EnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublication_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="1" />
+          <End Role="MachinePublication" Type="Self.MachinePublication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublication">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublication_Publication">
+          <End Role="Publication" Type="Self.Publication" Multiplicity="1" />
+          <End Role="MachinePublication" Type="Self.MachinePublication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publication">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublication">
+              <PropertyRef Name="PublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublicationLog_MachinePublication">
+          <End Role="MachinePublication" Type="Self.MachinePublication" Multiplicity="1" />
+          <End Role="MachinePublicationLog" Type="Self.MachinePublicationLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachinePublication">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublicationLog">
+              <PropertyRef Name="MachinePublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublicationProperty_MachinePublication">
+          <End Role="MachinePublication" Type="Self.MachinePublication" Multiplicity="1" />
+          <End Role="MachinePublicationProperty" Type="Self.MachinePublicationProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachinePublication">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublicationProperty">
+              <PropertyRef Name="MachinePublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MachineToEnvironment_Environment">
           <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
           <End Role="MachineToEnvironment" Type="Self.MachineToEnvironment" Multiplicity="*" />
@@ -361,6 +582,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_NextEnvironment_Environment_NextEnvironment">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="NextEnvironment" Type="Self.NextEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NextEnvironment">
+              <PropertyRef Name="NextEnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NextEnvironment_Environment_SourceEnvironment">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="NextEnvironment" Type="Self.NextEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NextEnvironment">
+              <PropertyRef Name="SourceEnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Package_BundleVersion">
           <End Role="BundleVersion" Type="Self.BundleVersion" Multiplicity="1" />
           <End Role="Package" Type="Self.Package" Multiplicity="*" />
@@ -382,6 +627,18 @@
             </Principal>
             <Dependent Role="Project">
               <PropertyRef Name="SourceControlId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectConfigurationValueToEnvironment_Environment">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="DataFieldValueToEnvironment" Type="Self.DataFieldValueToEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldValueToEnvironment">
+              <PropertyRef Name="EnvironmentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -569,15 +826,25 @@
           <EntitySet Name="Bundle" EntityType="Self.Bundle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BundleVersion" EntityType="Self.BundleVersion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BundleVersionProperty" EntityType="Self.BundleVersionProperty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataField" EntityType="Self.DataField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataFieldToBundleVersion" EntityType="Self.DataFieldToBundleVersion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataFieldValue" EntityType="Self.DataFieldValue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataFieldValueToEnvironment" EntityType="Self.DataFieldValueToEnvironment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataFieldValueToMachine" EntityType="Self.DataFieldValueToMachine" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeploymentStep" EntityType="Self.DeploymentStep" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeploymentStepProperty" EntityType="Self.DeploymentStepProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeploymentStepToMachineRole" EntityType="Self.DeploymentStepToMachineRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Environment" EntityType="Self.Environment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EnvironmentProperty" EntityType="Self.EnvironmentProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Machine" EntityType="Self.Machine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MachinePublication" EntityType="Self.MachinePublication" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MachinePublicationLog" EntityType="Self.MachinePublicationLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MachinePublicationProperty" EntityType="Self.MachinePublicationProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachineRole" EntityType="Self.MachineRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachineToEnvironment" EntityType="Self.MachineToEnvironment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachineToMachineRole" EntityType="Self.MachineToMachineRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NextEnvironment" EntityType="Self.NextEnvironment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Package" EntityType="Self.Package" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectProperty" EntityType="Self.ProjectProperty" Schema="dbo" store:Type="Tables" />
@@ -599,6 +866,30 @@
             <End Role="BundleVersion" EntitySet="BundleVersion" />
             <End Role="BundleVersionProperty" EntitySet="BundleVersionProperty" />
           </AssociationSet>
+          <AssociationSet Name="FK_DataFieldToBundleVersion_BundleVersion" Association="Self.FK_DataFieldToBundleVersion_BundleVersion">
+            <End Role="BundleVersion" EntitySet="BundleVersion" />
+            <End Role="DataFieldToBundleVersion" EntitySet="DataFieldToBundleVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataFieldToBundleVersion_DataField" Association="Self.FK_DataFieldToBundleVersion_DataField">
+            <End Role="DataField" EntitySet="DataField" />
+            <End Role="DataFieldToBundleVersion" EntitySet="DataFieldToBundleVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataFieldValue_DataField" Association="Self.FK_DataFieldValue_DataField">
+            <End Role="DataField" EntitySet="DataField" />
+            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataFieldValueToEnvironment_DataFieldValue" Association="Self.FK_DataFieldValueToEnvironment_DataFieldValue">
+            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
+            <End Role="DataFieldValueToEnvironment" EntitySet="DataFieldValueToEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataFieldValueToMachine_DataFieldValue" Association="Self.FK_DataFieldValueToMachine_DataFieldValue">
+            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
+            <End Role="DataFieldValueToMachine" EntitySet="DataFieldValueToMachine" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataFieldValueToMachine_Machine" Association="Self.FK_DataFieldValueToMachine_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="DataFieldValueToMachine" EntitySet="DataFieldValueToMachine" />
+          </AssociationSet>
           <AssociationSet Name="FK_DeploymentStep_BundleVersion" Association="Self.FK_DeploymentStep_BundleVersion">
             <End Role="BundleVersion" EntitySet="BundleVersion" />
             <End Role="DeploymentStep" EntitySet="DeploymentStep" />
@@ -619,6 +910,26 @@
             <End Role="MachineRole" EntitySet="MachineRole" />
             <End Role="DeploymentStepToMachineRole" EntitySet="DeploymentStepToMachineRole" />
           </AssociationSet>
+          <AssociationSet Name="FK_EnvironmentProperty_Environment" Association="Self.FK_EnvironmentProperty_Environment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="EnvironmentProperty" EntitySet="EnvironmentProperty" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublication_Machine" Association="Self.FK_MachinePublication_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublication_Publication" Association="Self.FK_MachinePublication_Publication">
+            <End Role="Publication" EntitySet="Publication" />
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublicationLog_MachinePublication" Association="Self.FK_MachinePublicationLog_MachinePublication">
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+            <End Role="MachinePublicationLog" EntitySet="MachinePublicationLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublicationProperty_MachinePublication" Association="Self.FK_MachinePublicationProperty_MachinePublication">
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+            <End Role="MachinePublicationProperty" EntitySet="MachinePublicationProperty" />
+          </AssociationSet>
           <AssociationSet Name="FK_MachineToEnvironment_Environment" Association="Self.FK_MachineToEnvironment_Environment">
             <End Role="Environment" EntitySet="Environment" />
             <End Role="MachineToEnvironment" EntitySet="MachineToEnvironment" />
@@ -635,6 +946,14 @@
             <End Role="MachineRole" EntitySet="MachineRole" />
             <End Role="MachineToMachineRole" EntitySet="MachineToMachineRole" />
           </AssociationSet>
+          <AssociationSet Name="FK_NextEnvironment_Environment_NextEnvironment" Association="Self.FK_NextEnvironment_Environment_NextEnvironment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="NextEnvironment" EntitySet="NextEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NextEnvironment_Environment_SourceEnvironment" Association="Self.FK_NextEnvironment_Environment_SourceEnvironment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="NextEnvironment" EntitySet="NextEnvironment" />
+          </AssociationSet>
           <AssociationSet Name="FK_Package_BundleVersion" Association="Self.FK_Package_BundleVersion">
             <End Role="BundleVersion" EntitySet="BundleVersion" />
             <End Role="Package" EntitySet="Package" />
@@ -642,6 +961,10 @@
           <AssociationSet Name="FK_Project_SourceControl" Association="Self.FK_Project_SourceControl">
             <End Role="SourceControl" EntitySet="SourceControl" />
             <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectConfigurationValueToEnvironment_Environment" Association="Self.FK_ProjectConfigurationValueToEnvironment_Environment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="DataFieldValueToEnvironment" EntitySet="DataFieldValueToEnvironment" />
           </AssociationSet>
           <AssociationSet Name="FK_ProjectProperty_Project" Association="Self.FK_ProjectProperty_Project">
             <End Role="Project" EntitySet="Project" />
@@ -816,6 +1139,52 @@
             <End Role="ProjectVersion" EntitySet="ProjectVersion" />
             <End Role="ProjectVersionProperty" EntitySet="ProjectVersionProperty" />
           </AssociationSet>
+          <EntitySet Name="MachinePublication" EntityType="AspNetDeployModel.MachinePublication" />
+          <EntitySet Name="MachinePublicationLog" EntityType="AspNetDeployModel.MachinePublicationLog" />
+          <EntitySet Name="MachinePublicationProperty" EntityType="AspNetDeployModel.MachinePublicationProperty" />
+          <AssociationSet Name="FK_MachinePublication_Machine" Association="AspNetDeployModel.FK_MachinePublication_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublication_Publication" Association="AspNetDeployModel.FK_MachinePublication_Publication">
+            <End Role="Publication" EntitySet="Publication" />
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublicationLog_MachinePublication" Association="AspNetDeployModel.FK_MachinePublicationLog_MachinePublication">
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+            <End Role="MachinePublicationLog" EntitySet="MachinePublicationLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublicationProperty_MachinePublication" Association="AspNetDeployModel.FK_MachinePublicationProperty_MachinePublication">
+            <End Role="MachinePublication" EntitySet="MachinePublication" />
+            <End Role="MachinePublicationProperty" EntitySet="MachinePublicationProperty" />
+          </AssociationSet>
+          <EntitySet Name="EnvironmentProperty" EntityType="AspNetDeployModel.EnvironmentProperty" />
+          <AssociationSet Name="FK_EnvironmentProperty_Environment" Association="AspNetDeployModel.FK_EnvironmentProperty_Environment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="EnvironmentProperty" EntitySet="EnvironmentProperty" />
+          </AssociationSet>
+          <AssociationSet Name="NextEnvironment" Association="AspNetDeployModel.NextEnvironment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="Environment1" EntitySet="Environment" />
+          </AssociationSet>
+          <EntitySet Name="DataField" EntityType="AspNetDeployModel.DataField" />
+          <EntitySet Name="DataFieldValue" EntityType="AspNetDeployModel.DataFieldValue" />
+          <AssociationSet Name="FK_DataFieldValue_DataField" Association="AspNetDeployModel.FK_DataFieldValue_DataField">
+            <End Role="DataField" EntitySet="DataField" />
+            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
+          </AssociationSet>
+          <AssociationSet Name="DataFieldToBundleVersion" Association="AspNetDeployModel.DataFieldToBundleVersion">
+            <End Role="BundleVersion" EntitySet="BundleVersion" />
+            <End Role="DataField" EntitySet="DataField" />
+          </AssociationSet>
+          <AssociationSet Name="DataFieldValueToEnvironment" Association="AspNetDeployModel.DataFieldValueToEnvironment">
+            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
+            <End Role="Environment" EntitySet="Environment" />
+          </AssociationSet>
+          <AssociationSet Name="DataFieldValueToMachine" Association="AspNetDeployModel.DataFieldValueToMachine">
+            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
+            <End Role="Machine" EntitySet="Machine" />
+          </AssociationSet>
         </EntityContainer>
                 <EnumType Name="SourceControlType">
           <Member Name="Undefined" Value="0" />
@@ -869,6 +1238,7 @@
           <Property Name="OrderIndex" Type="Int32" Nullable="false" />
           <Property Name="IsHead" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_BundleVersionProperty_BundleVersion" FromRole="BundleVersion" ToRole="BundleVersionProperty" />
+          <NavigationProperty Name="DataFields" Relationship="AspNetDeployModel.DataFieldToBundleVersion" FromRole="BundleVersion" ToRole="DataField" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -902,9 +1272,12 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Machines" Relationship="AspNetDeployModel.MachineToEnvironment" FromRole="Environment" ToRole="Machine" />
-          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_Environment" FromRole="Environment" ToRole="Publication" />
-        </EntityType>
+          <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_EnvironmentProperty_Environment" FromRole="Environment" ToRole="EnvironmentProperty" />
+          <NavigationProperty Name="PreviousEnvironment" Relationship="AspNetDeployModel.NextEnvironment" FromRole="Environment" ToRole="Environment1" />
+          <NavigationProperty Name="NextEnvironment" Relationship="AspNetDeployModel.NextEnvironment" FromRole="Environment1" ToRole="Environment" />
+          <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.DataFieldValueToEnvironment" FromRole="Environment" ToRole="DataFieldValue" />
+          </EntityType>
         <EntityType Name="Group">
           <Key>
             <PropertyRef Name="Id" />
@@ -920,10 +1293,12 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="PrivateKey" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="URL" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Environments" Relationship="AspNetDeployModel.MachineToEnvironment" FromRole="Machine" ToRole="Environment" />
           <NavigationProperty Name="MachineRoles" Relationship="AspNetDeployModel.MachineToMachineRole" FromRole="Machine" ToRole="MachineRole" />
+          <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublication_Machine" FromRole="Machine" ToRole="MachinePublication" />
+          <Property Name="PublicKey" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.DataFieldValueToMachine" FromRole="Machine" ToRole="DataFieldValue" />
         </EntityType>
         <EntityType Name="MachineRole">
           <Key>
@@ -1195,9 +1570,10 @@
           <Property Name="PackageId" Type="Int32" Nullable="false" />
           <Property Name="EnvironmentId" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ResultId" Type="Int32" Nullable="false" />
+          <Property Name="Result" Type="AspNetDeployModel.PublicationResult" Nullable="false" />
           <NavigationProperty Name="Environment" Relationship="AspNetDeployModel.FK_Publication_Environment" FromRole="Publication" ToRole="Environment" />
           <NavigationProperty Name="Package" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Publication" ToRole="Package" />
+          <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublication_Publication" FromRole="Publication" ToRole="MachinePublication" />
         </EntityType>
         <Association Name="FK_Package_BundleVersion">
           <End Type="AspNetDeployModel.BundleVersion" Role="BundleVersion" Multiplicity="1" />
@@ -1279,6 +1655,172 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MachinePublication">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PublicationId" Type="Int32" Nullable="false" />
+          <Property Name="MachineId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StateId" Type="Int32" Nullable="false" />
+          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Machine" Relationship="AspNetDeployModel.FK_MachinePublication_Machine" FromRole="MachinePublication" ToRole="Machine" />
+          <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_MachinePublication_Publication" FromRole="MachinePublication" ToRole="Publication" />
+          <NavigationProperty Name="Log" Relationship="AspNetDeployModel.FK_MachinePublicationLog_MachinePublication" FromRole="MachinePublication" ToRole="MachinePublicationLog" />
+          <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_MachinePublicationProperty_MachinePublication" FromRole="MachinePublication" ToRole="MachinePublicationProperty" />
+        </EntityType>
+        <EntityType Name="MachinePublicationLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachinePublicationId" Type="Int32" Nullable="false" />
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeploymentStepId" Type="Int32" />
+          <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublicationLog_MachinePublication" FromRole="MachinePublicationLog" ToRole="MachinePublication" />
+        </EntityType>
+        <EntityType Name="MachinePublicationProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachinePublicationId" Type="Int32" Nullable="false" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublicationProperty_MachinePublication" FromRole="MachinePublicationProperty" ToRole="MachinePublication" />
+        </EntityType>
+        <Association Name="FK_MachinePublication_Machine">
+          <End Type="AspNetDeployModel.Machine" Role="Machine" Multiplicity="1" />
+          <End Type="AspNetDeployModel.MachinePublication" Role="MachinePublication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublication">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublication_Publication">
+          <End Type="AspNetDeployModel.Publication" Role="Publication" Multiplicity="1" />
+          <End Type="AspNetDeployModel.MachinePublication" Role="MachinePublication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publication">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublication">
+              <PropertyRef Name="PublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublicationLog_MachinePublication">
+          <End Type="AspNetDeployModel.MachinePublication" Role="MachinePublication" Multiplicity="1" />
+          <End Type="AspNetDeployModel.MachinePublicationLog" Role="MachinePublicationLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachinePublication">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublicationLog">
+              <PropertyRef Name="MachinePublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublicationProperty_MachinePublication">
+          <End Type="AspNetDeployModel.MachinePublication" Role="MachinePublication" Multiplicity="1" />
+          <End Type="AspNetDeployModel.MachinePublicationProperty" Role="MachinePublicationProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachinePublication">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublicationProperty">
+              <PropertyRef Name="MachinePublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EnvironmentProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EnvironmentId" Type="Int32" Nullable="false" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Environment" Relationship="AspNetDeployModel.FK_EnvironmentProperty_Environment" FromRole="EnvironmentProperty" ToRole="Environment" />
+        </EntityType>
+        <Association Name="FK_EnvironmentProperty_Environment">
+          <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="1" />
+          <End Type="AspNetDeployModel.EnvironmentProperty" Role="EnvironmentProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentProperty">
+              <PropertyRef Name="EnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="NextEnvironment">
+          <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="*" />
+          <End Type="AspNetDeployModel.Environment" Role="Environment1" Multiplicity="*" />
+        </Association>
+        <EnumType Name="PublicationResult">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="NotStarted" Value="1" />
+          <Member Name="InProgress" Value="2" />
+          <Member Name="Canceled" Value="3" />
+          <Member Name="Error" Value="4" />
+          <Member Name="Complete" Value="5" />
+        </EnumType>
+        <EntityType Name="DataField">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeId" Type="Int32" Nullable="false" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="IsSensitive" Type="Boolean" Nullable="false" />
+          <Property Name="ModeId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.FK_DataFieldValue_DataField" FromRole="DataField" ToRole="DataFieldValue" />
+          <NavigationProperty Name="BundleVersions" Relationship="AspNetDeployModel.DataFieldToBundleVersion" FromRole="DataField" ToRole="BundleVersion" />
+        </EntityType>
+        <EntityType Name="DataFieldValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DataFieldId" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DataField" Relationship="AspNetDeployModel.FK_DataFieldValue_DataField" FromRole="DataFieldValue" ToRole="DataField" />
+          <NavigationProperty Name="Environments" Relationship="AspNetDeployModel.DataFieldValueToEnvironment" FromRole="DataFieldValue" ToRole="Environment" />
+          <NavigationProperty Name="Machines" Relationship="AspNetDeployModel.DataFieldValueToMachine" FromRole="DataFieldValue" ToRole="Machine" />
+        </EntityType>
+        <Association Name="FK_DataFieldValue_DataField">
+          <End Type="AspNetDeployModel.DataField" Role="DataField" Multiplicity="1" />
+          <End Type="AspNetDeployModel.DataFieldValue" Role="DataFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataField">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataFieldValue">
+              <PropertyRef Name="DataFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DataFieldToBundleVersion">
+          <End Type="AspNetDeployModel.BundleVersion" Role="BundleVersion" Multiplicity="*" />
+          <End Type="AspNetDeployModel.DataField" Role="DataField" Multiplicity="*" />
+        </Association>
+        <Association Name="DataFieldValueToEnvironment">
+          <End Type="AspNetDeployModel.DataFieldValue" Role="DataFieldValue" Multiplicity="*" />
+          <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="*" />
+        </Association>
+        <Association Name="DataFieldValueToMachine">
+          <End Type="AspNetDeployModel.DataFieldValue" Role="DataFieldValue" Multiplicity="*" />
+          <End Type="AspNetDeployModel.Machine" Role="Machine" Multiplicity="*" />
+        </Association>
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -1331,7 +1873,6 @@
           <EntitySetMapping Name="Environment">
             <EntityTypeMapping TypeName="AspNetDeployModel.Environment">
               <MappingFragment StoreEntitySet="Environment">
-                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -1349,8 +1890,8 @@
           <EntitySetMapping Name="Machine">
             <EntityTypeMapping TypeName="AspNetDeployModel.Machine">
               <MappingFragment StoreEntitySet="Machine">
+                <ScalarProperty Name="PublicKey" ColumnName="PublicKey" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
-                <ScalarProperty Name="PrivateKey" ColumnName="PrivateKey" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -1500,7 +2041,7 @@
           <EntitySetMapping Name="Publication">
             <EntityTypeMapping TypeName="AspNetDeployModel.Publication">
               <MappingFragment StoreEntitySet="Publication">
-                <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+                <ScalarProperty Name="Result" ColumnName="ResultId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
                 <ScalarProperty Name="PackageId" ColumnName="PackageId" />
@@ -1528,6 +2069,102 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MachinePublication">
+            <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublication">
+              <MappingFragment StoreEntitySet="MachinePublication">
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="PublicationId" ColumnName="PublicationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MachinePublicationLog">
+            <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublicationLog">
+              <MappingFragment StoreEntitySet="MachinePublicationLog">
+                <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="MachinePublicationId" ColumnName="MachinePublicationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MachinePublicationProperty">
+            <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublicationProperty">
+              <MappingFragment StoreEntitySet="MachinePublicationProperty">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="MachinePublicationId" ColumnName="MachinePublicationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnvironmentProperty">
+            <EntityTypeMapping TypeName="AspNetDeployModel.EnvironmentProperty">
+              <MappingFragment StoreEntitySet="EnvironmentProperty">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="NextEnvironment" TypeName="AspNetDeployModel.NextEnvironment" StoreEntitySet="NextEnvironment">
+            <EndProperty Name="Environment1">
+              <ScalarProperty Name="Id" ColumnName="SourceEnvironmentId" />
+            </EndProperty>
+            <EndProperty Name="Environment">
+              <ScalarProperty Name="Id" ColumnName="NextEnvironmentId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="DataField">
+            <EntityTypeMapping TypeName="AspNetDeployModel.DataField">
+              <MappingFragment StoreEntitySet="DataField">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="ModeId" ColumnName="ModeId" />
+                <ScalarProperty Name="IsSensitive" ColumnName="IsSensitive" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataFieldValue">
+            <EntityTypeMapping TypeName="AspNetDeployModel.DataFieldValue">
+              <MappingFragment StoreEntitySet="DataFieldValue">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="DataFieldId" ColumnName="DataFieldId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="DataFieldToBundleVersion" TypeName="AspNetDeployModel.DataFieldToBundleVersion" StoreEntitySet="DataFieldToBundleVersion">
+            <EndProperty Name="DataField">
+              <ScalarProperty Name="Id" ColumnName="DataFieldId" />
+            </EndProperty>
+            <EndProperty Name="BundleVersion">
+              <ScalarProperty Name="Id" ColumnName="BundleVersionId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="DataFieldValueToEnvironment" TypeName="AspNetDeployModel.DataFieldValueToEnvironment" StoreEntitySet="DataFieldValueToEnvironment">
+            <EndProperty Name="Environment">
+              <ScalarProperty Name="Id" ColumnName="EnvironmentId" />
+            </EndProperty>
+            <EndProperty Name="DataFieldValue">
+              <ScalarProperty Name="Id" ColumnName="DataFieldValueId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="DataFieldValueToMachine" TypeName="AspNetDeployModel.DataFieldValueToMachine" StoreEntitySet="DataFieldValueToMachine">
+            <EndProperty Name="Machine">
+              <ScalarProperty Name="Id" ColumnName="MachineId" />
+            </EndProperty>
+            <EndProperty Name="DataFieldValue">
+              <ScalarProperty Name="Id" ColumnName="DataFieldValueId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
             </Mapping>
         </edmx:Mappings>

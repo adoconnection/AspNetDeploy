@@ -16,7 +16,7 @@
         foreach (Machine machine in environment.Machines)
         {
             <div class="row machine">
-                <div class="col-sm-8 col-md-6">
+                <div class="col-sm-8 col-md-4">
                     <div class="name">
                         <div class="roles pull-right">
                             @foreach (MachineRole role in machine.MachineRoles)
@@ -25,8 +25,12 @@
                             }
                         </div>
                         <div>
-                            <img src="~/Resources/Layout/Images/Icons/Server-Online.png" />
+                            <img src="~/Resources/Layout/Images/Icons/server32.png" />
                             @machine.Name
+                            <span id="@("idMachine" + machine.Id)">
+                                <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                <small class="status text-muted" style="display: none;"></small>
+                            </span>
                         </div>
                         
                     </div>

@@ -14,6 +14,7 @@ namespace ThreadHostedTaskRunner
         private static readonly ConcurrentDictionary<int, BundleState> BundleStates = new ConcurrentDictionary<int, BundleState>();
         private static readonly ConcurrentDictionary<int, SourceControlState> SourceControlStates = new ConcurrentDictionary<int, SourceControlState>();
         private static readonly ConcurrentDictionary<int, ProjectState> ProjectStates = new ConcurrentDictionary<int, ProjectState>();
+        private static readonly ConcurrentDictionary<int, MachineState> MachineStates = new ConcurrentDictionary<int, MachineState>();
 
         public static void LockSourceControl(int sourceControlVersionId, int bundleId)
         {
@@ -96,7 +97,7 @@ namespace ThreadHostedTaskRunner
         }
         public static SourceControlState SetSourceControlVersionState(int id, SourceControlState state)
         {
-            return SourceControlStates.AddOrUpdate(id, state, (i, controlState) => state);
+            return SourceControlStates.AddOrUpdate(id, state, (i, s) => state);
         }
 
         public static BundleState GetBundleVersionState(int id)
@@ -105,7 +106,7 @@ namespace ThreadHostedTaskRunner
         }
         public static BundleState SetBundleVersionState(int id, BundleState state)
         {
-            return BundleStates.AddOrUpdate(id, state, (i, controlState) => state);
+            return BundleStates.AddOrUpdate(id, state, (i, s) => state);
         }
 
         public static ProjectState GetProjectVersionState(int id)
@@ -114,7 +115,16 @@ namespace ThreadHostedTaskRunner
         }
         public static ProjectState SetProjectVersionState(int id, ProjectState state)
         {
-            return ProjectStates.AddOrUpdate(id, state, (i, controlState) => state);
+            return ProjectStates.AddOrUpdate(id, state, (i, s) => state);
+        }
+
+        public static MachineState GetMachineState(int id)
+        {
+            return MachineStates.GetOrAdd(id, MachineState.Idle);
+        }
+        public static MachineState SetMachineState(int id, MachineState state)
+        {
+            return MachineStates.AddOrUpdate(id, state, (i, s) => state);
         }
 
     }

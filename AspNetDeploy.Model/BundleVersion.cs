@@ -20,6 +20,7 @@ namespace AspNetDeploy.Model
             this.ProjectVersions = new HashSet<ProjectVersion>();
             this.Packages = new HashSet<Package>();
             this.Properties = new HashSet<BundleVersionProperty>();
+            this.DataFields = new HashSet<DataField>();
         }
     
         public int Id { get; set; }
@@ -33,5 +34,6 @@ namespace AspNetDeploy.Model
         public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
         public virtual ICollection<Package> Packages { get; set; }
         public virtual ICollection<BundleVersionProperty> Properties { get; set; }
+        public virtual ICollection<DataField> DataFields { get; set; }
     }
 }

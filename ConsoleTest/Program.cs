@@ -25,20 +25,19 @@ namespace ConsoleTest
 
             RunScheduler();
 
-            Console.WriteLine("Complete");
+            WriteLine("Main thread complete");
             Console.ReadKey();
         }
 
         private static void RunScheduler()
         {
-            
-
             BackgroundWorker worker = new BackgroundWorker();
 
             worker.DoWork += (sender, eventArgs) => ThreadTaskRunner.ProcessTasks();
             worker.RunWorkerCompleted += (sender, eventArgs) =>
             {
-                Console.WriteLine("Worker Complete");
+                WriteLine("---------------");
+                WriteLine("Worker Complete");
                 WorkerComplete = true;
             };
             worker.RunWorkerAsync();
@@ -47,32 +46,43 @@ namespace ConsoleTest
 
             while (true)
             {
-                Console.WriteLine(DateTime.Now);
+                WriteLine(DateTime.Now.ToString());
                 List<SourceControlVersion> sourceControls = entities.SourceControlVersion.Include("SourceControl").ToList();
                 List<BundleVersion> bundleVersions = entities.BundleVersion.Include("Bundle").ToList();
                 List<ProjectVersion> projectVersions = entities.ProjectVersion.Include("Project").ToList();
+                List<Machine> machines = entities.Machine.ToList();
 
                 foreach (SourceControlVersion sourceControlVersion in sourceControls)
                 {
-                    Console.WriteLine(sourceControlVersion.Id + " - " + sourceControlVersion.SourceControl.Name + " / " + sourceControlVersion.Name + " - " + TaskRunnerContext.GetSourceControlVersionState(sourceControlVersion.Id));
+                    WriteLine(sourceControlVersion.Id + " - " + sourceControlVersion.SourceControl.Name + " / " + sourceControlVersion.Name + " - " + TaskRunnerContext.GetSourceControlVersionState(sourceControlVersion.Id));
                 }
 
-                Console.WriteLine("");
+                WriteLine("");
 
                 foreach (BundleVersion bundleVersion in bundleVersions)
                 {
-                    Console.WriteLine(bundleVersion.Id + " - " + bundleVersion.Bundle.Name + " / " + bundleVersion.Name + " - " + TaskRunnerContext.GetBundleVersionState(bundleVersion.Id));
+                    WriteLine(bundleVersion.Id + " - " + bundleVersion.Bundle.Name + " / " + bundleVersion.Name + " - " + TaskRunnerContext.GetBundleVersionState(bundleVersion.Id));
                 }
 
-                Console.WriteLine("");
+                WriteLine("");
 
                 foreach (ProjectVersion projectVersion in projectVersions.Where(p => TaskRunnerContext.GetProjectVersionState(p.Id) != ProjectState.Idle))
                 {
-                    Console.WriteLine(
+                    WriteLine(
                         projectVersion.SourceControlVersion.SourceControl.Name + "/ " +  
                         projectVersion.SourceControlVersion.Name + "/ " +  
                         projectVersion.Id + " - " + projectVersion.Project.Name + " - " + TaskRunnerContext.GetProjectVersionState(projectVersion.Id));
                 }
+
+                WriteLine("");
+
+                foreach (Machine machine in machines)
+                {
+                    WriteLine(
+                        machine.Name + " - " + TaskRunnerContext.GetMachineState(machine.Id));
+                }
+
+                WriteLine("");
 
                 /*if (sourceControls.All(scv => TaskRunnerContext.GetSourceControlVersionState(scv.Id) == SourceControlState.Idle) &&
                     bundleVersions.All(bv => TaskRunnerContext.GetBundleVersionState(bv.Id) == BundleState.Idle))
@@ -85,10 +95,15 @@ namespace ConsoleTest
                     break;
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(200);
 
-                Console.Clear();
+                Console.SetCursorPosition(0,0);
             }
+        }
+
+        public static void WriteLine(string value)
+        {
+            Console.WriteLine(new string(' ', Console.WindowWidth - 1) + "\r" + value);
         }
     }
 }

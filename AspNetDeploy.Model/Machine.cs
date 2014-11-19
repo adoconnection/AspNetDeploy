@@ -18,14 +18,18 @@ namespace AspNetDeploy.Model
         {
             this.Environments = new HashSet<Environment>();
             this.MachineRoles = new HashSet<MachineRole>();
+            this.MachinePublication = new HashSet<MachinePublication>();
+            this.DataFieldValues = new HashSet<DataFieldValue>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public string PrivateKey { get; set; }
         public string URL { get; set; }
+        public string PublicKey { get; set; }
     
         public virtual ICollection<Environment> Environments { get; set; }
         public virtual ICollection<MachineRole> MachineRoles { get; set; }
+        public virtual ICollection<MachinePublication> MachinePublication { get; set; }
+        public virtual ICollection<DataFieldValue> DataFieldValues { get; set; }
     }
 }
