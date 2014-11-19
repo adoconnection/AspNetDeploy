@@ -1,0 +1,55 @@
+﻿@using Environment = AspNetDeploy.Model.Environment
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "environmentPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Environment environment = this.ViewBag.Environment;
+    IList<DataField> dataFields = this.ViewBag.DataFields;
+}
+
+<div class="container">
+
+    
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @environment.Name
+                
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>
+    </h1>
+        
+
+    <hr />
+    
+    <h3>Variables</h3>
+    
+    @foreach(DataField dataField in dataFields)
+    {
+        <div class="row">
+            <div class="col-sm-4 text-right">@dataField.Key</div>
+            <div class="col-sm-8">
+                @{
+                    var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
+                }
+                
+                @if (dataFieldValues.Count == 0)
+                {
+                    <span>&mdash;</span>
+                }
+                else
+                {
+                    foreach (DataFieldValue dataFieldValue in dataFieldValues)
+                    {
+                        <pre>@dataFieldValue.Value</pre>
+                    }
+                }
+            </div>
+        </div>
+    }
+    
+</div>

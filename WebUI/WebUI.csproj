@@ -224,6 +224,7 @@
     <Content Include="Views\Shared\RoleEditor.cshtml" />
     <Content Include="Views\BundleVersionDeployment\EditConfigStep.cshtml" />
     <Content Include="Views\BundleVersionDeployment\EditWebsiteStep.cshtml" />
+    <Content Include="Views\Environments\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

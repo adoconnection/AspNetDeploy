@@ -10,7 +10,7 @@
 
     @foreach (Environment environment in this.ViewBag.Environments)
     {
-        <h1> @environment.Name </h1>
+        <h1> @Html.ActionLink(environment.Name, "Details", new { id = environment.Id }) </h1>
         <hr />
 
         foreach (Machine machine in environment.Machines)

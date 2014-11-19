@@ -96,12 +96,12 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)
         {
-            JsonConvert.SerializeObject(new
+            /*JsonConvert.SerializeObject(new
             {
                 
-            })
+            })*/
 
-            this.client.DeployWebSite();
+            //this.client.DeployWebSite();
         }
     }
 }
