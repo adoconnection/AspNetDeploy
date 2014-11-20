@@ -34,7 +34,7 @@ namespace AspNetDeploy.ContinuousIntegration
                 .Include("Machines.MachineRoles")
                 .First(e => e.Id == environmentId);
 
-            IDictionary<Machine, IDeploymentAgent> agents = this.CreateDeploymentAgents(environment);
+            IDictionary<Machine, IDeploymentAgent> agents = this.CreateDeploymentAgents(environment, package.BundleVersion);
 
             if (!this.ValidateDeploymentAgents(agents))
             {
@@ -48,9 +48,9 @@ namespace AspNetDeploy.ContinuousIntegration
                 return;
             }
 
-            //Publication publication = this.CreatePublication(package, environment, entities);
+            Publication publication = this.CreatePublication(package, environment, entities);
 
-            //this.ChangePublicationResult(publication, PublicationResult.InProgress, entities);
+            this.ChangePublicationResult(publication, PublicationResult.InProgress, entities);
 
             foreach (KeyValuePair<Machine, IDeploymentAgent> pair in agents)
             {
@@ -59,7 +59,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
                 if (!deploymentAgent.IsReady())
                 {
-                    //this.ChangePublicationResult(publication, PublicationResult.Error, entities);
+                    this.ChangePublicationResult(publication, PublicationResult.Error, entities);
                     return;
                 }
 
@@ -67,8 +67,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
                 try
                 {
-                   // deploymentAgent.BeginPublication(publication.Id);
-                    deploymentAgent.BeginPublication(1); // TODO: HARDCODED TEST
+                    deploymentAgent.BeginPublication(publication.Id);
                     deploymentAgent.ResetPackage();
                     deploymentAgent.UploadPackage(bundlePackagePath);
 
@@ -83,7 +82,7 @@ namespace AspNetDeploy.ContinuousIntegration
                 {
                     deploymentAgent.Rollback();
                     machineDeploymentComplete(machine.Id, false);
-                   // this.ChangePublicationResult(publication, PublicationResult.Error, entities);
+                    this.ChangePublicationResult(publication, PublicationResult.Error, entities);
                     return;
                 }
 
@@ -91,7 +90,7 @@ namespace AspNetDeploy.ContinuousIntegration
                 machineDeploymentComplete(machine.Id, true);
             }
 
-           // this.ChangePublicationResult(publication, PublicationResult.Complete, entities);
+            this.ChangePublicationResult(publication, PublicationResult.Complete, entities);
         }
 
        
@@ -145,13 +144,13 @@ namespace AspNetDeploy.ContinuousIntegration
             return true;
         }
 
-        private IDictionary<Machine, IDeploymentAgent> CreateDeploymentAgents(Environment environment)
+        private IDictionary<Machine, IDeploymentAgent> CreateDeploymentAgents(Environment environment, BundleVersion bundleVersion)
         {
             IDictionary<Machine, IDeploymentAgent> agents = new Dictionary<Machine, IDeploymentAgent>();
 
             foreach (Machine machine in environment.Machines)
             {
-                agents[machine] = this.deploymentAgentFactory.Create(machine);
+                agents[machine] = this.deploymentAgentFactory.Create(machine, bundleVersion);
             }
             return agents;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Web.Administration;
 using SatelliteService.Contracts;
@@ -27,9 +28,11 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string)this.configuration.destination);
-            
-            DirectoryHelper.DeleteContents((string)this.configuration.destination);
+            if (Directory.Exists((string) this.configuration.destination))
+            {
+                this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
+                DirectoryHelper.DeleteContents((string)this.configuration.destination);
+            }
 
             packageRepository.ExtractProject(
                 (int)this.configuration.projectId, 
@@ -55,7 +58,7 @@ namespace SatelliteService.Operations
                     Binding binding = site.Bindings.CreateElement();
 
                     binding.Protocol = (string)bindingConfig.protocol;
-                    binding.BindingInformation = ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.url;
+                    binding.BindingInformation = ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
 
                     site.Bindings.Add(binding);
                 }
@@ -106,6 +109,10 @@ namespace SatelliteService.Operations
             if (this.backupDirectoryGuid.HasValue)
             {
                 this.BackupRepository.RestoreDirectory(this.backupDirectoryGuid.Value);
+            }
+            else if (Directory.Exists((string) this.configuration.destination))
+            {
+                Directory.Delete((string) this.configuration.destination, true);
             }
 
             /*if (this.backupSiteConfigurationGuid.HasValue)

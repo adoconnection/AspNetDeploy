@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
@@ -11,11 +14,13 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 {
     public class WCFSatelliteDeploymentAgent : IDeploymentAgent, IDisposable
     {
+        private readonly IVariableProcessor variableProcessor;
         private readonly DeploymentServiceClient client;
 
-        public WCFSatelliteDeploymentAgent()
+        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint)
         {
-            client = new DeploymentServiceClient("WSHttpBinding_IDeploymentService", "http://localhost:8090/AspNetDeploySatellite/DeploymentService");
+            this.variableProcessor = variableProcessor;
+            this.client = new DeploymentServiceClient("WSHttpBinding_IDeploymentService", endpoint);
         }
 
         public void Dispose()
@@ -89,6 +94,10 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                     this.ProcessWebSiteDeploymentStep(deploymentStep);
                     break;
 
+                case DeploymentStepType.Configuration:
+                    this.ProcessConfigurationStep(deploymentStep);
+                    break;
+
                 default:
                     throw new AspNetDeployException("Deployment step type is not supported: " + deploymentStep.Type);
             }
@@ -96,12 +105,32 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)
         {
-            /*JsonConvert.SerializeObject(new
+            string configuration = JsonConvert.SerializeObject(new
             {
-                
-            })*/
+                destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.DestinationPath")),
+                siteName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
+                applicationPoolName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
+                projectId = deploymentStep.GetIntProperty("ProjectId"),
+                bindings = ((IEnumerable<dynamic>) deploymentStep.GetDynamicProperty("IIS.Bindings")).Select(b => new
+                {
+                    protocol = this.variableProcessor.ProcessValue((string) b.protocol),
+                    port = this.variableProcessor.ProcessValue((string) b.port),
+                    host = this.variableProcessor.ProcessValue((string) b.host),
+                })
+            });
 
-            //this.client.DeployWebSite();
+            this.client.DeployWebSite(configuration);
+        }
+
+        private void ProcessConfigurationStep(DeploymentStep deploymentStep)
+        {
+            string configuration = JsonConvert.SerializeObject(new
+            {
+                file = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("File")),
+                content = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("SetValues"))
+            });
+
+            this.client.ProcessConfigFile(configuration);
         }
     }
 }

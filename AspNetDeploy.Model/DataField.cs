@@ -24,7 +24,7 @@ namespace AspNetDeploy.Model
         public int TypeId { get; set; }
         public string Key { get; set; }
         public bool IsSensitive { get; set; }
-        public int ModeId { get; set; }
+        public DataFieldMode Mode { get; set; }
         public bool IsDeleted { get; set; }
     
         public virtual ICollection<DataFieldValue> DataFieldValues { get; set; }

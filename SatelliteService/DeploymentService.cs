@@ -16,12 +16,17 @@ namespace SatelliteService
         private int activePublicationId;
 
         private readonly IPathRepository pathRepository;
+        private readonly IBackupRepository backupRepository;
+        private readonly IPackageRepositoryFactory packageRepositoryFactory;
+
         private IList<Operation> queuedOperations = new List<Operation>();
         private IList<Operation> completedOperations = new List<Operation>();
 
         public DeploymentService()
         {
             this.pathRepository = Factory.GetInstance<IPathRepository>();
+            this.backupRepository = Factory.GetInstance<IBackupRepository>();
+            this.packageRepositoryFactory = Factory.GetInstance<IPackageRepositoryFactory>();
         }
 
         public bool IsReady()
@@ -45,18 +50,17 @@ namespace SatelliteService
 
         public void Commit()
         {
-            foreach (Operation operation in this.queuedOperations)
+            try
             {
-                try
+                foreach (Operation operation in this.queuedOperations)
                 {
                     operation.Run();
                     this.completedOperations.Add(operation);
                 }
-                catch (Exception)
-                {
-                    this.Rollback();
-                    throw;
-                }
+            }
+            catch (Exception)
+            {
+                this.Rollback();
             }
 
             this.completedOperations.Clear();
@@ -90,7 +94,8 @@ namespace SatelliteService
 
         public void DeployWebSite(string jsonConfig)
         {
-            WebSiteOperation operation = Factory.GetInstance<WebSiteOperation>();
+            string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
+            WebSiteOperation operation = new WebSiteOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
             operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
 
             this.queuedOperations.Add(operation);

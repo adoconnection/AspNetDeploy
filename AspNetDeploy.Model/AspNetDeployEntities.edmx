@@ -1781,7 +1781,7 @@
           <Property Name="TypeId" Type="Int32" Nullable="false" />
           <Property Name="Key" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="IsSensitive" Type="Boolean" Nullable="false" />
-          <Property Name="ModeId" Type="Int32" Nullable="false" />
+          <Property Name="Mode" Type="AspNetDeployModel.DataFieldMode" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.FK_DataFieldValue_DataField" FromRole="DataField" ToRole="DataFieldValue" />
           <NavigationProperty Name="BundleVersions" Relationship="AspNetDeployModel.DataFieldToBundleVersion" FromRole="DataField" ToRole="BundleVersion" />
@@ -1821,6 +1821,11 @@
           <End Type="AspNetDeployModel.DataFieldValue" Role="DataFieldValue" Multiplicity="*" />
           <End Type="AspNetDeployModel.Machine" Role="Machine" Multiplicity="*" />
         </Association>
+        <EnumType Name="DataFieldMode">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="BundlePrivate" Value="1" />
+          <Member Name="Global" Value="2" />
+        </EnumType>
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -2124,7 +2129,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.DataField">
               <MappingFragment StoreEntitySet="DataField">
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModeId" ColumnName="ModeId" />
+                <ScalarProperty Name="Mode" ColumnName="ModeId" />
                 <ScalarProperty Name="IsSensitive" ColumnName="IsSensitive" />
                 <ScalarProperty Name="Key" ColumnName="Key" />
                 <ScalarProperty Name="TypeId" ColumnName="TypeId" />

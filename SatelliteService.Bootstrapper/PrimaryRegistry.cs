@@ -11,7 +11,7 @@ namespace SatelliteService.Bootstrapper
         public PrimaryRegistry()
         {
             this.Map<IPathRepository, PathRepository>(LifecycleType.Application);
-            this.Map<IPackageRepository, PackageRepository>();
+            this.Map<IPackageRepositoryFactory, PackageRepositoryFactory>(LifecycleType.Application);
             this.Map<IBackupRepository, LocalBackupRepository>();
         }
     }

@@ -63,6 +63,10 @@
       <Project>{2F548CB9-6147-4CFB-B1F6-BE5C0259D675}</Project>
       <Name>SourceControls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Variables\Variables.csproj">
+      <Project>{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}</Project>
+      <Name>Variables</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
       <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
       <Name>LocalEnvironment</Name>

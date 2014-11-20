@@ -22,6 +22,11 @@ namespace SatelliteHost
             wsHttpBinding.MaxReceivedMessageSize = 1024 * 1024 * 10;
             wsHttpBinding.ReaderQuotas.MaxArrayLength = 1024 * 1024 * 10;
 
+            wsHttpBinding.OpenTimeout = new TimeSpan(0, 10, 0);
+            wsHttpBinding.CloseTimeout = new TimeSpan(0, 10, 0);
+            wsHttpBinding.SendTimeout = new TimeSpan(0, 10, 0);
+            wsHttpBinding.ReceiveTimeout = new TimeSpan(3, 0, 0);
+
             host.AddServiceEndpoint(typeof(IDeploymentService), wsHttpBinding, "");
 
             ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
@@ -29,9 +34,11 @@ namespace SatelliteHost
             host.Description.Behaviors.Add(serviceMetadataBehavior);
             
             host.Open();
-
+            
             Console.WriteLine("Running");
             Console.ReadKey();
+            
+            host.Close();
         }
     }
 }

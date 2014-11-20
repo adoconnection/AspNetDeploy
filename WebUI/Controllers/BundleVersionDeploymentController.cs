@@ -128,7 +128,8 @@ namespace AspNetDeploy.WebUI.Controllers
                     SiteName = deploymentStep.GetStringProperty("IIS.SiteName"),
                     ProjectId = deploymentStep.GetIntProperty("ProjectId"),
                     Destination = deploymentStep.GetStringProperty("IIS.DestinationPath"),
-                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select( mr => mr.Name))
+                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select( mr => mr.Name)),
+                    BindingsJson = deploymentStep.GetStringProperty("IIS.Bindings")
                 };
 
                 this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
@@ -245,9 +246,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
             deploymentStep.SetStringProperty("IIS.SiteName", model.SiteName);
             deploymentStep.SetStringProperty("IIS.DestinationPath", model.Destination);
+            deploymentStep.SetStringProperty("IIS.Bindings", model.BindingsJson);
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString());
-
-            
 
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("ProjectVersions")

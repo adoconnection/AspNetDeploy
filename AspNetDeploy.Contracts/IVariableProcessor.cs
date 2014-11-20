@@ -1,6 +1,6 @@
 ﻿namespace AspNetDeploy.Contracts
 {
-    public interface IVariableService
+    public interface IVariableProcessor
     {
         string ProcessValue(string value);
     }

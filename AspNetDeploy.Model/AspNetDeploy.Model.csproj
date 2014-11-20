@@ -81,6 +81,9 @@
     <Compile Include="DataField.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataFieldMode.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataFieldValue.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>

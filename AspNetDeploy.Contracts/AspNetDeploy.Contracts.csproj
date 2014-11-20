@@ -54,7 +54,8 @@
     <Compile Include="ISourceControlRepository.cs" />
     <Compile Include="ISourceControlRepositoryFactory.cs" />
     <Compile Include="ITaskRunner.cs" />
-    <Compile Include="IVariableService.cs" />
+    <Compile Include="IVariableProcessor.cs" />
+    <Compile Include="IVariableProcessorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

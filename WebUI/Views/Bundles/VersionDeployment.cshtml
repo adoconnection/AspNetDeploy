@@ -113,13 +113,20 @@
                 <li>Destination: @deploymentStep.GetStringProperty("IIS.DestinationPath")</li>
                 <li>Enabled AppOffilne page: @deploymentStep.GetStringProperty("EnabledAppOffilnePage")</li>
                 <li>Bindings:
-                    <ul>
+                    @if (deploymentStep.GetDynamicProperty("IIS.Bindings") != null)
+                    {
+                        <ul>
                                     
-                        @foreach (dynamic binding in deploymentStep.GetDynamicProperties("IIS.Binding"))
-                        {
-                            <li>@binding.type, @binding.port, @binding.host</li>
-                        }
-                    </ul>
+                            @foreach (dynamic binding in deploymentStep.GetDynamicProperty("IIS.Bindings"))
+                            {
+                                <li>@binding.protocol, @binding.port, @binding.host</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>not set</span>
+                    }
                 </li>
             </ul>
         </div>
