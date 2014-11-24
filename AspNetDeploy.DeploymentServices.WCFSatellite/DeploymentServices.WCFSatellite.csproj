@@ -57,21 +57,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Service References\SatelliteServiceReference\DeploymentService.wsdl" />
-    <None Include="Service References\SatelliteServiceReference\DeploymentService.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\SatelliteServiceReference\DeploymentService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\SatelliteServiceReference\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\SatelliteServiceReference\DeploymentService.disco" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\SatelliteServiceReference\configuration91.svcinfo" />
@@ -80,6 +69,13 @@
     <None Include="Service References\SatelliteServiceReference\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\SatelliteServiceReference\DeploymentService.wsdl" />
+    <None Include="Service References\SatelliteServiceReference\Metadata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\SatelliteServiceReference\Metadata1.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\SatelliteServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

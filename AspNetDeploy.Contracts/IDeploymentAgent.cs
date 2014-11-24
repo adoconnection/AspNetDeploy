@@ -7,7 +7,8 @@ namespace AspNetDeploy.Contracts
     {
         bool IsReady();
         bool BeginPublication(int publicationId);
-        void Commit();
+        bool ExecuteNextOperation();
+        bool Complete();
         void Rollback();
         void UploadPackage(string file, Action<int, int> progress = null);
         void ResetPackage();

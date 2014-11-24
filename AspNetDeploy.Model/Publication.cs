@@ -23,10 +23,12 @@ namespace AspNetDeploy.Model
         public int PackageId { get; set; }
         public int EnvironmentId { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public PublicationResult Result { get; set; }
+        public PublicationState State { get; set; }
+        public Nullable<int> QueuedByUserId { get; set; }
     
         public virtual Environment Environment { get; set; }
         public virtual Package Package { get; set; }
         public virtual ICollection<MachinePublication> MachinePublication { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AspNetDeploy.Contracts;
@@ -39,6 +40,10 @@ namespace ThreadHostedTaskRunner
         {
             return TaskRunnerContext.GetBundleVersionState(bundleId);
         }
+        public MachineState GetMachineState(int machineId)
+        {
+            return TaskRunnerContext.GetMachineState(machineId);
+        }
 
         public void Shutdown()
         {
@@ -65,72 +70,74 @@ namespace ThreadHostedTaskRunner
             TakeSources(entities);
             BuildProjects(entities);
             PackageBundles(entities);
-            AutoDeployToTest(entities);
+            ScheduleAutoDeployToTest(entities);
+            DeployScheduledPublications(entities);
             
         }
 
-        private static void AutoDeployToTest(AspNetDeployEntities entities)
+        private static void DeployScheduledPublications(AspNetDeployEntities entities)
         {
+            List<Publication> publications = entities.Publication
+                .Include("Package.BundleVersion")
+                .Include("Environment")
+                .Where( p => p.State == PublicationState.Queued)
+                .ToList();
+
+            List<IGrouping<BundleVersion, Publication>> groupedPublications = publications.GroupBy( p => p.Package.BundleVersion).ToList();
+
+            groupedPublications.ForEach(group =>
+            {
+                TaskRunnerContext.SetBundleVersionState(group.Key.Id, BundleState.Deploying);
+
+                foreach (Publication publication in group)
+                {
+                    DeploymentJob job = new DeploymentJob();
+                    job.Start(
+                        publication.Id,
+                        machineId => TaskRunnerContext.SetMachineState(machineId, MachineState.Deploying),
+                        (machineId, isSuccess) => TaskRunnerContext.SetMachineState(machineId, isSuccess ? MachineState.Idle : MachineState.Error));
+                }
+
+                TaskRunnerContext.SetBundleVersionState(group.Key.Id, BundleState.Idle);
+
+            });
+        }
+
+
+        private static void ScheduleAutoDeployToTest(AspNetDeployEntities entities)
+        {
+
             List<BundleVersion> bundleVersions = entities.BundleVersion
+                .Include("Properties")
+                .Include("Packages.Publications.Environment")
                 .Include("ProjectVersions.SourceControlVersion.Properties")
                 .ToList();
 
-            List<ProjectVersion> projectVersions = bundleVersions
-                .SelectMany(scv => scv.ProjectVersions)
-                .Where(pv =>
-                        pv.ProjectType.HasFlag(ProjectType.WindowsApplication) ||
-                        pv.ProjectType.HasFlag(ProjectType.Service) ||
-                        pv.ProjectType.HasFlag(ProjectType.Console) ||
-                        pv.ProjectType.HasFlag(ProjectType.Web)
-                )
-                .Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastTestDeploymentRevision"))
+            List<BundleVersion> bundleVersionsWithAutoDeploy = bundleVersions
+                .Where(bv => 
+                    bv.GetIntProperty("AutoDeployToEnvironment") > 0 && 
+                    bv.Packages.Any())
                 .ToList();
 
-            int[] projectIds = projectVersions.Select( pv => pv.Id).ToArray();
-
-            List<BundleVersion> bundleVersionsToDeploy = entities.BundleVersion
-                .Include("Properties")
-                .Where(bv => bv.ProjectVersions.Any(pv => projectIds.Contains(pv.Id)))
-                .ToList();
-
-
-            List<BundleVersion> bundleVersionsToAutoDeploy = bundleVersionsToDeploy
-                .Where( bv => bv.GetIntProperty("AutoDeployToEnvironment") > 0)
-                .ToList();
-
-            List<Environment> environments = entities.Environment
-                .Include("Machines")
-                .Include("Properties")
-                .ToList();
-
-            bundleVersionsToAutoDeploy.ForEach(bundleVersion =>
+            bundleVersionsWithAutoDeploy.ForEach(bundleVersion =>
             {
-                Package package = entities.Package.Where(p => p.BundleVersionId == bundleVersion.Id).OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+                Package latestPackage = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).FirstOrDefault();
+                List<Publication> latestPackagePublications = latestPackage.Publications.OrderByDescending( p => p.CreatedDate).ToList();
 
-                if (package == null)
+                if (latestPackagePublications.Count == 0)
                 {
-                    return;
+                    Publication publication = new Publication();
+                    publication.CreatedDate = DateTime.UtcNow;
+                    publication.EnvironmentId = bundleVersion.GetIntProperty("AutoDeployToEnvironment");
+                    publication.Package = latestPackage;
+                    publication.State = PublicationState.Queued;
+
+                    entities.Publication.Add(publication);
                 }
 
-                int environmentId = bundleVersion.GetIntProperty("AutoDeployToEnvironment");
-
-                environments
-                    .First(e => e.Id == environmentId).Machines
-                    .ToList()
-                    .ForEach(m => TaskRunnerContext.SetMachineState(m.Id, MachineState.DeployingQueued));
-
-                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Deploying);
-
-                DeploymentJob job = new DeploymentJob();
-                job.Start(
-                    package.Id, 
-                    environmentId,
-                    machineId => TaskRunnerContext.SetMachineState(machineId, MachineState.Deploing),
-                    (machineId, isSuccess) => TaskRunnerContext.SetMachineState(machineId, isSuccess ? MachineState.Idle : MachineState.Error));
-
-                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Idle);
-
             });
+
+            entities.SaveChanges();
         }
 
         private static void PackageBundles(AspNetDeployEntities entities)
@@ -183,7 +190,9 @@ namespace ThreadHostedTaskRunner
                     pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
                 .ToList();
 
-            bundleVersions.ForEach( bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building));
+            List<BundleVersion> affectedBundleVersions = projectVersions.SelectMany( pv => pv.BundleVersions).ToList();
+
+            affectedBundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building));
 
             foreach (var pair in projectVersions.Select(pv => new { pv.SolutionFile, pv.SourceControlVersion }).Distinct())
             {
@@ -195,7 +204,7 @@ namespace ThreadHostedTaskRunner
                     (projectId, isSuccess) => TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error));
             }
 
-            bundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
+            affectedBundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
         }
 
         private static void TakeSources(AspNetDeployEntities entities)

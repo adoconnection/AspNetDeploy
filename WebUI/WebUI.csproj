@@ -183,12 +183,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuthorizedAccessController.cs" />
     <Compile Include="Controllers\BundlesController.cs" />
     <Compile Include="Controllers\BundleVersionDeploymentController.cs" />
     <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\ProjectVersionsController.cs" />
+    <Compile Include="Controllers\PackagesController.cs" />
+    <Compile Include="Controllers\PublicationsController.cs" />
     <Compile Include="Controllers\SourcesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -197,6 +202,10 @@
     <Compile Include="Models\BundleVersionInfo.cs" />
     <Compile Include="Models\ConfigDeploymentStepModel.cs" />
     <Compile Include="Models\DeploymentStepModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\UserAddModel.cs" />
+    <Compile Include="Models\UserBaseModel.cs" />
+    <Compile Include="Models\UserEditModel.cs" />
     <Compile Include="Models\WebSiteDeploymentStepModel.cs" />
     <Compile Include="Models\ProjectVersionInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
@@ -225,6 +234,14 @@
     <Content Include="Views\BundleVersionDeployment\EditConfigStep.cshtml" />
     <Content Include="Views\BundleVersionDeployment\EditWebsiteStep.cshtml" />
     <Content Include="Views\Environments\Details.cshtml" />
+    <Content Include="Views\Bundles\VersionPublication.cshtml" />
+    <Content Include="Views\Packages\Details.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Shared\_Layout_Empty.cshtml" />
+    <Content Include="Views\Users\Add.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\List.cshtml" />
+    <Content Include="Views\Publications\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

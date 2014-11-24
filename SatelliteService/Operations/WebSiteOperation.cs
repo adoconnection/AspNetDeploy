@@ -110,11 +110,11 @@ namespace SatelliteService.Operations
             {
                 this.BackupRepository.RestoreDirectory(this.backupDirectoryGuid.Value);
             }
-            else if (Directory.Exists((string) this.configuration.destination))
+            /*else if (Directory.Exists((string) this.configuration.destination))
             {
                 Directory.Delete((string) this.configuration.destination, true);
             }
-
+*/
             /*if (this.backupSiteConfigurationGuid.HasValue)
             {
                 using (ServerManager serverManager = new ServerManager())

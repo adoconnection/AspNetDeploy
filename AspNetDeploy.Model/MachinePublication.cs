@@ -24,7 +24,7 @@ namespace AspNetDeploy.Model
         public int PublicationId { get; set; }
         public int MachineId { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public int StateId { get; set; }
+        public MachinePublicationState State { get; set; }
         public Nullable<System.DateTime> CompletedDate { get; set; }
     
         public virtual Machine Machine { get; set; }

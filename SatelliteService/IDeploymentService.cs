@@ -12,10 +12,13 @@ namespace SatelliteService
         bool BeginPublication(int publicationId);
 
         [OperationContract]
-        void Commit();
+        bool ExecuteNextOperation();
 
         [OperationContract]
-        void Rollback();
+        bool Complete();
+
+        [OperationContract]
+        bool Rollback();
 
         [OperationContract]
         void UploadPackageBuffer(byte[] buffer);

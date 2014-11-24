@@ -9,7 +9,7 @@ using MvcSiteMapProvider.Linq;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
-    public class BundleVersionDeploymentController : GenericController
+    public class BundleVersionDeploymentController : AuthorizedAccessController
     {
         public ActionResult MoveUp(int bundleVersionId, int deploymentStepId)
         {

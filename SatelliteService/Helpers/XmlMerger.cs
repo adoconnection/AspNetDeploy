@@ -158,7 +158,17 @@ namespace SatelliteService.Helpers
 
         private void AppendNewNode(XmlNode initialNode, XmlElement changesChildNode)
         {
-            XmlElement initialChildNode = initialNode.OwnerDocument.CreateElement(changesChildNode.Name);
+            XmlElement initialChildNode;
+
+            if (initialNode.OwnerDocument == null)
+            {
+                initialChildNode = ((XmlDocument)initialNode).CreateElement(changesChildNode.Name);
+            }
+            else
+            {
+                initialChildNode = initialNode.OwnerDocument.CreateElement(changesChildNode.Name);
+            }
+
             initialNode.AppendChild(initialChildNode);
 
             this.MergeNodes(initialChildNode, changesChildNode);

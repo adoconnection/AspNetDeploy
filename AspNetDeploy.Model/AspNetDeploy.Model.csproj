@@ -40,6 +40,7 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -100,6 +101,7 @@
     <Compile Include="Environment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="EnvironmentExtender.cs" />
     <Compile Include="EnvironmentProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -117,7 +119,13 @@
     <Compile Include="MachinePublicationLog.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="MachinePublicationLogEvent.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="MachinePublicationProperty.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MachinePublicationState.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="MachineRole.cs">
@@ -125,6 +133,9 @@
     </Compile>
     <Compile Include="MachineState.cs" />
     <Compile Include="Package.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PackageApprovedOnEnvironment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Project.cs">
@@ -149,28 +160,34 @@
     <Compile Include="Publication.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="PublicationResult.cs">
+    <Compile Include="PublicationState.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="SolutionType.cs" />
     <Compile Include="SourceControl.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="SourceControlExtender.cs" />
     <Compile Include="SourceControlProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="SourceControlState.cs" />
     <Compile Include="SourceControlType.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="SourceControlVersion.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="SourceControlVersionExtender.cs" />
     <Compile Include="SourceControlVersionProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserRole.cs" />
+    <Compile Include="UserRoleAction.cs" />
+    <Compile Include="RolePermissions.cs" />
+    <Compile Include="SolutionType.cs" />
+    <Compile Include="SourceControlExtender.cs" />
+    <Compile Include="SourceControlState.cs" />
+    <Compile Include="SourceControlVersionExtender.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="AspNetDeployEntities.edmx">

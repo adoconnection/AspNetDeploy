@@ -7,7 +7,7 @@ using AspNetDeploy.WebUI.Models;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
-    public class BundlesController : GenericController
+    public class BundlesController : AuthorizedAccessController
     {
         private readonly ITaskRunner taskRunner;
 
@@ -65,6 +65,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("DeploymentSteps.Properties")
                 .Include("DeploymentSteps.MachineRoles")
                 .Include("Packages.Publications.Environment.Machines")
+                .Include("Packages.ApprovedOnEnvironments")
                 .First( b => b.Id == id);
 
             List<Environment> environments = this.Entities.Environment.ToList();

@@ -81,6 +81,12 @@ H3 > a:hover
 }
 
 
+.navbar-nav .avatar
+{
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
 .variable
 {
     padding: 6px;

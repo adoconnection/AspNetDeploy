@@ -6,7 +6,6 @@ using AspNetDeploy.Model;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Logging;
 
 namespace AspNetDeploy.BuildServices.MSBuild
 {
@@ -22,7 +21,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 {"Platform", "Any CPU"}
             };
 
-            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "ReBuild" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "Build" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.Loggers = new List<ILogger>

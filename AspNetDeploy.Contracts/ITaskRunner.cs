@@ -13,6 +13,7 @@ namespace AspNetDeploy.Contracts
         ProjectState GetProjectState(int projectId);
 
         BundleState GetBundleState(int bundleId);
+        MachineState GetMachineState(int machineId);
 
         void Shutdown();
     }

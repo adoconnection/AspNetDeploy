@@ -17,21 +17,23 @@ namespace AspNetDeploy.Model
         public Environment()
         {
             this.Machines = new HashSet<Machine>();
-            this.Publication = new HashSet<Publication>();
+            this.Publications = new HashSet<Publication>();
             this.Properties = new HashSet<EnvironmentProperty>();
             this.PreviousEnvironment = new HashSet<Environment>();
             this.NextEnvironment = new HashSet<Environment>();
             this.DataFieldValues = new HashSet<DataFieldValue>();
+            this.ApprovedPackages = new HashSet<PackageApprovedOnEnvironment>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
         public virtual ICollection<Machine> Machines { get; set; }
-        public virtual ICollection<Publication> Publication { get; set; }
+        public virtual ICollection<Publication> Publications { get; set; }
         public virtual ICollection<EnvironmentProperty> Properties { get; set; }
         public virtual ICollection<Environment> PreviousEnvironment { get; set; }
         public virtual ICollection<Environment> NextEnvironment { get; set; }
         public virtual ICollection<DataFieldValue> DataFieldValues { get; set; }
+        public virtual ICollection<PackageApprovedOnEnvironment> ApprovedPackages { get; set; }
     }
 }

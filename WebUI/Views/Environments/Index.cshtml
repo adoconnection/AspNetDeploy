@@ -46,5 +46,83 @@
 
 </div>
 
+<script>
+
+    $(function ()
+    {
+        function updateStatuses()
+        {
+            var machineStates =
+            {
+                "Idle": {
+                    loadingIcon: false,
+                    text: ''
+                },
+                "DeployingQueued": {
+                    loadingIcon: false,
+                    text: 'Deploying queued'
+                },
+                "Deploying": {
+                    loadingIcon: true,
+                    text: 'Deploying'
+                },
+                "Uploading": {
+                    loadingIcon: true,
+                    text: 'Uploading'
+                },
+                "Installing": {
+                    loadingIcon: false,
+                    text: 'Installing'
+                },
+                "Finalizing": {
+                    loadingIcon: false,
+                    text: 'Finalizing'
+                },
+                "Error": {
+                    loadingIcon: false,
+                    text: 'Error'
+                }
+            }
+
+            function updateStatus(element, newState)
+            {
+                var loadingIcon = element.find('.loadingIcon');
+                var statusBox = element.find('.status');
+
+                if (newState.text == statusBox.data('text'))
+                {
+                    return;
+                }
+
+                statusBox.data('text', newState.text);
+
+                loadingIcon[newState.loadingIcon ? 'fadeIn' : 'fadeOut']();
+                statusBox[newState.text ? 'fadeIn' : 'fadeOut']();
+
+                if (newState.text)
+                {
+                    statusBox.text(newState.text);
+                }
+            }
+
+            $.post('@Url.Action("GetMachineStates")').success(function (data)
+            {
+                for (var i = 0; i < data.length; i++)
+                {
+                    var item = data[i];
+                    updateStatus($("#idMachine" + item.id), machineStates[item.state]);
+                }
+
+            });
+        }
+
+        updateStatuses();
+        setInterval(updateStatuses, 3000);
+
+    });
+
+</script>
+
+
 
 

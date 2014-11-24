@@ -18,74 +18,41 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/IsReady", ReplyAction="http://tempuri.org/IDeploymentService/IsReadyResponse")]
         bool IsReady();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/IsReady", ReplyAction="http://tempuri.org/IDeploymentService/IsReadyResponse")]
-        System.Threading.Tasks.Task<bool> IsReadyAsync();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/BeginPublication", ReplyAction="http://tempuri.org/IDeploymentService/BeginPublicationResponse")]
         bool BeginPublication(int publicationId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/BeginPublication", ReplyAction="http://tempuri.org/IDeploymentService/BeginPublicationResponse")]
-        System.Threading.Tasks.Task<bool> BeginPublicationAsync(int publicationId);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ExecuteNextOperation", ReplyAction="http://tempuri.org/IDeploymentService/ExecuteNextOperationResponse")]
+        bool ExecuteNextOperation();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/Commit", ReplyAction="http://tempuri.org/IDeploymentService/CommitResponse")]
-        void Commit();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/Commit", ReplyAction="http://tempuri.org/IDeploymentService/CommitResponse")]
-        System.Threading.Tasks.Task CommitAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/Complete", ReplyAction="http://tempuri.org/IDeploymentService/CompleteResponse")]
+        bool Complete();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/Rollback", ReplyAction="http://tempuri.org/IDeploymentService/RollbackResponse")]
-        void Rollback();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/Rollback", ReplyAction="http://tempuri.org/IDeploymentService/RollbackResponse")]
-        System.Threading.Tasks.Task RollbackAsync();
+        bool Rollback();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/UploadPackageBuffer", ReplyAction="http://tempuri.org/IDeploymentService/UploadPackageBufferResponse")]
         void UploadPackageBuffer(byte[] buffer);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/UploadPackageBuffer", ReplyAction="http://tempuri.org/IDeploymentService/UploadPackageBufferResponse")]
-        System.Threading.Tasks.Task UploadPackageBufferAsync(byte[] buffer);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ResetPackage", ReplyAction="http://tempuri.org/IDeploymentService/ResetPackageResponse")]
         void ResetPackage();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ResetPackage", ReplyAction="http://tempuri.org/IDeploymentService/ResetPackageResponse")]
-        System.Threading.Tasks.Task ResetPackageAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/DeployWebSite", ReplyAction="http://tempuri.org/IDeploymentService/DeployWebSiteResponse")]
         void DeployWebSite(string json);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/DeployWebSite", ReplyAction="http://tempuri.org/IDeploymentService/DeployWebSiteResponse")]
-        System.Threading.Tasks.Task DeployWebSiteAsync(string json);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ProcessConfigFile", ReplyAction="http://tempuri.org/IDeploymentService/ProcessConfigFileResponse")]
         void ProcessConfigFile(string json);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ProcessConfigFile", ReplyAction="http://tempuri.org/IDeploymentService/ProcessConfigFileResponse")]
-        System.Threading.Tasks.Task ProcessConfigFileAsync(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunPowerShellScript", ReplyAction="http://tempuri.org/IDeploymentService/RunPowerShellScriptResponse")]
         void RunPowerShellScript();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunPowerShellScript", ReplyAction="http://tempuri.org/IDeploymentService/RunPowerShellScriptResponse")]
-        System.Threading.Tasks.Task RunPowerShellScriptAsync();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/CopyFiles", ReplyAction="http://tempuri.org/IDeploymentService/CopyFilesResponse")]
         void CopyFiles();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/CopyFiles", ReplyAction="http://tempuri.org/IDeploymentService/CopyFilesResponse")]
-        System.Threading.Tasks.Task CopyFilesAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/UpdateHostsFile", ReplyAction="http://tempuri.org/IDeploymentService/UpdateHostsFileResponse")]
         void UpdateHostsFile();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/UpdateHostsFile", ReplyAction="http://tempuri.org/IDeploymentService/UpdateHostsFileResponse")]
-        System.Threading.Tasks.Task UpdateHostsFileAsync();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunSQLScript", ReplyAction="http://tempuri.org/IDeploymentService/RunSQLScriptResponse")]
         void RunSQLScript();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunSQLScript", ReplyAction="http://tempuri.org/IDeploymentService/RunSQLScriptResponse")]
-        System.Threading.Tasks.Task RunSQLScriptAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -119,96 +86,52 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
             return base.Channel.IsReady();
         }
         
-        public System.Threading.Tasks.Task<bool> IsReadyAsync() {
-            return base.Channel.IsReadyAsync();
-        }
-        
         public bool BeginPublication(int publicationId) {
             return base.Channel.BeginPublication(publicationId);
         }
         
-        public System.Threading.Tasks.Task<bool> BeginPublicationAsync(int publicationId) {
-            return base.Channel.BeginPublicationAsync(publicationId);
+        public bool ExecuteNextOperation() {
+            return base.Channel.ExecuteNextOperation();
         }
         
-        public void Commit() {
-            base.Channel.Commit();
+        public bool Complete() {
+            return base.Channel.Complete();
         }
         
-        public System.Threading.Tasks.Task CommitAsync() {
-            return base.Channel.CommitAsync();
-        }
-        
-        public void Rollback() {
-            base.Channel.Rollback();
-        }
-        
-        public System.Threading.Tasks.Task RollbackAsync() {
-            return base.Channel.RollbackAsync();
+        public bool Rollback() {
+            return base.Channel.Rollback();
         }
         
         public void UploadPackageBuffer(byte[] buffer) {
             base.Channel.UploadPackageBuffer(buffer);
         }
         
-        public System.Threading.Tasks.Task UploadPackageBufferAsync(byte[] buffer) {
-            return base.Channel.UploadPackageBufferAsync(buffer);
-        }
-        
         public void ResetPackage() {
             base.Channel.ResetPackage();
-        }
-        
-        public System.Threading.Tasks.Task ResetPackageAsync() {
-            return base.Channel.ResetPackageAsync();
         }
         
         public void DeployWebSite(string json) {
             base.Channel.DeployWebSite(json);
         }
         
-        public System.Threading.Tasks.Task DeployWebSiteAsync(string json) {
-            return base.Channel.DeployWebSiteAsync(json);
-        }
-        
         public void ProcessConfigFile(string json) {
             base.Channel.ProcessConfigFile(json);
-        }
-        
-        public System.Threading.Tasks.Task ProcessConfigFileAsync(string json) {
-            return base.Channel.ProcessConfigFileAsync(json);
         }
         
         public void RunPowerShellScript() {
             base.Channel.RunPowerShellScript();
         }
         
-        public System.Threading.Tasks.Task RunPowerShellScriptAsync() {
-            return base.Channel.RunPowerShellScriptAsync();
-        }
-        
         public void CopyFiles() {
             base.Channel.CopyFiles();
-        }
-        
-        public System.Threading.Tasks.Task CopyFilesAsync() {
-            return base.Channel.CopyFilesAsync();
         }
         
         public void UpdateHostsFile() {
             base.Channel.UpdateHostsFile();
         }
         
-        public System.Threading.Tasks.Task UpdateHostsFileAsync() {
-            return base.Channel.UpdateHostsFileAsync();
-        }
-        
         public void RunSQLScript() {
             base.Channel.RunSQLScript();
-        }
-        
-        public System.Threading.Tasks.Task RunSQLScriptAsync() {
-            return base.Channel.RunSQLScriptAsync();
         }
     }
 }

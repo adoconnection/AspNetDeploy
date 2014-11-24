@@ -17,10 +17,30 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
         private readonly IVariableProcessor variableProcessor;
         private readonly DeploymentServiceClient client;
 
-        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint)
+        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password)
         {
             this.variableProcessor = variableProcessor;
-            this.client = new DeploymentServiceClient("WSHttpBinding_IDeploymentService", endpoint);
+
+            WSHttpBinding binding = new WSHttpBinding(SecurityMode.TransportWithMessageCredential);
+            EndpointAddress endpointAddress = new EndpointAddress(new Uri(endpoint));
+
+            binding.MaxBufferPoolSize = 1024 * 1024 * 10;
+            binding.MaxReceivedMessageSize = 1024 * 1024 * 10;
+            binding.ReaderQuotas.MaxArrayLength = 1024 * 1024 * 10;
+
+            binding.OpenTimeout = new TimeSpan(0, 10, 0);
+            binding.CloseTimeout = new TimeSpan(0, 10, 0);
+            binding.SendTimeout = new TimeSpan(0, 10, 0);
+            binding.ReceiveTimeout = new TimeSpan(3, 0, 0);
+
+            binding.BypassProxyOnLocal = false;
+            binding.UseDefaultWebProxy = true;
+
+            binding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
+
+            this.client = new DeploymentServiceClient(binding, endpointAddress);
+            this.client.ClientCredentials.UserName.UserName = login;
+            this.client.ClientCredentials.UserName.Password = password;
         }
 
         public void Dispose()
@@ -36,6 +56,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         public bool IsReady()
         {
+            
             return this.client.IsReady();
         }
 
@@ -43,10 +64,13 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
         {
             return this.client.BeginPublication(publicationId);
         }
-
-        public void Commit()
+        public bool ExecuteNextOperation()
         {
-            this.client.Commit();
+            return this.client.ExecuteNextOperation();
+        }
+        public bool Complete()
+        {
+            return this.client.Complete();
         }
 
         public void Rollback()

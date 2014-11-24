@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -19,82 +20,134 @@ namespace AspNetDeploy.ContinuousIntegration
             this.deploymentAgentFactory = deploymentAgentFactory;
         }
 
-        public void Deploy(int packageId, int environmentId, Action<int> machineDeploymentStarted, Action<int, bool> machineDeploymentComplete)
+
+        public void Deploy(int publicationId, Action<int> machineDeploymentStarted, Action<int, bool> machineDeploymentComplete)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
-            Package package = entities.Package
-                .Include("BundleVersion.Properties")
-                .Include("BundleVersion.DeploymentSteps.Properties")
-                .Include("BundleVersion.DeploymentSteps.MachineRoles")
-                .First(p => p.Id == packageId);
+            Publication publication = entities.Publication
+                .Include("Package.BundleVersion.Properties")
+                .Include("Package.BundleVersion.DeploymentSteps.Properties")
+                .Include("Package.BundleVersion.DeploymentSteps.MachineRoles")
+                .Include("Environment.Properties")
+                .Include("Environment.Machines.MachineRoles")
+                .First(p => p.Id == publicationId);
 
-            Environment environment = entities.Environment
-                .Include("Properties")
-                .Include("Machines.MachineRoles")
-                .First(e => e.Id == environmentId);
-
-            IDictionary<Machine, IDeploymentAgent> agents = this.CreateDeploymentAgents(environment, package.BundleVersion);
+            IDictionary<Machine, IDeploymentAgent> agents = this.CreateDeploymentAgents(publication);
+            IDictionary<Machine, MachinePublication> machinePublications = this.CreateMachinePublications(publication, entities);
 
             if (!this.ValidateDeploymentAgents(agents))
             {
                 return;
             }
 
-            string bundlePackagePath = pathServices.GetBundlePackagePath(package.BundleVersionId, package.Id);
+            string bundlePackagePath = pathServices.GetBundlePackagePath(publication.Package.BundleVersionId, publication.Package.Id);
 
             if (!this.ValidatePackage(bundlePackagePath))
             {
                 return;
             }
 
-            Publication publication = this.CreatePublication(package, environment, entities);
+            this.ChangePublicationResult(publication, PublicationState.InProgress, entities);
 
-            this.ChangePublicationResult(publication, PublicationResult.InProgress, entities);
+            foreach (MachinePublication machinePublication in machinePublications.Values)
+            {
+                this.ChangeMachinePublication(machinePublication, MachinePublicationState.Queued, entities);
+            }
 
             foreach (KeyValuePair<Machine, IDeploymentAgent> pair in agents)
             {
                 Machine machine = pair.Key;
                 IDeploymentAgent deploymentAgent = pair.Value;
 
+                MachinePublication machinePublication = machinePublications[machine];
+
                 if (!deploymentAgent.IsReady())
                 {
-                    this.ChangePublicationResult(publication, PublicationResult.Error, entities);
+                    this.ChangePublicationResult(publication, PublicationState.Error, entities);
                     return;
                 }
 
                 machineDeploymentStarted(machine.Id);
+                
 
                 try
                 {
                     deploymentAgent.BeginPublication(publication.Id);
                     deploymentAgent.ResetPackage();
+
+                    this.ChangeMachinePublication(machinePublication, MachinePublicationState.Uploading, entities);
                     deploymentAgent.UploadPackage(bundlePackagePath);
 
-                    foreach (DeploymentStep deploymentStep in this.GetMachineDeploymentSteps(package, machine))
+                    this.ChangeMachinePublication(machinePublication, MachinePublicationState.Configuring, entities);
+
+                    foreach (DeploymentStep deploymentStep in this.GetMachineDeploymentSteps(publication.Package, machine))
                     {
-                        deploymentAgent.ProcessDeploymentStep(deploymentStep);
+                        try
+                        {
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguring);
+                            deploymentAgent.ProcessDeploymentStep(deploymentStep);
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguringComplete);
+                        }
+                        catch (Exception e)
+                        {
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguringError);
+                            throw;
+                        }
                     }
 
-                    deploymentAgent.Commit();
+                    this.ChangeMachinePublication(machinePublication, MachinePublicationState.Running, entities);
+
+                    foreach (DeploymentStep deploymentStep in this.GetMachineDeploymentSteps(publication.Package, machine))
+                    {
+                        try
+                        {
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecuting);
+                            
+                            if (deploymentAgent.ExecuteNextOperation())
+                            {
+                                this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingComplete);    
+                            }
+                            else
+                            {
+                                throw new AspNetDeployException("Error executing deploymentStep");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError);
+                            throw;
+                        }
+                    }
+
+                    deploymentAgent.Complete();
                 }
                 catch (Exception e)
                 {
                     deploymentAgent.Rollback();
                     machineDeploymentComplete(machine.Id, false);
-                    this.ChangePublicationResult(publication, PublicationResult.Error, entities);
+                    this.ChangeMachinePublication(machinePublication, MachinePublicationState.Error, entities);
+                    this.ChangePublicationResult(publication, PublicationState.Error, entities);
                     return;
                 }
 
-                
+                this.ChangeMachinePublication(machinePublication, MachinePublicationState.Complete, entities);
                 machineDeploymentComplete(machine.Id, true);
             }
 
-            this.ChangePublicationResult(publication, PublicationResult.Complete, entities);
+            this.ChangePublicationResult(publication, PublicationState.Complete, entities);
         }
 
-       
-
+        private void LogMachinePublicationStep(MachinePublication machinePublication, DeploymentStep deploymentStep, AspNetDeployEntities entities, MachinePublicationLogEvent @event)
+        {
+            MachinePublicationLog machinePublicationLog = new MachinePublicationLog();
+            machinePublicationLog.CreatedDate = DateTime.UtcNow;
+            machinePublicationLog.MachinePublication = machinePublication;
+            machinePublicationLog.Event = @event;
+            machinePublicationLog.DeploymentStepId = deploymentStep.Id;
+            entities.MachinePublicationLog.Add(machinePublicationLog);
+            entities.SaveChanges();
+        }
 
         private IList<DeploymentStep> GetMachineDeploymentSteps(Package package, Machine machine)
         {
@@ -111,22 +164,15 @@ namespace AspNetDeploy.ContinuousIntegration
             return true;
         }
 
-        private Publication CreatePublication(Package package, Environment environment, AspNetDeployEntities entities)
+        private void ChangePublicationResult(Publication publication, PublicationState result , AspNetDeployEntities entities)
         {
-            Publication publication = new Publication();
-            publication.Package = package;
-            publication.Environment = environment;
-            publication.CreatedDate = DateTime.UtcNow;
-            publication.Result = PublicationResult.NotStarted;
-
-            entities.Publication.Add(publication);
+            publication.State = result;
             entities.SaveChanges();
-            return publication;
         }
 
-        private void ChangePublicationResult(Publication publication, PublicationResult result , AspNetDeployEntities entities)
+        private void ChangeMachinePublication(MachinePublication machinePublication, MachinePublicationState result, AspNetDeployEntities entities)
         {
-            publication.Result = result;
+            machinePublication.State = result;
             entities.SaveChanges();
         }
 
@@ -144,15 +190,36 @@ namespace AspNetDeploy.ContinuousIntegration
             return true;
         }
 
-        private IDictionary<Machine, IDeploymentAgent> CreateDeploymentAgents(Environment environment, BundleVersion bundleVersion)
+        private IDictionary<Machine, IDeploymentAgent> CreateDeploymentAgents(Publication publication)
         {
             IDictionary<Machine, IDeploymentAgent> agents = new Dictionary<Machine, IDeploymentAgent>();
 
-            foreach (Machine machine in environment.Machines)
+            foreach (Machine machine in publication.Environment.Machines)
             {
-                agents[machine] = this.deploymentAgentFactory.Create(machine, bundleVersion);
+                agents[machine] = this.deploymentAgentFactory.Create(machine, publication.Package.BundleVersion);
             }
+
             return agents;
+        }
+
+        private IDictionary<Machine, MachinePublication> CreateMachinePublications(Publication publication, AspNetDeployEntities entities)
+        {
+            IDictionary<Machine, MachinePublication> machinePublications = new Dictionary<Machine, MachinePublication>();
+
+            foreach (Machine machine in publication.Environment.Machines)
+            {
+                MachinePublication machinePublication = new MachinePublication();
+                machinePublication.Publication = publication;
+                machinePublication.Machine = machine;
+                machinePublication.CreatedDate = DateTime.UtcNow;
+
+                entities.MachinePublication.Add(machinePublication);
+                machinePublications.Add(machine, machinePublication);
+            }
+
+            entities.SaveChanges();
+
+            return machinePublications;
         }
     }
 }

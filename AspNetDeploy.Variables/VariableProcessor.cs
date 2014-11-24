@@ -40,7 +40,7 @@ namespace AspNetDeploy.Variables
                     return match.Value;
                 }
                 
-                if (variableType == "evn")
+                if (variableType == "env")
                 {
                     if (this.environmentDictionary.ContainsKey(variableName))
                     {

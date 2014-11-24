@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Model;
@@ -9,20 +8,19 @@ namespace ThreadHostedTaskRunner.Jobs
 {
     public class DeploymentJob
     {
-        public void Start(int packageId, int environmentId, Action<int> machineDeploymentStarted, Action<int, bool> machineDeploymentComplete)
+        public void Start(int publicationId, Action<int> machineDeploymentStarted, Action<int, bool> machineDeploymentComplete)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
-            Package package = entities.Package
-                .Include("Publications")
-                .Include("BundleVersion.Properties")
-                .First(p => p.Id == packageId);
+            Publication publication = entities.Publication
+                .Include("Package.BundleVersion.Properties")
+                .Include("Environment")
+                .First( p => p.Id == publicationId);
 
             DeploymentManager deploymentManager = Factory.GetInstance<DeploymentManager>();
 
             deploymentManager.Deploy(
-                packageId, 
-                environmentId,
+                publication.Id,
                 machineId =>
                 {
                     machineDeploymentStarted(machineId);
@@ -31,6 +29,8 @@ namespace ThreadHostedTaskRunner.Jobs
                 {
                     machineDeploymentComplete(machineId, isSuccess);
                 });
+
+            publication.Package.BundleVersion.SetStringProperty("LastPublicationAttemptPackage", publication.PackageId.ToString());
 
             entities.SaveChanges();
         }

@@ -7,7 +7,7 @@ using AspNetDeploy.WebUI.Models;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
-    public class SourcesController : GenericController
+    public class SourcesController : AuthorizedAccessController
     {
         private readonly ITaskRunner taskRunner;
 

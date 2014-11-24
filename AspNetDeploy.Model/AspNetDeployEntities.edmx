@@ -134,8 +134,9 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="PublicKey" Type="nvarchar" MaxLength="4000" Nullable="false" />
           <Property Name="URL" Type="nvarchar" MaxLength="4000" />
+          <Property Name="Login" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <EntityType Name="MachinePublication">
           <Key>
@@ -206,6 +207,16 @@
           <Property Name="BundleVersionId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="PackageApprovedOnEnvironment">
+          <Key>
+            <PropertyRef Name="PackageId" />
+            <PropertyRef Name="EnvironmentId" />
+          </Key>
+          <Property Name="PackageId" Type="int" Nullable="false" />
+          <Property Name="EnvironmentId" Type="int" Nullable="false" />
+          <Property Name="ApprovedByUserId" Type="int" Nullable="false" />
+          <Property Name="ApprovedDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Project">
           <Key>
             <PropertyRef Name="Id" />
@@ -271,6 +282,7 @@
           <Property Name="EnvironmentId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ResultId" Type="int" Nullable="false" />
+          <Property Name="QueuedByUserId" Type="int" />
         </EntityType>
         <EntityType Name="SourceControl">
           <Key>
@@ -317,6 +329,18 @@
           <Property Name="SourceControlVersionId" Type="int" Nullable="false" />
           <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Guid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="IsDisabled" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_BundleVersion_Bundle">
           <End Role="Bundle" Type="Self.Bundle" Multiplicity="1" />
@@ -618,6 +642,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PackageApprovedOnEnvironment_Environment">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="PackageApprovedOnEnvironment" Type="Self.PackageApprovedOnEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageApprovedOnEnvironment">
+              <PropertyRef Name="EnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackageApprovedOnEnvironment_Package">
+          <End Role="Package" Type="Self.Package" Multiplicity="1" />
+          <End Role="PackageApprovedOnEnvironment" Type="Self.PackageApprovedOnEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Package">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageApprovedOnEnvironment">
+              <PropertyRef Name="PackageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackageApprovedOnEnvironment_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="PackageApprovedOnEnvironment" Type="Self.PackageApprovedOnEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageApprovedOnEnvironment">
+              <PropertyRef Name="ApprovedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Project_SourceControl">
           <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
           <End Role="Project" Type="Self.Project" Multiplicity="*" />
@@ -762,6 +822,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Publication_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Publication" Type="Self.Publication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Publication">
+              <PropertyRef Name="QueuedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SourceControlProperty_SourceControl">
           <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
           <End Role="SourceControlProperty" Type="Self.SourceControlProperty" Multiplicity="*" />
@@ -846,6 +918,7 @@
           <EntitySet Name="MachineToMachineRole" EntityType="Self.MachineToMachineRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NextEnvironment" EntityType="Self.NextEnvironment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Package" EntityType="Self.Package" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackageApprovedOnEnvironment" EntityType="Self.PackageApprovedOnEnvironment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectProperty" EntityType="Self.ProjectProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectToBundle" EntityType="Self.ProjectToBundle" Schema="dbo" store:Type="Tables" />
@@ -858,6 +931,7 @@
           <EntitySet Name="SourceControlToGroup" EntityType="Self.SourceControlToGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlVersion" EntityType="Self.SourceControlVersion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlVersionProperty" EntityType="Self.SourceControlVersionProperty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BundleVersion_Bundle" Association="Self.FK_BundleVersion_Bundle">
             <End Role="Bundle" EntitySet="Bundle" />
             <End Role="BundleVersion" EntitySet="BundleVersion" />
@@ -958,6 +1032,18 @@
             <End Role="BundleVersion" EntitySet="BundleVersion" />
             <End Role="Package" EntitySet="Package" />
           </AssociationSet>
+          <AssociationSet Name="FK_PackageApprovedOnEnvironment_Environment" Association="Self.FK_PackageApprovedOnEnvironment_Environment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackageApprovedOnEnvironment_Package" Association="Self.FK_PackageApprovedOnEnvironment_Package">
+            <End Role="Package" EntitySet="Package" />
+            <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackageApprovedOnEnvironment_User" Association="Self.FK_PackageApprovedOnEnvironment_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
           <AssociationSet Name="FK_Project_SourceControl" Association="Self.FK_Project_SourceControl">
             <End Role="SourceControl" EntitySet="SourceControl" />
             <End Role="Project" EntitySet="Project" />
@@ -1004,6 +1090,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Publication_Package" Association="Self.FK_Publication_Package">
             <End Role="Package" EntitySet="Package" />
+            <End Role="Publication" EntitySet="Publication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Publication_User" Association="Self.FK_Publication_User">
+            <End Role="User" EntitySet="User" />
             <End Role="Publication" EntitySet="Publication" />
           </AssociationSet>
           <AssociationSet Name="FK_SourceControlProperty_SourceControl" Association="Self.FK_SourceControlProperty_SourceControl">
@@ -1185,6 +1275,24 @@
             <End Role="DataFieldValue" EntitySet="DataFieldValue" />
             <End Role="Machine" EntitySet="Machine" />
           </AssociationSet>
+          <EntitySet Name="PackageApprovedOnEnvironment" EntityType="AspNetDeployModel.PackageApprovedOnEnvironment" />
+          <AssociationSet Name="FK_PackageApprovedOnEnvironment_Environment" Association="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Environment">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackageApprovedOnEnvironment_Package" Association="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Package">
+            <End Role="Package" EntitySet="Package" />
+            <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
+          <EntitySet Name="User" EntityType="AspNetDeployModel.User" />
+          <AssociationSet Name="FK_PackageApprovedOnEnvironment_User" Association="AspNetDeployModel.FK_PackageApprovedOnEnvironment_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Publication_User" Association="AspNetDeployModel.FK_Publication_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Publication" EntitySet="Publication" />
+          </AssociationSet>
         </EntityContainer>
                 <EnumType Name="SourceControlType">
           <Member Name="Undefined" Value="0" />
@@ -1272,11 +1380,12 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Machines" Relationship="AspNetDeployModel.MachineToEnvironment" FromRole="Environment" ToRole="Machine" />
-          <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_Environment" FromRole="Environment" ToRole="Publication" />
+          <NavigationProperty Name="Publications" Relationship="AspNetDeployModel.FK_Publication_Environment" FromRole="Environment" ToRole="Publication" />
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_EnvironmentProperty_Environment" FromRole="Environment" ToRole="EnvironmentProperty" />
           <NavigationProperty Name="PreviousEnvironment" Relationship="AspNetDeployModel.NextEnvironment" FromRole="Environment" ToRole="Environment1" />
           <NavigationProperty Name="NextEnvironment" Relationship="AspNetDeployModel.NextEnvironment" FromRole="Environment1" ToRole="Environment" />
           <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.DataFieldValueToEnvironment" FromRole="Environment" ToRole="DataFieldValue" />
+          <NavigationProperty Name="ApprovedPackages" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Environment" FromRole="Environment" ToRole="PackageApprovedOnEnvironment" />
           </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -1297,8 +1406,9 @@
           <NavigationProperty Name="Environments" Relationship="AspNetDeployModel.MachineToEnvironment" FromRole="Machine" ToRole="Environment" />
           <NavigationProperty Name="MachineRoles" Relationship="AspNetDeployModel.MachineToMachineRole" FromRole="Machine" ToRole="MachineRole" />
           <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublication_Machine" FromRole="Machine" ToRole="MachinePublication" />
-          <Property Name="PublicKey" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.DataFieldValueToMachine" FromRole="Machine" ToRole="DataFieldValue" />
+          <Property Name="Login" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="MachineRole">
           <Key>
@@ -1561,6 +1671,7 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="BundleVersion" Relationship="AspNetDeployModel.FK_Package_BundleVersion" FromRole="Package" ToRole="BundleVersion" />
           <NavigationProperty Name="Publications" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Package" ToRole="Publication" />
+          <NavigationProperty Name="ApprovedOnEnvironments" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Package" FromRole="Package" ToRole="PackageApprovedOnEnvironment" />
         </EntityType>
         <EntityType Name="Publication">
           <Key>
@@ -1570,10 +1681,12 @@
           <Property Name="PackageId" Type="Int32" Nullable="false" />
           <Property Name="EnvironmentId" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Result" Type="AspNetDeployModel.PublicationResult" Nullable="false" />
+          <Property Name="State" Type="AspNetDeployModel.PublicationState" Nullable="false" />
           <NavigationProperty Name="Environment" Relationship="AspNetDeployModel.FK_Publication_Environment" FromRole="Publication" ToRole="Environment" />
           <NavigationProperty Name="Package" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Publication" ToRole="Package" />
           <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublication_Publication" FromRole="Publication" ToRole="MachinePublication" />
+          <Property Name="QueuedByUserId" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="AspNetDeployModel.FK_Publication_User" FromRole="Publication" ToRole="User" />
         </EntityType>
         <Association Name="FK_Package_BundleVersion">
           <End Type="AspNetDeployModel.BundleVersion" Role="BundleVersion" Multiplicity="1" />
@@ -1663,7 +1776,7 @@
           <Property Name="PublicationId" Type="Int32" Nullable="false" />
           <Property Name="MachineId" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="StateId" Type="Int32" Nullable="false" />
+          <Property Name="State" Type="AspNetDeployModel.MachinePublicationState" Nullable="false" />
           <Property Name="CompletedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Machine" Relationship="AspNetDeployModel.FK_MachinePublication_Machine" FromRole="MachinePublication" ToRole="Machine" />
           <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_MachinePublication_Publication" FromRole="MachinePublication" ToRole="Publication" />
@@ -1676,7 +1789,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="MachinePublicationId" Type="Int32" Nullable="false" />
-          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="Event" Type="AspNetDeployModel.MachinePublicationLogEvent" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DeploymentStepId" Type="Int32" />
           <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublicationLog_MachinePublication" FromRole="MachinePublicationLog" ToRole="MachinePublication" />
@@ -1765,13 +1878,14 @@
           <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="*" />
           <End Type="AspNetDeployModel.Environment" Role="Environment1" Multiplicity="*" />
         </Association>
-        <EnumType Name="PublicationResult">
+        <EnumType Name="PublicationState">
           <Member Name="Undefined" Value="0" />
           <Member Name="NotStarted" Value="1" />
           <Member Name="InProgress" Value="2" />
           <Member Name="Canceled" Value="3" />
           <Member Name="Error" Value="4" />
           <Member Name="Complete" Value="5" />
+          <Member Name="Queued" Value="6" />
         </EnumType>
         <EntityType Name="DataField">
           <Key>
@@ -1825,6 +1939,105 @@
           <Member Name="Undefined" Value="0" />
           <Member Name="BundlePrivate" Value="1" />
           <Member Name="Global" Value="2" />
+        </EnumType>
+        <EntityType Name="PackageApprovedOnEnvironment">
+          <Key>
+            <PropertyRef Name="PackageId" />
+            <PropertyRef Name="EnvironmentId" />
+          </Key>
+          <Property Name="PackageId" Type="Int32" Nullable="false" />
+          <Property Name="EnvironmentId" Type="Int32" Nullable="false" />
+          <Property Name="ApprovedByUserId" Type="Int32" Nullable="false" />
+          <Property Name="ApprovedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Environment" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Environment" FromRole="PackageApprovedOnEnvironment" ToRole="Environment" />
+          <NavigationProperty Name="Package" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Package" FromRole="PackageApprovedOnEnvironment" ToRole="Package" />
+          <NavigationProperty Name="ApprovedBy" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_User" FromRole="PackageApprovedOnEnvironment" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_PackageApprovedOnEnvironment_Environment">
+          <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="1" />
+          <End Type="AspNetDeployModel.PackageApprovedOnEnvironment" Role="PackageApprovedOnEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageApprovedOnEnvironment">
+              <PropertyRef Name="EnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackageApprovedOnEnvironment_Package">
+          <End Type="AspNetDeployModel.Package" Role="Package" Multiplicity="1" />
+          <End Type="AspNetDeployModel.PackageApprovedOnEnvironment" Role="PackageApprovedOnEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Package">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageApprovedOnEnvironment">
+              <PropertyRef Name="PackageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Guid" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="AspNetDeployModel.UserRole" Nullable="false" />
+          <Property Name="IsDisabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PackageApprovedOnEnvironment" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_User" FromRole="User" ToRole="PackageApprovedOnEnvironment" />
+          <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_User" FromRole="User" ToRole="Publication" />
+        </EntityType>
+        <Association Name="FK_PackageApprovedOnEnvironment_User">
+          <End Type="AspNetDeployModel.User" Role="User" Multiplicity="1" />
+          <End Type="AspNetDeployModel.PackageApprovedOnEnvironment" Role="PackageApprovedOnEnvironment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageApprovedOnEnvironment">
+              <PropertyRef Name="ApprovedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Publication_User">
+          <End Type="AspNetDeployModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.Publication" Role="Publication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Publication">
+              <PropertyRef Name="QueuedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="UserRole" a:ExternalTypeName="UserRole" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+        <EnumType Name="MachinePublicationState">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="Queued" Value="1" />
+          <Member Name="Uploading" Value="2" />
+          <Member Name="Configuring" Value="3" />
+          <Member Name="Running" Value="4" />
+          <Member Name="Finalizing" Value="5" />
+          <Member Name="Complete" Value="6" />
+          <Member Name="Error" Value="7" />
+          <Member Name="Canceled" Value="8" />
+        </EnumType>
+        <EnumType Name="MachinePublicationLogEvent">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="DeploymentStepConfiguring" Value="100" />
+          <Member Name="DeploymentStepConfiguringComplete" Value="101" />
+          <Member Name="DeploymentStepConfiguringError" Value="110" />
+          <Member Name="DeploymentStepExecuting" Value="200" />
+          <Member Name="DeploymentStepExecutingComplete" Value="201" />
+          <Member Name="DeploymentStepExecutingError" Value="210" />
+          <Member Name="DeploymentStepRollback" Value="300" />
+          <Member Name="DeploymentStepRollbackComplete" Value="301" />
+          <Member Name="DeploymentStepRollbackError" Value="310" />
         </EnumType>
             </Schema>
         </edmx:ConceptualModels>
@@ -1895,7 +2108,8 @@
           <EntitySetMapping Name="Machine">
             <EntityTypeMapping TypeName="AspNetDeployModel.Machine">
               <MappingFragment StoreEntitySet="Machine">
-                <ScalarProperty Name="PublicKey" ColumnName="PublicKey" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -2046,7 +2260,8 @@
           <EntitySetMapping Name="Publication">
             <EntityTypeMapping TypeName="AspNetDeployModel.Publication">
               <MappingFragment StoreEntitySet="Publication">
-                <ScalarProperty Name="Result" ColumnName="ResultId" />
+                <ScalarProperty Name="QueuedByUserId" ColumnName="QueuedByUserId" />
+                <ScalarProperty Name="State" ColumnName="ResultId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
                 <ScalarProperty Name="PackageId" ColumnName="PackageId" />
@@ -2078,7 +2293,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublication">
               <MappingFragment StoreEntitySet="MachinePublication">
                 <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
-                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="State" ColumnName="StateId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
                 <ScalarProperty Name="PublicationId" ColumnName="PublicationId" />
@@ -2091,7 +2306,7 @@
               <MappingFragment StoreEntitySet="MachinePublicationLog">
                 <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="Event" ColumnName="EventId" />
                 <ScalarProperty Name="MachinePublicationId" ColumnName="MachinePublicationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -2170,6 +2385,29 @@
               <ScalarProperty Name="Id" ColumnName="DataFieldValueId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="PackageApprovedOnEnvironment">
+            <EntityTypeMapping TypeName="AspNetDeployModel.PackageApprovedOnEnvironment">
+              <MappingFragment StoreEntitySet="PackageApprovedOnEnvironment">
+                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+                <ScalarProperty Name="ApprovedByUserId" ColumnName="ApprovedByUserId" />
+                <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
+                <ScalarProperty Name="PackageId" ColumnName="PackageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="AspNetDeployModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
+                <ScalarProperty Name="Role" ColumnName="RoleId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Guid" ColumnName="Guid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
             </Mapping>
         </edmx:Mappings>

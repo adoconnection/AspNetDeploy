@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading;
 using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.DeploymentServices.WCFSatellite;
 using AspNetDeploy.Model;
+using AspNetDeploy.Variables;
 using AspNetDeploy.WebUI.Bootstrapper;
 using ObjectFactory;
 using ThreadHostedTaskRunner;
@@ -19,9 +21,6 @@ namespace ConsoleTest
         static void Main(string[] args)
         {
             ObjectFactoryConfigurator.Configure();
-
-            //PackageManager packageManager = Factory.GetInstance<PackageManager>();
-            //packageManager.PackageBundle(4);
 
             RunScheduler();
 

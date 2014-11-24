@@ -10,16 +10,18 @@
 namespace AspNetDeploy.Model
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class MachinePublicationLog
+    public enum MachinePublicationLogEvent : int
     {
-        public int Id { get; set; }
-        public int MachinePublicationId { get; set; }
-        public MachinePublicationLogEvent Event { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public Nullable<int> DeploymentStepId { get; set; }
-    
-        public virtual MachinePublication MachinePublication { get; set; }
+        Undefined = 0,
+        DeploymentStepConfiguring = 100,
+        DeploymentStepConfiguringComplete = 101,
+        DeploymentStepConfiguringError = 110,
+        DeploymentStepExecuting = 200,
+        DeploymentStepExecutingComplete = 201,
+        DeploymentStepExecutingError = 210,
+        DeploymentStepRollback = 300,
+        DeploymentStepRollbackComplete = 301,
+        DeploymentStepRollbackError = 310
     }
 }

@@ -2,7 +2,6 @@
 <ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="1be6f891-939a-45ae-a7fc-646bd5b45815" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
-    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
     <EnableDataBinding>true</EnableDataBinding>
     <ExcludedTypes />
     <ImportXmlTypes>false</ImportXmlTypes>
@@ -19,13 +18,12 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8090/AspNetDeploySatellite/DeploymentService" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8091/AspNetDeploySatellite/Metadata" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="DeploymentService.disco" MetadataType="Disco" ID="7808f09e-44d7-4ec1-aa7f-49ef02bdbf44" SourceId="1" SourceUrl="http://localhost:8090/AspNetDeploySatellite/DeploymentService?disco" />
-    <MetadataFile FileName="DeploymentService.xsd" MetadataType="Schema" ID="109763f4-8aa4-441a-b2b4-ba8c1e315e43" SourceId="1" SourceUrl="http://localhost:8090/AspNetDeploySatellite/DeploymentService?xsd=xsd1" />
-    <MetadataFile FileName="DeploymentService1.xsd" MetadataType="Schema" ID="8e551132-2611-47ff-87b9-c923f5ce409c" SourceId="1" SourceUrl="http://localhost:8090/AspNetDeploySatellite/DeploymentService?xsd=xsd0" />
-    <MetadataFile FileName="DeploymentService.wsdl" MetadataType="Wsdl" ID="39df9943-9908-4876-a5d4-574f479f1802" SourceId="1" SourceUrl="http://localhost:8090/AspNetDeploySatellite/DeploymentService?wsdl" />
+    <MetadataFile FileName="DeploymentService.wsdl" MetadataType="Wsdl" ID="4e571620-f7f6-4746-bebe-0f8844cf345f" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata" />
+    <MetadataFile FileName="Metadata.xsd" MetadataType="Schema" ID="ce11b38a-1f32-4fa5-8eb7-188a591f0760" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd0" />
+    <MetadataFile FileName="Metadata1.xsd" MetadataType="Schema" ID="330c78bc-1c29-44fa-bf6e-9f213bb5611a" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -4,7 +4,7 @@ using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
-    public class ProjectVersionsController : GenericController
+    public class ProjectVersionsController : AuthorizedAccessController
     {
         public ActionResult Details(int id)
         {

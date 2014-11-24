@@ -10,16 +10,15 @@
 namespace AspNetDeploy.Model
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class MachinePublicationLog
+    public enum PublicationState : int
     {
-        public int Id { get; set; }
-        public int MachinePublicationId { get; set; }
-        public MachinePublicationLogEvent Event { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public Nullable<int> DeploymentStepId { get; set; }
-    
-        public virtual MachinePublication MachinePublication { get; set; }
+        Undefined = 0,
+        NotStarted = 1,
+        InProgress = 2,
+        Canceled = 3,
+        Error = 4,
+        Complete = 5,
+        Queued = 6
     }
 }

@@ -99,6 +99,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentServices.WCFSatel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Variables", "AspNetDeploy.Variables\Variables.csproj", "{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SatelliteService.Exceptions", "SatelliteService.Exceptions\SatelliteService.Exceptions.csproj", "{1071BF12-F1C6-4477-9D81-C293301507AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -241,6 +243,10 @@ Global
 		{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1071BF12-F1C6-4477-9D81-C293301507AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1071BF12-F1C6-4477-9D81-C293301507AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1071BF12-F1C6-4477-9D81-C293301507AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1071BF12-F1C6-4477-9D81-C293301507AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,6 +297,7 @@ Global
 		{6192E2D0-88B7-4ED5-B556-19A7959D1788} = {C930D618-BB7C-4D23-8B84-9B9586BBD662}
 		{D599826D-2EBD-4C3F-904A-A404E790841B} = {C930D618-BB7C-4D23-8B84-9B9586BBD662}
 		{B542EA6D-378B-4DA7-85F8-EE51CEBB457C} = {6083A989-2E29-42A7-B124-8077AE3A2DEE}
+		{1071BF12-F1C6-4477-9D81-C293301507AE} = {B2B7A4F1-F32E-46D1-B26D-7C1A3B294142}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .

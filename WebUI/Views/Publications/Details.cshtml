@@ -1,0 +1,134 @@
+﻿@using Environment = AspNetDeploy.Model.Environment
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "publicationPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Publication publication = this.ViewBag.Publication;
+    Package package = publication.Package;
+    Environment environment = publication.Environment;
+    BundleVersion bundleVersion = publication.Package.BundleVersion;
+    
+}
+
+<div class="container">
+    
+    <div class="">
+        @Html.ActionLink("Back", "VersionPackages", "Bundles", new { id = bundleVersion.Id}, null)
+    </div>
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                Publication @publication.Id – Package @package.Id – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm")
+            </div>
+            
+        </div>
+    </h1>
+    
+    <div>@bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small></div>
+
+    <hr />
+    
+    @foreach (MachinePublication machinePublication in publication.MachinePublication)
+    {
+        IEnumerable<IGrouping<int?, MachinePublicationLog>> groups = machinePublication.Log.Where( log => log.DeploymentStepId.HasValue).GroupBy( log => log.DeploymentStepId);
+
+        Dictionary<int, DeploymentStep> deploymentSteps = bundleVersion.DeploymentSteps.ToDictionary( ds => ds.Id);
+        
+        
+        <h3>@machinePublication.Machine.Name</h3>   
+     
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Step</th>
+                    <th>Configuring</th>
+                    <th>Executing</th>
+                    <th>Rollback</th>
+                </tr>
+            </thead> 
+            <tbody>
+                @foreach (IGrouping<int?, MachinePublicationLog> group in groups)
+                {
+                    DeploymentStep deploymentStep = deploymentSteps[@group.Key.Value];
+
+                    if (!deploymentSteps.ContainsKey(group.Key.Value))
+                    {
+                        <tr><td>deleted</td></tr>
+                        continue;
+                    }
+
+                    <tr>
+                        <td>
+                            @if (deploymentStep.Type == DeploymentStepType.DeployWebSite)
+                            {
+                                @deploymentStep.GetStringProperty("IIS.SiteName")
+                            }
+                            else if (deploymentStep.Type == DeploymentStepType.Configuration)
+                            {
+                                @deploymentStep.GetStringProperty("Step.Title")
+                            }
+                        </td>  
+                        <td>
+                            @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepConfiguring))
+                            {
+                                if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepConfiguringComplete))
+                                {
+                                    <span class="text-success">OK</span>
+                                }
+                                else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepConfiguringError))
+                                {
+                                    <span>Error</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>–</span>
+                            }
+                        </td>  
+                        <td>
+                            @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepExecuting))
+                            {
+                                if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepExecutingComplete))
+                                {
+                                    <span class="text-success">OK</span>
+                                }
+                                else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepExecutingError))
+                                {
+                                    <span>Error</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>–</span>
+                            }
+                        </td>
+                        <td>
+                           @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollback))
+                           {
+                               if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollbackComplete))
+                               {
+                                <span class="text-success">OK</span>
+                               }
+                               else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollbackError))
+                               {
+                                <span>Error</span>
+                               }
+                           }
+                           else
+                           {
+                            <span>–</span>
+                           }
+                        </td>
+
+                    </tr>
+
+                }
+            </tbody>
+            
+        </table>
+        
+    }
+    
+</div>

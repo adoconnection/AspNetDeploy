@@ -26,21 +26,29 @@
 
                     @Html.MvcSiteMap().Menu(false)
 
-
                     <ul class="nav navbar-nav navbar-right">
 
-                        <li><a href="/User/List">Пользователи</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            @*    <img src="/Account/Avatar/1.jpg" class="img-circle avatar" />*@
-                                Shade <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/Navigation/AuthorizeOnTarget" target="_blank">Авторизоваться на сайте</a></li>
-                                <li class="divider"></li>
-                                <li><a href="/Account/LogOut">Выйти</a></li>
-                            </ul>
-                        </li>
+                        @if (this.Request.IsAuthenticated)
+                        {
+                            if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ManageUsers))
+                            {
+                                <li>@Html.ActionLink("Пользователи", "List", "Users")</li>
+                            }
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="@Url.Action("Avatar", "Account", new { id = this.ViewBag.ActiveUser.Id })" class="img-circle avatar" />
+                                    @this.ViewBag.ActiveUser.Name <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Выйти", "LogOut", "Account")</li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Войти", "Login", "Account")</li>
+                        }
                     </ul>
 
                 </div>

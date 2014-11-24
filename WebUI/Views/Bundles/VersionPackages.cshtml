@@ -7,6 +7,7 @@
     IList<Environment> environments = this.ViewBag.Environments;
     BundleVersion bundleVersion = this.ViewBag.BundleVersion;
 
+    List<Publication> allPublications = bundleVersion.Packages.SelectMany( p => p.Publications).OrderByDescending( p => p.CreatedDate).ToList();
 
     IList<Package> orderedPackages = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).ToList();
     Package latestPackage = orderedPackages.FirstOrDefault();
@@ -32,7 +33,7 @@
         <li role="presentation"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
         <li role="presentation" class="active"><a href="#">Packages & Publications</a></li>
     </ul>
-       
+    
     <hr />
 
     <h3>Latest package</h3>
@@ -48,56 +49,128 @@
     
     <br/>
     
-    <h3>Environments</h3>
-    <div class="row">
-        <div class="col-sm-3">
-            <h4>&nbsp;</h4>
-            <hr />
-        </div>
-        @foreach (Environment environment in environments)
-        {
-            <div class="col-sm-3">
-                <h4>@environment.Name</h4>
-                <hr/>
-            </div>
-        }
-    </div>
+    <h3>Packages</h3>
     
-    @{
-        int packageIndex = 0;
-    }
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Build date</th>
+                @foreach (Environment environment in environments)
+                {
+                    <th>@environment.Name</th>
+                }
+            </tr>
+        </thead>
 
-    @foreach (Package package in orderedPackages)
-    {
-        packageIndex++;
-        
-        <div class="row">
-            <div class="col-sm-3">
-                <p>@packageIndex – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm") <small class="text-muted">(@package.Id)</small></p>
-            </div>
-            @foreach (Environment environment in environments)
+
+        @{
+            int packageIndex = orderedPackages.Count;
+        }
+        <tbody>
+            @foreach (Package package in orderedPackages)
             {
-                List<Publication> publications = package.Publications.Where(p => p.EnvironmentId == environment.Id).ToList();
-                    
-                <div class="col-sm-3">
-                    
-                    @if (publications.Count == 0)
+                <tr>
+                    <td>@Html.ActionLink(package.Id.ToString(), "Details", "Packages", new { id = package.Id }, null)</td>
+                    <td>@package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm")</td>
+
+                    @foreach (Environment environment in environments)
                     {
-                        <p>–</p>
-                    }
-                    else
-                    {
-                        foreach (Publication publication in publications.OrderByDescending(p => p.CreatedDate))
+                        List<Publication> packagePublications = package.Publications.Where(p => p.EnvironmentId == environment.Id).ToList();
+                        Publication latestPackagePublication = packagePublications.OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+
+                        Publication latestSuccessPublication = allPublications.Where( p => p.State == PublicationState.Complete).FirstOrDefault(p => p.Environment == environment);
+
+                        bool isActiveOnEnvironment = false;
+                        
+                        if (latestSuccessPublication != null)
                         {
-                            <p>@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @publication.CreatedDate.ToLocalTime().ToString("H:mm")</p>
+                            if (latestSuccessPublication.Package == package)
+                            {
+                                isActiveOnEnvironment = true;
+                            }
                         }
+
+                        bool isQueued = latestPackagePublication != null && latestPackagePublication.State == PublicationState.Queued;
+                        
+                        string rowClass = "";
+
+                        /*if (latestPackagePublication != null )
+                        {
+                            switch (latestPackagePublication.State)
+                            {
+                                case PublicationState.Complete:
+                                    rowClass = "success";
+                                    break;
+
+                                case PublicationState.Error:
+                                    rowClass = "error";
+                                    break;
+
+                                case PublicationState.Queued:
+                                case PublicationState.InProgress:
+                                    rowClass = "info";
+                                    break;
+                            }
+                            
+                        }*/
+
+
+                        if (isActiveOnEnvironment)
+                        {
+                            rowClass = "success";
+                        }
+                        else if (isQueued)
+                        {
+                            rowClass = "info";
+                        }
+
+                        <td class="@rowClass">
+                            @if (packagePublications.Count == 0)
+                            {
+                                @:&mdash;
+                            }
+                            else
+                            {
+                                <div class="pull-right">
+                                    @if (isActiveOnEnvironment)
+                                    {
+                                        <span><b>Active</b></span>
+                                    }
+                                    else if (isQueued)
+                                    {
+                                        <span><b>Queued</b></span>
+                                    }
+                                    
+                                    @if (package.ApprovedOnEnvironments.Any(a => a.Environment == environment))
+                                    {
+                                        <span class="label label-success">approved</span>
+                                    }
+                                    else
+                                    {
+                                            @*<span class="label label-info">pending</span>*@
+                                    }
+                                </div>
+                                
+                                foreach (Publication publication in packagePublications.OrderByDescending(p => p.CreatedDate))
+                                {
+                                    <div>
+                                        <a href="@Url.Action("Details", "Publications", new { id = publication.Id })">@publication.Id – @publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @publication.CreatedDate.ToLocalTime().ToString("H:mm")</a>
+                                        <span> – @publication.State</span>
+                                    </div>
+                                }
+                                
+                                
+                            }
+                        </td>
                     }
 
-                </div>
-            }
-        </div>
-    }
+                </tr>
 
+                    packageIndex--;
+            }
+        </tbody>
+    </table>
 </div>
 
 @helper ProjectGroup(BundleVersion bundleVersion, string name, ProjectType projectType)

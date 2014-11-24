@@ -19,6 +19,7 @@ namespace SatelliteService
         private readonly IBackupRepository backupRepository;
         private readonly IPackageRepositoryFactory packageRepositoryFactory;
 
+        private int nextOperationIndex = 0;
         private IList<Operation> queuedOperations = new List<Operation>();
         private IList<Operation> completedOperations = new List<Operation>();
 
@@ -41,39 +42,70 @@ namespace SatelliteService
                 return false;
             }
 
+            Console.WriteLine("Begin publication: " + publicationId);
+
             this.activePublicationId = publicationId;
             this.queuedOperations = new List<Operation>();
             this.completedOperations = new List<Operation>();
+            this.nextOperationIndex = 0;
 
             return true;
         }
 
-        public void Commit()
+        public bool ExecuteNextOperation()
         {
+            if (this.nextOperationIndex == this.queuedOperations.Count)
+            {
+                return false;
+            }
+
             try
             {
-                foreach (Operation operation in this.queuedOperations)
-                {
-                    operation.Run();
-                    this.completedOperations.Add(operation);
-                }
+                Operation operation = this.queuedOperations[this.nextOperationIndex];
+
+                Console.Write("Executing operation: " + this.nextOperationIndex);
+                operation.Run();
+                Console.Write("– OK\n\r");
+                this.completedOperations.Add(operation);
+                this.nextOperationIndex++;
+
+                return true;
             }
             catch (Exception)
             {
+                Console.Write("– Error\n\r");
                 this.Rollback();
+                
+                return false;
             }
-
-            this.completedOperations.Clear();
         }
 
-        public void Rollback()
+        public bool Complete()
         {
+            this.activePublicationId = 0;
+            this.completedOperations.Clear();
+            this.queuedOperations.Clear();
+
+            Console.WriteLine("Publication complete");
+
+            return true;
+        }
+
+        public bool Rollback()
+        {
+            Console.WriteLine("Rolling back");
+
             foreach (Operation operation in this.completedOperations.Reverse())
             {
                 operation.Rollback();
             }
 
             this.activePublicationId = 0;
+            this.completedOperations.Clear();
+
+            Console.WriteLine("Rollback complete");
+
+            return true;
         }
 
         public void ResetPackage()

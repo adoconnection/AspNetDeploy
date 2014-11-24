@@ -1,4 +1,8 @@
-﻿using System.Web;
+﻿using System;
+using System.Configuration;
+using System.Globalization;
+using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using AspNetDeploy.Contracts;
@@ -17,9 +21,20 @@ namespace AspNetDeploy.WebUI
 
             ObjectFactoryConfigurator.Configure();
 
-            ControllerBuilder.Current.SetControllerFactory(typeof(ControllerFactory)); 
-            
-            //Factory.GetInstance<ITaskRunner>().Initialize();
+            ControllerBuilder.Current.SetControllerFactory(typeof(ControllerFactory));
+
+            if (bool.Parse(ConfigurationManager.AppSettings["Settings.EnableTaskRunner"] ?? "false"))
+            {
+                Factory.GetInstance<ITaskRunner>().Initialize();
+            }
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            CultureInfo culture = new CultureInfo("en-US");
+
+            Thread.CurrentThread.CurrentUICulture = culture; 
+            Thread.CurrentThread.CurrentCulture = culture;
         }
     }
 }

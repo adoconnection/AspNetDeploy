@@ -11,13 +11,16 @@ namespace AspNetDeploy.Model
 {
     using System;
     
-    public enum PublicationResult : int
+    public enum MachinePublicationState : int
     {
         Undefined = 0,
-        NotStarted = 1,
-        InProgress = 2,
-        Canceled = 3,
-        Error = 4,
-        Complete = 5
+        Queued = 1,
+        Uploading = 2,
+        Configuring = 3,
+        Running = 4,
+        Finalizing = 5,
+        Complete = 6,
+        Error = 7,
+        Canceled = 8
     }
 }
