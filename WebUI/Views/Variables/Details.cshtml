@@ -1,0 +1,52 @@
+﻿@using Environment = AspNetDeploy.Model.Environment
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "variablesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    DataField dataField = this.ViewBag.DataField;
+    IList<Environment> environments = this.ViewBag.Environments;
+}
+
+<div class="container">
+
+    
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @dataField.Key
+            </div>
+           
+        </div>
+    </h1>
+
+    <hr />
+    
+    @foreach (Environment environment in environments)
+    {
+        <h3>@Html.ActionLink(environment.Name, "Details", "Environments",new { id = environment.Id}, null)</h3>
+        <div class="row">
+            <div class="col-sm-10">
+                @{
+                    var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
+                }
+                
+                @if (dataFieldValues.Count == 0)
+                {
+                    <span>&mdash;</span>
+                }
+                else
+                {
+                    foreach (DataFieldValue dataFieldValue in dataFieldValues)
+                    {
+                        <pre>@dataFieldValue.Value</pre>
+                    }
+                }
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id })">Edit</a>
+            </div>
+        </div>
+    }
+    
+</div>

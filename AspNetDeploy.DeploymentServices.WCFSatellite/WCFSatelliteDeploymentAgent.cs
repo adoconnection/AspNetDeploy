@@ -17,7 +17,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
         private readonly IVariableProcessor variableProcessor;
         private readonly DeploymentServiceClient client;
 
-        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password)
+        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password, TimeSpan? openTimeoutSpan = null)
         {
             this.variableProcessor = variableProcessor;
 
@@ -28,7 +28,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
             binding.MaxReceivedMessageSize = 1024 * 1024 * 10;
             binding.ReaderQuotas.MaxArrayLength = 1024 * 1024 * 10;
 
-            binding.OpenTimeout = new TimeSpan(0, 10, 0);
+            binding.OpenTimeout = openTimeoutSpan ?? new TimeSpan(0, 10, 0);
             binding.CloseTimeout = new TimeSpan(0, 10, 0);
             binding.SendTimeout = new TimeSpan(0, 10, 0);
             binding.ReceiveTimeout = new TimeSpan(3, 0, 0);

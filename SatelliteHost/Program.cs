@@ -29,7 +29,6 @@ namespace SatelliteHost
             wsHttpBinding.MaxReceivedMessageSize = 1024 * 1024 * 10;
             wsHttpBinding.ReaderQuotas.MaxArrayLength = 1024 * 1024 * 10;
             
-
             wsHttpBinding.OpenTimeout = new TimeSpan(0, 10, 0);
             wsHttpBinding.CloseTimeout = new TimeSpan(0, 10, 0);
             wsHttpBinding.SendTimeout = new TimeSpan(0, 10, 0);
@@ -41,10 +40,10 @@ namespace SatelliteHost
 
             host.AddServiceEndpoint(typeof(IDeploymentService), wsHttpBinding, "");
 
-            ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
+            /*ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
             serviceMetadataBehavior.HttpGetEnabled = true;
             serviceMetadataBehavior.HttpGetUrl = new Uri("http://localhost:8091/AspNetDeploySatellite/Metadata");
-            host.Description.Behaviors.Add(serviceMetadataBehavior);
+            host.Description.Behaviors.Add(serviceMetadataBehavior);*/
 
             ServiceCredentials credentials = new ServiceCredentials();
             credentials.UserNameAuthentication.UserNamePasswordValidationMode = UserNamePasswordValidationMode.Custom;
@@ -57,7 +56,7 @@ namespace SatelliteHost
                 StoreLocation.LocalMachine,
                 StoreName.My,
                 X509FindType.FindBySubjectName,
-                "SAND.office.documentoved.ru");
+                ConfigurationManager.AppSettings["Authrozation.CertificateName"]);
             
             host.Open();
             host.Faulted += (sender, eventArgs) =>
@@ -76,6 +75,12 @@ namespace SatelliteHost
             Console.WriteLine("Closed");
 
             host.Close();
+
+            /*
+             
+             netsh http add sslcert ipport=0.0.0.0:8090 certhash=969e746fb374e0dd102b0a3c197c7b5d66b0900e appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc}
+             
+             */
         }
     }
 }

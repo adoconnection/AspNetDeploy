@@ -15,7 +15,6 @@
         <div class="row">
             <div class="col-md-10">
                 @environment.Name
-                
             </div>
             <div class="col-md-2 text-right">
                 <button class="btn btn-default btn-lg">Configure</button>
@@ -27,28 +26,40 @@
     
     <h3>Variables</h3>
     
-    @foreach(DataField dataField in dataFields)
-    {
-        <div class="row">
-            <div class="col-sm-4 text-right">@dataField.Key</div>
-            <div class="col-sm-8">
-                @{
-                    var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
-                }
-                
-                @if (dataFieldValues.Count == 0)
-                {
-                    <span>&mdash;</span>
-                }
-                else
-                {
-                    foreach (DataFieldValue dataFieldValue in dataFieldValues)
-                    {
-                        <pre>@dataFieldValue.Value</pre>
-                    }
-                }
-            </div>
-        </div>
-    }
+    <table class="table">
+        <tbody>
+            @foreach (DataField dataField in dataFields)
+            {
+                <tr>
+                    <td>
+                        <a class="text-muted" href="@Url.Action("Details", "Variables", new { id = dataField.Id })">@dataField.Key</a>
+                    </td>
+                    <td>
+                        @{
+                            var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
+                        }
+
+                        @if (dataFieldValues.Count == 0)
+                        {
+                            <span>&mdash;</span>
+                        }
+                        else
+                        {
+                            foreach (DataFieldValue dataFieldValue in dataFieldValues)
+                            {
+
+
+                                <code>@dataFieldValue.Value</code>
+                            }
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id })">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
     
 </div>

@@ -1,6 +1,7 @@
 ﻿using AspNetDeploy.BuildServices;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.DeploymentServices;
+using AspNetDeploy.DeploymentServices.SatelliteMonitoring;
 using AspNetDeploy.SolutionParsers;
 using AspNetDeploy.SourceControls;
 using AspNetDeploy.Variables;
@@ -23,6 +24,7 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<IPathServices, PathServices>(LifecycleType.Application);
             this.Map<IDeploymentAgentFactory, DeploymentAgentFactory>(LifecycleType.Application);
             this.Map<IVariableProcessorFactory, VariableProcessorFactory>();
+            this.Map<ISatelliteMonitor, SatelliteMonitor>();
         }
     }
 }

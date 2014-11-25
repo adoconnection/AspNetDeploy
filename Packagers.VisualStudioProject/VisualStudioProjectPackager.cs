@@ -9,8 +9,10 @@ using Ionic.Zlib;
 
 namespace Packagers.VisualStudioProject
 {
-    public class VisualStudioProjectPackager : IProjectPackager
+    public abstract class VisualStudioProjectPackager : IProjectPackager
     {
+        protected abstract void PackageProjectContents(ZipFile zipFile, XDocument xDocument, XNamespace vsNamespace, string projectRootFolder);
+
         public void Package(string projectPath, string packageFile)
         {
             XDocument xDocument = XDocument.Load(projectPath);
@@ -22,33 +24,25 @@ namespace Packagers.VisualStudioProject
             {
                 zipFile.CompressionLevel = CompressionLevel.BestCompression;
 
-                List<string> content = xDocument.Descendants(vsNamespace + "Content")
-                    .Where(e => e.Attribute("Include") != null)
-                    .Select(e => e.Attribute("Include").Value)
-                    .ToList();
+                this.PackageProjectContents(zipFile, xDocument, vsNamespace, projectRootFolder);
 
-                foreach (string file in content)
-                {
-                    AddProjectFile(zipFile, projectRootFolder, file);
-                }
-
-                AddProjectDirectory(zipFile, projectRootFolder, "bin");
+                
 
                 zipFile.Save(packageFile);
             }
         }
 
-        private static void AddProjectDirectory(ZipFile zipFile, string projectRootFolder, string directory)
+        protected static void AddProjectDirectory(ZipFile zipFile, string projectRootFolder, string directory, string customArchiveDirectory = null)
         {
             string directoryPath = Path.Combine(projectRootFolder, directory);
 
             if (Directory.Exists(directoryPath))
             {
-                zipFile.AddDirectory(directoryPath, directory);
+                zipFile.AddDirectory(directoryPath, customArchiveDirectory ?? directory);
             }
         }
 
-        private static void AddProjectFile(ZipFile zipFile, string projectRootFolder, string file)
+        protected static void AddProjectFile(ZipFile zipFile, string projectRootFolder, string file)
         {
             string filePath = Path.Combine(projectRootFolder, file);
             string directoryPathInArchive = Path.GetDirectoryName(file);

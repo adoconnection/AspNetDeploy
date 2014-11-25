@@ -1,5 +1,4 @@
-﻿@using System.Configuration
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <title>@Page.Title</title>
@@ -25,39 +24,18 @@
                 </div>
                 <div class="navbar-collapse collapse">
 
-                    @Html.MvcSiteMap().Menu(false)
-                    
-                    
-
                     <ul class="nav navbar-nav navbar-right">
 
                         @if (this.Request.IsAuthenticated)
                         {
-                            if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ManageUsers))
-                            {
-                                <li>@Html.ActionLink("Users", "List", "Users")</li>
-                            }
-
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="@Url.Action("Avatar", "Account", new { id = this.ViewBag.ActiveUser.Id })" class="img-circle avatar" />
-                                    @this.ViewBag.ActiveUser.Name <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>@Html.ActionLink("Log out", "LogOut", "Account")</li>
-                                </ul>
-                            </li>
+                            <p class="navbar-text">@this.ViewBag.ActiveUser.Name</p>
+                            <li>@Html.ActionLink("Выйти", "LogOut", "Account")</li>
                         }
                         else
                         {
-                            <li>@Html.ActionLink("Log in", "Login", "Account")</li>
+                            <li>@Html.ActionLink("Войти", "Login", "Account")</li>
                         }
                     </ul>
-                    @if (!bool.Parse(ConfigurationManager.AppSettings["Settings.EnableTaskRunner"] ?? "false"))
-                    {
-                        <p class="navbar-text navbar-right">Task runner: <b class="text-warning" title="To enable set AppSettings.Settings.EnableTaskRunner = true">offline</b></p>
-                    }
-                    
 
                 </div>
             </div>

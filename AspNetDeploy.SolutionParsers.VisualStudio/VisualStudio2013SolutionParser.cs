@@ -98,6 +98,10 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
             {
                 visualStudioProject.Type |= ProjectType.WindowsApplication;
             }
+            else if (outputTypeElement != null && outputTypeElement.Value == "Database")
+            {
+                visualStudioProject.Type |= ProjectType.Database;
+            }
             else if (xDocument.Descendants(fileNamespace + "UseIISExpress").Any())
             {
                 visualStudioProject.Type |= ProjectType.Web;
@@ -137,6 +141,9 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
 
                 case "349C5851-65DF-11DA-9384-00065B846F21":
                     return ProjectType.Web;
+
+                case "00D1A9C2-B5F0-4AF3-8072-F6C62B433612":
+                    return ProjectType.Database;
 
                 default:
                     return ProjectType.Undefined;

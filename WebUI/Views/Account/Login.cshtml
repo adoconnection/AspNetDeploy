@@ -1,0 +1,51 @@
+﻿@model AspNetDeploy.WebUI.Models.LoginModel
+
+@{
+    ViewBag.Title = "Releases";
+    Layout = "~/Views/Shared/_Layout_Empty.cshtml";
+}
+
+@section Scripts
+{
+    <script src="@Url.Content("~/Resources/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Resources/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("Login", "Account", new { }, FormMethod.Post, new { Class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            <label for="UserName" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(m => m.Email, new { Class = "form-control", placeholder = "Email" })
+                                @Html.ValidationMessageFor(m => m.Email)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Password" class="col-sm-2 control-label">Пароль</label>
+                            <div class="col-sm-10">
+                                @Html.PasswordFor(m => m.Password, new { Class = "form-control", placeholder = "Пароль" })
+                                @Html.ValidationMessageFor(m => m.Password)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Войти</button>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

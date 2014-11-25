@@ -42,8 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseProjectPackager.cs" />
     <Compile Include="VisualStudioProjectPackager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebProjectPackager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">

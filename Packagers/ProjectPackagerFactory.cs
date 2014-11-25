@@ -11,7 +11,17 @@ namespace Packagers
         {
             if (projectType.HasFlag(ProjectType.Web))
             {
-                return new VisualStudioProjectPackager();
+                return new WebProjectPackager();
+            }
+
+            if (projectType.HasFlag(ProjectType.Database))
+            {
+                return new DatabaseProjectPackager();
+            }
+
+            if (projectType.HasFlag(ProjectType.Console))
+            {
+                return new WebProjectPackager();
             }
 
             throw new AspNetDeployException("Project type is not supported: " + projectType);

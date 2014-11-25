@@ -52,7 +52,6 @@
                         <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />    
                         <small class="status" style="display: none;"></small>
                     </span>
-                    
 
                 </h3>
 
@@ -63,8 +62,9 @@
                         bool hasWeb = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Web);
                         bool hasTest = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Test);
                         bool hasConsole = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Console);
+                        bool hasDatabase = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Database);
 
-                        if (hasWeb || hasTest || hasConsole)
+                        if (hasWeb || hasTest || hasConsole || hasDatabase)
                         {
                             <div>
                                 <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersionInfo.ProjectVersion.Id })">
@@ -79,6 +79,10 @@
                                     @if (hasConsole)
                                     {
                                         <img src="~/Resources/Layout/Images/Icons/VsConsoleProject.PNG" />
+                                    }
+                                    @if (hasDatabase)
+                                    {
+                                        <img src="~/Resources/Layout/Images/Icons/VsDatabaseProject.PNG" />
                                     }
 
                                     @projectVersionInfo.ProjectVersion.Name

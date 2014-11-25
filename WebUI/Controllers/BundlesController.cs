@@ -20,6 +20,7 @@ namespace AspNetDeploy.WebUI.Controllers
         {
             List<Bundle> bundles = this.Entities.Bundle
                 .Include("BundleVersions.ProjectVersions")
+                .Include("BundleVersions.Properties")
                 .OrderBy( b => b.OrderIndex)
                 .ToList();
 

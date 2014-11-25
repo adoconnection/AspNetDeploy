@@ -1,0 +1,73 @@
+﻿@model AspNetDeploy.WebUI.Models.UserAddModel
+
+@{
+    ViewBag.Title = "Add user";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <div>@Html.ActionLink("Назад", "List")</div>
+
+    <h1>Добавить пользователя</h1>
+    <hr />
+    @using (Html.BeginForm("Add", "Users", new { }, FormMethod.Post, new { Class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-7 ">
+
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Название</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Name, new { Class = "form-control", placeholder = "Название" })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Email</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Email, new { Class = "form-control", placeholder = "Email" })
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Роль</label>
+                    <div class="col-sm-8">
+                        @Html.EnumDropDownListFor(m => m.Role, new { Class = "form-control", placeholder = "Роль" })
+                        @Html.ValidationMessageFor(m => m.Role)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Пароль</label>
+                    <div class="col-sm-8">
+                        @Html.PasswordFor(m => m.Password, new { Class = "form-control", placeholder = "Пароль" })
+                        @Html.ValidationMessageFor(m => m.Password)
+                        <p class="text-muted">не менее 6 символов</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.IsDisabled, new { placeholder = "Название" }) Заблокировать
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-default">Создать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

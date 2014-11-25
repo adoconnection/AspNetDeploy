@@ -162,6 +162,7 @@
     <Content Include="Resources\Layout\Images\Icons\settings16.png" />
     <Content Include="Resources\Layout\Images\Icons\SVN-Icon.jpg" />
     <Content Include="Resources\Layout\Images\Icons\up16.png" />
+    <Content Include="Resources\Layout\Images\Icons\VsDatabaseProject.png" />
     <Content Include="Resources\Layout\Images\Icons\VsSolution.png" />
     <Content Include="Resources\Layout\Images\Icons\VsTestProject.png" />
     <Content Include="Resources\Layout\Images\vs-loading-colored.gif" />
@@ -194,9 +195,11 @@
     <Compile Include="Controllers\PublicationsController.cs" />
     <Compile Include="Controllers\SourcesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\VariablesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\VariableAddModel.cs" />
     <Compile Include="Models\Binding.cs" />
     <Compile Include="Models\BundleInfo.cs" />
     <Compile Include="Models\BundleVersionInfo.cs" />
@@ -206,6 +209,7 @@
     <Compile Include="Models\UserAddModel.cs" />
     <Compile Include="Models\UserBaseModel.cs" />
     <Compile Include="Models\UserEditModel.cs" />
+    <Compile Include="Models\VariableEditModel.cs" />
     <Compile Include="Models\WebSiteDeploymentStepModel.cs" />
     <Compile Include="Models\ProjectVersionInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
@@ -242,6 +246,8 @@
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\List.cshtml" />
     <Content Include="Views\Publications\Details.cshtml" />
+    <Content Include="Views\Variables\Edit.cshtml" />
+    <Content Include="Views\Variables\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Пользователи";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Пользователи</h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="@Url.Action("Add")" class="btn btn-default">Новый пользователь</a>
+
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Sate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (User user in this.ViewBag.Users)
+            {
+                <tr class="@(user.IsDisabled ? "text-muted" : "")">
+                    <td>
+                        @user.Id
+                    </td>
+                    <td>
+                        <div>@Html.ActionLink(user.Name, "Edit", new { id = user.Id })</div>
+                        <small>@user.Email</small>
+                    </td>
+                    <td>
+                        @switch (user.Role)
+                        {
+                            case UserRole.Observer:
+                                <span>Observer</span>
+                                break;
+
+                            case UserRole.Developer:
+                            <span>Developer</span>
+                                break;
+
+                            case UserRole.Tester:
+                            <span>Tester</span>
+                                break;
+
+                            case UserRole.Publisher:
+                            <span>Publisher</span>
+                                break;
+
+                            case UserRole.Admin:
+                            <span>Admin</span>
+                                break;
+
+                            case UserRole.Undefined:
+                            <span>–</span>
+                                break;
+                        }
+                    </td>
+
+
+                    <td>
+                        @if (user.IsDisabled)
+                        {
+                            <span>Заблокирован</span>
+                        }
+                        else
+                        {
+                            <text>Активен</text>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+

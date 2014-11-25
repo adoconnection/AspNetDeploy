@@ -9,10 +9,12 @@ namespace AspNetDeploy.WebUI.Controllers
     public class EnvironmentsController : AuthorizedAccessController
     {
         private readonly ITaskRunner taskRunner;
+        private readonly ISatelliteMonitor satelliteMonitor;
 
-        public EnvironmentsController(ITaskRunner taskRunner)
+        public EnvironmentsController(ITaskRunner taskRunner, ISatelliteMonitor satelliteMonitor)
         {
             this.taskRunner = taskRunner;
+            this.satelliteMonitor = satelliteMonitor;
         }
 
 
@@ -23,6 +25,12 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Machines.MachineRoles")
                 .ToList();
 
+            Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines)
+                .Distinct()
+                .Select(m => new {m, alive = this.satelliteMonitor.IsAlive(m)})
+                .ToDictionary(k => k.m, k => k.alive);
+
+            this.ViewBag.MachineStates = dictionary;
             this.ViewBag.Environments = environments;
 
             return this.View();
