@@ -27,6 +27,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [HttpGet]
         public ActionResult Edit(int id, int environmentId)
         {
+            this.CheckPermission(UserRoleAction.EnvironmentChangeVariables);
+
             DataField dataField = this.Entities.DataField
                 .Include("DataFieldValues.Environments")
                 .Include("DataFieldValues.Machines")
@@ -50,8 +52,11 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.View(model);
         }
 
+        [HttpPost]
         public ActionResult Edit(VariableEditModel model)
         {
+            this.CheckPermission(UserRoleAction.EnvironmentChangeVariables);
+
             DataField dataField = this.Entities.DataField
                     .Include("DataFieldValues.Environments")
                     .Include("DataFieldValues.Machines")

@@ -53,6 +53,9 @@ namespace AspNetDeploy.Model
 
                     UserRoleAction.VersionCreate,
 
+                    UserRoleAction.EnvironmentCreate,
+                    UserRoleAction.EnvironmentChangeVariables,
+
                     UserRoleAction.ManageUsers,
 
                 }

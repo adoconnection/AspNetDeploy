@@ -28,6 +28,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Approve(int id, int environmentid)
         {
+            this.CheckPermission(UserRoleAction.ReleaseApprove);
+
             Package package = this.Entities.Package
                 .Include("ApprovedOnEnvironments")
                 .First(p => p.Id == id);
@@ -54,6 +56,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Reject(int id, int environmentid)
         {
+            this.CheckPermission(UserRoleAction.ReleaseApprove);
+
             Package package = this.Entities.Package
                 .Include("ApprovedOnEnvironments.ApprovedBy")
                 .First(p => p.Id == id);
@@ -75,6 +79,20 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Schedule(int id, int environmentid)
         {
+            Environment environment = this.Entities.Environment
+                .Include("Properties")
+                .First( e => e.Id == environmentid);
+
+            if (environment.GetBoolProperty("AllowTestDeployment"))
+            {
+                this.CheckPermission(UserRoleAction.ReleasePublishTest);
+            }
+            else
+            {
+                this.CheckPermission(UserRoleAction.ReleasePublishLive);
+            }
+            
+
             Package package = this.Entities.Package.First( p => p.Id == id);
 
             Publication publication = new Publication();

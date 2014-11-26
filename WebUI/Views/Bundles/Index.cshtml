@@ -4,6 +4,8 @@
     ViewBag.Title = "Index";
     ViewBag.PageClass = "bundlesPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    IList<Environment> environments = this.ViewBag.Environments;
 }
 
 <div class="container">
@@ -28,7 +30,7 @@
                 
                 @if (bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
                 {
-                    <small>/ Auto deploy</small>
+                    <small>/ Auto deploy to @environments.First(e => e.Id == bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment")).Name</small>
                 }
                 
                 <span id="@("idBundleVersion" + bundleVersionInfo.BundleVersion.Id)">

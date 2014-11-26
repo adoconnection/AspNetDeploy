@@ -248,6 +248,7 @@
     <Content Include="Views\Publications\Details.cshtml" />
     <Content Include="Views\Variables\Edit.cshtml" />
     <Content Include="Views\Variables\Details.cshtml" />
+    <Content Include="Views\Bundles\CreateNewVersion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -81,7 +81,9 @@ namespace AspNetDeploy.ContinuousIntegration
 
                     this.ChangeMachinePublication(machinePublication, MachinePublicationState.Configuring, entities);
 
-                    foreach (DeploymentStep deploymentStep in this.GetMachineDeploymentSteps(publication.Package, machine))
+                    IList<DeploymentStep> machineDeploymentSteps = this.GetMachineDeploymentSteps(publication.Package, machine);
+
+                    foreach (DeploymentStep deploymentStep in machineDeploymentSteps)
                     {
                         try
                         {
@@ -98,7 +100,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
                     this.ChangeMachinePublication(machinePublication, MachinePublicationState.Running, entities);
 
-                    foreach (DeploymentStep deploymentStep in this.GetMachineDeploymentSteps(publication.Package, machine))
+                    foreach (DeploymentStep deploymentStep in machineDeploymentSteps)
                     {
                         try
                         {

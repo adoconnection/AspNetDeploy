@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    BundleVersion bundleVersion = this.ViewBag.BundleVersion;
+
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                New version from @bundleVersion.Bundle.Name / @bundleVersion.Name
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>  
+    </h1>
+
+    @*<hr />
+    <br />
+    <h3>Source controls</h3>
+  
+    <table class="table">
+        @foreach (SourceControlVersion sourceControlVersion in bundleVersion.ProjectVersions.Select(pv => pv.SourceControlVersion).Distinct())
+        {
+            <tr>
+                <td>
+                    @sourceControlVersion.SourceControl.Name / @sourceControlVersion.Name
+                </td>
+            </tr>
+        }
+    </table>  *@
+
+    <br/>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Project</th>
+                <th>Source control</th>
+                <th>New source control</th>
+            </tr>
+        </thead>
+        @foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)
+        {
+            <tr>
+                <td>@projectVersion.Name</td>
+                <td>@projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name</td>
+                <td>@Html.DropDownList(
+                        "projectVersion-" + projectVersion.Id,
+                        projectVersion.SourceControlVersion.SourceControl.SourceControlVersions
+                            .Select( scv => new SelectListItem()
+                            {
+                                Text = projectVersion.SourceControlVersion.SourceControl.Name + " / " + scv.Name,
+                                Value = scv.Id.ToString()
+                            })
+                            .ToList(),
+                      new { Class = "projectSelector", ProjectId = projectVersion.Id }
+                        )</td>
+            </tr>
+        }
+    </table>
+    
+    <br />
+    
+    @using (Html.BeginForm("CreateNewVersion", "Bundles", new { }, FormMethod.Post, new { id = "idForm", Class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("FromBundleVersionId", bundleVersion.Id)
+        @Html.Hidden("JsonData", "")
+        <hr />
+        <div class="row">
+            <div class="col-md-6 ">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
+                    <div class="col-sm-5">
+                        @Html.TextBox("NewVersionName", "", new { Class = "form-control", placeholder = "Name" })
+                        @Html.ValidationMessage("NewVersionName")
+                    </div>
+                </div>
+            </div>
+        </div>
+    <hr />
+    }
+    
+    <button class="btn btn-lg btn-default" id="idCreate">Create</button>
+
+</div>
+
+@section Scripts
+{
+    <script>
+
+        $(function() {
+
+            $('#idCreate').click(function() {
+
+                var result = [];
+
+                $('.projectSelector').each(function() {
+
+                    result.push({
+                        projectVersionId: $(this).attr('ProjectId'),
+                        sourceControlVersionId: $(this).val()
+                    });
+                    
+                });
+
+                $('#JsonData').val(JSON.stringify(result));
+
+                $('#idForm').submit();
+
+            });
+        });
+
+    </script>
+}
