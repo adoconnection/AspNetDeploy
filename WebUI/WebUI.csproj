@@ -151,6 +151,7 @@
     <Content Include="Resources\Layout\Images\Icons\box16-2.png" />
     <Content Include="Resources\Layout\Images\Icons\box16.png" />
     <Content Include="Resources\Layout\Images\Icons\down16.png" />
+    <Content Include="Resources\Layout\Images\Icons\zip32.png" />
     <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
     <Content Include="Resources\Layout\Images\Icons\server-ok32.png" />
@@ -214,6 +215,7 @@
     <Compile Include="Models\ProjectVersionInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
     <Compile Include="Models\SourceControlVersionInfo.cs" />
+    <Compile Include="Models\ZipArchiveDeploymentStepModel.cs" />
     <Compile Include="Mvc\ControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -249,6 +251,7 @@
     <Content Include="Views\Variables\Edit.cshtml" />
     <Content Include="Views\Variables\Details.cshtml" />
     <Content Include="Views\Bundles\CreateNewVersion.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditZipArchiveStep.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

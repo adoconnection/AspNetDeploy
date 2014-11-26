@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using AspNetDeploy.Contracts.Exceptions;
@@ -93,6 +94,27 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("EditWebsiteStep", model);
             }
 
+            if (deploymentStepType == DeploymentStepType.CopyFiles)
+            {
+                this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
+                    .SelectMany(scv => scv.ProjectVersions)
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.ZipArchive) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Select(pv => new SelectListItem
+                    {
+                        Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
+                        Value = pv.Id.ToString()
+                    })
+                    .OrderBy(sli => sli.Text)
+                    .ToList();
+
+                ZipArchiveDeploymentStepModel model = new ZipArchiveDeploymentStepModel
+                {
+                    BundleVersionId = bundleVersion.Id
+                };
+
+                return this.View("EditZipArchiveStep", model);
+            }
+
             if (deploymentStepType == DeploymentStepType.Configuration)
             {
                 ConfigDeploymentStepModel model = new ConfigDeploymentStepModel
@@ -144,6 +166,31 @@ namespace AspNetDeploy.WebUI.Controllers
                     .ToList();
 
                 return this.View("EditWebsiteStep", model);
+            }
+            if (deploymentStep.Type == DeploymentStepType.CopyFiles)
+            {
+                ZipArchiveDeploymentStepModel model = new ZipArchiveDeploymentStepModel
+                {
+                    BundleVersionId = deploymentStep.BundleVersionId,
+                    StepTitle = deploymentStep.GetStringProperty("Step.Title"),
+                    ProjectId = deploymentStep.GetIntProperty("ProjectId"),
+                    Destination = deploymentStep.GetStringProperty("DestinationPath"),
+                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select( mr => mr.Name)),
+                    CustomConfigurationJson = deploymentStep.GetStringProperty("CustomConfiguration")
+                };
+
+                this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
+                    .SelectMany(scv => scv.ProjectVersions)
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.ZipArchive) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Select(pv => new SelectListItem
+                    {
+                        Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
+                        Value = pv.Id.ToString()
+                    })
+                    .OrderBy(sli => sli.Text)
+                    .ToList();
+
+                return this.View("EditZipArchiveStep", model);
             }
 
             if (deploymentStep.Type == DeploymentStepType.Configuration)
@@ -248,6 +295,82 @@ namespace AspNetDeploy.WebUI.Controllers
             deploymentStep.SetStringProperty("IIS.DestinationPath", model.Destination);
             deploymentStep.SetStringProperty("IIS.Bindings", model.BindingsJson);
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString());
+
+            BundleVersion bundleVersion = this.Entities.BundleVersion
+                .Include("ProjectVersions")
+                .Include("DeploymentSteps.Properties")
+                .First(bv => bv.Id == model.BundleVersionId);
+
+            if (activeProjectId > 0 && model.DeploymentStepId > 0) // remove unused project
+            {
+                if (bundleVersion.DeploymentSteps.Where(ds => ds.Id != model.DeploymentStepId).All(ds => ds.GetIntProperty("ProjectId") != activeProjectId))
+                {
+                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First( pv => pv.Id == activeProjectId);
+                    bundleVersion.ProjectVersions.Remove(activeProjectVersion);
+                }
+            }
+
+            ProjectVersion projectVersion = this.Entities.ProjectVersion.First( pv => pv.Id == model.ProjectId);
+
+            if (!bundleVersion.ProjectVersions.Contains(projectVersion))
+            {
+                bundleVersion.ProjectVersions.Add(projectVersion);
+            }
+
+            List<MachineRole> machineRoles = this.Entities.MachineRole.ToList();
+
+            deploymentStep.MachineRoles.Clear();
+
+            if (!string.IsNullOrWhiteSpace(model.Roles))
+            {
+                foreach (string role in model.Roles.ToLowerInvariant().Split(',').Select(r => r.Trim()))
+                {
+                    MachineRole machineRole = machineRoles.FirstOrDefault(mr => mr.Name.ToLowerInvariant() == role);
+
+                    if (machineRole != null)
+                    {
+                        deploymentStep.MachineRoles.Add(machineRole);
+                    }
+                }
+            }
+
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveZipArchiveStep(ZipArchiveDeploymentStepModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("EditZipArchiveStep", model);
+            }
+
+            DeploymentStep deploymentStep;
+
+            if (model.DeploymentStepId == 0)
+            {
+                deploymentStep = new DeploymentStep();
+                deploymentStep.Type = DeploymentStepType.CopyFiles;
+                deploymentStep.BundleVersionId = model.BundleVersionId;
+                deploymentStep.OrderIndex = this.Entities.DeploymentStep.Count(ds => ds.BundleVersionId == model.BundleVersionId) + 1;
+                this.Entities.DeploymentStep.Add(deploymentStep);
+            }
+            else
+            {
+                deploymentStep = this.Entities.DeploymentStep
+                    .Include("Properties")
+                    .First(ds => ds.Id == model.DeploymentStepId);
+            }
+
+            int activeProjectId = deploymentStep.GetIntProperty("ProjectId");
+
+            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
+            deploymentStep.SetStringProperty("DestinationPath", model.Destination);
+            deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfigurationJson);
+            deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
 
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("ProjectVersions")

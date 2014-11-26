@@ -61,6 +61,10 @@
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Guids\Guids.csproj">
+      <Project>{845C08E5-6953-42E0-A7DA-91DF6BEF62A9}</Project>
+      <Name>Guids</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

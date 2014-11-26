@@ -1310,6 +1310,7 @@
           <Member Name="Database" Value="32" />
           <Member Name="Test" Value="64" />
           <Member Name="WindowsApplication" Value="128" />
+          <Member Name="ZipArchive" Value="256" />
         </EnumType>
         <EnumType Name="DeploymentStepType">
           <Member Name="Undefined" Value="0" />
@@ -1319,6 +1320,7 @@
           <Member Name="Configuration" Value="4" />
           <Member Name="UpdateHostsFile" Value="5" />
           <Member Name="RunSQLScript" Value="6" />
+          <Member Name="DeployDacpac" Value="7" />
         </EnumType>
         <EntityType Name="Bundle">
           <Key>

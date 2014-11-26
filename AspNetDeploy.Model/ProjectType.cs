@@ -22,6 +22,7 @@ namespace AspNetDeploy.Model
         Deployment = 16,
         Database = 32,
         Test = 64,
-        WindowsApplication = 128
+        WindowsApplication = 128,
+        ZipArchive = 256
     }
 }

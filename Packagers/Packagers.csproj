@@ -51,6 +51,10 @@
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Packagers.Zip\Packagers.Zip.csproj">
+      <Project>{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}</Project>
+      <Name>Packagers.Zip</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Packagers.VisualStudioProject\Packagers.VisualStudioProject.csproj">
       <Project>{83DCC20E-1E31-4E25-8384-507823BD4B1A}</Project>
       <Name>Packagers.VisualStudioProject</Name>

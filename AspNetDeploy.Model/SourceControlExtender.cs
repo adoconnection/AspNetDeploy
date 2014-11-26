@@ -17,6 +17,18 @@ namespace AspNetDeploy.Model
             return DateTime.Parse(stringProperty);
         }
 
+        public bool GetBoolProperty(string key, bool defaultValue = false)
+        {
+            string stringProperty = this.GetStringProperty(key);
+
+            if (string.IsNullOrEmpty(stringProperty))
+            {
+                return defaultValue;
+            }
+
+            return bool.Parse(stringProperty);
+        }
+
         public int GetIntProperty(string key, int defaultValue)
         {
             string stringProperty = this.GetStringProperty(key);

@@ -63,8 +63,9 @@
                         bool hasTest = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Test);
                         bool hasConsole = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Console);
                         bool hasDatabase = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Database);
+                        bool hasZip = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.ZipArchive);
 
-                        if (hasWeb || hasTest || hasConsole || hasDatabase)
+                        if (hasWeb || hasTest || hasConsole || hasDatabase || hasZip)
                         {
                             <div>
                                 <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersionInfo.ProjectVersion.Id })">
@@ -83,6 +84,10 @@
                                     @if (hasDatabase)
                                     {
                                         <img src="~/Resources/Layout/Images/Icons/VsDatabaseProject.PNG" />
+                                    }
+                                    @if (hasZip)
+                                    {
+                                        <img src="~/Resources/Layout/Images/Icons/zip32.png" />
                                     }
 
                                     @projectVersionInfo.ProjectVersion.Name

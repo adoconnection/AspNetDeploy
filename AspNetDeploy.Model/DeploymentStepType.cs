@@ -19,6 +19,7 @@ namespace AspNetDeploy.Model
         CopyFiles = 3,
         Configuration = 4,
         UpdateHostsFile = 5,
-        RunSQLScript = 6
+        RunSQLScript = 6,
+        DeployDacpac = 7
     }
 }

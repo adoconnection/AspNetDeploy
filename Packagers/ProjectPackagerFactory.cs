@@ -1,6 +1,7 @@
 ﻿using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
+using AspNetDeploy.Packagers.Zip;
 using Packagers.VisualStudioProject;
 
 namespace Packagers
@@ -22,6 +23,11 @@ namespace Packagers
             if (projectType.HasFlag(ProjectType.Console))
             {
                 return new WebProjectPackager();
+            }
+
+            if (projectType.HasFlag(ProjectType.ZipArchive))
+            {
+                return new ZipProjectPackager();
             }
 
             throw new AspNetDeployException("Project type is not supported: " + projectType);

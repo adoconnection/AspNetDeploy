@@ -122,9 +122,34 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                     this.ProcessConfigurationStep(deploymentStep);
                     break;
 
+                case DeploymentStepType.CopyFiles:
+                    this.ProcessCopyFilesStep(deploymentStep);
+                    break;
+
                 default:
                     throw new AspNetDeployException("Deployment step type is not supported: " + deploymentStep.Type);
             }
+        }
+
+        private void ProcessCopyFilesStep(DeploymentStep deploymentStep)
+        {
+            string mode = "replace";
+
+            if (!string.IsNullOrWhiteSpace(deploymentStep.GetStringProperty("CustomConfiguration")))
+            {
+                dynamic customConfig = deploymentStep.GetDynamicProperty("CustomConfiguration");
+
+                mode = customConfig.mode ?? "replace";
+            }
+
+            string configuration = JsonConvert.SerializeObject(new
+            {
+                destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("DestinationPath")),
+                projectId = deploymentStep.GetIntProperty("ProjectId"),
+                mode = mode
+            });
+
+            this.client.DeployWebSite(configuration);
         }
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)

@@ -32,12 +32,12 @@ namespace SatelliteService.Packages
                 }
             }
         }
-
-        public void ExtractFiles(int archiveId, string destination)
+/*
+        public void ExtractFiles(int projectId, string destination)
         {
             using (ZipFile packageZipFile = ZipFile.Read(this.packagePath))
             {
-                ZipEntry archiveZipEntry = packageZipFile.Entries.First(e => e.FileName.StartsWith("archive-" + archiveId + "-"));
+                ZipEntry archiveZipEntry = packageZipFile.Entries.First(e => e.FileName.StartsWith("project-" + projectId + "-"));
 
                 using (MemoryStream extractedEntryStream = new MemoryStream())
                 {
@@ -50,6 +50,6 @@ namespace SatelliteService.Packages
                     }
                 }
             }
-        }
+        }*/
     }
 }

@@ -24,10 +24,14 @@ namespace SatelliteService.Operations
         public override void Run()
         {
             this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string)this.configuration.destination);
-            DirectoryHelper.DeleteContents((string)this.configuration.destination);
 
-            packageRepository.ExtractFiles(
-                (int)this.configuration.archiveId, 
+            if (((string) this.configuration.mode).ToLower() == "replace")
+            {
+                DirectoryHelper.DeleteContents((string)this.configuration.destination);
+            }
+
+            packageRepository.ExtractProject(
+                (int)this.configuration.projectId, 
                 (string)this.configuration.destination);
         }
 

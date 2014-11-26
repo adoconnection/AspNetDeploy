@@ -90,12 +90,26 @@
 }
 
 @helper RenderFileSystem(SourceControl sourceControl)
-{
-    
+{   
     <dl class="dl-horizontal">
         <dt>Path</dt>
         <dd>@sourceControl.GetStringProperty("Path")</dd>
+        <dt>Mode</dt>
+        <dd>@(sourceControl.GetBoolProperty("IsRelativeMode") ? "Relative" : "Absolute")</dd>
     </dl>
 
     <hr />
+
+    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
+    {
+        <h3>@sourceControlVersion.Name</h3>
+        <dl class="dl-horizontal">
+            <dt>Path</dt>
+            <dd>@sourceControlVersion.GetStringProperty("Path")</dd>
+            @*<dt>Revision</dt>
+            <dd>@sourceControlVersion.GetStringProperty("Revision")</dd>*@
+        </dl>
+
+        <hr />
+    }
 }
