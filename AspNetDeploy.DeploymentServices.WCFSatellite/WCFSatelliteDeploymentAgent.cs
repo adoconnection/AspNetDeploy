@@ -145,7 +145,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         private void ProcessDacpacStep(DeploymentStep deploymentStep)
         {
-            dynamic customConfig = JsonConvert.DeserializeObject(deploymentStep.GetStringProperty("CustomConfiguration"));
+            dynamic customConfig = JsonConvert.DeserializeObject(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("CustomConfiguration")));
 
             string configuration = JsonConvert.SerializeObject(new
             {
