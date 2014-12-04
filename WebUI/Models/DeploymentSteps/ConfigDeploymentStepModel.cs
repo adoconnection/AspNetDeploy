@@ -1,4 +1,4 @@
-﻿namespace AspNetDeploy.WebUI.Models
+﻿namespace AspNetDeploy.WebUI.Models.DeploymentSteps
 {
     public class ConfigDeploymentStepModel : DeploymentStepModel
     {

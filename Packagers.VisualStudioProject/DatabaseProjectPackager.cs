@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Ionic.Zip;
@@ -15,11 +16,17 @@ namespace Packagers.VisualStudioProject
                 .Descendants(vsNamespace + "OutputPath")
                 .FirstOrDefault();
 
-            AddProjectDirectory(
-                zipFile,
-                projectRootFolder,
-                outputPath.Value,
-                "\\");
+            List<string> dacpacFiles = Directory.GetFiles(Path.Combine(projectRootFolder, outputPath.Value), "*.dacpac").ToList();
+
+            if (dacpacFiles.Any())
+            {
+                AddProjectFile(
+                    zipFile,
+                    projectRootFolder,
+                    dacpacFiles.First(),
+                    "\\",
+                    "database.dacpac");
+            }
         }
     }
 }

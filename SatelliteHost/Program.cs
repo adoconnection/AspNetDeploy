@@ -21,8 +21,14 @@ namespace SatelliteHost
             ObjectFactoryConfigurator.Configure();
 
             Uri httpUrl = new Uri(ConfigurationManager.AppSettings["ServiceURI"]);
+            bool authorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authrozation.Enabled"]);
+            bool metadataEnabled = bool.Parse(ConfigurationManager.AppSettings["Metadata.Enabled"]);
+
+            string metadataURL = "http://localhost:8091/AspNetDeploySatellite/Metadata";
+
 
             ServiceHost host = new ServiceHost(typeof(DeploymentService), httpUrl);
+
 
             WSHttpBinding wsHttpBinding = new WSHttpBinding();
             wsHttpBinding.MaxBufferPoolSize = 1024 * 1024 * 10;
@@ -34,16 +40,19 @@ namespace SatelliteHost
             wsHttpBinding.SendTimeout = new TimeSpan(0, 10, 0);
             wsHttpBinding.ReceiveTimeout = new TimeSpan(3, 0, 0);
 
-            wsHttpBinding.Security.Mode = SecurityMode.TransportWithMessageCredential;
+            wsHttpBinding.Security.Mode = authorizationEnabled ? SecurityMode.TransportWithMessageCredential : SecurityMode.None;
             wsHttpBinding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
             wsHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
             host.AddServiceEndpoint(typeof(IDeploymentService), wsHttpBinding, "");
 
-            /*ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
-            serviceMetadataBehavior.HttpGetEnabled = true;
-            serviceMetadataBehavior.HttpGetUrl = new Uri("http://localhost:8091/AspNetDeploySatellite/Metadata");
-            host.Description.Behaviors.Add(serviceMetadataBehavior);*/
+            if (metadataEnabled)
+            {
+                ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
+                serviceMetadataBehavior.HttpGetEnabled = true;
+                serviceMetadataBehavior.HttpGetUrl = new Uri(metadataURL);
+                host.Description.Behaviors.Add(serviceMetadataBehavior);
+            }
 
             ServiceCredentials credentials = new ServiceCredentials();
             credentials.UserNameAuthentication.UserNamePasswordValidationMode = UserNamePasswordValidationMode.Custom;
@@ -52,20 +61,56 @@ namespace SatelliteHost
 
             host.Description.Behaviors.OfType<ServiceDebugBehavior>().First().IncludeExceptionDetailInFaults = true;
 
-            host.Credentials.ServiceCertificate.SetCertificate(
-                StoreLocation.LocalMachine,
-                StoreName.My,
-                X509FindType.FindBySubjectName,
-                ConfigurationManager.AppSettings["Authrozation.CertificateName"]);
-            
+            if (authorizationEnabled)
+            {
+                host.Credentials.ServiceCertificate.SetCertificate(
+                    StoreLocation.LocalMachine,
+                    StoreName.My,
+                    X509FindType.FindBySubjectName,
+                    ConfigurationManager.AppSettings["Authrozation.CertificateName"]);
+            }
+
             host.Open();
             host.Faulted += (sender, eventArgs) =>
             {
                 Console.WriteLine("Error");
                 Close = true;
             };
-            
+
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Running");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Version: " + (new DeploymentService()).GetVersion());
+            Console.WriteLine("URL: " + ConfigurationManager.AppSettings["ServiceURI"]);
+            
+            if (authorizationEnabled)
+            {
+                Console.WriteLine("CertificateName: " + ConfigurationManager.AppSettings["Authrozation.CertificateName"]);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Authrozation Enabled: True");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Authrozation Enabled: FALSE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+
+            if (metadataEnabled)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Metadata Enabled: TRUE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Metadata URL: " + metadataURL);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Metadata Enabled: False");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+
 
             while (!Close)
             {

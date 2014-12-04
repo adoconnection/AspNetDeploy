@@ -18,6 +18,7 @@ namespace AspNetDeploy.Variables
 
             BundleVersion bundleVersion = entities.BundleVersion
                 .Include("Bundle")
+                .Include("ParentBundleVersion")
                 .First(bv => bv.Id == bundleVersionId);
 
             int environmentId = entities.Machine.First(m => m.Id == machineId).Environments.First().Id;
@@ -66,6 +67,8 @@ namespace AspNetDeploy.Variables
             IDictionary<string, string> environmentDictionary = new Dictionary<string, string>();
 
             environmentDictionary.Add("version", bundleVersion.Name);
+            environmentDictionary.Add("previousVersion",  bundleVersion.ParentBundleVersion != null  ? bundleVersion.ParentBundleVersion.Name : "");
+
             environmentDictionary.Add("bundle", bundleVersion.Bundle.Name);
             return environmentDictionary;
         }

@@ -68,6 +68,18 @@
             case DeploymentStepType.Configuration:
             @RenderConfigurationStep(bundleVersion, deploymentStep, stepCounter)
                 break;
+
+            case DeploymentStepType.UpdateHostsFile:
+            @RenderHostsStep(bundleVersion, deploymentStep, stepCounter)
+                break;
+
+            case DeploymentStepType.RunSQLScript:
+            @RenderSQLStep(bundleVersion, deploymentStep, stepCounter)
+                break;
+
+            case DeploymentStepType.DeployDacpac:
+            @RenderDacpacStep(bundleVersion, deploymentStep, stepCounter)
+                break;
         }
         
         <br/>
@@ -133,6 +145,46 @@
     </div>
 }
 
+@helper RenderDacpacStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
+{
+    ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
+
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Dacpac: @deploymentStep.GetStringProperty("Step.Title") <small>DACPAC</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
+    <div class="row text-muted">
+        <div class="col-md-12">
+            <ul>
+                <li>Roles:
+                                
+                    @foreach (MachineRole role in deploymentStep.MachineRoles)
+                    {
+                        <span class="label label-default">@role.Name</span>
+                    }
+                </li>
+                <li>Project: @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
+                <li>
+                    Target database:
+                    @deploymentStep.GetStringProperty("TargetDatabase")
+                </li>
+                <li>
+                    Connection string:
+                    <pre>@deploymentStep.GetStringProperty("ConnectionString")</pre>
+                </li>
+                <li>
+                    Custom configuration:
+                    <pre>@deploymentStep.GetStringProperty("CustomConfiguration")</pre>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
 @helper RenderRunPowerShellScript(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
     <h3>
@@ -179,8 +231,70 @@
     </div>
 }
 
+@helper RenderHostsStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
+{
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Update hosts: @deploymentStep.GetStringProperty("Step.Title") <small>HOSTS</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
+    <div class="row text-muted">
+        <div class="col-md-12">
+            <ul>
+                <li>
+                    Roles:
+
+                    @foreach (MachineRole role in deploymentStep.MachineRoles)
+                    {
+                        <span class="label label-default">@role.Name</span>
+                    }
+                </li>
+                <li>
+                    config:
+                    <pre>@deploymentStep.GetStringProperty("ConfigurationJson")</pre>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
 
 
+@helper RenderSQLStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
+{
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Run SQL: @deploymentStep.GetStringProperty("Step.Title") <small>SQL</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
+    <div class="row text-muted">
+        <div class="col-md-12">
+            <ul>
+                <li>
+                    Roles:
+
+                    @foreach (MachineRole role in deploymentStep.MachineRoles)
+                    {
+                        <span class="label label-default">@role.Name</span>
+                    }
+                </li>
+                <li>
+                    connection string:
+                    <pre>@deploymentStep.GetStringProperty("ConnectionString")</pre>
+                </li>
+                <li>
+                    command:
+                    <pre>@deploymentStep.GetStringProperty("Command")</pre>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
 
 @helper RenderConfigurationStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {

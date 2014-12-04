@@ -5,20 +5,18 @@
     ViewBag.PageClass = "variablesPage";
 
     Layout = "~/Views/Shared/_Layout.cshtml";
-    DataField dataField = this.ViewBag.DataField;
     Environment environment = this.ViewBag.Environment;
 }
 
 <div class="container">
 
-    <div>@Html.ActionLink("Назад", "Details", new { id = dataField.Id })</div>
+    <div>@Html.ActionLink("Назад", "Details", "Environments", new { id = environment.Id }, new {})</div>
 
-    <h1>Edit variable: @Model.Name on @environment.Name</h1>
+    <h1>Add variable on @environment.Name</h1>
     <hr />
     @using (Html.BeginForm("Save", "Variables", new { }, FormMethod.Post, new { Class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor( m => m.VariableId)
         @Html.HiddenFor( m => m.EnvironmentId)
 
         <div class="row">

@@ -25,6 +25,22 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         [HttpGet]
+        public ActionResult Add(int environmentId)
+        {
+            VariableEditModel model = new VariableEditModel()
+            {
+                EnvironmentId = environmentId
+            };
+
+            Environment environment = this.Entities.Environment
+                .First(e => e.Id == environmentId);
+
+            this.ViewBag.Environment = environment;
+
+            return this.View(model);
+        }
+
+        [HttpGet]
         public ActionResult Edit(int id, int environmentId)
         {
             this.CheckPermission(UserRoleAction.EnvironmentChangeVariables);
@@ -53,15 +69,30 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(VariableEditModel model)
+        public ActionResult Save(VariableEditModel model)
         {
             this.CheckPermission(UserRoleAction.EnvironmentChangeVariables);
 
-            DataField dataField = this.Entities.DataField
+            DataField dataField;
+
+            if (model.VariableId == 0)
+            {
+                dataField = new DataField();
+                dataField.TypeId = 1;
+                dataField.IsSensitive = false;
+                dataField.Mode = DataFieldMode.Global;
+                dataField.IsDeleted = false;
+
+                this.Entities.DataField.Add(dataField);
+            }
+            else
+            {
+                dataField = this.Entities.DataField
                     .Include("DataFieldValues.Environments")
                     .Include("DataFieldValues.Machines")
                     .Include("BundleVersions")
                     .First(f => f.Id == model.VariableId);
+            }
 
             Environment environment = this.Entities.Environment
                 .First(e => e.Id == model.EnvironmentId);
@@ -71,7 +102,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 this.ViewBag.DataField = dataField;
                 this.ViewBag.Environment = environment;
 
-                return this.View(model);
+                return this.RedirectToAction("Edit", new { id = model.VariableId, environmentId = model.EnvironmentId });
             }
 
             DataFieldValue value = dataField.DataFieldValues.FirstOrDefault(v => v.Environments.Any(e => e == environment));
@@ -89,7 +120,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             this.Entities.SaveChanges();
 
-            return this.RedirectToAction("Details", new {id = model.VariableId});
+            return this.RedirectToAction("Details", new { id = dataField.Id });
         }
 
     }

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
+using AspNetDeploy.WebUI.Models.DeploymentSteps;
 using MvcSiteMapProvider.Linq;
 
 namespace AspNetDeploy.WebUI.Controllers
@@ -94,6 +95,27 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("EditWebsiteStep", model);
             }
 
+            if (deploymentStepType == DeploymentStepType.DeployDacpac)
+            {
+                this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
+                    .SelectMany(scv => scv.ProjectVersions)
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.Database) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Select(pv => new SelectListItem
+                    {
+                        Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
+                        Value = pv.Id.ToString()
+                    })
+                    .OrderBy(sli => sli.Text)
+                    .ToList();
+
+                DacpacDeploymentStepModel model = new DacpacDeploymentStepModel
+                {
+                    BundleVersionId = bundleVersion.Id
+                };
+
+                return this.View("EditDacpacStep", model);
+            }
+
             if (deploymentStepType == DeploymentStepType.CopyFiles)
             {
                 this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
@@ -113,6 +135,26 @@ namespace AspNetDeploy.WebUI.Controllers
                 };
 
                 return this.View("EditZipArchiveStep", model);
+            }
+
+            if (deploymentStepType == DeploymentStepType.UpdateHostsFile)
+            {
+                HostsDeploymentStepModel model = new HostsDeploymentStepModel
+                {
+                    BundleVersionId = bundleVersion.Id
+                };
+
+                return this.View("EditHostsStep", model);
+            }
+
+            if (deploymentStepType == DeploymentStepType.RunSQLScript)
+            {
+                SqlScriptDeploymentStepModel model = new SqlScriptDeploymentStepModel
+                {
+                    BundleVersionId = bundleVersion.Id
+                };
+
+                return this.View("EditSqlScriptStep", model);
             }
 
             if (deploymentStepType == DeploymentStepType.Configuration)
@@ -146,6 +188,8 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 WebSiteDeploymentStepModel model = new WebSiteDeploymentStepModel
                 {
+                    OrderIndex = deploymentStep.OrderIndex,
+                    DeploymentStepId = deploymentStepId,
                     BundleVersionId = deploymentStep.BundleVersionId,
                     SiteName = deploymentStep.GetStringProperty("IIS.SiteName"),
                     ProjectId = deploymentStep.GetIntProperty("ProjectId"),
@@ -171,6 +215,8 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 ZipArchiveDeploymentStepModel model = new ZipArchiveDeploymentStepModel
                 {
+                    OrderIndex = deploymentStep.OrderIndex,
+                    DeploymentStepId = deploymentStepId,
                     BundleVersionId = deploymentStep.BundleVersionId,
                     StepTitle = deploymentStep.GetStringProperty("Step.Title"),
                     ProjectId = deploymentStep.GetIntProperty("ProjectId"),
@@ -197,6 +243,7 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 ConfigDeploymentStepModel model = new ConfigDeploymentStepModel
                 {
+                    OrderIndex = deploymentStep.OrderIndex,
                     BundleVersionId = deploymentStep.BundleVersionId,
                     DeploymentStepId = deploymentStepId,
                     ConfigJson = deploymentStep.GetStringProperty("SetValues"),
@@ -206,6 +253,66 @@ namespace AspNetDeploy.WebUI.Controllers
                 };
 
                 return this.View("EditConfigStep", model);
+            }
+
+            if (deploymentStep.Type == DeploymentStepType.RunSQLScript)
+            {
+                SqlScriptDeploymentStepModel model = new SqlScriptDeploymentStepModel
+                {
+                    OrderIndex = deploymentStep.OrderIndex,
+                    BundleVersionId = deploymentStep.BundleVersionId,
+                    DeploymentStepId = deploymentStepId,
+                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select(mr => mr.Name)),
+                    ConnectionString = deploymentStep.GetStringProperty("ConnectionString"),
+                    StepTitle = deploymentStep.GetStringProperty("Step.Title"),
+                    Command = deploymentStep.GetStringProperty("Command")
+                };
+
+                return this.View("EditSqlScriptStep", model);
+            }
+
+            if (deploymentStep.Type == DeploymentStepType.UpdateHostsFile)
+            {
+                HostsDeploymentStepModel model = new HostsDeploymentStepModel
+                {
+                    OrderIndex = deploymentStep.OrderIndex,
+                    BundleVersionId = deploymentStep.BundleVersionId,
+                    DeploymentStepId = deploymentStepId,
+                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select(mr => mr.Name)),
+                    StepTitle = deploymentStep.GetStringProperty("Step.Title"),
+                    ConfigJson = deploymentStep.GetStringProperty("ConfigurationJson")
+                };
+
+                return this.View("EditHostsStep", model);
+            }
+
+            if (deploymentStep.Type == DeploymentStepType.DeployDacpac)
+            {
+                DacpacDeploymentStepModel model = new DacpacDeploymentStepModel
+                {
+                    OrderIndex = deploymentStep.OrderIndex,
+                    BundleVersionId = deploymentStep.BundleVersionId,
+                    DeploymentStepId = deploymentStepId,
+                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select(mr => mr.Name)),
+                    StepTitle = deploymentStep.GetStringProperty("Step.Title"),
+                    ProjectId = deploymentStep.GetIntProperty("ProjectId"),
+                    ConnectionString = deploymentStep.GetStringProperty("ConnectionString"),
+                    TargetDatabase = deploymentStep.GetStringProperty("TargetDatabase"),
+                    CustomConfiguration = deploymentStep.GetStringProperty("CustomConfiguration")
+                };
+
+                this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
+                    .SelectMany(scv => scv.ProjectVersions)
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.Database) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Select(pv => new SelectListItem
+                    {
+                        Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
+                        Value = pv.Id.ToString()
+                    })
+                    .OrderBy(sli => sli.Text)
+                    .ToList();
+
+                return this.View("EditDacpacStep", model);
             }
 
             return this.Content("Unsupported step type");
@@ -220,48 +327,62 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("EditConfigStep", model);
             }
 
-            DeploymentStep deploymentStep;
-
-            if (model.DeploymentStepId == 0)
-            {
-                deploymentStep = new DeploymentStep();
-                deploymentStep.Type = DeploymentStepType.Configuration;
-                deploymentStep.BundleVersionId = model.BundleVersionId;
-                deploymentStep.OrderIndex = this.Entities.DeploymentStep.Count(ds => ds.BundleVersionId == model.BundleVersionId) + 1;
-                this.Entities.DeploymentStep.Add(deploymentStep);
-            }
-            else
-            {
-                deploymentStep = this.Entities.DeploymentStep
-                    .Include("Properties")
-                    .First(ds => ds.Id == model.DeploymentStepId);
-            }
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.Configuration);
 
             deploymentStep.SetStringProperty("SetValues", model.ConfigJson);
             deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
             deploymentStep.SetStringProperty("File", model.File);
 
-            List<MachineRole> machineRoles = this.Entities.MachineRole.ToList();
-
-            deploymentStep.MachineRoles.Clear();
-
-            if (!string.IsNullOrWhiteSpace(model.Roles))
-            {
-                foreach (string role in model.Roles.ToLowerInvariant().Split(',').Select(r => r.Trim()))
-                {
-                    MachineRole machineRole = machineRoles.FirstOrDefault(mr => mr.Name.ToLowerInvariant() == role);
-
-                    if (machineRole != null)
-                    {
-                        deploymentStep.MachineRoles.Add(machineRole);
-                    }
-                }
-            }
+            this.SaveRoles(model, deploymentStep);
 
             this.Entities.SaveChanges();
 
             return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveHostsStep(HostsDeploymentStepModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("EditHostsStep", model);
+            }
+
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.UpdateHostsFile);
+
+            deploymentStep.SetStringProperty("ConfigurationJson", model.ConfigJson);
+            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
+
+            this.SaveRoles(model, deploymentStep);
+
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveSQLStep(SqlScriptDeploymentStepModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("EditSqlScriptStep", model);
+            }
+
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.RunSQLScript);
+
+            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
+            deploymentStep.SetStringProperty("Command", model.Command);
+            deploymentStep.SetStringProperty("ConnectionString", model.ConnectionString);
+
+            this.SaveRoles(model, deploymentStep);
+
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -272,72 +393,46 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("EditWebsiteStep", model);
             }
 
-            DeploymentStep deploymentStep;
-
-            if (model.DeploymentStepId == 0)
-            {
-                deploymentStep = new DeploymentStep();
-                deploymentStep.Type = DeploymentStepType.DeployWebSite;
-                deploymentStep.BundleVersionId = model.BundleVersionId;
-                deploymentStep.OrderIndex = this.Entities.DeploymentStep.Count(ds => ds.BundleVersionId == model.BundleVersionId) + 1;
-                this.Entities.DeploymentStep.Add(deploymentStep);
-            }
-            else
-            {
-                deploymentStep = this.Entities.DeploymentStep
-                    .Include("Properties")
-                    .First(ds => ds.Id == model.DeploymentStepId);
-            }
-
-            int activeProjectId = deploymentStep.GetIntProperty("ProjectId");
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.DeployWebSite);
 
             deploymentStep.SetStringProperty("IIS.SiteName", model.SiteName);
             deploymentStep.SetStringProperty("IIS.DestinationPath", model.Destination);
             deploymentStep.SetStringProperty("IIS.Bindings", model.BindingsJson);
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString());
 
-            BundleVersion bundleVersion = this.Entities.BundleVersion
-                .Include("ProjectVersions")
-                .Include("DeploymentSteps.Properties")
-                .First(bv => bv.Id == model.BundleVersionId);
+            this.UpdateProjectReference(model, deploymentStep);
 
-            if (activeProjectId > 0 && model.DeploymentStepId > 0) // remove unused project
-            {
-                if (bundleVersion.DeploymentSteps.Where(ds => ds.Id != model.DeploymentStepId).All(ds => ds.GetIntProperty("ProjectId") != activeProjectId))
-                {
-                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First( pv => pv.Id == activeProjectId);
-                    bundleVersion.ProjectVersions.Remove(activeProjectVersion);
-                }
-            }
-
-            ProjectVersion projectVersion = this.Entities.ProjectVersion.First( pv => pv.Id == model.ProjectId);
-
-            if (!bundleVersion.ProjectVersions.Contains(projectVersion))
-            {
-                bundleVersion.ProjectVersions.Add(projectVersion);
-            }
-
-            List<MachineRole> machineRoles = this.Entities.MachineRole.ToList();
-
-            deploymentStep.MachineRoles.Clear();
-
-            if (!string.IsNullOrWhiteSpace(model.Roles))
-            {
-                foreach (string role in model.Roles.ToLowerInvariant().Split(',').Select(r => r.Trim()))
-                {
-                    MachineRole machineRole = machineRoles.FirstOrDefault(mr => mr.Name.ToLowerInvariant() == role);
-
-                    if (machineRole != null)
-                    {
-                        deploymentStep.MachineRoles.Add(machineRole);
-                    }
-                }
-            }
+            this.SaveRoles(model, deploymentStep);
 
             this.Entities.SaveChanges();
 
             return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveDacpacStep(DacpacDeploymentStepModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("EditDacpacStep", model);
+            }
+
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.DeployDacpac);
+
+            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
+            deploymentStep.SetStringProperty("ConnectionString", model.ConnectionString);
+            deploymentStep.SetStringProperty("TargetDatabase", model.TargetDatabase);
+            deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfiguration);
+            deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString());
+
+            this.UpdateProjectReference(model, deploymentStep);
+            this.SaveRoles(model, deploymentStep);
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -348,12 +443,82 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("EditZipArchiveStep", model);
             }
 
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.CopyFiles);
+
+            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
+            deploymentStep.SetStringProperty("DestinationPath", model.Destination);
+            deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfigurationJson);
+            deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
+
+            this.UpdateProjectReference(model, deploymentStep);
+
+            this.SaveRoles(model, deploymentStep);
+
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+
+        public ActionResult DeleteStep(int id, int deploymentStepId)
+        {
+            DeploymentStep deploymentStep = this.Entities.DeploymentStep
+                .Include("Properties")
+                .Include("MachineRoles")
+                .Include("BundleVersion")
+                .First(ds => ds.BundleVersionId == id && ds.Id == deploymentStepId);
+
+            switch (deploymentStep.Type)
+            {
+                    case DeploymentStepType.DeployWebSite:
+                    case DeploymentStepType.DeployDacpac:
+                    case DeploymentStepType.CopyFiles:
+                        this.UpdateProjectReference(new ProjectRelatedDeploymentStepModel
+                        {
+                            BundleVersionId = deploymentStep.BundleVersionId,
+                            DeploymentStepId = deploymentStep.Id,
+                            ProjectId = 0
+                        }, deploymentStep);
+                        break;
+            }
+
+            deploymentStep.MachineRoles.Clear();
+
+            this.Entities.DeploymentStep.Remove(deploymentStep);
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+
+        private void SaveRoles(DeploymentStepModel model, DeploymentStep deploymentStep)
+        {
+            List<MachineRole> machineRoles = this.Entities.MachineRole.ToList();
+
+            deploymentStep.MachineRoles.Clear();
+
+            if (string.IsNullOrWhiteSpace(model.Roles))
+            {
+                return;
+            }
+
+            foreach (string role in model.Roles.ToLowerInvariant().Split(',').Select(r => r.Trim()))
+            {
+                MachineRole machineRole = machineRoles.FirstOrDefault(mr => mr.Name.ToLowerInvariant() == role);
+
+                if (machineRole != null)
+                {
+                    deploymentStep.MachineRoles.Add(machineRole);
+                }
+            }
+        }
+
+        private DeploymentStep GetDeploymentStep(DeploymentStepModel model, DeploymentStepType deploymentStepType)
+        {
             DeploymentStep deploymentStep;
 
             if (model.DeploymentStepId == 0)
             {
                 deploymentStep = new DeploymentStep();
-                deploymentStep.Type = DeploymentStepType.CopyFiles;
+                deploymentStep.Type = deploymentStepType;
                 deploymentStep.BundleVersionId = model.BundleVersionId;
                 deploymentStep.OrderIndex = this.Entities.DeploymentStep.Count(ds => ds.BundleVersionId == model.BundleVersionId) + 1;
                 this.Entities.DeploymentStep.Add(deploymentStep);
@@ -365,66 +530,37 @@ namespace AspNetDeploy.WebUI.Controllers
                     .First(ds => ds.Id == model.DeploymentStepId);
             }
 
-            int activeProjectId = deploymentStep.GetIntProperty("ProjectId");
+            return deploymentStep;
+        }
 
-            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
-            deploymentStep.SetStringProperty("DestinationPath", model.Destination);
-            deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfigurationJson);
-            deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
-
+        private void UpdateProjectReference(ProjectRelatedDeploymentStepModel model, DeploymentStep deploymentStep)
+        {
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("ProjectVersions")
                 .Include("DeploymentSteps.Properties")
                 .First(bv => bv.Id == model.BundleVersionId);
 
+            var activeProjectId = deploymentStep.GetIntProperty("ProjectId");
+
             if (activeProjectId > 0 && model.DeploymentStepId > 0) // remove unused project
             {
                 if (bundleVersion.DeploymentSteps.Where(ds => ds.Id != model.DeploymentStepId).All(ds => ds.GetIntProperty("ProjectId") != activeProjectId))
                 {
-                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First( pv => pv.Id == activeProjectId);
+                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First(pv => pv.Id == activeProjectId);
                     bundleVersion.ProjectVersions.Remove(activeProjectVersion);
                 }
             }
 
-            ProjectVersion projectVersion = this.Entities.ProjectVersion.First( pv => pv.Id == model.ProjectId);
-
-            if (!bundleVersion.ProjectVersions.Contains(projectVersion))
+            if (model.ProjectId > 0) // add project
             {
-                bundleVersion.ProjectVersions.Add(projectVersion);
-            }
+                ProjectVersion projectVersion = this.Entities.ProjectVersion.First(pv => pv.Id == model.ProjectId);
 
-            List<MachineRole> machineRoles = this.Entities.MachineRole.ToList();
-
-            deploymentStep.MachineRoles.Clear();
-
-            if (!string.IsNullOrWhiteSpace(model.Roles))
-            {
-                foreach (string role in model.Roles.ToLowerInvariant().Split(',').Select(r => r.Trim()))
+                if (!bundleVersion.ProjectVersions.Contains(projectVersion))
                 {
-                    MachineRole machineRole = machineRoles.FirstOrDefault(mr => mr.Name.ToLowerInvariant() == role);
-
-                    if (machineRole != null)
-                    {
-                        deploymentStep.MachineRoles.Add(machineRole);
-                    }
+                    bundleVersion.ProjectVersions.Add(projectVersion);
                 }
             }
-
-            this.Entities.SaveChanges();
-
-            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteStep(int id)
-        {
-            DeploymentStep deploymentStep = this.Entities.DeploymentStep.First( ds => ds.Id == id);
-
-            this.Entities.DeploymentStep.Remove(deploymentStep);
-            this.Entities.SaveChanges();
-
-            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
-        }
     }
 }

@@ -21,7 +21,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 {"Platform", "Any CPU"}
             };
 
-            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "Build" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "Rebuild" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.Loggers = new List<ILogger>

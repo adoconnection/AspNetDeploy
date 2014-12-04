@@ -40,6 +40,10 @@ namespace AspNetDeploy.ContinuousIntegration
 
             using (ZipFile zipFile = new ZipFile(Encoding.UTF8))
             {
+                zipFile.AlternateEncoding = Encoding.UTF8;
+                zipFile.ProvisionalAlternateEncoding = Encoding.UTF8;
+                zipFile.AlternateEncodingUsage = ZipOption.AsNecessary;
+
                 foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)
                 {
                     string sourcesFolder = this.pathServices.GetSourceControlVersionPath(projectVersion.SourceControlVersion.SourceControl.Id, projectVersion.SourceControlVersion.Id);

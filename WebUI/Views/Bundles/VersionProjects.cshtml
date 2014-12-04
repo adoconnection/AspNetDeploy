@@ -34,8 +34,7 @@
     @ProjectGroup(bundleVersion, "Test projects", ProjectType.Test)
     @ProjectGroup(bundleVersion, "Console projects", ProjectType.Console)
     @ProjectGroup(bundleVersion, "Database projects", ProjectType.Database)
-
-
+    @ProjectGroup(bundleVersion, "Archives", ProjectType.ZipArchive)
 
 </div>
 
@@ -64,6 +63,10 @@
                     else if (projectVersion.ProjectType.HasFlag(ProjectType.Database))
                     {
                         <img src="~/Resources/Layout/Images/Icons/VsDatabaseProject.png" />
+                    }
+                    else if (projectVersion.ProjectType.HasFlag(ProjectType.ZipArchive))
+                    {
+                        <img src="~/Resources/Layout/Images/Icons/zip32.png" />
                     }
                     <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersion.Id })">@projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</a>
                 </div>

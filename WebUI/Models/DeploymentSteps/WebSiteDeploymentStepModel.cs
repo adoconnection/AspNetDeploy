@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AspNetDeploy.WebUI.Models
+namespace AspNetDeploy.WebUI.Models.DeploymentSteps
 {
-    public class WebSiteDeploymentStepModel : DeploymentStepModel
+    public class WebSiteDeploymentStepModel : ProjectRelatedDeploymentStepModel
     {
         public string SiteName { get; set; }
-        [Required]
-        public int ProjectId { get; set; }
         public string Destination { get; set; }
         public string BindingsJson { get; set; }
     }

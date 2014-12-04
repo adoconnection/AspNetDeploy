@@ -30,9 +30,9 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             binding.OpenTimeout = openTimeoutSpan ?? new TimeSpan(0, 10, 0);
             binding.CloseTimeout = new TimeSpan(0, 10, 0);
-            binding.SendTimeout = new TimeSpan(0, 10, 0);
+            binding.SendTimeout = new TimeSpan(3, 0, 0);
             binding.ReceiveTimeout = new TimeSpan(3, 0, 0);
-
+            
             binding.BypassProxyOnLocal = false;
             binding.UseDefaultWebProxy = true;
 
@@ -126,9 +126,54 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                     this.ProcessCopyFilesStep(deploymentStep);
                     break;
 
+                case DeploymentStepType.UpdateHostsFile:
+                    this.ProcessHostsStep(deploymentStep);
+                    break;
+
+                case DeploymentStepType.RunSQLScript:
+                    this.ProcessSQLStep(deploymentStep);
+                    break;
+
+                case DeploymentStepType.DeployDacpac:
+                    this.ProcessDacpacStep(deploymentStep);
+                    break;
+
                 default:
                     throw new AspNetDeployException("Deployment step type is not supported: " + deploymentStep.Type);
             }
+        }
+
+        private void ProcessDacpacStep(DeploymentStep deploymentStep)
+        {
+            dynamic customConfig = JsonConvert.DeserializeObject(deploymentStep.GetStringProperty("CustomConfiguration"));
+
+            string configuration = JsonConvert.SerializeObject(new
+            {
+                dacpacFileName = "database.dacpac",
+                connectionString = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConnectionString")),
+                targetDatabase = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("TargetDatabase")),
+                projectId = deploymentStep.GetIntProperty("ProjectId"),
+                backupDatabaseBeforeChanges = (bool)customConfig.backupDatabaseBeforeChanges,
+                blockOnPossibleDataLoss = (bool)customConfig.blockOnPossibleDataLoss,
+            });
+
+            this.client.ApplyDacpac(configuration);
+        }
+
+        private void ProcessSQLStep(DeploymentStep deploymentStep)
+        {
+            string configuration = JsonConvert.SerializeObject(new
+            {
+                connectionString = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConnectionString")),
+                command = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("Command")),
+            });
+
+            this.client.RunSQLScript(configuration);
+        }
+
+        private void ProcessHostsStep(DeploymentStep deploymentStep)
+        {
+            this.client.UpdateHostsFile(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConfigurationJson")));
         }
 
         private void ProcessCopyFilesStep(DeploymentStep deploymentStep)
@@ -149,7 +194,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                 mode = mode
             });
 
-            this.client.DeployWebSite(configuration);
+            this.client.CopyFiles(configuration);
         }
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)

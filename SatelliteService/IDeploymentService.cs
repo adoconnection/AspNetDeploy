@@ -33,15 +33,24 @@ namespace SatelliteService
         void ProcessConfigFile(string json);
 
         [OperationContract]
-        void RunPowerShellScript();
+        void RunPowerShellScript(string json);
 
         [OperationContract]
-        void CopyFiles();
+        void CopyFiles(string json);
 
         [OperationContract]
-        void UpdateHostsFile();
+        void UpdateHostsFile(string json);
 
         [OperationContract]
-        void RunSQLScript();
+        void RunSQLScript(string json);
+
+        [OperationContract]
+        int GetVersion();
+
+        [OperationContract]
+        void ApplyDacpac(string jsonConfig);
+
+        [OperationContract]
+        ExceptionInfo GetLastException();
     }
 }

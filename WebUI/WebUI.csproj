@@ -200,22 +200,27 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DeploymentSteps\DacpacDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\DeploymentStepEditModelFactory.cs" />
+    <Compile Include="Models\DeploymentSteps\HostsDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\ProjectRelatedDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\SqlScriptDeploymentStepModel.cs" />
     <Compile Include="Models\VariableAddModel.cs" />
     <Compile Include="Models\Binding.cs" />
     <Compile Include="Models\BundleInfo.cs" />
     <Compile Include="Models\BundleVersionInfo.cs" />
-    <Compile Include="Models\ConfigDeploymentStepModel.cs" />
-    <Compile Include="Models\DeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\ConfigDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\DeploymentStepModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\UserAddModel.cs" />
     <Compile Include="Models\UserBaseModel.cs" />
     <Compile Include="Models\UserEditModel.cs" />
     <Compile Include="Models\VariableEditModel.cs" />
-    <Compile Include="Models\WebSiteDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\WebSiteDeploymentStepModel.cs" />
     <Compile Include="Models\ProjectVersionInfo.cs" />
     <Compile Include="Models\SourceControlInfo.cs" />
     <Compile Include="Models\SourceControlVersionInfo.cs" />
-    <Compile Include="Models\ZipArchiveDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\ZipArchiveDeploymentStepModel.cs" />
     <Compile Include="Mvc\ControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -252,6 +257,10 @@
     <Content Include="Views\Variables\Details.cshtml" />
     <Content Include="Views\Bundles\CreateNewVersion.cshtml" />
     <Content Include="Views\BundleVersionDeployment\EditZipArchiveStep.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditSqlScriptStep.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditDacpacStep.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditHostsStep.cshtml" />
+    <Content Include="Views\Variables\Add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

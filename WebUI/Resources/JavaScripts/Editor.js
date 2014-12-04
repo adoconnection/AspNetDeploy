@@ -1,7 +1,8 @@
 ﻿Common.namespace("Studio").Editor = function () {
     var modes = {
         "xml" : ace.require("ace/mode/xml").Mode,
-        "json" : ace.require("ace/mode/json").Mode
+        "json" : ace.require("ace/mode/json").Mode,
+        "sql" : ace.require("ace/mode/sql").Mode
     }
     var languageTools = ace.require("ace/ext/language_tools");
 

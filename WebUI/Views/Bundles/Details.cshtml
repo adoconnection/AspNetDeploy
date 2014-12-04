@@ -22,7 +22,7 @@
 
     <hr />
 
-    @foreach (BundleVersion bundleVersion in bundle.BundleVersions)
+    @foreach (BundleVersion bundleVersion in bundle.BundleVersions.Where( bv => !bv.IsDeleted))
     {
         <h3>
             @bundleVersion.Name

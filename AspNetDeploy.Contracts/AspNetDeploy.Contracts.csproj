@@ -42,6 +42,7 @@
     <Compile Include="Exceptions\AspNetDeployException.cs" />
     <Compile Include="IBuildService.cs" />
     <Compile Include="IBuildServiceFactory.cs" />
+    <Compile Include="IBundleRepository.cs" />
     <Compile Include="IContinuousIntegrationLogger.cs" />
     <Compile Include="IDeploymentAgent.cs" />
     <Compile Include="IDeploymentAgentFactory.cs" />

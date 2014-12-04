@@ -83,7 +83,10 @@ namespace ThreadHostedTaskRunner
                 .Where( p => p.State == PublicationState.Queued)
                 .ToList();
 
-            List<IGrouping<BundleVersion, Publication>> groupedPublications = publications.GroupBy( p => p.Package.BundleVersion).ToList();
+            List<IGrouping<BundleVersion, Publication>> groupedPublications = publications
+                .GroupBy( p => p.Package.BundleVersion)
+                .Where(bv => !bv.Key.IsDeleted)
+                .ToList();
 
             groupedPublications.ForEach(group =>
             {
@@ -111,6 +114,7 @@ namespace ThreadHostedTaskRunner
                 .Include("Properties")
                 .Include("Packages.Publications.Environment")
                 .Include("ProjectVersions.SourceControlVersion.Properties")
+                .Where(bv => !bv.IsDeleted)
                 .ToList();
 
             List<BundleVersion> bundleVersionsWithAutoDeploy = bundleVersions
@@ -144,6 +148,7 @@ namespace ThreadHostedTaskRunner
         {
             List<BundleVersion> bundleVersions = entities.BundleVersion
                 .Include("ProjectVersions.SourceControlVersion.Properties")
+                .Where(bv => !bv.IsDeleted)
                 .ToList();
 
             List<ProjectVersion> projectVersions = bundleVersions
@@ -190,7 +195,10 @@ namespace ThreadHostedTaskRunner
                     pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
                 .ToList();
 
-            List<BundleVersion> affectedBundleVersions = projectVersions.SelectMany( pv => pv.BundleVersions).ToList();
+            List<BundleVersion> affectedBundleVersions = projectVersions
+                .SelectMany( pv => pv.BundleVersions)
+                .Where(bv => !bv.IsDeleted)
+                .ToList();
 
             affectedBundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building));
 
@@ -216,7 +224,11 @@ namespace ThreadHostedTaskRunner
                 .Include("SourceControl.Properties")
                 .ToList();
 
-            IList<BundleVersion> bundleVersions = sourceControlVersions.SelectMany( scv => scv.ProjectVersions).SelectMany( pv => pv.BundleVersions).ToList();
+            IList<BundleVersion> bundleVersions = sourceControlVersions
+                .SelectMany(scv => scv.ProjectVersions)
+                .SelectMany(pv => pv.BundleVersions)
+                .Where(bv => !bv.IsDeleted)
+                .ToList();
 
             foreach (BundleVersion bundleVersion in bundleVersions)
             {

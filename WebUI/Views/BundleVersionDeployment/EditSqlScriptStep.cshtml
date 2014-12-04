@@ -1,4 +1,4 @@
-﻿@model AspNetDeploy.WebUI.Models.DeploymentSteps.WebSiteDeploymentStepModel
+﻿@model AspNetDeploy.WebUI.Models.DeploymentSteps.SqlScriptDeploymentStepModel
 
 @{
     ViewBag.Title = "Index";
@@ -46,23 +46,23 @@
 
     <hr />
 
-    <h3>@this.Model.OrderIndex. Deploy: @this.Model.SiteName <small>IIS</small></h3>
+    <h3>@this.Model.OrderIndex. SQL Command: @this.Model.StepTitle <small>SQL</small></h3>
 
-    @using (Html.BeginForm("SaveWebSiteStep", "BundleVersionDeployment", new { }, FormMethod.Post, new { id = "idForm", Class = "form-horizontal" }))
+    @using (Html.BeginForm("SaveSQLStep", "BundleVersionDeployment", new { }, FormMethod.Post, new { id = "idForm", Class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.BundleVersionId)
         @Html.HiddenFor(m => m.DeploymentStepId)
-        @Html.HiddenFor(m => m.BindingsJson)
+        @Html.HiddenFor(m => m.Command)
 
         <div class="row">
             <div class="col-md-12 ">
 
                 <div class="form-group">
-                    <label for="UserName" class="col-sm-2 control-label">Site name</label>
+                    <label for="UserName" class="col-sm-2 control-label">Step name</label>
                     <div class="col-sm-4">
-                        @Html.TextBoxFor(m => m.SiteName, new { Class = "form-control", placeholder = "step title" })
-                        @Html.ValidationMessageFor(m => m.SiteName)
+                        @Html.TextBoxFor(m => m.StepTitle, new { Class = "form-control", placeholder = "step title" })
+                        @Html.ValidationMessageFor(m => m.StepTitle)
                     </div>
                 </div>
 
@@ -79,25 +79,17 @@
                         }
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="UserName" class="col-sm-2 control-label">Project</label>
-                    <div class="col-sm-10">
-                        @Html.DropDownListFor(m => m.ProjectId, projectsSelect, "Choose project", new { Class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.ProjectId)
-                    </div>
-                </div>
                 
                 <div class="form-group">
-                    <label for="UserName" class="col-sm-2 control-label">Destination</label>
+                    <label for="UserName" class="col-sm-2 control-label">Connection string</label>
                     <div class="col-sm-10">
-                        @Html.TextBoxFor(m => m.Destination, new { Class = "form-control", placeholder = "Destination" })
-                        @Html.ValidationMessageFor(m => m.Destination)
+                        @Html.TextAreaFor(m => m.ConnectionString, new { Class = "form-control", placeholder = "connection string", style="height: 200px" })
+                        @Html.ValidationMessageFor(m => m.ConnectionString)
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="UserName" class="col-sm-2 control-label">Bindings JSON</label>
+                    <label for="UserName" class="col-sm-2 control-label">Command</label>
                     <div class="col-sm-10">
                         <div id="idEditorBindings" style="border: 1px solid #999;"></div>
                     </div>
@@ -140,14 +132,15 @@
 
             editor.initialize({
                 containerId: 'idEditorBindings',
-                readOnly: false
+                readOnly: false,
+                mode: 'sql'
             });
 
-            editor.value($('#BindingsJson').val());
+            editor.value($('#Command').val());
 
             $('#idForm').submit(function ()
             {
-                $('#BindingsJson').val(editor.value());
+                $('#Command').val(editor.value());
             });
 
             resize();

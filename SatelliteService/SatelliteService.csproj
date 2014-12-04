@@ -51,6 +51,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,6 +62,9 @@
   <ItemGroup>
     <Compile Include="ConfigSourceValidator.cs" />
     <Compile Include="DeploymentService.cs" />
+    <Compile Include="ExceptionDataInfo.cs" />
+    <Compile Include="ExceptionInfo.cs" />
+    <Compile Include="ExceptionInfoFactory.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\XmlMerger.cs" />
     <Compile Include="IDeploymentService.cs" />
@@ -69,6 +73,7 @@
     <Compile Include="Operations\CopyFilesOperation.cs" />
     <Compile Include="Operations\DacpacOperation.cs" />
     <Compile Include="Operations\Operation.cs" />
+    <Compile Include="Operations\RunSQLScriptOperation.cs" />
     <Compile Include="Operations\UpdateHostsOperation.cs" />
     <Compile Include="Operations\WebSiteOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

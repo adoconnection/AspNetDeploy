@@ -10,7 +10,7 @@
 
 <div class="container">
 
-    
+
     <h1>
         <div class="row">
             <div class="col-md-10">
@@ -24,11 +24,45 @@
 
     <hr />
     
-    <h3>Variables</h3>
-    
+    <h3>
+        <div class="row">
+            <div class="col-md-10">
+                Variables
+            </div>
+            <div class="col-md-2 text-right">
+                <a href="@Url.Action("Add", "Variables", new { environmentId = environment.Id })" class="btn btn-default">Add variable</a>
+            </div>
+        </div>
+    </h3>
+
+    <br/>
     <table class="table">
         <tbody>
-            @foreach (DataField dataField in dataFields)
+            @{
+                List<IGrouping<string, DataField>> groups = dataFields.Where(df => df.Key.Contains(".")).GroupBy(df => df.Key.Substring(0, df.Key.IndexOf(".", System.StringComparison.InvariantCulture))).OrderBy(g => g.Key).ToList();
+            }
+
+            @foreach (var group in groups)
+            {
+                @RenderVariables(environment, group)
+                <tr>
+                    <th><br/><br/></th>
+                    <th><br/></th>
+                    <th><br/></th>
+                </tr>
+            }
+
+            @RenderVariables(environment, dataFields.Where(df => !df.Key.Contains(".")))
+
+        </tbody>
+    </table>
+
+</div>
+
+@helper RenderVariables(Environment environment, IEnumerable<DataField> dataFields)
+{
+    
+            foreach (DataField dataField in dataFields.OrderBy(df => df.Key))
             {
                 <tr>
                     <td>
@@ -36,7 +70,7 @@
                     </td>
                     <td>
                         @{
-                            var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
+                var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
                         }
 
                         @if (dataFieldValues.Count == 0)
@@ -53,13 +87,10 @@
                             }
                         }
                     </td>
-                    <td>
+                    <td style="width: 50px;">
                         <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id })">Edit</a>
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
-
-    
-</div>
+        
+}

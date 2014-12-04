@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using SatelliteService.Contracts;
 using SatelliteService.Helpers;
 
@@ -23,11 +24,14 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string)this.configuration.destination);
-
-            if (((string) this.configuration.mode).ToLower() == "replace")
+            if (Directory.Exists((string) this.configuration.destination))
             {
-                DirectoryHelper.DeleteContents((string)this.configuration.destination);
+                this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
+
+                if (((string)this.configuration.mode).ToLower() == "replace")
+                {
+                    DirectoryHelper.DeleteContents((string)this.configuration.destination);
+                }
             }
 
             packageRepository.ExtractProject(

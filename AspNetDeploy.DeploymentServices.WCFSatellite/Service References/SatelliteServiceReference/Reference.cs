@@ -43,16 +43,22 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         void ProcessConfigFile(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunPowerShellScript", ReplyAction="http://tempuri.org/IDeploymentService/RunPowerShellScriptResponse")]
-        void RunPowerShellScript();
+        void RunPowerShellScript(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/CopyFiles", ReplyAction="http://tempuri.org/IDeploymentService/CopyFilesResponse")]
-        void CopyFiles();
+        void CopyFiles(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/UpdateHostsFile", ReplyAction="http://tempuri.org/IDeploymentService/UpdateHostsFileResponse")]
-        void UpdateHostsFile();
+        void UpdateHostsFile(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunSQLScript", ReplyAction="http://tempuri.org/IDeploymentService/RunSQLScriptResponse")]
-        void RunSQLScript();
+        void RunSQLScript(string json);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/GetVersion", ReplyAction="http://tempuri.org/IDeploymentService/GetVersionResponse")]
+        int GetVersion();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ApplyDacpac", ReplyAction="http://tempuri.org/IDeploymentService/ApplyDacpacResponse")]
+        void ApplyDacpac(string jsonConfig);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -118,20 +124,28 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
             base.Channel.ProcessConfigFile(json);
         }
         
-        public void RunPowerShellScript() {
-            base.Channel.RunPowerShellScript();
+        public void RunPowerShellScript(string json) {
+            base.Channel.RunPowerShellScript(json);
         }
         
-        public void CopyFiles() {
-            base.Channel.CopyFiles();
+        public void CopyFiles(string json) {
+            base.Channel.CopyFiles(json);
         }
         
-        public void UpdateHostsFile() {
-            base.Channel.UpdateHostsFile();
+        public void UpdateHostsFile(string json) {
+            base.Channel.UpdateHostsFile(json);
         }
         
-        public void RunSQLScript() {
-            base.Channel.RunSQLScript();
+        public void RunSQLScript(string json) {
+            base.Channel.RunSQLScript(json);
+        }
+        
+        public int GetVersion() {
+            return base.Channel.GetVersion();
+        }
+        
+        public void ApplyDacpac(string jsonConfig) {
+            base.Channel.ApplyDacpac(jsonConfig);
         }
     }
 }

@@ -21,9 +21,11 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BundleId" Type="int" Nullable="false" />
+          <Property Name="ParentBundleVersionId" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsHead" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BundleVersionProperty">
           <Key>
@@ -317,6 +319,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SourceControlId" Type="int" Nullable="false" />
+          <Property Name="ParentVersionId" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsHead" Type="bit" Nullable="false" />
@@ -351,6 +354,18 @@
             </Principal>
             <Dependent Role="BundleVersion">
               <PropertyRef Name="BundleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BundleVersion_BundleVersion">
+          <End Role="BundleVersion" Type="Self.BundleVersion" Multiplicity="0..1" />
+          <End Role="BundleVersion1" Type="Self.BundleVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BundleVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BundleVersion1">
+              <PropertyRef Name="ParentBundleVersionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -882,6 +897,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SourceControlVersion_SourceControlVersion">
+          <End Role="SourceControlVersion" Type="Self.SourceControlVersion" Multiplicity="0..1" />
+          <End Role="SourceControlVersion1" Type="Self.SourceControlVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SourceControlVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SourceControlVersion1">
+              <PropertyRef Name="ParentVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SourceControlVersionProperty_SourceControlVersion">
           <End Role="SourceControlVersion" Type="Self.SourceControlVersion" Multiplicity="1" />
           <End Role="SourceControlVersionProperty" Type="Self.SourceControlVersionProperty" Multiplicity="*" />
@@ -935,6 +962,10 @@
           <AssociationSet Name="FK_BundleVersion_Bundle" Association="Self.FK_BundleVersion_Bundle">
             <End Role="Bundle" EntitySet="Bundle" />
             <End Role="BundleVersion" EntitySet="BundleVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BundleVersion_BundleVersion" Association="Self.FK_BundleVersion_BundleVersion">
+            <End Role="BundleVersion" EntitySet="BundleVersion" />
+            <End Role="BundleVersion1" EntitySet="BundleVersion" />
           </AssociationSet>
           <AssociationSet Name="FK_BundleVersionProperty_BundleVersion" Association="Self.FK_BundleVersionProperty_BundleVersion">
             <End Role="BundleVersion" EntitySet="BundleVersion" />
@@ -1111,6 +1142,10 @@
           <AssociationSet Name="FK_SourceControlVersion_SourceControl" Association="Self.FK_SourceControlVersion_SourceControl">
             <End Role="SourceControl" EntitySet="SourceControl" />
             <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SourceControlVersion_SourceControlVersion" Association="Self.FK_SourceControlVersion_SourceControlVersion">
+            <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
+            <End Role="SourceControlVersion1" EntitySet="SourceControlVersion" />
           </AssociationSet>
           <AssociationSet Name="FK_SourceControlVersionProperty_SourceControlVersion" Association="Self.FK_SourceControlVersionProperty_SourceControlVersion">
             <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
@@ -1293,6 +1328,14 @@
             <End Role="User" EntitySet="User" />
             <End Role="Publication" EntitySet="Publication" />
           </AssociationSet>
+          <AssociationSet Name="FK_BundleVersion_BundleVersion" Association="AspNetDeployModel.FK_BundleVersion_BundleVersion">
+            <End Role="BundleVersion" EntitySet="BundleVersion" />
+            <End Role="BundleVersion1" EntitySet="BundleVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SourceControlVersion_SourceControlVersion" Association="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion">
+            <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
+            <End Role="SourceControlVersion1" EntitySet="SourceControlVersion" />
+          </AssociationSet>
         </EntityContainer>
                 <EnumType Name="SourceControlType">
           <Member Name="Undefined" Value="0" />
@@ -1349,6 +1392,10 @@
           <Property Name="IsHead" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_BundleVersionProperty_BundleVersion" FromRole="BundleVersion" ToRole="BundleVersionProperty" />
           <NavigationProperty Name="DataFields" Relationship="AspNetDeployModel.DataFieldToBundleVersion" FromRole="BundleVersion" ToRole="DataField" />
+          <Property Name="ParentBundleVersionId" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ChildBundleVersions" Relationship="AspNetDeployModel.FK_BundleVersion_BundleVersion" FromRole="BundleVersion" ToRole="BundleVersion1" />
+          <NavigationProperty Name="ParentBundleVersion" Relationship="AspNetDeployModel.FK_BundleVersion_BundleVersion" FromRole="BundleVersion1" ToRole="BundleVersion" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -1497,6 +1544,9 @@
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_SourceControlVersionProperty_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersionProperty" />
           <Property Name="OrderIndex" Type="Int32" Nullable="false" />
           <Property Name="IsHead" Type="Boolean" Nullable="false" />
+          <Property Name="ParentVersionId" Type="Int32" />
+          <NavigationProperty Name="SourceControlVersion1" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersion1" />
+          <NavigationProperty Name="SourceControlVersion2" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion1" ToRole="SourceControlVersion" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -1545,8 +1595,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DeploymentStepProperty_DeploymentStep">
-          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep" Multiplicity="1" />
-          <End Type="AspNetDeployModel.DeploymentStepProperty" Role="DeploymentStepProperty" Multiplicity="*" />
+          <End Type="AspNetDeployModel.DeploymentStep" Role="DeploymentStep" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="AspNetDeployModel.DeploymentStepProperty" Role="DeploymentStepProperty" Multiplicity="*" >
+          </End>
           <ReferentialConstraint>
             <Principal Role="DeploymentStep">
               <PropertyRef Name="Id" />
@@ -2041,6 +2094,30 @@
           <Member Name="DeploymentStepRollbackComplete" Value="301" />
           <Member Name="DeploymentStepRollbackError" Value="310" />
         </EnumType>
+        <Association Name="FK_BundleVersion_BundleVersion">
+          <End Type="AspNetDeployModel.BundleVersion" Role="BundleVersion" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.BundleVersion" Role="BundleVersion1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BundleVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BundleVersion1">
+              <PropertyRef Name="ParentBundleVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SourceControlVersion_SourceControlVersion">
+          <End Type="AspNetDeployModel.SourceControlVersion" Role="SourceControlVersion" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.SourceControlVersion" Role="SourceControlVersion1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SourceControlVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SourceControlVersion1">
+              <PropertyRef Name="ParentVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -2061,6 +2138,8 @@
           <EntitySetMapping Name="BundleVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.BundleVersion">
               <MappingFragment StoreEntitySet="BundleVersion">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="ParentBundleVersionId" ColumnName="ParentBundleVersionId" />
                 <ScalarProperty Name="IsHead" ColumnName="IsHead" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -2184,6 +2263,7 @@
           <EntitySetMapping Name="SourceControlVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlVersion">
               <MappingFragment StoreEntitySet="SourceControlVersion">
+                <ScalarProperty Name="ParentVersionId" ColumnName="ParentVersionId" />
                 <ScalarProperty Name="IsHead" ColumnName="IsHead" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

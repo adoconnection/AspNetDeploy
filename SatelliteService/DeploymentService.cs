@@ -22,6 +22,7 @@ namespace SatelliteService
         private int nextOperationIndex = 0;
         private IList<Operation> queuedOperations = new List<Operation>();
         private IList<Operation> completedOperations = new List<Operation>();
+        private Exception lastException = null;
 
         public DeploymentService()
         {
@@ -33,6 +34,22 @@ namespace SatelliteService
         public bool IsReady()
         {
             return this.activePublicationId == 0;
+        }
+
+        public int GetVersion()
+        {
+            return 100;
+        }
+
+        public ExceptionInfo GetLastException()
+        {
+            if (this.lastException == null)
+            {
+                return null;
+            }
+
+            ExceptionInfoFactory factory = new ExceptionInfoFactory();
+            return factory.Create(this.lastException);
         }
 
         public bool BeginPublication(int publicationId)
@@ -48,6 +65,7 @@ namespace SatelliteService
             this.queuedOperations = new List<Operation>();
             this.completedOperations = new List<Operation>();
             this.nextOperationIndex = 0;
+            this.lastException = null;
 
             return true;
         }
@@ -71,9 +89,30 @@ namespace SatelliteService
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.Write("– Error\n\r");
+                this.lastException = e;
+
+                Console.WriteLine("– Error\n\r");
+                Console.WriteLine(e.Message);
+                Console.WriteLine("---------");
+                Console.WriteLine(e.Source);
+                Console.WriteLine("---------");
+                Console.WriteLine(e.StackTrace);
+
+                Exception innerException = e.InnerException;
+
+                while (innerException != null)
+                {
+                    Console.WriteLine("Inner:");
+                    Console.WriteLine(innerException.Message);
+                    Console.WriteLine("---------");
+                    Console.WriteLine(innerException.Source);
+                    Console.WriteLine("---------");
+                    Console.WriteLine(innerException.StackTrace);
+                    innerException = innerException.InnerException;
+                }
+
                 this.Rollback();
                 
                 return false;
@@ -85,6 +124,7 @@ namespace SatelliteService
             this.activePublicationId = 0;
             this.completedOperations.Clear();
             this.queuedOperations.Clear();
+            this.lastException = null;
 
             Console.WriteLine("Publication complete");
 
@@ -135,30 +175,49 @@ namespace SatelliteService
 
         public void ProcessConfigFile(string jsonConfig)
         {
-            ConfigOperation operation = Factory.GetInstance<ConfigOperation>();
+            ConfigOperation operation = new ConfigOperation(this.backupRepository);
             operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
 
             this.queuedOperations.Add(operation);
         }
 
-        public void RunPowerShellScript()
+        public void RunPowerShellScript(string jsonConfig)
         {
             throw new System.NotImplementedException();
         }
 
-        public void CopyFiles()
+        public void CopyFiles(string jsonConfig)
         {
-            throw new System.NotImplementedException();
+            string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
+            CopyFilesOperation operation = new CopyFilesOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
+
+            this.queuedOperations.Add(operation);
         }
 
-        public void UpdateHostsFile()
+        public void UpdateHostsFile(string jsonConfig)
         {
-            throw new System.NotImplementedException();
+            UpdateHostsOperation operation = new UpdateHostsOperation(this.backupRepository);
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
+
+            this.queuedOperations.Add(operation);
         }
 
-        public void RunSQLScript()
+        public void RunSQLScript(string jsonConfig)
         {
-            throw new System.NotImplementedException();
+            RunSQLScriptOperation operation = new RunSQLScriptOperation(this.backupRepository);
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
+
+            this.queuedOperations.Add(operation);
+        }
+
+        public void ApplyDacpac(string jsonConfig)
+        {
+            string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
+            DacpacOperation operation = new DacpacOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
+            operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
+
+            this.queuedOperations.Add(operation);
         }
     }
 }

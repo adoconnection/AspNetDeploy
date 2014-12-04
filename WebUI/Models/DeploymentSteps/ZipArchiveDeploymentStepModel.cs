@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AspNetDeploy.WebUI.Models
+namespace AspNetDeploy.WebUI.Models.DeploymentSteps
 {
-    public class ZipArchiveDeploymentStepModel : DeploymentStepModel
+    public class ZipArchiveDeploymentStepModel : ProjectRelatedDeploymentStepModel
     {
         public string StepTitle { get; set; }
-        [Required]
-        public int ProjectId { get; set; }
         public string Destination { get; set; }
         public string CustomConfigurationJson { get; set; }
     }

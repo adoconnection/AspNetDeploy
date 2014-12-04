@@ -31,16 +31,18 @@ namespace AspNetDeploy.WebUI.Controllers
             this.ViewBag.Bundles = bundles.Select( b => new BundleInfo
             {
                 Bundle = b,
-                BundleVersionsInfo = b.BundleVersions.Select( bv => new BundleVersionInfo()
-                {
-                    BundleVersion = bv,
-                    State = this.taskRunner.GetBundleState(b.Id),
-                    ProjectsVersionsInfo = bv.ProjectVersions.Select( pv => new ProjectVersionInfo
+                BundleVersionsInfo = b.BundleVersions
+                    .Where(bv => !bv.IsDeleted)
+                    .Select(bv => new BundleVersionInfo()
                     {
-                        ProjectVersion = pv,
-                        ProjectState = this.taskRunner.GetProjectState(pv.Id)
+                        BundleVersion = bv,
+                        State = this.taskRunner.GetBundleState(b.Id),
+                        ProjectsVersionsInfo = bv.ProjectVersions.Select( pv => new ProjectVersionInfo
+                        {
+                            ProjectVersion = pv,
+                            ProjectState = this.taskRunner.GetProjectState(pv.Id)
+                        }).ToList()
                     }).ToList()
-                }).ToList()
             }).ToList();
 
             return this.View();

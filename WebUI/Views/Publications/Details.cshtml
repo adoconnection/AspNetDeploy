@@ -43,9 +43,9 @@
             <thead>
                 <tr>
                     <th>Step</th>
-                    <th>Configuring</th>
-                    <th>Executing</th>
-                    <th>Rollback</th>
+                    <th style="width: 150px;" class="text-center">Configuring</th>
+                    <th style="width: 150px;" class="text-center">Executing</th>
+                    @*<th style="width: 150px;" class="text-center">Rollback</th>*@
                 </tr>
             </thead> 
             <tbody>
@@ -61,16 +61,17 @@
 
                     <tr>
                         <td>
-                            @if (deploymentStep.Type == DeploymentStepType.DeployWebSite)
+                            @switch (deploymentStep.Type)
                             {
-                                @deploymentStep.GetStringProperty("IIS.SiteName")
-                            }
-                            else if (deploymentStep.Type == DeploymentStepType.Configuration)
-                            {
-                                @deploymentStep.GetStringProperty("Step.Title")
+                                case DeploymentStepType.DeployWebSite:
+                                    @deploymentStep.GetStringProperty("IIS.SiteName")
+                                    break;
+                                default:
+                                    @deploymentStep.GetStringProperty("Step.Title")
+                                    break;
                             }
                         </td>  
-                        <td>
+                        <td class="text-center">
                             @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepConfiguring))
                             {
                                 if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepConfiguringComplete))
@@ -79,7 +80,7 @@
                                 }
                                 else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepConfiguringError))
                                 {
-                                    <span>Error</span>
+                                    <span class="text-danger">Error</span>
                                 }
                             }
                             else
@@ -87,7 +88,7 @@
                                 <span>–</span>
                             }
                         </td>  
-                        <td>
+                        <td class="text-center">
                             @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepExecuting))
                             {
                                 if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepExecutingComplete))
@@ -96,7 +97,7 @@
                                 }
                                 else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepExecutingError))
                                 {
-                                    <span>Error</span>
+                                    <span class="text-danger">Error</span>
                                 }
                             }
                             else
@@ -104,23 +105,23 @@
                                 <span>–</span>
                             }
                         </td>
-                        <td>
-                           @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollback))
-                           {
-                               if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollbackComplete))
-                               {
-                                <span class="text-success">OK</span>
-                               }
-                               else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollbackError))
-                               {
-                                <span>Error</span>
-                               }
-                           }
-                           else
-                           {
-                            <span>–</span>
-                           }
-                        </td>
+                        @*<td class="text-center">
+                            @if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollback))
+                            {
+                                if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollbackComplete))
+                                {
+                                    <span class="text-success">OK</span>
+                                }
+                                else if (group.Any(g => g.Event == MachinePublicationLogEvent.DeploymentStepRollbackError))
+                                {
+                                    <span class="text-danger">Error</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>–</span>
+                            }
+                        </td>*@
 
                     </tr>
 

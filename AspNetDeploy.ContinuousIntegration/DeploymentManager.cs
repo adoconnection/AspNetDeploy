@@ -126,7 +126,7 @@ namespace AspNetDeploy.ContinuousIntegration
                 }
                 catch (Exception e)
                 {
-                    deploymentAgent.Rollback();
+                    /*deploymentAgent.Rollback();*/
                     machineDeploymentComplete(machine.Id, false);
                     this.ChangeMachinePublication(machinePublication, MachinePublicationState.Error, entities);
                     this.ChangePublicationResult(publication, PublicationState.Error, entities);
