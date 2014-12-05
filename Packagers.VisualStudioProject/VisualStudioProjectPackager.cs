@@ -23,8 +23,7 @@ namespace Packagers.VisualStudioProject
             using (ZipFile zipFile = new ZipFile(Encoding.UTF8))
             {
                 zipFile.AlternateEncoding = Encoding.UTF8;
-                zipFile.ProvisionalAlternateEncoding = Encoding.UTF8;
-                zipFile.AlternateEncodingUsage = ZipOption.AsNecessary;
+                zipFile.AlternateEncodingUsage = ZipOption.Always;
 
                 zipFile.CompressionLevel = CompressionLevel.BestCompression;
 

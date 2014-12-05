@@ -39,14 +39,10 @@ namespace SatelliteService.Packages
 
         public Stream LoadProjectFile(int projectId, string file)
         {
-            ReadOptions options = new ReadOptions();
-            options.Encoding = Encoding.UTF8;
-
-            using (ZipFile packageZipFile = ZipFile.Read(this.packagePath, options))
+            using (ZipFile packageZipFile = new ZipFile(this.packagePath))
             {
                 packageZipFile.AlternateEncoding = Encoding.UTF8;
-                packageZipFile.ProvisionalAlternateEncoding = Encoding.UTF8;
-                packageZipFile.AlternateEncodingUsage = ZipOption.AsNecessary;
+                packageZipFile.AlternateEncodingUsage = ZipOption.Always;
 
                 ZipEntry projectZipEntry = packageZipFile.Entries.First(e => e.FileName.StartsWith("project-" + projectId + "-"));
 
@@ -55,11 +51,13 @@ namespace SatelliteService.Packages
                     projectZipEntry.Extract(extractedEntryStream);
                     extractedEntryStream.Position = 0;
 
+                    ReadOptions options = new ReadOptions();
+                    options.Encoding = Encoding.UTF8;
+
                     using (ZipFile projectZipFile = ZipFile.Read(extractedEntryStream, options))
                     {
                         projectZipFile.AlternateEncoding = Encoding.UTF8;
-                        projectZipFile.ProvisionalAlternateEncoding = Encoding.UTF8;
-                        projectZipFile.AlternateEncodingUsage = ZipOption.AsNecessary;
+                        projectZipFile.AlternateEncodingUsage = ZipOption.Always;
 
                         ZipEntry projectFileEntry = projectZipFile.First( e => e.FileName.ToLower() == file.ToLower());
 
@@ -72,25 +70,5 @@ namespace SatelliteService.Packages
                 }
             }
         }
-
-        /*
-        public void ExtractFiles(int projectId, string destination)
-        {
-            using (ZipFile packageZipFile = ZipFile.Read(this.packagePath))
-            {
-                ZipEntry archiveZipEntry = packageZipFile.Entries.First(e => e.FileName.StartsWith("project-" + projectId + "-"));
-
-                using (MemoryStream extractedEntryStream = new MemoryStream())
-                {
-                    archiveZipEntry.Extract(extractedEntryStream);
-                    extractedEntryStream.Position = 0;
-
-                    using (ZipFile projectZipFile = ZipFile.Read(extractedEntryStream))
-                    {
-                        projectZipFile.ExtractAll(destination, ExtractExistingFileAction.OverwriteSilently);
-                    }
-                }
-            }
-        }*/
     }
 }

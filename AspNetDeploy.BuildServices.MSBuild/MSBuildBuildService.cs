@@ -24,6 +24,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
             BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "Rebuild" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
+            buildParameters.MaxNodeCount = 1;
             buildParameters.Loggers = new List<ILogger>
             {
                 new NugetPackageRestorer(Path.GetDirectoryName(solutionFilePath)),

@@ -155,6 +155,8 @@ namespace ThreadHostedTaskRunner
                 .SelectMany(scv => scv.ProjectVersions)
                 .Where(pv => 
                         pv.ProjectType.HasFlag(ProjectType.WindowsApplication) || 
+                        pv.ProjectType.HasFlag(ProjectType.Database) || 
+                        pv.ProjectType.HasFlag(ProjectType.ZipArchive) || 
                         pv.ProjectType.HasFlag(ProjectType.Service) ||
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
                         pv.ProjectType.HasFlag(ProjectType.Web)
@@ -186,6 +188,7 @@ namespace ThreadHostedTaskRunner
                 .SelectMany( scv=> scv.ProjectVersions)
                 .Where(pv => 
                     (
+                        pv.ProjectType.HasFlag(ProjectType.Database) || 
                         pv.ProjectType.HasFlag(ProjectType.WindowsApplication) || 
                         pv.ProjectType.HasFlag(ProjectType.Service) ||
                         pv.ProjectType.HasFlag(ProjectType.Console) ||

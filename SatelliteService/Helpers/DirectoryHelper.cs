@@ -6,6 +6,11 @@ namespace SatelliteService.Helpers
     {
         public static void DeleteContents(string path)
         {
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
             foreach (string file in Directory.GetFiles(path))
             {
                 if (File.Exists(file))

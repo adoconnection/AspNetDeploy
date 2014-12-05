@@ -30,8 +30,8 @@ namespace SourceControls.FileSystem
                     .Select( f => 
                         f.GetHashCode().ToString(CultureInfo.InvariantCulture) +
                         File.GetLastWriteTimeUtc(f).ToString(CultureInfo.InvariantCulture)))
-                    .GetHashCode()
-                    .ToString(CultureInfo.InvariantCulture);
+                .GetHashCode()
+                .ToString(CultureInfo.InvariantCulture);
 
             if (!Directory.Exists(path))
             {
