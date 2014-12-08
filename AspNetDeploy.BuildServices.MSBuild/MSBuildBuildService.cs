@@ -11,7 +11,14 @@ namespace AspNetDeploy.BuildServices.MSBuild
 {
     public class MSBuildBuildService : IBuildService
     {
-        public BuildSolutionResult Build(string solutionFilePath, Action<string> projectBuildStarted, Action<string, bool> projectBuildComplete)
+        private readonly INugetPackageManager nugetPackageManager;
+
+        public MSBuildBuildService(INugetPackageManager nugetPackageManager)
+        {
+            this.nugetPackageManager = nugetPackageManager;
+        }
+
+        public BuildSolutionResult Build(string solutionFilePath, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
         {
             ProjectCollection projectCollection = new ProjectCollection();
 
@@ -27,8 +34,8 @@ namespace AspNetDeploy.BuildServices.MSBuild
             buildParameters.MaxNodeCount = 1;
             buildParameters.Loggers = new List<ILogger>
             {
-                new NugetPackageRestorer(Path.GetDirectoryName(solutionFilePath)),
-                new MSBuildLogger(projectBuildStarted, projectBuildComplete)
+                new NugetPackageRestorer(nugetPackageManager, Path.GetDirectoryName(solutionFilePath)),
+                new MSBuildLogger(projectBuildStarted, projectBuildComplete, errorLogger)
             };
 
             BuildResult buildResult = BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);

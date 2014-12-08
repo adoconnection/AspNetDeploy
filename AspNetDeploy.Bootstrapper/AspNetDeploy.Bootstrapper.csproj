@@ -79,6 +79,10 @@
       <Project>{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}</Project>
       <Name>Variables</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BuildServices.NuGet\BuildServices.NuGet.csproj">
+      <Project>{F91D4165-BA2F-4C06-9BE7-2662C0EA7B0E}</Project>
+      <Name>BuildServices.NuGet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
       <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
       <Name>LocalEnvironment</Name>

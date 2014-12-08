@@ -1,4 +1,7 @@
-﻿using AspNetDeploy.Contracts;
+﻿using System.Configuration;
+using System.IO;
+using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 
 namespace LocalEnvironment
 {
@@ -6,17 +9,39 @@ namespace LocalEnvironment
     {
         public string GetSourceControlVersionPath(int sourceControlId, int sourceControlVersionId)
         {
-            return string.Format(@"H:\AspNetDeployWorkingFolder\Sources\{0}\{1}", sourceControlId, sourceControlVersionId);
+            return this.GetWorkingFolderPath(string.Format(@"Sources\{0}\{1}", sourceControlId, sourceControlVersionId));
         }
 
         public string GetBundlePackagePath(int bundleId, int packageId)
         {
-            return string.Format(@"H:\AspNetDeployWorkingFolder\Packages\package-{0}-{1}.zip", bundleId, packageId);
+            return this.GetWorkingFolderPath(string.Format(@"Packages\package-{0}-{1}.zip", bundleId, packageId));
         }
 
         public string GetProjectPackagePath(int projectId, string revisionId)
         {
-            return string.Format(@"H:\AspNetDeployWorkingFolder\Packages\project-{0}-{1}.zip", projectId, revisionId);
+            return this.GetWorkingFolderPath(string.Format(@"Packages\project-{0}-{1}.zip", projectId, revisionId));
+        }
+
+        public string GetNugetPath()
+        {
+            return this.GetWorkingFolderPath(@"NuGet\NuGet.exe");
+        }
+
+        private string GetWorkingFolderPath(string path)
+        {
+            return Path.Combine(this.GetWorkingFolder(), path);
+        }
+
+        private string GetWorkingFolder()
+        {
+            string workingFolder = ConfigurationManager.AppSettings["Settings.WorkingFolder"];
+
+            if (string.IsNullOrWhiteSpace(workingFolder))
+            {
+                throw new AspNetDeployException("Settings.WorkingFolder in AppSettings is not defined");
+            }
+
+            return workingFolder;
         }
     }
 }

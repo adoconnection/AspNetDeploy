@@ -27,6 +27,11 @@ namespace AspNetDeploy.WebUI
             {
                 Factory.GetInstance<ITaskRunner>().Initialize();
             }
+
+            if (!string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["Settings.WorkingFolder"]))
+            {
+                Factory.GetInstance<IEnvironmentResourcesService>().InitializeWorkingFolder(ConfigurationManager.AppSettings["Settings.WorkingFolder"]);
+            }
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

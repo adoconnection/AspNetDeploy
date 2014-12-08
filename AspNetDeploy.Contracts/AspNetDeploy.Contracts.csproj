@@ -46,7 +46,9 @@
     <Compile Include="IContinuousIntegrationLogger.cs" />
     <Compile Include="IDeploymentAgent.cs" />
     <Compile Include="IDeploymentAgentFactory.cs" />
+    <Compile Include="IEnvironmentResourcesService.cs" />
     <Compile Include="ILoggingService.cs" />
+    <Compile Include="INugetPackageManager.cs" />
     <Compile Include="IPathServices.cs" />
     <Compile Include="IProjectPackagerFactory.cs" />
     <Compile Include="IProjectPackager.cs" />

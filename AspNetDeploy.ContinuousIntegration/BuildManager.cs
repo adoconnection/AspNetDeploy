@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.ContinuousIntegration
@@ -11,11 +12,13 @@ namespace AspNetDeploy.ContinuousIntegration
     {
         private readonly IBuildServiceFactory buildServiceFactory;
         private readonly IPathServices pathServices;
+        private readonly ILoggingService loggingService;
 
-        public BuildManager(IBuildServiceFactory buildServiceFactory, IPathServices pathServices)
+        public BuildManager(IBuildServiceFactory buildServiceFactory, IPathServices pathServices, ILoggingService loggingService)
         {
             this.buildServiceFactory = buildServiceFactory;
             this.pathServices = pathServices;
+            this.loggingService = loggingService;
         }
 
         public void Build(int sourceControlVersionId, string solutionFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
@@ -41,7 +44,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         projectBuildStarted(projectVersion.Id);
                     }
                 },
-                (projectFileName, success) =>
+                (projectFileName, success, message) =>
                 {
                     ProjectVersion projectVersion = entities.ProjectVersion
                         .Where(p => p.SourceControlVersionId == sourceControlVersionId)
@@ -52,6 +55,19 @@ namespace AspNetDeploy.ContinuousIntegration
                     {
                         projectBuildComplete(projectVersion.Id, success);
                     }
+                },
+                (projectFile, file, code, lineNumber, columnNumber, message) =>
+                {
+                    AspNetDeployException exception = new AspNetDeployException(
+                        string.Format(
+                            "File: {0}. code: {1}, lineNumber: {2}, columnNumber: {3}, message: {4}", 
+                            file, 
+                            code,
+                            lineNumber, 
+                            columnNumber,
+                            message));
+
+                    this.loggingService.Log(new AspNetDeployException("Project build failed: " + projectFile, exception));
                 });
         }
     }

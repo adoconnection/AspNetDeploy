@@ -1,18 +1,19 @@
 ﻿using System;
 using System.IO;
-using BuildServices.NuGet;
+using AspNetDeploy.Contracts;
 using Microsoft.Build.Framework;
 
 namespace AspNetDeploy.BuildServices.MSBuild
 {
     public class NugetPackageRestorer : ILogger
     {
-        readonly NugetPackageManager packageRestorer = new NugetPackageManager();
+        private readonly INugetPackageManager nugetPackageManager;
         private readonly string solutionDirectory;
 
-        public NugetPackageRestorer(string solutionDirectory)
+        public NugetPackageRestorer(INugetPackageManager nugetPackageManager, string solutionDirectory)
         {
             this.Verbosity = LoggerVerbosity.Diagnostic;
+            this.nugetPackageManager = nugetPackageManager;
             this.solutionDirectory = solutionDirectory;
         }
 
@@ -33,7 +34,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
 
             if (File.Exists(packagesConfigPath))
             {
-                packageRestorer.RestorePackages(packagesConfigPath, solutionDirectory);
+                this.nugetPackageManager.RestorePackages(packagesConfigPath, solutionDirectory);
             }
         }
 

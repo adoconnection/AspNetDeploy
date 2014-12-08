@@ -7,6 +7,7 @@ using AspNetDeploy.Projects;
 using AspNetDeploy.SolutionParsers;
 using AspNetDeploy.SourceControls;
 using AspNetDeploy.Variables;
+using BuildServices.NuGet;
 using LocalEnvironment;
 using ObjectFactory;
 using Packagers;
@@ -29,6 +30,8 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<ISatelliteMonitor, SatelliteMonitor>();
             this.Map<IProjectParsingService, ProjectParsingService>();
             this.Map<ILoggingService, LoggingService>();
+            this.Map<IEnvironmentResourcesService, EnvironmentResourcesService>();
+            this.Map<INugetPackageManager, NugetPackageManager>();
         }
     }
 }
