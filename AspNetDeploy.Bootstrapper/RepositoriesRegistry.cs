@@ -2,6 +2,7 @@
 using AspNetDeploy.Contracts;
 using AspNetDeploy.DeploymentServices;
 using AspNetDeploy.DeploymentServices.SatelliteMonitoring;
+using AspNetDeploy.Logging.ElmahSvc;
 using AspNetDeploy.Projects;
 using AspNetDeploy.SolutionParsers;
 using AspNetDeploy.SourceControls;
@@ -27,6 +28,7 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<IVariableProcessorFactory, VariableProcessorFactory>();
             this.Map<ISatelliteMonitor, SatelliteMonitor>();
             this.Map<IProjectParsingService, ProjectParsingService>();
+            this.Map<ILoggingService, LoggingService>();
         }
     }
 }

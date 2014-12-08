@@ -17,15 +17,7 @@ namespace ThreadHostedTaskRunner.Jobs
         public void Start()
         {
             SourceControlManager sourceControlManager = Factory.GetInstance<SourceControlManager>();
-            try
-            {
-                UpdateAndParseResult updateAndParseResult = sourceControlManager.UpdateAndParse(this.sourceControlVersionId);
-                TaskRunnerContext.SetSourceControlVersionState(this.sourceControlVersionId, SourceControlState.Idle);
-            }
-            catch (Exception e)
-            {
-                TaskRunnerContext.SetSourceControlVersionState(this.sourceControlVersionId, SourceControlState.Error);
-            }
+            UpdateAndParseResult updateAndParseResult = sourceControlManager.UpdateAndParse(this.sourceControlVersionId);
         }
 
     }

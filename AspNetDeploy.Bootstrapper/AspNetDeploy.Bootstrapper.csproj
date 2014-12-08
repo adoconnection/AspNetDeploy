@@ -59,6 +59,10 @@
       <Project>{6192E2D0-88B7-4ED5-B556-19A7959D1788}</Project>
       <Name>DeploymentServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Logging.Elmah\Logging.ElmahSvc.csproj">
+      <Project>{4C37BE99-0293-417D-9982-0EB70190880A}</Project>
+      <Name>Logging.ElmahSvc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Projects\Projects.csproj">
       <Project>{E1B89197-95E6-46C4-B1C7-F3145BAA43B5}</Project>
       <Name>Projects</Name>

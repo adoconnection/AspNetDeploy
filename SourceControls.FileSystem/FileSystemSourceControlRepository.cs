@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 
 namespace SourceControls.FileSystem

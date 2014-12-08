@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using Microsoft.VisualBasic;
+using ObjectFactory;
 using ThreadHostedTaskRunner.Jobs;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -67,6 +68,7 @@ namespace ThreadHostedTaskRunner
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
+       
             TakeSources(entities);
             BuildProjects(entities);
             PackageBundles(entities);
@@ -251,6 +253,7 @@ namespace ThreadHostedTaskRunner
                     catch (Exception e)
                     {
                         TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
+                        Factory.GetInstance<ILoggingService>().Log(e);
                     }
                 });
 
@@ -260,5 +263,47 @@ namespace ThreadHostedTaskRunner
             }
         }
 
+        private static bool IsExceptionCritical(Exception exception)
+        {
+            if (exception is ThreadAbortException)
+            {
+                return true;
+            }
+
+            if (exception is OutOfMemoryException)
+            {
+                return true;
+            }
+
+            if (exception is AppDomainUnloadedException)
+            {
+                return true;
+            }
+
+            if (exception is BadImageFormatException)
+            {
+                return true;
+            }
+
+            if (exception is CannotUnloadAppDomainException)
+            {
+                return true;
+            }
+
+            if (exception is ExecutionEngineException)
+            {
+                return true;
+            }
+
+            if (exception is InvalidProgramException)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     }
+
+    
 }

@@ -115,6 +115,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projects.Contracts", "AspNe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packagers.Zip", "AspNetDeploy.Packagers.Zip\Packagers.Zip.csproj", "{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging.ElmahSvc", "AspNetDeploy.Logging.Elmah\Logging.ElmahSvc.csproj", "{4C37BE99-0293-417D-9982-0EB70190880A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -285,6 +287,10 @@ Global
 		{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C37BE99-0293-417D-9982-0EB70190880A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C37BE99-0293-417D-9982-0EB70190880A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C37BE99-0293-417D-9982-0EB70190880A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C37BE99-0293-417D-9982-0EB70190880A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -343,6 +349,7 @@ Global
 		{845C08E5-6953-42E0-A7DA-91DF6BEF62A9} = {D23AB140-E668-4230-9F9B-A31926E3E199}
 		{94622F2D-3769-4FC4-9686-49ECA3E4077C} = {B727AB72-0680-41EB-A64C-63A3EBBD0F4E}
 		{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
+		{4C37BE99-0293-417D-9982-0EB70190880A} = {2BAE3B06-63CF-483D-ACA2-6662C78B2422}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
