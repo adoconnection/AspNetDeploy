@@ -38,7 +38,8 @@ namespace AspNetDeploy.Model
                 {
                     UserRoleAction.ReleaseApprove,
                     UserRoleAction.ReleasePublishTest,
-                    UserRoleAction.ReleasePublishLive
+                    UserRoleAction.ReleasePublishLive,
+
                 }
             },
             {

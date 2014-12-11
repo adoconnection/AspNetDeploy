@@ -219,6 +219,15 @@
           <Property Name="ApprovedByUserId" Type="int" Nullable="false" />
           <Property Name="ApprovedDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="PackageEntry">
+          <Key>
+            <PropertyRef Name="PackageId" />
+            <PropertyRef Name="ProjectVersionId" />
+          </Key>
+          <Property Name="PackageId" Type="int" Nullable="false" />
+          <Property Name="ProjectVersionId" Type="int" Nullable="false" />
+          <Property Name="Revision" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Project">
           <Key>
             <PropertyRef Name="Id" />
@@ -693,6 +702,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PackageEntry_Package">
+          <End Role="Package" Type="Self.Package" Multiplicity="1" />
+          <End Role="PackageEntry" Type="Self.PackageEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Package">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageEntry">
+              <PropertyRef Name="PackageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackageEntry_ProjectVersion">
+          <End Role="ProjectVersion" Type="Self.ProjectVersion" Multiplicity="1" />
+          <End Role="PackageEntry" Type="Self.PackageEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageEntry">
+              <PropertyRef Name="ProjectVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Project_SourceControl">
           <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
           <End Role="Project" Type="Self.Project" Multiplicity="*" />
@@ -946,6 +979,7 @@
           <EntitySet Name="NextEnvironment" EntityType="Self.NextEnvironment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Package" EntityType="Self.Package" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PackageApprovedOnEnvironment" EntityType="Self.PackageApprovedOnEnvironment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackageEntry" EntityType="Self.PackageEntry" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectProperty" EntityType="Self.ProjectProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectToBundle" EntityType="Self.ProjectToBundle" Schema="dbo" store:Type="Tables" />
@@ -1074,6 +1108,14 @@
           <AssociationSet Name="FK_PackageApprovedOnEnvironment_User" Association="Self.FK_PackageApprovedOnEnvironment_User">
             <End Role="User" EntitySet="User" />
             <End Role="PackageApprovedOnEnvironment" EntitySet="PackageApprovedOnEnvironment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackageEntry_Package" Association="Self.FK_PackageEntry_Package">
+            <End Role="Package" EntitySet="Package" />
+            <End Role="PackageEntry" EntitySet="PackageEntry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackageEntry_ProjectVersion" Association="Self.FK_PackageEntry_ProjectVersion">
+            <End Role="ProjectVersion" EntitySet="ProjectVersion" />
+            <End Role="PackageEntry" EntitySet="PackageEntry" />
           </AssociationSet>
           <AssociationSet Name="FK_Project_SourceControl" Association="Self.FK_Project_SourceControl">
             <End Role="SourceControl" EntitySet="SourceControl" />
@@ -1336,6 +1378,15 @@
             <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
             <End Role="SourceControlVersion1" EntitySet="SourceControlVersion" />
           </AssociationSet>
+          <EntitySet Name="PackageEntry" EntityType="AspNetDeployModel.PackageEntry" />
+          <AssociationSet Name="FK_PackageEntry_Package" Association="AspNetDeployModel.FK_PackageEntry_Package">
+            <End Role="Package" EntitySet="Package" />
+            <End Role="PackageEntry" EntitySet="PackageEntry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackageEntry_ProjectVersion" Association="AspNetDeployModel.FK_PackageEntry_ProjectVersion">
+            <End Role="ProjectVersion" EntitySet="ProjectVersion" />
+            <End Role="PackageEntry" EntitySet="PackageEntry" />
+          </AssociationSet>
         </EntityContainer>
                 <EnumType Name="SourceControlType">
           <Member Name="Undefined" Value="0" />
@@ -1507,6 +1558,7 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Properties" Relationship="AspNetDeployModel.FK_ProjectVersionProperty_ProjectVersion" FromRole="ProjectVersion" ToRole="ProjectVersionProperty" />
+          <NavigationProperty Name="PackageEntries" Relationship="AspNetDeployModel.FK_PackageEntry_ProjectVersion" FromRole="ProjectVersion" ToRole="PackageEntry" />
         </EntityType>
         <EntityType Name="SourceControl">
           <Key>
@@ -1727,6 +1779,7 @@
           <NavigationProperty Name="BundleVersion" Relationship="AspNetDeployModel.FK_Package_BundleVersion" FromRole="Package" ToRole="BundleVersion" />
           <NavigationProperty Name="Publications" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Package" ToRole="Publication" />
           <NavigationProperty Name="ApprovedOnEnvironments" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Package" FromRole="Package" ToRole="PackageApprovedOnEnvironment" />
+          <NavigationProperty Name="PackageEntry" Relationship="AspNetDeployModel.FK_PackageEntry_Package" FromRole="Package" ToRole="PackageEntry" />
         </EntityType>
         <EntityType Name="Publication">
           <Key>
@@ -2118,6 +2171,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PackageEntry">
+          <Key>
+            <PropertyRef Name="PackageId" />
+            <PropertyRef Name="ProjectVersionId" />
+          </Key>
+          <Property Name="PackageId" Type="Int32" Nullable="false" />
+          <Property Name="ProjectVersionId" Type="Int32" Nullable="false" />
+          <Property Name="Revision" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Package" Relationship="AspNetDeployModel.FK_PackageEntry_Package" FromRole="PackageEntry" ToRole="Package" />
+          <NavigationProperty Name="ProjectVersion" Relationship="AspNetDeployModel.FK_PackageEntry_ProjectVersion" FromRole="PackageEntry" ToRole="ProjectVersion" />
+        </EntityType>
+        <Association Name="FK_PackageEntry_Package">
+          <End Type="AspNetDeployModel.Package" Role="Package" Multiplicity="1" />
+          <End Type="AspNetDeployModel.PackageEntry" Role="PackageEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Package">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageEntry">
+              <PropertyRef Name="PackageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackageEntry_ProjectVersion">
+          <End Type="AspNetDeployModel.ProjectVersion" Role="ProjectVersion" Multiplicity="1" />
+          <End Type="AspNetDeployModel.PackageEntry" Role="PackageEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackageEntry">
+              <PropertyRef Name="ProjectVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -2487,6 +2575,15 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Guid" ColumnName="Guid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackageEntry">
+            <EntityTypeMapping TypeName="AspNetDeployModel.PackageEntry">
+              <MappingFragment StoreEntitySet="PackageEntry">
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="ProjectVersionId" ColumnName="ProjectVersionId" />
+                <ScalarProperty Name="PackageId" ColumnName="PackageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

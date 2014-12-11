@@ -52,5 +52,6 @@ namespace AspNetDeploy.Model
         public virtual DbSet<DataFieldValue> DataFieldValue { get; set; }
         public virtual DbSet<PackageApprovedOnEnvironment> PackageApprovedOnEnvironment { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<PackageEntry> PackageEntry { get; set; }
     }
 }

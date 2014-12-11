@@ -61,8 +61,9 @@
 
 @helper RenderVariables(Environment environment, IEnumerable<DataField> dataFields)
 {
-    
-            foreach (DataField dataField in dataFields.OrderBy(df => df.Key))
+    bool hideSensitiveValues = environment.GetBoolProperty("HideSensitiveValues");
+
+    foreach (DataField dataField in dataFields.OrderBy(df => df.Key))
             {
                 <tr>
                     <td>
@@ -81,9 +82,19 @@
                         {
                             foreach (DataFieldValue dataFieldValue in dataFieldValues)
                             {
-
-
-                                <code>@dataFieldValue.Value</code>
+                                if (dataFieldValue == null || string.IsNullOrWhiteSpace(dataFieldValue.Value))
+                                {
+                                    continue;
+                                }
+                                
+                                if (dataField.IsSensitive && hideSensitiveValues)
+                                {
+                                    <code>••••••••••••••••••••••••••••••</code>
+                                }
+                                else
+                                {
+                                    <code>@dataFieldValue.Value</code>
+                                }
                             }
                         }
                     </td>

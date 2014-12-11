@@ -14,7 +14,12 @@
     <h1>
         <div class="row">
             <div class="col-md-10">
-                @dataField.Key
+                @dataField.Key 
+                @if (dataField.IsSensitive)
+                {
+                    <small>Sensitive</small>
+                }
+                
             </div>
            
         </div>
@@ -24,6 +29,8 @@
     
     @foreach (Environment environment in environments)
     {
+        bool hideSensitiveValues = environment.GetBoolProperty("HideSensitiveValues");
+        
         <h3>@Html.ActionLink(environment.Name, "Details", "Environments",new { id = environment.Id}, null)</h3>
         <div class="row">
             <div class="col-sm-10">
@@ -39,7 +46,19 @@
                 {
                     foreach (DataFieldValue dataFieldValue in dataFieldValues)
                     {
-                        <pre>@dataFieldValue.Value</pre>
+                        if (dataFieldValue == null || string.IsNullOrWhiteSpace(dataFieldValue.Value))
+                        {
+                            continue;
+                        }
+
+                        if (dataField.IsSensitive && hideSensitiveValues)
+                        {
+                            <code>••••••••••••••••••••••••••••••</code>
+                        }
+                        else
+                        {
+                            <code>@dataFieldValue.Value</code>
+                        }
                     }
                 }
             </div>

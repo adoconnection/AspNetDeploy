@@ -138,6 +138,9 @@
     <Compile Include="PackageApprovedOnEnvironment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="PackageEntry.cs">
+      <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Project.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>

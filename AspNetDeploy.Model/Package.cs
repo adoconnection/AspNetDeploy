@@ -18,6 +18,7 @@ namespace AspNetDeploy.Model
         {
             this.Publications = new HashSet<Publication>();
             this.ApprovedOnEnvironments = new HashSet<PackageApprovedOnEnvironment>();
+            this.PackageEntry = new HashSet<PackageEntry>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace AspNetDeploy.Model
         public virtual BundleVersion BundleVersion { get; set; }
         public virtual ICollection<Publication> Publications { get; set; }
         public virtual ICollection<PackageApprovedOnEnvironment> ApprovedOnEnvironments { get; set; }
+        public virtual ICollection<PackageEntry> PackageEntry { get; set; }
     }
 }

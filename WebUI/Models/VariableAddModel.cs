@@ -13,5 +13,7 @@ namespace AspNetDeploy.WebUI.Models
 
         [DataType(DataType.Text)]
         public string Value { get; set; }
+
+        public bool IsSensitive { get; set; }
     }
 }

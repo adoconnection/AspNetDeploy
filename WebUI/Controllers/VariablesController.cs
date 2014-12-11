@@ -62,7 +62,8 @@ namespace AspNetDeploy.WebUI.Controllers
                 Name = dataField.Key,
                 Value = dataField.DataFieldValues.Where(v => v.Environments.Any(e => e == environment)).Select(v => v.Value).FirstOrDefault(),
                 VariableId = id,
-                EnvironmentId = environmentId
+                EnvironmentId = environmentId,
+                IsSensitive = dataField.IsSensitive
             };
 
             return this.View(model);
@@ -79,7 +80,6 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 dataField = new DataField();
                 dataField.TypeId = 1;
-                dataField.IsSensitive = false;
                 dataField.Mode = DataFieldMode.Global;
                 dataField.IsDeleted = false;
 
@@ -116,6 +116,8 @@ namespace AspNetDeploy.WebUI.Controllers
             }
 
             dataField.Key = model.Name;
+            dataField.IsSensitive = model.IsSensitive;
+
             value.Value = model.Value;
 
             this.Entities.SaveChanges();

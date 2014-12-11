@@ -57,10 +57,18 @@ namespace AspNetDeploy.ContinuousIntegration
                     }
                     
                     zipFile.AddFile(projectPackagePath, "/");
+
+                    PackageEntry packageEntry = new PackageEntry();
+                    packageEntry.Package = package;
+                    packageEntry.ProjectVersion = projectVersion;
+                    packageEntry.Revision = projectVersion.SourceControlVersion.GetStringProperty("Revision");
+                    entities.PackageEntry.Add(packageEntry);
                 }
 
                 zipFile.Save(this.pathServices.GetBundlePackagePath(bundleVersionId, package.Id));
             }
+
+            entities.SaveChanges();
 
             foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)
             {
