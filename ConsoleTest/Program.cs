@@ -24,7 +24,7 @@ namespace ConsoleTest
 
             RunScheduler();
 
-            WriteLine("Main thread complete 123");
+            WriteLine("Main thread complete");
             Console.ReadKey();
         }
 
