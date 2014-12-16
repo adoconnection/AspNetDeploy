@@ -38,7 +38,65 @@
 <a id="1-add-source-controls" class="anchor" href="#1-add-source-controls" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Add source controls</h2>
 
 <p>AspNetDeploy will checkout your sources and show all your projects:
-<img src="http://resources.aspnetdeploy.com/sources-list.PNG" alt=""></p>
+<img src="http://resources.aspnetdeploy.com/sources-list.PNG" alt="">
+AspNetDeploy is aware of:</p>
+
+<ul>
+<li>Web projects</li>
+<li>Database projects</li>
+<li>Unit test projects</li>
+<li>Console projects</li>
+<li>Standalone Windows apps</li>
+<li>File archives</li>
+</ul>
+
+<h2>
+<a id="2-define-bundles" class="anchor" href="#2-define-bundles" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Define bundles</h2>
+
+<p>Bundle is a set of related projects that can not live without each other.
+For example Web project + Database project
+<img src="http://resources.aspnetdeploy.com/bundles-list.PNG" alt=""></p>
+
+<h2>
+<a id="3-define-deployment-steps-for-each-bundle" class="anchor" href="#3-define-deployment-steps-for-each-bundle" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Define deployment steps for each bundle</h2>
+
+<p>Every bundle needs deployment steps to be defined. 
+<img src="http://resources.aspnetdeploy.com/deployment-step-types.PNG" alt=""></p>
+
+<p>Sinse AspNetDeploy is aware of project types you will never be asked to script anything ever again, instead it will suggest to do regular tasks for according to each project type.
+<img src="http://resources.aspnetdeploy.com/deployment-step-web.png" alt=""></p>
+
+<p><img src="http://resources.aspnetdeploy.com/deployment-steps.PNG" alt=""></p>
+
+<h2>
+<a id="4-define-environments" class="anchor" href="#4-define-environments" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Define environments</h2>
+
+<p>Create as many environments as your publication process require.
+Once environment is created it require machines to be assigned to in. Satellite agent has to be installed on each machine.
+AspNetDeploy uses SSL to connect to satellite agents as well as Key / Password pair to ensure noone else will be able to connect.
+<img src="http://resources.aspnetdeploy.com/environments-list.PNG" alt="">
+Every machine has its own roles. Each deployment step is configured to run only on machines with selected roles.</p>
+
+<h2>
+<a id="5-start-building-and-deploying" class="anchor" href="#5-start-building-and-deploying" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. Start building and deploying!</h2>
+
+<p>Every time you do changes to your code AspNetDeploy will take latest version and rebuild all projects assigned to bundles.
+Then it will package and prepare every bundle that depends of modified projects.
+When packaging is complete you can instantly deploy to Test environment.</p>
+
+<h3>
+<a id="promote-to-next-environment" class="anchor" href="#promote-to-next-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Promote to next environment</h3>
+
+<p>Every package has to be approved by appropriate team member to move forward. </p>
+
+<ul>
+<li>Developers or Testers can approve package if its working on Test environment</li>
+<li>Testers can approve its working on intermediate environments such as QA or Staging. </li>
+<li>Testers decide when they want fresh version to be deployed on QA / Staging, so developers won't interrupt important testing procedures. </li>
+<li>Publishers are responsible for promoting package to deploy on Live environments.
+<img src="http://resources.aspnetdeploy.com/publications-approvement.PNG" alt="">
+</li>
+</ul>
       </section>
     </div>
 
