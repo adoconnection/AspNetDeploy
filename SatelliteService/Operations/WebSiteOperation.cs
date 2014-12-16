@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using CertificateHelpers;
 using Microsoft.Web.Administration;
 using SatelliteService.Contracts;
 using SatelliteService.Helpers;
@@ -60,7 +63,30 @@ namespace SatelliteService.Operations
                     binding.Protocol = (string)bindingConfig.protocol;
                     binding.BindingInformation = ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
 
-                    site.Bindings.Add(binding);
+                    switch (binding.Protocol.ToLower())
+                    {
+                        case "http":
+                            site.Bindings.Add(binding);
+                            break;
+
+                        default:
+                        {
+                            X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+                            store.Open(OpenFlags.OpenExistingOnly);
+                            X509Certificate2 certificate = store.FindByFriendlyName((string) bindingConfig.certificateName);
+
+                            if (certificate != null)
+                            {
+                                binding.CertificateHash = certificate.GetCertHash();
+                                binding.CertificateStoreName = store.Name;
+
+                                site.Bindings.Add(binding);
+                            }
+
+                            store.Close();
+                        }
+                        break;
+                    }
                 }
 
                 serverManager.CommitChanges();

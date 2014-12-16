@@ -40,13 +40,6 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="SharpSvn, Version=1.8991.3359.105, Culture=neutral, PublicKeyToken=d729672594885a28, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpSvn.UI">
-      <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.UI.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -7,6 +7,7 @@
         ReleaseApprove,
         ReleasePublishTest,
         ReleasePublishLive,
+        ReleaseCancel,
 
         VersionCreate,
 

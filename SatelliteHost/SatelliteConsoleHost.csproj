@@ -7,8 +7,8 @@
     <ProjectGuid>{CDDEA61F-AA3C-473D-AF02-5B8D424F7B17}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SatelliteHost</RootNamespace>
-    <AssemblyName>SatelliteHost</AssemblyName>
+    <RootNamespace>SatelliteConsoleHost</RootNamespace>
+    <AssemblyName>SatelliteConsoleHost</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>

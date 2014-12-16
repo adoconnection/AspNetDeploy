@@ -63,6 +63,37 @@
                         <td>
                             @switch (deploymentStep.Type)
                             {
+                                case DeploymentStepType.Configuration:
+                                    <span>Configurate</span>
+                                    break;
+                                    
+                                case DeploymentStepType.CopyFiles:
+                                    <span>Extract files</span>
+                                    break;
+                                    
+                                case DeploymentStepType.DeployDacpac:
+                                    <span>Deploy DACPAC</span>
+                                    break;
+                                    
+                                case DeploymentStepType.DeployWebSite:
+                                    <span>Deploy Web site</span>
+                                    break;
+
+                                case DeploymentStepType.RunPowerShellScript:
+                                    <span>Run script</span>
+                                    break;
+
+                                case DeploymentStepType.RunSQLScript:
+                                    <span>Run SQL</span>
+                                    break;
+
+                                case DeploymentStepType.UpdateHostsFile:
+                                    <span>Update hosts</span>
+                                    break;
+                            }
+                      
+                            @switch (deploymentStep.Type)
+                            {
                                 case DeploymentStepType.DeployWebSite:
                                     @deploymentStep.GetStringProperty("IIS.SiteName")
                                     break;

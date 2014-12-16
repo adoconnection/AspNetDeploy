@@ -12,16 +12,14 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class MachinePublicationLog
+    public partial class AspNetDeployExceptionLog
     {
         public int Id { get; set; }
-        public int MachinePublicationId { get; set; }
-        public MachinePublicationLogEvent Event { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public Nullable<int> DeploymentStepId { get; set; }
-        public Nullable<int> ExceptionId { get; set; }
+        public int ExceptionId { get; set; }
+        public System.DateTime TimeStamp { get; set; }
+        public Nullable<int> UserId { get; set; }
     
-        public virtual MachinePublication MachinePublication { get; set; }
         public virtual ExceptionLog Exception { get; set; }
+        public virtual User User { get; set; }
     }
 }

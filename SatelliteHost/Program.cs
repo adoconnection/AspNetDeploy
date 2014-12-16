@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Configuration;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
-using System.ServiceModel.Description;
-using System.ServiceModel.Security;
 using System.Threading;
 using SatelliteService;
 using SatelliteService.Bootstrapper;
-using SatelliteService.Exceptions;
 
-namespace SatelliteHost
+namespace SatelliteConsoleHost
 {
     class Program
     {
@@ -20,58 +15,23 @@ namespace SatelliteHost
         {
             ObjectFactoryConfigurator.Configure();
 
-            Uri httpUrl = new Uri(ConfigurationManager.AppSettings["ServiceURI"]);
-            bool authorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authrozation.Enabled"]);
-            bool metadataEnabled = bool.Parse(ConfigurationManager.AppSettings["Metadata.Enabled"]);
+            Uri serviceUri = new Uri(ConfigurationManager.AppSettings["Service.URI"]);
+            bool isAuthorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authorization.Enabled"]);
+            string certificateName = ConfigurationManager.AppSettings["Authorization.CertificateFriendlyName"];
+            bool isMetadataEnabled = bool.Parse(ConfigurationManager.AppSettings["Metadata.Enabled"]);
+            Uri metadataUri = new Uri(ConfigurationManager.AppSettings["Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/Metadata");
 
-            string metadataURL = "http://localhost:8091/AspNetDeploySatellite/Metadata";
-
-
-            ServiceHost host = new ServiceHost(typeof(DeploymentService), httpUrl);
-
-
-            WSHttpBinding wsHttpBinding = new WSHttpBinding();
-            wsHttpBinding.MaxBufferPoolSize = 1024 * 1024 * 10;
-            wsHttpBinding.MaxReceivedMessageSize = 1024 * 1024 * 10;
-            wsHttpBinding.ReaderQuotas.MaxArrayLength = 1024 * 1024 * 10;
+            ServiceHostFactory serviceHostFactory = new ServiceHostFactory();
             
-            wsHttpBinding.OpenTimeout = new TimeSpan(0, 10, 0);
-            wsHttpBinding.CloseTimeout = new TimeSpan(0, 10, 0);
-            wsHttpBinding.SendTimeout = new TimeSpan(0, 10, 0);
-            wsHttpBinding.ReceiveTimeout = new TimeSpan(3, 0, 0);
+            ServiceHost serviceHost = serviceHostFactory.Create(
+                serviceUri, 
+                isAuthorizationEnabled, 
+                isMetadataEnabled, 
+                metadataUri, 
+                certificateName);
 
-            wsHttpBinding.Security.Mode = authorizationEnabled ? SecurityMode.TransportWithMessageCredential : SecurityMode.None;
-            wsHttpBinding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
-            wsHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
-
-            host.AddServiceEndpoint(typeof(IDeploymentService), wsHttpBinding, "");
-
-            if (metadataEnabled)
-            {
-                ServiceMetadataBehavior serviceMetadataBehavior = new ServiceMetadataBehavior();
-                serviceMetadataBehavior.HttpGetEnabled = true;
-                serviceMetadataBehavior.HttpGetUrl = new Uri(metadataURL);
-                host.Description.Behaviors.Add(serviceMetadataBehavior);
-            }
-
-            ServiceCredentials credentials = new ServiceCredentials();
-            credentials.UserNameAuthentication.UserNamePasswordValidationMode = UserNamePasswordValidationMode.Custom;
-            credentials.UserNameAuthentication.CustomUserNamePasswordValidator = new ConfigSourceValidator();
-            host.Description.Behaviors.Add(credentials);
-
-            host.Description.Behaviors.OfType<ServiceDebugBehavior>().First().IncludeExceptionDetailInFaults = true;
-
-            if (authorizationEnabled)
-            {
-                host.Credentials.ServiceCertificate.SetCertificate(
-                    StoreLocation.LocalMachine,
-                    StoreName.My,
-                    X509FindType.FindBySubjectName,
-                    ConfigurationManager.AppSettings["Authrozation.CertificateName"]);
-            }
-
-            host.Open();
-            host.Faulted += (sender, eventArgs) =>
+            serviceHost.Open();
+            serviceHost.Faulted += (sender, eventArgs) =>
             {
                 Console.WriteLine("Error");
                 Close = true;
@@ -81,11 +41,11 @@ namespace SatelliteHost
             Console.WriteLine("Running");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("Version: " + (new DeploymentService()).GetVersion());
-            Console.WriteLine("URL: " + ConfigurationManager.AppSettings["ServiceURI"]);
+            Console.WriteLine("URL: " + serviceUri);
             
-            if (authorizationEnabled)
+            if (isAuthorizationEnabled)
             {
-                Console.WriteLine("CertificateName: " + ConfigurationManager.AppSettings["Authrozation.CertificateName"]);
+                Console.WriteLine("CertificateName: " + certificateName);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Authrozation Enabled: True");
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -97,12 +57,12 @@ namespace SatelliteHost
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
 
-            if (metadataEnabled)
+            if (isMetadataEnabled)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Metadata Enabled: TRUE");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("Metadata URL: " + metadataURL);
+                Console.WriteLine("Metadata URL: " + metadataUri);
             }
             else
             {
@@ -119,13 +79,17 @@ namespace SatelliteHost
 
             Console.WriteLine("Closed");
 
-            host.Close();
+            serviceHost.Close();
 
             /*
              
              netsh http add sslcert ipport=0.0.0.0:8090 certhash=969e746fb374e0dd102b0a3c197c7b5d66b0900e appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc}
-             
+            
+             * sc create "AspNetDeploy Satellite" binpath= "D:\Services\AspNetDeploySatellite\Service\SatelliteServiceHost.exe"
+             * 
              */
+
+
         }
     }
 }

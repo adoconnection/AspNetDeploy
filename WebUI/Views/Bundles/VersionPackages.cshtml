@@ -92,6 +92,7 @@
                         }
 
                         bool isQueued = latestPackagePublication != null && latestPackagePublication.State == PublicationState.Queued;
+                        bool isInProgress = latestPackagePublication != null && latestPackagePublication.State == PublicationState.InProgress;
                         
                         string rowClass = "";
 
@@ -123,6 +124,10 @@
                         else if (isQueued)
                         {
                             rowClass = "info";
+                        }
+                        else if (isInProgress)
+                        {
+                            rowClass = "primary";
                         }
 
                         <td class="@rowClass">

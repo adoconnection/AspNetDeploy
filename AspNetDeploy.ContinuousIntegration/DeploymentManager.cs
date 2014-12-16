@@ -69,7 +69,6 @@ namespace AspNetDeploy.ContinuousIntegration
                 }
 
                 machineDeploymentStarted(machine.Id);
-                
 
                 try
                 {
@@ -93,7 +92,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         }
                         catch (Exception e)
                         {
-                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguringError);
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguringError, this.GetLastExceptionSafe(deploymentAgent));
                             throw;
                         }
                     }
@@ -117,7 +116,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         }
                         catch (Exception e)
                         {
-                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError);
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError, this.GetLastExceptionSafe(deploymentAgent));
                             throw;
                         }
                     }
@@ -140,7 +139,19 @@ namespace AspNetDeploy.ContinuousIntegration
             this.ChangePublicationResult(publication, PublicationState.Complete, entities);
         }
 
-        private void LogMachinePublicationStep(MachinePublication machinePublication, DeploymentStep deploymentStep, AspNetDeployEntities entities, MachinePublicationLogEvent @event)
+        private IExceptionInfo GetLastExceptionSafe(IDeploymentAgent deploymentAgent)
+        {
+            try
+            {
+                return deploymentAgent.GetLastException();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void LogMachinePublicationStep(MachinePublication machinePublication, DeploymentStep deploymentStep, AspNetDeployEntities entities, MachinePublicationLogEvent @event, IExceptionInfo lastException = null)
         {
             MachinePublicationLog machinePublicationLog = new MachinePublicationLog();
             machinePublicationLog.CreatedDate = DateTime.UtcNow;
@@ -148,7 +159,44 @@ namespace AspNetDeploy.ContinuousIntegration
             machinePublicationLog.Event = @event;
             machinePublicationLog.DeploymentStepId = deploymentStep.Id;
             entities.MachinePublicationLog.Add(machinePublicationLog);
+
+            if (lastException != null)
+            {
+                this.RecordException(entities, null, lastException, machinePublicationLog);
+            }
+            
             entities.SaveChanges();
+        }
+
+        private void RecordException(AspNetDeployEntities entities, ExceptionLog parentException, IExceptionInfo lastException, MachinePublicationLog machinePublicationLog)
+        {
+            ExceptionLog exceptionLog = new ExceptionLog();
+            machinePublicationLog.Exception = exceptionLog;
+            exceptionLog.Message = lastException.Message;
+            exceptionLog.Source = lastException.Source;
+            exceptionLog.StackTrace = lastException.StackTrace;
+            exceptionLog.TypeName = lastException.TypeName;
+            entities.Exception.Add(exceptionLog);
+
+            if (parentException != null)
+            {
+                parentException.InnerException = exceptionLog;
+            }
+
+            foreach (IExceptionDataInfo exceptionDataInfo in lastException.ExceptionData)
+            {
+                ExceptionLogData data = new ExceptionLogData();
+                data.Exception = exceptionLog;
+                data.IsProperty = exceptionDataInfo.IsProperty;
+                data.Name = exceptionDataInfo.Name;
+                data.Value = exceptionDataInfo.Value;
+                entities.ExceptionData.Add(data);
+            }
+
+            if (lastException.InnerException != null)
+            {
+                this.RecordException(entities, exceptionLog, lastException.InnerException, machinePublicationLog);
+            }
         }
 
         private IList<DeploymentStep> GetMachineDeploymentSteps(Package package, Machine machine)
@@ -182,12 +230,16 @@ namespace AspNetDeploy.ContinuousIntegration
         {
             foreach (IDeploymentAgent agent in agents.Values)
             {
-                agent.Rollback();
-
-                if (!agent.IsReady())
+                try
+                {
+                    agent.Rollback();
+                    return agent.IsReady();
+                }
+                catch (Exception)
                 {
                     return false;
                 }
+                
             }
             return true;
         }

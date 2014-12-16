@@ -47,8 +47,8 @@
         <AssociationConnector Association="AspNetDeployModel.FK_BundleVersionProperty_BundleVersion" />
         <AssociationConnector Association="AspNetDeployModel.FK_ProjectVersionProperty_ProjectVersion" />
         <EntityTypeShape EntityType="AspNetDeployModel.MachinePublication" Width="2.375" PointX="12.5" PointY="16.75" />
-        <EntityTypeShape EntityType="AspNetDeployModel.MachinePublicationLog" Width="2.5" PointX="16" PointY="16" />
-        <EntityTypeShape EntityType="AspNetDeployModel.MachinePublicationProperty" Width="2.375" PointX="16" PointY="18.75" />
+        <EntityTypeShape EntityType="AspNetDeployModel.MachinePublicationLog" Width="2.5" PointX="16.125" PointY="15.5" />
+        <EntityTypeShape EntityType="AspNetDeployModel.MachinePublicationProperty" Width="2.375" PointX="16.25" PointY="18.5" />
         <AssociationConnector Association="AspNetDeployModel.FK_MachinePublication_Machine" />
         <AssociationConnector Association="AspNetDeployModel.FK_MachinePublication_Publication" />
         <AssociationConnector Association="AspNetDeployModel.FK_MachinePublicationLog_MachinePublication" />
@@ -73,6 +73,14 @@
         <EntityTypeShape EntityType="AspNetDeployModel.PackageEntry" Width="1.5" PointX="7.625" PointY="9.5" />
         <AssociationConnector Association="AspNetDeployModel.FK_PackageEntry_Package" />
         <AssociationConnector Association="AspNetDeployModel.FK_PackageEntry_ProjectVersion" />
+        <EntityTypeShape EntityType="AspNetDeployModel.AspNetDeployExceptionLog" Width="2.375" PointX="20.25" PointY="18.125" />
+        <EntityTypeShape EntityType="AspNetDeployModel.ExceptionLog" Width="1.5" PointX="20.25" PointY="14.125" />
+        <EntityTypeShape EntityType="AspNetDeployModel.ExceptionLogData" Width="1.5" PointX="22.5" PointY="14.75" />
+        <AssociationConnector Association="AspNetDeployModel.FK_AspNetDeployException_Exception" />
+        <AssociationConnector Association="AspNetDeployModel.FK_AspNetDeployException_User" />
+        <AssociationConnector Association="AspNetDeployModel.FK_ExceptionData_Exception" />
+        <AssociationConnector Association="AspNetDeployModel.FK_MachinePublicationLog_Exception" />
+        <AssociationConnector Association="AspNetDeployModel.FK_Exception_Exception" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

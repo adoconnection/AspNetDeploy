@@ -20,6 +20,7 @@ namespace AspNetDeploy.Model
                     UserRoleAction.DeploymentChangeSteps,
 
                     UserRoleAction.ReleasePublishTest,
+                    UserRoleAction.ReleaseCancel,
 
                     UserRoleAction.VersionCreate,
                 }
@@ -39,6 +40,7 @@ namespace AspNetDeploy.Model
                     UserRoleAction.ReleaseApprove,
                     UserRoleAction.ReleasePublishTest,
                     UserRoleAction.ReleasePublishLive,
+                    UserRoleAction.ReleaseCancel,
 
                 }
             },
@@ -51,6 +53,7 @@ namespace AspNetDeploy.Model
                     UserRoleAction.ReleaseApprove,
                     UserRoleAction.ReleasePublishTest,
                     UserRoleAction.ReleasePublishLive,
+                    UserRoleAction.ReleaseCancel,
 
                     UserRoleAction.VersionCreate,
 

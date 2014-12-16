@@ -11,6 +11,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/SatelliteService" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IDeploymentService_IsReady_InputMessage">
@@ -103,6 +104,12 @@
   <wsdl:message name="IDeploymentService_ApplyDacpac_OutputMessage">
     <wsdl:part name="parameters" element="tns:ApplyDacpacResponse" />
   </wsdl:message>
+  <wsdl:message name="IDeploymentService_GetLastException_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastException" />
+  </wsdl:message>
+  <wsdl:message name="IDeploymentService_GetLastException_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastExceptionResponse" />
+  </wsdl:message>
   <wsdl:portType name="IDeploymentService">
     <wsdl:operation name="IsReady">
       <wsdl:input wsaw:Action="http://tempuri.org/IDeploymentService/IsReady" message="tns:IDeploymentService_IsReady_InputMessage" />
@@ -163,6 +170,10 @@
     <wsdl:operation name="ApplyDacpac">
       <wsdl:input wsaw:Action="http://tempuri.org/IDeploymentService/ApplyDacpac" message="tns:IDeploymentService_ApplyDacpac_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDeploymentService/ApplyDacpacResponse" message="tns:IDeploymentService_ApplyDacpac_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLastException">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDeploymentService/GetLastException" message="tns:IDeploymentService_GetLastException_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDeploymentService/GetLastExceptionResponse" message="tns:IDeploymentService_GetLastException_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSHttpBinding_IDeploymentService" type="tns:IDeploymentService">
@@ -296,6 +307,15 @@
     </wsdl:operation>
     <wsdl:operation name="ApplyDacpac">
       <soap12:operation soapAction="http://tempuri.org/IDeploymentService/ApplyDacpac" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastException">
+      <soap12:operation soapAction="http://tempuri.org/IDeploymentService/GetLastException" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

@@ -1,4 +1,5 @@
 ﻿using System;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.Contracts
@@ -10,8 +11,10 @@ namespace AspNetDeploy.Contracts
         bool ExecuteNextOperation();
         bool Complete();
         void Rollback();
+
         void UploadPackage(string file, Action<int, int> progress = null);
         void ResetPackage();
         void ProcessDeploymentStep(DeploymentStep deploymentStep);
+        IExceptionInfo GetLastException();
     }
 }

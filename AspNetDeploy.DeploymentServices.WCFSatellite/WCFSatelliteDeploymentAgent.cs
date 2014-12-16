@@ -56,8 +56,12 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         public bool IsReady()
         {
-            
             return this.client.IsReady();
+        }
+
+        public IExceptionInfo GetLastException()
+        {
+            return this.client.GetLastException();
         }
 
         public bool BeginPublication(int publicationId)
@@ -199,18 +203,15 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)
         {
+            dynamic bindings = JsonConvert.DeserializeObject(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.Bindings")));
+
             string configuration = JsonConvert.SerializeObject(new
             {
                 destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.DestinationPath")),
                 siteName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
                 applicationPoolName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
                 projectId = deploymentStep.GetIntProperty("ProjectId"),
-                bindings = ((IEnumerable<dynamic>) deploymentStep.GetDynamicProperty("IIS.Bindings")).Select(b => new
-                {
-                    protocol = this.variableProcessor.ProcessValue((string) b.protocol),
-                    port = this.variableProcessor.ProcessValue((string) b.port),
-                    host = this.variableProcessor.ProcessValue((string) b.host),
-                })
+                bindings = ((IEnumerable<dynamic>)bindings)
             });
 
             this.client.DeployWebSite(configuration);

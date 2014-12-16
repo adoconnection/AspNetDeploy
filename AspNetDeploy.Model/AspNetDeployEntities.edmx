@@ -5,6 +5,15 @@
         <!-- SSDL content -->
         <edmx:StorageModels>
         <Schema Namespace="AspNetDeployModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetDeployException">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExceptionId" Type="int" Nullable="false" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+        </EntityType>
         <EntityType Name="Bundle">
           <Key>
             <PropertyRef Name="Id" />
@@ -122,6 +131,27 @@
           <Property Name="Key" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Exception">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InnerExceptionId" Type="int" Nullable="false" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="Source" Type="nvarchar(max)" />
+          <Property Name="StackTrace" Type="nvarchar(max)" />
+          <Property Name="TypeName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ExceptionData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExceptionId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="IsProperty" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Group">
           <Key>
             <PropertyRef Name="Id" />
@@ -160,6 +190,7 @@
           <Property Name="EventId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="DeploymentStepId" Type="int" />
+          <Property Name="ExceptionId" Type="int" />
         </EntityType>
         <EntityType Name="MachinePublicationProperty">
           <Key>
@@ -354,6 +385,30 @@
           <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="IsDisabled" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_AspNetDeployException_Exception">
+          <End Role="Exception" Type="Self.Exception" Multiplicity="1" />
+          <End Role="AspNetDeployException" Type="Self.AspNetDeployException" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetDeployException">
+              <PropertyRef Name="ExceptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetDeployException_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="AspNetDeployException" Type="Self.AspNetDeployException" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetDeployException">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BundleVersion_Bundle">
           <End Role="Bundle" Type="Self.Bundle" Multiplicity="1" />
           <End Role="BundleVersion" Type="Self.BundleVersion" Multiplicity="*" />
@@ -534,6 +589,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Exception_Exception">
+          <End Role="Exception" Type="Self.Exception" Multiplicity="1" />
+          <End Role="Exception1" Type="Self.Exception" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Exception1">
+              <PropertyRef Name="InnerExceptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExceptionData_Exception">
+          <End Role="Exception" Type="Self.Exception" Multiplicity="1" />
+          <End Role="ExceptionData" Type="Self.ExceptionData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExceptionData">
+              <PropertyRef Name="ExceptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MachinePublication_Machine">
           <End Role="Machine" Type="Self.Machine" Multiplicity="1" />
           <End Role="MachinePublication" Type="Self.MachinePublication" Multiplicity="*" />
@@ -555,6 +634,18 @@
             </Principal>
             <Dependent Role="MachinePublication">
               <PropertyRef Name="PublicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublicationLog_Exception">
+          <End Role="Exception" Type="Self.Exception" Multiplicity="0..1" />
+          <End Role="MachinePublicationLog" Type="Self.MachinePublicationLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublicationLog">
+              <PropertyRef Name="ExceptionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -955,6 +1046,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="AspNetDeployModelStoreContainer">
+          <EntitySet Name="AspNetDeployException" EntityType="Self.AspNetDeployException" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bundle" EntityType="Self.Bundle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BundleVersion" EntityType="Self.BundleVersion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BundleVersionProperty" EntityType="Self.BundleVersionProperty" Schema="dbo" store:Type="Tables" />
@@ -968,6 +1060,8 @@
           <EntitySet Name="DeploymentStepToMachineRole" EntityType="Self.DeploymentStepToMachineRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Environment" EntityType="Self.Environment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EnvironmentProperty" EntityType="Self.EnvironmentProperty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exception" EntityType="Self.Exception" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExceptionData" EntityType="Self.ExceptionData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Machine" EntityType="Self.Machine" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachinePublication" EntityType="Self.MachinePublication" Schema="dbo" store:Type="Tables" />
@@ -993,6 +1087,14 @@
           <EntitySet Name="SourceControlVersion" EntityType="Self.SourceControlVersion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlVersionProperty" EntityType="Self.SourceControlVersionProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AspNetDeployException_Exception" Association="Self.FK_AspNetDeployException_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="AspNetDeployException" EntitySet="AspNetDeployException" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetDeployException_User" Association="Self.FK_AspNetDeployException_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AspNetDeployException" EntitySet="AspNetDeployException" />
+          </AssociationSet>
           <AssociationSet Name="FK_BundleVersion_Bundle" Association="Self.FK_BundleVersion_Bundle">
             <End Role="Bundle" EntitySet="Bundle" />
             <End Role="BundleVersion" EntitySet="BundleVersion" />
@@ -1053,6 +1155,14 @@
             <End Role="Environment" EntitySet="Environment" />
             <End Role="EnvironmentProperty" EntitySet="EnvironmentProperty" />
           </AssociationSet>
+          <AssociationSet Name="FK_Exception_Exception" Association="Self.FK_Exception_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="Exception1" EntitySet="Exception" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExceptionData_Exception" Association="Self.FK_ExceptionData_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="ExceptionData" EntitySet="ExceptionData" />
+          </AssociationSet>
           <AssociationSet Name="FK_MachinePublication_Machine" Association="Self.FK_MachinePublication_Machine">
             <End Role="Machine" EntitySet="Machine" />
             <End Role="MachinePublication" EntitySet="MachinePublication" />
@@ -1060,6 +1170,10 @@
           <AssociationSet Name="FK_MachinePublication_Publication" Association="Self.FK_MachinePublication_Publication">
             <End Role="Publication" EntitySet="Publication" />
             <End Role="MachinePublication" EntitySet="MachinePublication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublicationLog_Exception" Association="Self.FK_MachinePublicationLog_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="MachinePublicationLog" EntitySet="MachinePublicationLog" />
           </AssociationSet>
           <AssociationSet Name="FK_MachinePublicationLog_MachinePublication" Association="Self.FK_MachinePublicationLog_MachinePublication">
             <End Role="MachinePublication" EntitySet="MachinePublication" />
@@ -1386,6 +1500,29 @@
           <AssociationSet Name="FK_PackageEntry_ProjectVersion" Association="AspNetDeployModel.FK_PackageEntry_ProjectVersion">
             <End Role="ProjectVersion" EntitySet="ProjectVersion" />
             <End Role="PackageEntry" EntitySet="PackageEntry" />
+          </AssociationSet>
+          <EntitySet Name="AspNetDeployException" EntityType="AspNetDeployModel.AspNetDeployExceptionLog" />
+          <EntitySet Name="Exception" EntityType="AspNetDeployModel.ExceptionLog" />
+          <EntitySet Name="ExceptionData" EntityType="AspNetDeployModel.ExceptionLogData" />
+          <AssociationSet Name="FK_AspNetDeployException_Exception" Association="AspNetDeployModel.FK_AspNetDeployException_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="AspNetDeployException" EntitySet="AspNetDeployException" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetDeployException_User" Association="AspNetDeployModel.FK_AspNetDeployException_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AspNetDeployException" EntitySet="AspNetDeployException" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExceptionData_Exception" Association="AspNetDeployModel.FK_ExceptionData_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="ExceptionData" EntitySet="ExceptionData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePublicationLog_Exception" Association="AspNetDeployModel.FK_MachinePublicationLog_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="MachinePublicationLog" EntitySet="MachinePublicationLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exception_Exception" Association="AspNetDeployModel.FK_Exception_Exception">
+            <End Role="Exception" EntitySet="Exception" />
+            <End Role="Exception1" EntitySet="Exception" />
           </AssociationSet>
         </EntityContainer>
                 <EnumType Name="SourceControlType">
@@ -1901,6 +2038,8 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DeploymentStepId" Type="Int32" />
           <NavigationProperty Name="MachinePublication" Relationship="AspNetDeployModel.FK_MachinePublicationLog_MachinePublication" FromRole="MachinePublicationLog" ToRole="MachinePublication" />
+          <Property Name="ExceptionId" Type="Int32" />
+          <NavigationProperty Name="Exception" Relationship="AspNetDeployModel.FK_MachinePublicationLog_Exception" FromRole="MachinePublicationLog" ToRole="Exception" />
         </EntityType>
         <EntityType Name="MachinePublicationProperty">
           <Key>
@@ -2098,6 +2237,7 @@
           <Property Name="IsDisabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="PackageApprovedOnEnvironment" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_User" FromRole="User" ToRole="PackageApprovedOnEnvironment" />
           <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_User" FromRole="User" ToRole="Publication" />
+          <NavigationProperty Name="AspNetDeployException" Relationship="AspNetDeployModel.FK_AspNetDeployException_User" FromRole="User" ToRole="AspNetDeployException" />
         </EntityType>
         <Association Name="FK_PackageApprovedOnEnvironment_User">
           <End Type="AspNetDeployModel.User" Role="User" Multiplicity="1" />
@@ -2203,6 +2343,104 @@
             </Principal>
             <Dependent Role="PackageEntry">
               <PropertyRef Name="ProjectVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AspNetDeployExceptionLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExceptionId" Type="Int32" Nullable="false" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Int32" />
+          <NavigationProperty Name="Exception" Relationship="AspNetDeployModel.FK_AspNetDeployException_Exception" FromRole="AspNetDeployException" ToRole="Exception" />
+          <NavigationProperty Name="User" Relationship="AspNetDeployModel.FK_AspNetDeployException_User" FromRole="AspNetDeployException" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ExceptionLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InnerExceptionId" Type="Int32" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TypeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetDeployException" Relationship="AspNetDeployModel.FK_AspNetDeployException_Exception" FromRole="Exception" ToRole="AspNetDeployException" />
+          <NavigationProperty Name="ExceptionData" Relationship="AspNetDeployModel.FK_ExceptionData_Exception" FromRole="Exception" ToRole="ExceptionData" />
+          <NavigationProperty Name="MachinePublicationLog" Relationship="AspNetDeployModel.FK_MachinePublicationLog_Exception" FromRole="Exception" ToRole="MachinePublicationLog" />
+          <NavigationProperty Name="ParentExceptions" Relationship="AspNetDeployModel.FK_Exception_Exception" FromRole="Exception" ToRole="Exception1" />
+          <NavigationProperty Name="InnerException" Relationship="AspNetDeployModel.FK_Exception_Exception" FromRole="Exception1" ToRole="Exception" />
+          </EntityType>
+        <EntityType Name="ExceptionLogData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExceptionId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsProperty" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Exception" Relationship="AspNetDeployModel.FK_ExceptionData_Exception" FromRole="ExceptionData" ToRole="Exception" />
+        </EntityType>
+        <Association Name="FK_AspNetDeployException_Exception">
+          <End Type="AspNetDeployModel.ExceptionLog" Role="Exception" Multiplicity="1" />
+          <End Type="AspNetDeployModel.AspNetDeployExceptionLog" Role="AspNetDeployException" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetDeployException">
+              <PropertyRef Name="ExceptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetDeployException_User">
+          <End Type="AspNetDeployModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.AspNetDeployExceptionLog" Role="AspNetDeployException" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetDeployException">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExceptionData_Exception">
+          <End Type="AspNetDeployModel.ExceptionLog" Role="Exception" Multiplicity="1" />
+          <End Type="AspNetDeployModel.ExceptionLogData" Role="ExceptionData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExceptionData">
+              <PropertyRef Name="ExceptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePublicationLog_Exception">
+          <End Type="AspNetDeployModel.ExceptionLog" Role="Exception" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.MachinePublicationLog" Role="MachinePublicationLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePublicationLog">
+              <PropertyRef Name="ExceptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exception_Exception">
+          <End Type="AspNetDeployModel.ExceptionLog" Role="Exception" Multiplicity="1" />
+          <End Type="AspNetDeployModel.ExceptionLog" Role="Exception1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exception">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Exception1">
+              <PropertyRef Name="InnerExceptionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2474,6 +2712,7 @@
           <EntitySetMapping Name="MachinePublicationLog">
             <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublicationLog">
               <MappingFragment StoreEntitySet="MachinePublicationLog">
+                <ScalarProperty Name="ExceptionId" ColumnName="ExceptionId" />
                 <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Event" ColumnName="EventId" />
@@ -2584,6 +2823,39 @@
                 <ScalarProperty Name="Revision" ColumnName="Revision" />
                 <ScalarProperty Name="ProjectVersionId" ColumnName="ProjectVersionId" />
                 <ScalarProperty Name="PackageId" ColumnName="PackageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetDeployException">
+            <EntityTypeMapping TypeName="AspNetDeployModel.AspNetDeployExceptionLog">
+              <MappingFragment StoreEntitySet="AspNetDeployException">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="ExceptionId" ColumnName="ExceptionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Exception">
+            <EntityTypeMapping TypeName="AspNetDeployModel.ExceptionLog">
+              <MappingFragment StoreEntitySet="Exception">
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="InnerExceptionId" ColumnName="InnerExceptionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExceptionData">
+            <EntityTypeMapping TypeName="AspNetDeployModel.ExceptionLogData">
+              <MappingFragment StoreEntitySet="ExceptionData">
+                <ScalarProperty Name="IsProperty" ColumnName="IsProperty" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ExceptionId" ColumnName="ExceptionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

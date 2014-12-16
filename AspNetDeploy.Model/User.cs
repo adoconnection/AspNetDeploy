@@ -18,6 +18,7 @@ namespace AspNetDeploy.Model
         {
             this.PackageApprovedOnEnvironment = new HashSet<PackageApprovedOnEnvironment>();
             this.Publication = new HashSet<Publication>();
+            this.AspNetDeployException = new HashSet<AspNetDeployExceptionLog>();
         }
     
         public int Id { get; set; }
@@ -30,5 +31,6 @@ namespace AspNetDeploy.Model
     
         public virtual ICollection<PackageApprovedOnEnvironment> PackageApprovedOnEnvironment { get; set; }
         public virtual ICollection<Publication> Publication { get; set; }
+        public virtual ICollection<AspNetDeployExceptionLog> AspNetDeployException { get; set; }
     }
 }

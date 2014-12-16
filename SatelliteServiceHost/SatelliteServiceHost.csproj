@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76580B91-2151-48A4-941F-1AEF298B13DE}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{A54503F8-4AD9-4D8B-B6E0-D0D52E6AF411}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AspNetDeploy.Contracts</RootNamespace>
-    <AssemblyName>AspNetDeploy.Contracts</AssemblyName>
+    <RootNamespace>SatelliteServiceHost</RootNamespace>
+    <AssemblyName>SatelliteServiceHost</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,46 +33,37 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\AspNetDeployException.cs" />
-    <Compile Include="Exceptions\IExceptionDataInfo.cs" />
-    <Compile Include="Exceptions\IExceptionInfo.cs" />
-    <Compile Include="IBuildService.cs" />
-    <Compile Include="IBuildServiceFactory.cs" />
-    <Compile Include="IBundleRepository.cs" />
-    <Compile Include="IContinuousIntegrationLogger.cs" />
-    <Compile Include="IDeploymentAgent.cs" />
-    <Compile Include="IDeploymentAgentFactory.cs" />
-    <Compile Include="IEnvironmentResourcesService.cs" />
-    <Compile Include="ILoggingService.cs" />
-    <Compile Include="INugetPackageManager.cs" />
-    <Compile Include="IPathServices.cs" />
-    <Compile Include="IProjectPackagerFactory.cs" />
-    <Compile Include="IProjectPackager.cs" />
-    <Compile Include="IProjectParsingService.cs" />
-    <Compile Include="ISatelliteMonitor.cs" />
-    <Compile Include="ISolutionParser.cs" />
-    <Compile Include="ISolutionParsersFactory.cs" />
-    <Compile Include="ISolutionProject.cs" />
-    <Compile Include="ISourceControlRepository.cs" />
-    <Compile Include="ISourceControlRepositoryFactory.cs" />
-    <Compile Include="ITaskRunner.cs" />
-    <Compile Include="IVariableProcessor.cs" />
-    <Compile Include="IVariableProcessorFactory.cs" />
+    <Compile Include="SatelliteServiceContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SatelliteServiceContainer.Designer.cs">
+      <DependentUpon>SatelliteServiceContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SatelliteState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
-      <Project>{b22a302a-153f-4b7b-91ef-877412d3efbb}</Project>
-      <Name>AspNetDeploy.Model</Name>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SatelliteService.Bootstrapper\SatelliteService.Bootstrapper.csproj">
+      <Project>{16F91492-7FA9-49DF-BB7D-4D5D27147942}</Project>
+      <Name>SatelliteService.Bootstrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService\SatelliteService.csproj">
+      <Project>{87C8F2EC-BA8B-4EFF-A320-23AFBD070738}</Project>
+      <Name>SatelliteService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

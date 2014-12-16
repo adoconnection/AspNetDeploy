@@ -21,9 +21,10 @@
     <MetadataSource Address="http://localhost:8091/AspNetDeploySatellite/Metadata" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="Metadata1.xsd" MetadataType="Schema" ID="330c78bc-1c29-44fa-bf6e-9f213bb5611a" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd1" />
     <MetadataFile FileName="DeploymentService.wsdl" MetadataType="Wsdl" ID="4e571620-f7f6-4746-bebe-0f8844cf345f" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata" />
     <MetadataFile FileName="Metadata.xsd" MetadataType="Schema" ID="ce11b38a-1f32-4fa5-8eb7-188a591f0760" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd0" />
-    <MetadataFile FileName="Metadata1.xsd" MetadataType="Schema" ID="330c78bc-1c29-44fa-bf6e-9f213bb5611a" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd1" />
+    <MetadataFile FileName="Metadata2.xsd" MetadataType="Schema" ID="07cca957-05a7-442e-9b16-5a5c8dadc8be" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

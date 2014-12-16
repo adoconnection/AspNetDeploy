@@ -91,7 +91,6 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 this.CheckPermission(UserRoleAction.ReleasePublishLive);
             }
-            
 
             Package package = this.Entities.Package.First( p => p.Id == id);
 
@@ -105,6 +104,23 @@ namespace AspNetDeploy.WebUI.Controllers
             this.Entities.SaveChanges();
 
             return this.RedirectToAction("VersionPackages", "Bundles", new { id = package.BundleVersionId });
+        }
+
+        public ActionResult Cancel(int id, int environmentid)
+        {
+            this.CheckPermission(UserRoleAction.ReleaseCancel);
+
+            Publication publication = this.Entities.Publication.Where( p => p.PackageId == id && p.EnvironmentId == environmentid).OrderByDescending( p => p.CreatedDate).FirstOrDefault();
+
+            if (publication == null || publication.State != PublicationState.Queued)
+            {
+                return this.RedirectToAction("VersionPackages", "Bundles", new { id, environmentid });
+            }
+
+            publication.State = PublicationState.Canceled;
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionPackages", "Bundles", new { id, environmentid });
         }
     }
 }

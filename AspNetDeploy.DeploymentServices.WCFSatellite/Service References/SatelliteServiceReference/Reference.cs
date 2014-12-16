@@ -9,7 +9,227 @@
 //------------------------------------------------------------------------------
 
 namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExceptionInfo", Namespace="http://schemas.datacontract.org/2004/07/SatelliteService")]
+    [System.SerializableAttribute()]
+    public partial class ExceptionInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AssemblyQualifiedTypeNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionDataInfo[] ExceptionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo InnerExceptionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SourceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string StackTraceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TypeNameField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AssemblyQualifiedTypeName {
+            get {
+                return this.AssemblyQualifiedTypeNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AssemblyQualifiedTypeNameField, value) != true)) {
+                    this.AssemblyQualifiedTypeNameField = value;
+                    this.RaisePropertyChanged("AssemblyQualifiedTypeName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionDataInfo[] ExceptionData {
+            get {
+                return this.ExceptionDataField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ExceptionDataField, value) != true)) {
+                    this.ExceptionDataField = value;
+                    this.RaisePropertyChanged("ExceptionData");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo InnerException {
+            get {
+                return this.InnerExceptionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.InnerExceptionField, value) != true)) {
+                    this.InnerExceptionField = value;
+                    this.RaisePropertyChanged("InnerException");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Source {
+            get {
+                return this.SourceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SourceField, value) != true)) {
+                    this.SourceField = value;
+                    this.RaisePropertyChanged("Source");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string StackTrace {
+            get {
+                return this.StackTraceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.StackTraceField, value) != true)) {
+                    this.StackTraceField = value;
+                    this.RaisePropertyChanged("StackTrace");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TypeName {
+            get {
+                return this.TypeNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TypeNameField, value) != true)) {
+                    this.TypeNameField = value;
+                    this.RaisePropertyChanged("TypeName");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExceptionDataInfo", Namespace="http://schemas.datacontract.org/2004/07/SatelliteService")]
+    [System.SerializableAttribute()]
+    public partial class ExceptionDataInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool IsPropertyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ValueField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsProperty {
+            get {
+                return this.IsPropertyField;
+            }
+            set {
+                if ((this.IsPropertyField.Equals(value) != true)) {
+                    this.IsPropertyField = value;
+                    this.RaisePropertyChanged("IsProperty");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Value {
+            get {
+                return this.ValueField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ValueField, value) != true)) {
+                    this.ValueField = value;
+                    this.RaisePropertyChanged("Value");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="SatelliteServiceReference.IDeploymentService")]
@@ -59,6 +279,9 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ApplyDacpac", ReplyAction="http://tempuri.org/IDeploymentService/ApplyDacpacResponse")]
         void ApplyDacpac(string jsonConfig);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/GetLastException", ReplyAction="http://tempuri.org/IDeploymentService/GetLastExceptionResponse")]
+        AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo GetLastException();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -146,6 +369,10 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         
         public void ApplyDacpac(string jsonConfig) {
             base.Channel.ApplyDacpac(jsonConfig);
+        }
+        
+        public AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo GetLastException() {
+            return base.Channel.GetLastException();
         }
     }
 }

@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExceptionDataInfoExtender.cs" />
+    <Compile Include="ExceptionInfoExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\SatelliteServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -64,6 +66,9 @@
     <WCFMetadataStorage Include="Service References\SatelliteServiceReference\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\SatelliteServiceReference\AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\SatelliteServiceReference\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +80,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\SatelliteServiceReference\Metadata1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\SatelliteServiceReference\Metadata2.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\SatelliteServiceReference\Reference.svcmap">
