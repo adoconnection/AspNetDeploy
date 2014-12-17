@@ -25,7 +25,7 @@ namespace AspNetDeploy.Projects.Zip
                 {
                     FilePath = f,
                     FileName = Path.GetFileName(f),
-                    Guid = GuidUtility.Create(GuidUtility.UrlNamespace, f)
+                    Guid = GuidUtility.Create(GuidUtility.UrlNamespace, f.Substring(this.sourcesFolder.Length).TrimStart('\\'))
                 })
                 .ToList();
         }
