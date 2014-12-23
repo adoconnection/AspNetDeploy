@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
 
@@ -8,6 +9,10 @@ namespace AspNetDeploy.WebUI.Controllers
 {
     public class VariablesController : AuthorizedAccessController
     {
+        public VariablesController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         public ActionResult Details(int id)
         {
             DataField dataField = this.Entities.DataField

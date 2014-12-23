@@ -12,14 +12,14 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class AspNetDeployExceptionLog
+    public partial class AspNetDeployExceptionEntry
     {
         public int Id { get; set; }
         public int ExceptionId { get; set; }
         public System.DateTime TimeStamp { get; set; }
         public Nullable<int> UserId { get; set; }
     
-        public virtual ExceptionLog Exception { get; set; }
         public virtual User User { get; set; }
+        public virtual ExceptionEntry ExceptionEntry { get; set; }
     }
 }

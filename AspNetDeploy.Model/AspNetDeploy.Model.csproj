@@ -66,7 +66,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="AspNetDeployExceptionLog.cs">
+    <Compile Include="AspNetDeployExceptionEntry.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="BuildSolutionResult.cs" />
@@ -108,10 +108,10 @@
     <Compile Include="EnvironmentProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="ExceptionLog.cs">
+    <Compile Include="ExceptionEntry.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="ExceptionLogData.cs">
+    <Compile Include="ExceptionEntryData.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Group.cs">

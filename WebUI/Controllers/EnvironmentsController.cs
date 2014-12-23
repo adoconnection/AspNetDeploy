@@ -11,14 +11,13 @@ namespace AspNetDeploy.WebUI.Controllers
         private readonly ITaskRunner taskRunner;
         private readonly ISatelliteMonitor satelliteMonitor;
 
-        public EnvironmentsController(ITaskRunner taskRunner, ISatelliteMonitor satelliteMonitor)
+        public EnvironmentsController(ILoggingService loggingService, ITaskRunner taskRunner, ISatelliteMonitor satelliteMonitor) : base(loggingService)
         {
             this.taskRunner = taskRunner;
             this.satelliteMonitor = satelliteMonitor;
         }
 
-
-        public ActionResult Index()
+        public ActionResult List()
         {
             List<Environment> environments = this.Entities.Environment
                 .Include("Properties")

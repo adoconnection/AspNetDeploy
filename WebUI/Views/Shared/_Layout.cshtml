@@ -38,6 +38,11 @@
                                 <li>@Html.ActionLink("Users", "List", "Users")</li>
                             }
 
+                            if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ViewLogs))
+                            {
+                                <li>@Html.ActionLink("Logs", "List", "Logs")</li>
+                            }
+
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="@Url.Action("Avatar", "Account", new { id = this.ViewBag.ActiveUser.Id })" class="img-circle avatar" />

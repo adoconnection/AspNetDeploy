@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Controllers
@@ -13,10 +14,18 @@ namespace AspNetDeploy.WebUI.Controllers
         protected User ActiveUser { get; private set; }
         protected AspNetDeployEntities Entities { get; private set; }
 
+        private readonly ILoggingService loggingService;
+
+        
+
+        public GenericController(ILoggingService loggingService)
+        {
+            this.loggingService = loggingService;
+        }
 
         public ActionResult Default()
         {
-            return this.RedirectToAction("Index", "Sources");
+            return this.RedirectToAction("List", "Sources");
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -40,6 +49,18 @@ namespace AspNetDeploy.WebUI.Controllers
             }
 
             base.OnActionExecuting(filterContext);
+        }
+
+        protected void Log(Exception e)
+        {
+            this.loggingService.Log(e, this.ActiveUser.Id);
+        }
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            this.loggingService.Log(filterContext.Exception, this.ActiveUser != null ? this.ActiveUser.Id : (int?) null);
+
+            base.OnException(filterContext);
         }
 
         protected bool HasPermission(UserRoleAction roleAction)

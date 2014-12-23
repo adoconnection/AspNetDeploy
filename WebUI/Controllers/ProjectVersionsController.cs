@@ -1,11 +1,16 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
     public class ProjectVersionsController : AuthorizedAccessController
     {
+        public ProjectVersionsController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         public ActionResult Details(int id)
         {
             ProjectVersion projectVersion = this.Entities.ProjectVersion

@@ -5,7 +5,6 @@ using System.Linq;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
-using Environment = AspNetDeploy.Model.Environment;
 
 namespace AspNetDeploy.ContinuousIntegration
 {
@@ -168,34 +167,34 @@ namespace AspNetDeploy.ContinuousIntegration
             entities.SaveChanges();
         }
 
-        private void RecordException(AspNetDeployEntities entities, ExceptionLog parentException, IExceptionInfo lastException, MachinePublicationLog machinePublicationLog)
+        private void RecordException(AspNetDeployEntities entities, ExceptionEntry parentException, IExceptionInfo lastException, MachinePublicationLog machinePublicationLog)
         {
-            ExceptionLog exceptionLog = new ExceptionLog();
-            machinePublicationLog.Exception = exceptionLog;
-            exceptionLog.Message = lastException.Message;
-            exceptionLog.Source = lastException.Source;
-            exceptionLog.StackTrace = lastException.StackTrace;
-            exceptionLog.TypeName = lastException.TypeName;
-            entities.Exception.Add(exceptionLog);
+            ExceptionEntry exceptionEntry = new ExceptionEntry();
+            machinePublicationLog.Exception = exceptionEntry;
+            exceptionEntry.Message = lastException.Message;
+            exceptionEntry.Source = lastException.Source;
+            exceptionEntry.StackTrace = lastException.StackTrace;
+            exceptionEntry.TypeName = lastException.TypeName;
+            entities.ExceptionEntry.Add(exceptionEntry);
 
             if (parentException != null)
             {
-                parentException.InnerException = exceptionLog;
+                parentException.InnerExceptionEntry = exceptionEntry;
             }
 
             foreach (IExceptionDataInfo exceptionDataInfo in lastException.ExceptionData)
             {
-                ExceptionLogData data = new ExceptionLogData();
-                data.Exception = exceptionLog;
+                ExceptionEntryData data = new ExceptionEntryData();
+                data.ExceptionEntry = exceptionEntry;
                 data.IsProperty = exceptionDataInfo.IsProperty;
                 data.Name = exceptionDataInfo.Name;
                 data.Value = exceptionDataInfo.Value;
-                entities.ExceptionData.Add(data);
+                entities.ExceptionEntryData.Add(data);
             }
 
             if (lastException.InnerException != null)
             {
-                this.RecordException(entities, exceptionLog, lastException.InnerException, machinePublicationLog);
+                this.RecordException(entities, exceptionEntry, lastException.InnerException, machinePublicationLog);
             }
         }
 
@@ -262,16 +261,22 @@ namespace AspNetDeploy.ContinuousIntegration
 
             foreach (Machine machine in publication.Environment.Machines)
             {
-                MachinePublication machinePublication = new MachinePublication();
-                machinePublication.Publication = publication;
-                machinePublication.Machine = machine;
-                machinePublication.CreatedDate = DateTime.UtcNow;
+                MachinePublication machinePublication = entities.MachinePublication.FirstOrDefault(mp => mp.MachineId == machine.Id && mp.PublicationId == publication.Id);
 
-                entities.MachinePublication.Add(machinePublication);
+                if (machinePublication == null)
+                {
+                    machinePublication = new MachinePublication();
+
+                    machinePublication.Publication = publication;
+                    machinePublication.Machine = machine;
+                    machinePublication.CreatedDate = DateTime.UtcNow;
+
+                    entities.MachinePublication.Add(machinePublication);
+                    entities.SaveChanges();
+                }
+
                 machinePublications.Add(machine, machinePublication);
             }
-
-            entities.SaveChanges();
 
             return machinePublications;
         }

@@ -12,7 +12,7 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class ExceptionLogData
+    public partial class ExceptionEntryData
     {
         public int Id { get; set; }
         public int ExceptionId { get; set; }
@@ -20,6 +20,6 @@ namespace AspNetDeploy.Model
         public string Value { get; set; }
         public bool IsProperty { get; set; }
     
-        public virtual ExceptionLog Exception { get; set; }
+        public virtual ExceptionEntry ExceptionEntry { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Security;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
 
@@ -12,6 +13,10 @@ namespace AspNetDeploy.WebUI.Controllers
 {
     public class AccountController : GenericController
     {
+        public AccountController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         [HttpGet]
         public ActionResult Login()
         {

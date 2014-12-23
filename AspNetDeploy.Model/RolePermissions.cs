@@ -23,6 +23,7 @@ namespace AspNetDeploy.Model
                     UserRoleAction.ReleaseCancel,
 
                     UserRoleAction.VersionCreate,
+                    UserRoleAction.ViewLogs,
                 }
             },
             {
@@ -61,6 +62,7 @@ namespace AspNetDeploy.Model
                     UserRoleAction.EnvironmentChangeVariables,
 
                     UserRoleAction.ManageUsers,
+                    UserRoleAction.ViewLogs,
 
                 }
             },

@@ -22,6 +22,6 @@ namespace AspNetDeploy.Model
         public Nullable<int> ExceptionId { get; set; }
     
         public virtual MachinePublication MachinePublication { get; set; }
-        public virtual ExceptionLog Exception { get; set; }
+        public virtual ExceptionEntry Exception { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
 
@@ -8,6 +9,10 @@ namespace AspNetDeploy.WebUI.Controllers
 {
     public class UsersController : AuthorizedAccessController
     {
+        public UsersController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         public ActionResult List()
         {
             this.CheckPermission(UserRoleAction.ManageUsers);

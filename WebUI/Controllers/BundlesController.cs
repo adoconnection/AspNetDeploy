@@ -13,12 +13,12 @@ namespace AspNetDeploy.WebUI.Controllers
     {
         private readonly ITaskRunner taskRunner;
 
-        public BundlesController(ITaskRunner taskRunner)
+        public BundlesController(ILoggingService loggingService, ITaskRunner taskRunner) : base(loggingService)
         {
             this.taskRunner = taskRunner;
         }
 
-        public ActionResult Index()
+        public ActionResult List()
         {
             List<Bundle> bundles = this.Entities.Bundle
                 .Include("BundleVersions.ProjectVersions")
@@ -115,6 +115,14 @@ namespace AspNetDeploy.WebUI.Controllers
             newBundleVersion.IsHead = false;
             newBundleVersion.Bundle = sourceBundleVersion.Bundle;
             newBundleVersion.Name = newVersionName.Trim();
+            newBundleVersion.ParentBundleVersion = sourceBundleVersion;
+
+            if (sourceBundleVersion.IsHead)
+            {
+                sourceBundleVersion.IsHead = false;
+                newBundleVersion.IsHead = true;
+            }
+
 
             this.Entities.BundleVersion.Add(newBundleVersion);
 

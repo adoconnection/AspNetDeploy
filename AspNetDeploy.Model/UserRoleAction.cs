@@ -16,6 +16,7 @@
         EnvironmentCreate,
         EnvironmentChangeVariables,
 
-        ManageUsers
+        ManageUsers,
+        ViewLogs
     }
 }

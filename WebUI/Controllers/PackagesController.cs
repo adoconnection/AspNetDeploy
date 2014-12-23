@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -9,6 +10,10 @@ namespace AspNetDeploy.WebUI.Controllers
 {
     public class PackagesController : AuthorizedAccessController
     {
+        public PackagesController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         public ActionResult Details(int id)
         {
             Package package = this.Entities.Package
@@ -110,7 +115,9 @@ namespace AspNetDeploy.WebUI.Controllers
         {
             this.CheckPermission(UserRoleAction.ReleaseCancel);
 
-            Publication publication = this.Entities.Publication.Where( p => p.PackageId == id && p.EnvironmentId == environmentid).OrderByDescending( p => p.CreatedDate).FirstOrDefault();
+            Publication publication = this.Entities.Publication
+                .Include("Package")
+                .Where( p => p.PackageId == id && p.EnvironmentId == environmentid).OrderByDescending( p => p.CreatedDate).FirstOrDefault();
 
             if (publication == null || publication.State != PublicationState.Queued)
             {
@@ -120,7 +127,7 @@ namespace AspNetDeploy.WebUI.Controllers
             publication.State = PublicationState.Canceled;
             this.Entities.SaveChanges();
 
-            return this.RedirectToAction("VersionPackages", "Bundles", new { id, environmentid });
+            return this.RedirectToAction("VersionPackages", "Bundles", new { id = publication.Package.BundleVersionId });
         }
     }
 }

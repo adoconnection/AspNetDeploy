@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "sourcesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SourceControlVersion sourceControlVersion = this.ViewBag.SourceControlVersion;
+
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                New version from @sourceControlVersion.SourceControl.Name / @sourceControlVersion.Name <small>File System</small>
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>  
+    </h1>
+
+    @*<hr />
+    <br />
+    <h3>Source controls</h3>
+  
+    <table class="table">
+        @foreach (SourceControlVersion sourceControlVersion in bundleVersion.ProjectVersions.Select(pv => pv.SourceControlVersion).Distinct())
+        {
+            <tr>
+                <td>
+                    @sourceControlVersion.SourceControl.Name / @sourceControlVersion.Name
+                </td>
+            </tr>
+        }
+    </table>  *@
+
+    <br/>
+    
+    
+    @using (Html.BeginForm("CreateNewFileSystemVersion", "Sources", new { }, FormMethod.Post, new { id = "idForm", Class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("FromSourceControlVersionId", sourceControlVersion.Id)
+        @Html.Hidden("JsonData", "")
+        <hr />
+        <div class="row">
+            <div class="col-md-6 ">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Name</label>
+                    <div class="col-sm-5">
+                        @Html.TextBox("NewVersionName", "", new { Class = "form-control", placeholder = "2.21" })
+                        @Html.ValidationMessage("NewVersionName")
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Path</label>
+                    <div class="col-sm-5">
+                        @Html.TextBox("NewVersionPath", "", new { Class = "form-control", placeholder = "Release-v2.21" })
+                        @Html.ValidationMessage("NewVersionPath")
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    <hr />
+    }
+    
+    <button class="btn btn-lg btn-default" id="idCreate">Create</button>
+
+</div>
+
+@section Scripts
+{
+    <script>
+
+        $(function() {
+
+            $('#idCreate').click(function() {
+
+                var result = [];
+
+                $('.projectSelector').each(function() {
+
+                    result.push({
+                        projectVersionId: $(this).attr('ProjectId'),
+                        sourceControlVersionId: $(this).val()
+                    });
+                    
+                });
+
+                $('#JsonData').val(JSON.stringify(result));
+
+                $('#idForm').submit();
+
+            });
+        });
+
+    </script>
+}

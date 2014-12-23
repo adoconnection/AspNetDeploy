@@ -8,7 +8,7 @@
 
 <div class="container">
 
-    
+
     <h1>
         <div class="row">
             <div class="col-md-10">
@@ -37,10 +37,10 @@
             </div>
         </div>
     </h1>
-        
+
 
     <hr />
-    
+
     @switch (sourceControl.Type)
     {
         case SourceControlType.Svn:
@@ -51,14 +51,14 @@
             break;
 
         case SourceControlType.FileSystem:
-            @RenderFileSystem(sourceControl)
+        @RenderFileSystem(sourceControl)
             break;
 
         default:
             break;
     }
-    
-    
+
+
 </div>
 
 
@@ -74,23 +74,31 @@
     </dl>
 
     <hr />
-    
+
     foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
     {
         <h3>@sourceControlVersion.Name</h3>
-        <dl class="dl-horizontal">
-            <dt>URL</dt>
-            <dd>@sourceControlVersion.GetStringProperty("URL")</dd>
-            <dt>Revision</dt>
-            <dd>@sourceControlVersion.GetStringProperty("Revision")</dd>
-        </dl>
 
+        <div class="row">
+            <div class="col-sm-7">
+                <dl class="dl-horizontal">
+                    <dt>URL</dt>
+                    <dd>@sourceControlVersion.GetStringProperty("URL")</dd>
+                    <dt>Revision</dt>
+                    <dd>@sourceControlVersion.GetStringProperty("Revision")</dd>
+                </dl>
+            </div>
+            <div class="col-sm-5 text-right">
+                <a href="@Url.Action("CreateNewVersion", new { id = sourceControlVersion.Id })" class="btn btn-default btn-lg">Create new version</a>
+            </div>
+        </div>
+    
         <hr />
     }
 }
 
 @helper RenderFileSystem(SourceControl sourceControl)
-{   
+{
     <dl class="dl-horizontal">
         <dt>Path</dt>
         <dd>@sourceControl.GetStringProperty("Path")</dd>
@@ -103,12 +111,17 @@
     foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
     {
         <h3>@sourceControlVersion.Name</h3>
-        <dl class="dl-horizontal">
-            <dt>Path</dt>
-            <dd>@sourceControlVersion.GetStringProperty("Path")</dd>
-            @*<dt>Revision</dt>
-            <dd>@sourceControlVersion.GetStringProperty("Revision")</dd>*@
-        </dl>
+    <div class="row">
+        <div class="col-sm-7">
+            <dl class="dl-horizontal">
+                <dt>URL</dt>
+                <dd>@sourceControlVersion.GetStringProperty("Path")</dd>
+            </dl>
+        </div>
+        <div class="col-sm-5 text-right">
+            <a href="@Url.Action("CreateNewVersion", new { id = sourceControlVersion.Id })" class="btn btn-default btn-lg">Create new version</a>
+        </div>
+    </div>
 
         <hr />
     }

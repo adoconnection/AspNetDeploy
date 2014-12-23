@@ -67,7 +67,7 @@ namespace AspNetDeploy.ContinuousIntegration
                             columnNumber,
                             message));
 
-                    this.loggingService.Log(new AspNetDeployException("Project build failed: " + projectFile, exception));
+                    this.loggingService.Log(new AspNetDeployException("Project build failed: " + projectFile, exception), null);
                 });
         }
     }

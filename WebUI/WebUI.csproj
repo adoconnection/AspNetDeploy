@@ -176,7 +176,9 @@
     <Content Include="Resources\Layout\Images\Icons\VsConsoleProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsWebProject.PNG" />
     <Content Include="Resources\Layout\site.css" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.map" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
@@ -195,6 +197,7 @@
     <Compile Include="Controllers\BundleVersionDeploymentController.cs" />
     <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\LogsController.cs" />
     <Compile Include="Controllers\ProjectVersionsController.cs" />
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\PublicationsController.cs" />
@@ -204,11 +207,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CreateNewSourceControlVersion.cs" />
+    <Compile Include="Models\CreateNewSvnVersion.cs" />
+    <Compile Include="Models\CreateNewFileSystemVersion.cs" />
     <Compile Include="Models\DeploymentSteps\DacpacDeploymentStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\DeploymentStepEditModelFactory.cs" />
     <Compile Include="Models\DeploymentSteps\HostsDeploymentStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\ProjectRelatedDeploymentStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\SqlScriptDeploymentStepModel.cs" />
+    <Compile Include="Models\EditNewSvnVersion.cs" />
     <Compile Include="Models\VariableAddModel.cs" />
     <Compile Include="Models\Binding.cs" />
     <Compile Include="Models\BundleInfo.cs" />
@@ -232,9 +239,9 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Sources\Index.cshtml" />
-    <Content Include="Views\Environments\Index.cshtml" />
-    <Content Include="Views\Bundles\Index.cshtml" />
+    <Content Include="Views\Sources\List.cshtml" />
+    <Content Include="Views\Environments\List.cshtml" />
+    <Content Include="Views\Bundles\List.cshtml" />
     <Content Include="Views\Bundles\Details.cshtml" />
     <Content Include="Views\Sources\Details.cshtml" />
     <Content Include="Views\Sources\AddChooseSource.cshtml" />
@@ -265,6 +272,10 @@
     <Content Include="Views\BundleVersionDeployment\EditDacpacStep.cshtml" />
     <Content Include="Views\BundleVersionDeployment\EditHostsStep.cshtml" />
     <Content Include="Views\Variables\Add.cshtml" />
+    <Content Include="Views\Sources\CreateNewVersionSVN.cshtml" />
+    <Content Include="Views\Sources\CreateNewVersionFileSystem.cshtml" />
+    <Content Include="Views\Logs\List.cshtml" />
+    <Content Include="Views\Logs\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

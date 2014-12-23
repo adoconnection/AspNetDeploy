@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
@@ -13,6 +14,10 @@ namespace AspNetDeploy.WebUI.Controllers
 {
     public class BundleVersionDeploymentController : AuthorizedAccessController
     {
+        public BundleVersionDeploymentController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         public ActionResult MoveUp(int bundleVersionId, int deploymentStepId)
         {
             BundleVersion bundleVersion = this.Entities.BundleVersion

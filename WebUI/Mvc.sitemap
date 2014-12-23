@@ -3,14 +3,14 @@
             xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
             xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
 
-    <mvcSiteMapNode title="Sources" controller="Home" action="Index">
-        <mvcSiteMapNode title="Sources" controller="Sources" action="Index">
+    <mvcSiteMapNode title="Sources" controller="Home" action="List">
+        <mvcSiteMapNode title="Sources" controller="Sources" action="List">
             <mvcSiteMapNode title="Details" controller="Sources" action="Details"/> 
         </mvcSiteMapNode>
-        <mvcSiteMapNode title="Bundles" controller="Bundles" action="Index">
+        <mvcSiteMapNode title="Bundles" controller="Bundles" action="List">
             <mvcSiteMapNode title="Details" controller="Bundles" action="Details"/>
         </mvcSiteMapNode>
-        <mvcSiteMapNode title="Environments" controller="Environments" action="Index"/>
+        <mvcSiteMapNode title="Environments" controller="Environments" action="List"/>
     </mvcSiteMapNode>
 
 

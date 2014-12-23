@@ -12,27 +12,27 @@ namespace AspNetDeploy.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class ExceptionLog
+    public partial class ExceptionEntry
     {
-        public ExceptionLog()
+        public ExceptionEntry()
         {
-            this.AspNetDeployException = new HashSet<AspNetDeployExceptionLog>();
-            this.ExceptionData = new HashSet<ExceptionLogData>();
+            this.AspNetDeployException = new HashSet<AspNetDeployExceptionEntry>();
+            this.ParentExceptionEntry = new HashSet<ExceptionEntry>();
+            this.ExceptionData = new HashSet<ExceptionEntryData>();
             this.MachinePublicationLog = new HashSet<MachinePublicationLog>();
-            this.ParentExceptions = new HashSet<ExceptionLog>();
         }
     
         public int Id { get; set; }
-        public int InnerExceptionId { get; set; }
+        public Nullable<int> InnerExceptionId { get; set; }
         public string Message { get; set; }
         public string Source { get; set; }
         public string StackTrace { get; set; }
         public string TypeName { get; set; }
     
-        public virtual ICollection<AspNetDeployExceptionLog> AspNetDeployException { get; set; }
-        public virtual ICollection<ExceptionLogData> ExceptionData { get; set; }
+        public virtual ICollection<AspNetDeployExceptionEntry> AspNetDeployException { get; set; }
+        public virtual ICollection<ExceptionEntry> ParentExceptionEntry { get; set; }
+        public virtual ExceptionEntry InnerExceptionEntry { get; set; }
+        public virtual ICollection<ExceptionEntryData> ExceptionData { get; set; }
         public virtual ICollection<MachinePublicationLog> MachinePublicationLog { get; set; }
-        public virtual ICollection<ExceptionLog> ParentExceptions { get; set; }
-        public virtual ExceptionLog InnerException { get; set; }
     }
 }

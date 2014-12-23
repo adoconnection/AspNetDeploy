@@ -209,12 +209,19 @@ namespace ThreadHostedTaskRunner
 
             foreach (var pair in projectVersions.Select(pv => new { pv.SolutionFile, pv.SourceControlVersion }).Distinct())
             {
-                BuildProjectJob job = new BuildProjectJob();
-                job.Start(
-                    pair.SourceControlVersion.Id, 
-                    pair.SolutionFile, 
-                    projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building), 
-                    (projectId, isSuccess) => TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error));
+                try
+                {
+                    BuildProjectJob job = new BuildProjectJob();
+                    job.Start(
+                        pair.SourceControlVersion.Id, 
+                        pair.SolutionFile, 
+                        projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building), 
+                        (projectId, isSuccess) => TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error));
+                }
+                catch (Exception e)
+                {
+                    Factory.GetInstance<ILoggingService>().Log(e, null);
+                }
             }
 
             affectedBundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
@@ -253,7 +260,7 @@ namespace ThreadHostedTaskRunner
                     catch (Exception e)
                     {
                         TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
-                        Factory.GetInstance<ILoggingService>().Log(e);
+                        Factory.GetInstance<ILoggingService>().Log(e, null);
                     }
                 });
 

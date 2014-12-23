@@ -10,6 +10,24 @@ namespace AspNetDeploy.SourceControls.SVN
 {
     public class SvnSourceControlRepository : ISourceControlRepository
     {
+        public bool CreateNewVersion(SourceControlVersion from, SourceControlVersion to)
+        {
+            NetworkCredential credentials = new NetworkCredential(
+                        from.SourceControl.GetStringProperty("Login"),
+                        from.SourceControl.GetStringProperty("Password"));
+
+            using (SvnClient client = new SvnClient())
+            {
+                client.Authentication.DefaultCredentials = credentials;
+
+                SvnTarget svnTarget = new SvnPathTarget(this.GetVersionURI(from));
+
+                client.RemoteCopy(svnTarget, new Uri(this.GetVersionURI(to)));
+
+                return true;
+            }
+        }
+
         public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
         {
             NetworkCredential credentials = new NetworkCredential(
@@ -57,7 +75,7 @@ namespace AspNetDeploy.SourceControls.SVN
             SvnUpdateResult result;
             Directory.CreateDirectory(path);
 
-            string uriString = sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL");
+            string uriString = this.GetVersionURI(sourceControlVersion);
 
             client.CheckOut(new Uri(uriString), path, out result);
 
@@ -68,6 +86,11 @@ namespace AspNetDeploy.SourceControls.SVN
             {
                 RevisionId = info.LastChangeRevision.ToString(CultureInfo.InvariantCulture)
             };
+        }
+
+        private string GetVersionURI(SourceControlVersion sourceControlVersion)
+        {
+            return sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL");
         }
     }
 }

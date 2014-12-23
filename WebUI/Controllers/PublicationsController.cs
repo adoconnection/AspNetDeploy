@@ -1,11 +1,16 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
     public class PublicationsController : AuthorizedAccessController
     {
+        public PublicationsController(ILoggingService loggingService) : base(loggingService)
+        {
+        }
+
         public ActionResult Details(int id)
         {
             Publication publication = this.Entities.Publication

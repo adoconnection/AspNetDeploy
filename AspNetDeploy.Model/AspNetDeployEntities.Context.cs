@@ -53,8 +53,8 @@ namespace AspNetDeploy.Model
         public virtual DbSet<PackageApprovedOnEnvironment> PackageApprovedOnEnvironment { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<PackageEntry> PackageEntry { get; set; }
-        public virtual DbSet<AspNetDeployExceptionLog> AspNetDeployException { get; set; }
-        public virtual DbSet<ExceptionLog> Exception { get; set; }
-        public virtual DbSet<ExceptionLogData> ExceptionData { get; set; }
+        public virtual DbSet<AspNetDeployExceptionEntry> AspNetDeployExceptionEntry { get; set; }
+        public virtual DbSet<ExceptionEntryData> ExceptionEntryData { get; set; }
+        public virtual DbSet<ExceptionEntry> ExceptionEntry { get; set; }
     }
 }
