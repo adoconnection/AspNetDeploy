@@ -22,6 +22,18 @@ namespace ConsoleTest
         {
             ObjectFactoryConfigurator.Configure();
 
+            Console.WriteLine("Testing satellites");
+
+            AspNetDeployEntities entities = new AspNetDeployEntities();
+
+            foreach (Machine machine in entities.Machine)
+            {
+                Console.Write(machine.Name + "...");
+                Console.WriteLine(Factory.GetInstance<ISatelliteMonitor>().IsAlive(machine));
+            }
+
+            Console.ReadKey();
+
             RunScheduler();
 
             WriteLine("Main thread complete");

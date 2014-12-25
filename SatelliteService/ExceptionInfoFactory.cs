@@ -25,6 +25,11 @@ namespace SatelliteService
                 ExceptionData = this.GetExceptionData(exception).Union(GetReflectionInfo(exception)).ToList()
             };
 
+            if (exception.InnerException != null)
+            {
+                exceptionInfo.InnerException = this.Create(exception.InnerException);
+            }
+
             return exceptionInfo;
         }
 

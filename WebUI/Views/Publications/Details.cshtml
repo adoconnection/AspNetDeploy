@@ -51,13 +51,13 @@
             <tbody>
                 @foreach (IGrouping<int?, MachinePublicationLog> group in groups)
                 {
-                    DeploymentStep deploymentStep = deploymentSteps[@group.Key.Value];
-
                     if (!deploymentSteps.ContainsKey(group.Key.Value))
                     {
-                        <tr><td>deleted</td></tr>
                         continue;
                     }
+                    
+                    DeploymentStep deploymentStep = deploymentSteps[@group.Key.Value];
+                    MachinePublicationLog errorPublicationLog = @group.FirstOrDefault( g => g.Event == MachinePublicationLogEvent.DeploymentStepExecutingError);
 
                     <tr>
                         <td>
@@ -100,6 +100,36 @@
                                 default:
                                     @deploymentStep.GetStringProperty("Step.Title")
                                     break;
+                            }
+
+                            
+                            @if (errorPublicationLog != null)
+                            {
+                                <br/>
+                                if (errorPublicationLog.Exception == null)
+                                {
+                                    <small class="text-muted">no exception data</small>
+                                }
+                                else
+                                {
+                                    ExceptionEntry innerExceptionEntry = errorPublicationLog.Exception.InnerExceptionEntry;
+                                    <small>
+                                        <b>@errorPublicationLog.Exception.TypeName</b>
+                                        <pre>@errorPublicationLog.Exception.Message</pre>
+                                        <pre>@errorPublicationLog.Exception.StackTrace</pre>
+                                    </small>
+                                    while (innerExceptionEntry != null)
+                                    {
+                                        <hr/>
+                                        <small>
+                                            <b>@innerExceptionEntry.TypeName</b>
+                                            <pre>@innerExceptionEntry.Message</pre>
+                                            <pre>@innerExceptionEntry.StackTrace</pre>
+                                        </small>
+                                
+                                        innerExceptionEntry = innerExceptionEntry.InnerExceptionEntry;
+                                    }
+                                }
                             }
                         </td>  
                         <td class="text-center">

@@ -13,6 +13,7 @@
         PackagingQueued = 50,
         Packaging = 51,
         DeployingQueued = 60,
-        Deploying = 61
+        Deploying = 61,
+        Error = 100
     }
 }

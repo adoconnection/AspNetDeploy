@@ -181,6 +181,13 @@ namespace AspNetDeploy.ContinuousIntegration
             {
                 parentException.InnerExceptionEntry = exceptionEntry;
             }
+            else
+            {
+                AspNetDeployExceptionEntry aspNetDeployExceptionEntry = new AspNetDeployExceptionEntry();
+                aspNetDeployExceptionEntry.TimeStamp = DateTime.UtcNow;
+                aspNetDeployExceptionEntry.ExceptionEntry = exceptionEntry;
+                entities.AspNetDeployExceptionEntry.Add(aspNetDeployExceptionEntry);
+            }
 
             foreach (IExceptionDataInfo exceptionDataInfo in lastException.ExceptionData)
             {

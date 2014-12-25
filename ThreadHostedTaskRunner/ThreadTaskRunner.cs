@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using Microsoft.VisualBasic;
 using ObjectFactory;
@@ -20,7 +21,7 @@ namespace ThreadHostedTaskRunner
 
         public void Initialize()
         {
-            Timer.Change(new TimeSpan(0, 0, 10), new TimeSpan(0, 0, 10));
+            Timer.Change(new TimeSpan(0, 0, 30), new TimeSpan(0, 0, 10));
         }
 
         public void WatchForSources()
@@ -94,13 +95,36 @@ namespace ThreadHostedTaskRunner
             {
                 TaskRunnerContext.SetBundleVersionState(group.Key.Id, BundleState.Deploying);
 
-                foreach (Publication publication in group)
+                try
                 {
-                    DeploymentJob job = new DeploymentJob();
-                    job.Start(
-                        publication.Id,
-                        machineId => TaskRunnerContext.SetMachineState(machineId, MachineState.Deploying),
-                        (machineId, isSuccess) => TaskRunnerContext.SetMachineState(machineId, isSuccess ? MachineState.Idle : MachineState.Error));
+                    foreach (Publication publication in group)
+                    {
+                        try
+                        {
+                            DeploymentJob job = new DeploymentJob();
+                            job.Start(
+                                publication.Id,
+                                machineId => TaskRunnerContext.SetMachineState(machineId, MachineState.Deploying),
+                                (machineId, isSuccess) => TaskRunnerContext.SetMachineState(machineId, isSuccess ? MachineState.Idle : MachineState.Error));
+                        }
+                        catch (Exception e)
+                        {
+                            throw new AspNetDeployException("Publication failed: " + publication.Id, e);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    TaskRunnerContext.SetBundleVersionState(group.Key.Id, BundleState.Error);
+
+                    Factory.GetInstance<ILoggingService>().Log(e, null);
+
+                    if (IsExceptionCritical(e))
+                    {
+                        throw;
+                    }
+                    
+                    return;
                 }
 
                 TaskRunnerContext.SetBundleVersionState(group.Key.Id, BundleState.Idle);
@@ -127,14 +151,26 @@ namespace ThreadHostedTaskRunner
 
             bundleVersionsWithAutoDeploy.ForEach(bundleVersion =>
             {
-                Package latestPackage = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).FirstOrDefault();
+                int deployToEnvironmentId = bundleVersion.GetIntProperty("AutoDeployToEnvironment");
+
+                if (bundleVersion.Packages.Any(p => p.Publications.Any(pub => pub.EnvironmentId == deployToEnvironmentId && pub.State == PublicationState.Queued)))
+                {
+                    return;
+                }
+
+                if (TaskRunnerContext.GetBundleVersionState(bundleVersion.Id) != BundleState.Idle)
+                {
+                    return;
+                }
+
+                Package latestPackage = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).First();
                 List<Publication> latestPackagePublications = latestPackage.Publications.OrderByDescending( p => p.CreatedDate).ToList();
 
                 if (latestPackagePublications.Count == 0)
                 {
                     Publication publication = new Publication();
                     publication.CreatedDate = DateTime.UtcNow;
-                    publication.EnvironmentId = bundleVersion.GetIntProperty("AutoDeployToEnvironment");
+                    publication.EnvironmentId = deployToEnvironmentId;
                     publication.Package = latestPackage;
                     publication.State = PublicationState.Queued;
 
@@ -170,14 +206,33 @@ namespace ThreadHostedTaskRunner
 
             bundleVersionsToPack.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Packaging));
 
+            List<BundleVersion> errorBundles = new List<BundleVersion>();
+
             bundleVersionsToPack.ForEach(bundleVersion =>
             {
-                PackageJob job = new PackageJob();
-                job.Start(bundleVersion.Id);
+                try
+                {
+                    PackageJob job = new PackageJob();
+                    job.Start(bundleVersion.Id);
+                }
+                catch (Exception e)
+                {
+                    TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Error);
+                    Factory.GetInstance<ILoggingService>().Log(e, null);
+                    errorBundles.Add(bundleVersion);
+
+                    if (IsExceptionCritical(e))
+                    {
+                        throw;
+                    }
+                }
 
             });
 
-            bundleVersionsToPack.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
+            bundleVersionsToPack
+                .Except(errorBundles)
+                .ToList()
+                .ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
         }
 
         private static void BuildProjects(AspNetDeployEntities entities)
@@ -220,7 +275,16 @@ namespace ThreadHostedTaskRunner
                 }
                 catch (Exception e)
                 {
-                    Factory.GetInstance<ILoggingService>().Log(e, null);
+                    AspNetDeployException aspNetDeployException = new AspNetDeployException("Build project failed", e);
+                    aspNetDeployException.Data.Add("SourceControl version Id", pair.SourceControlVersion.Id);
+                    aspNetDeployException.Data.Add("Solution file", pair.SolutionFile);
+
+                    Factory.GetInstance<ILoggingService>().Log(aspNetDeployException, null);
+
+                    if (IsExceptionCritical(e))
+                    {
+                        throw;
+                    }
                 }
             }
 
@@ -242,15 +306,16 @@ namespace ThreadHostedTaskRunner
                 .Where(bv => !bv.IsDeleted)
                 .ToList();
 
-            foreach (BundleVersion bundleVersion in bundleVersions)
-            {
-                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Loading);
-            }
-
             sourceControlVersions
                 .ForEach(sourceControlVersion =>
                 {
                     TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Loading);
+
+                    sourceControlVersion.ProjectVersions
+                        .SelectMany( pv => pv.BundleVersions)
+                        .Where(bv => !bv.IsDeleted)
+                        .ToList()
+                        .ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Loading));
 
                     try
                     {
@@ -260,14 +325,21 @@ namespace ThreadHostedTaskRunner
                     catch (Exception e)
                     {
                         TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
-                        Factory.GetInstance<ILoggingService>().Log(e, null);
+                        Factory.GetInstance<ILoggingService>().Log(new AspNetDeployException("Take sources failed: " + sourceControlVersion.Id, e), null);
+                        
+                        if (IsExceptionCritical(e))
+                        {
+                            throw;
+                        }
                     }
-                });
 
-            foreach (BundleVersion bundleVersion in bundleVersions)
-            {
-                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Idle);
-            }
+                    sourceControlVersion.ProjectVersions
+                        .SelectMany(pv => pv.BundleVersions)
+                        .Where(bv => !bv.IsDeleted)
+                        .ToList()
+                        .ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
+
+                });
         }
 
         private static bool IsExceptionCritical(Exception exception)
@@ -293,11 +365,6 @@ namespace ThreadHostedTaskRunner
             }
 
             if (exception is CannotUnloadAppDomainException)
-            {
-                return true;
-            }
-
-            if (exception is ExecutionEngineException)
             {
                 return true;
             }

@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Logs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<AspNetDeployExceptionEntry> aspNetDeployExceptionEntries = this.ViewBag.AspNetDeployExceptionEntries;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Logs</h1>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (AspNetDeployExceptionEntry aspNetDeployExceptionEntry in aspNetDeployExceptionEntries)
+            {
+                <tr >
+                    <td>
+                        <b>
+                            @Html.ActionLink(aspNetDeployExceptionEntry.Id.ToString(), "Details", new { id = aspNetDeployExceptionEntry.Id })
+                        </b>
+                    </td>
+                    <td>
+                        <span style="white-space: nowrap">
+                            @aspNetDeployExceptionEntry.TimeStamp.ToLocalTime().ToString("d MMMM")
+                            <small class="text-muted">@aspNetDeployExceptionEntry.TimeStamp.ToLocalTime().ToString("H:mm")</small>
+                        </span>
+                    </td>
+                    <td>
+                        <div><b>@aspNetDeployExceptionEntry.ExceptionEntry.TypeName</b></div>
+                        <div>@aspNetDeployExceptionEntry.ExceptionEntry.Message</div>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
