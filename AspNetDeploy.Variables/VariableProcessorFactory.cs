@@ -30,7 +30,7 @@ namespace AspNetDeploy.Variables
 
         }
 
-        private static IDictionary<string, string> CreateDataFieldsDictionary(int machineId, List<DataField> dataFields, int environmentId)
+        private static IDictionary<string, string> CreateDataFieldsDictionary(int machineId, IEnumerable<DataField> dataFields, int environmentId)
         {
             IDictionary<string, string> dataFieldsDictionary = new Dictionary<string, string>();
 
@@ -67,7 +67,7 @@ namespace AspNetDeploy.Variables
             IDictionary<string, string> environmentDictionary = new Dictionary<string, string>();
 
             environmentDictionary.Add("version", bundleVersion.Name);
-            environmentDictionary.Add("previousVersion",  bundleVersion.ParentBundleVersion != null  ? bundleVersion.ParentBundleVersion.Name : "");
+            environmentDictionary.Add("previousversion",  bundleVersion.ParentBundleVersion != null  ? bundleVersion.ParentBundleVersion.Name : "");
 
             environmentDictionary.Add("bundle", bundleVersion.Bundle.Name);
             return environmentDictionary;
