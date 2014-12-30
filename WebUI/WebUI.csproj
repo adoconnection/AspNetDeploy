@@ -152,9 +152,15 @@
     <Content Include="Resources\JavaScripts\bootstrap.min.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
+    <Content Include="Resources\Layout\Images\Icons\box-empty64.png" />
     <Content Include="Resources\Layout\Images\Icons\box16-2.png" />
     <Content Include="Resources\Layout\Images\Icons\box16.png" />
     <Content Include="Resources\Layout\Images\Icons\down16.png" />
+    <Content Include="Resources\Layout\Images\Icons\inventory-maintenance64.png" />
+    <Content Include="Resources\Layout\Images\Icons\Package-Accept-64.png" />
+    <Content Include="Resources\Layout\Images\Icons\Package-Progress64.png" />
+    <Content Include="Resources\Layout\Images\Icons\Package-Warning64.png" />
+    <Content Include="Resources\Layout\Images\Icons\package64.png" />
     <Content Include="Resources\Layout\Images\Icons\zip32.png" />
     <Content Include="Resources\Layout\Images\Icons\Git-Icon.png" />
     <Content Include="Resources\Layout\Images\Icons\IIS.png" />
