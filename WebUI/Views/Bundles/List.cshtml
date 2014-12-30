@@ -33,13 +33,19 @@
                     <small>/ Auto deploy to @environments.First(e => e.Id == bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment")).Name</small>
                 }
                 
-                <span id="@("idBundleVersion" + bundleVersionInfo.BundleVersion.Id)">
+                <span id="@("idBundleVersionState" + bundleVersionInfo.BundleVersion.Id)">
                     <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
                     <small class="status" style="display: none;"></small>
                 </span>
 
             </h3>
-        
+
+            <div id="@("idBundleVersionProgress" + bundleVersionInfo.BundleVersion.Id)" class="progress" style="display: none; height: 7px;">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-6">
                     @if (bundleVersionInfo.BundleVersion.ProjectVersions.Count == 0)
@@ -52,7 +58,7 @@
                         {
                             <div>
                                 @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name
-                                <span id="@("idProjectVersion" + projectVersion.Id)">
+                                <span id="@("idProjectVersionState" + projectVersion.Id)">
                                     <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
                                     <small class="status text-muted" style="display: none;"></small>
                                 </span>
@@ -203,17 +209,32 @@
                 }
             }
 
+            function updateProgress(element, elapsedSecs, totalSecs)
+            {
+                if (totalSecs == 0)
+                {
+                    element.fadeOut();
+                }
+                else
+                {
+                    var progress = element.find('.progress-bar');
+                    progress.width((elapsedSecs * 100 / totalSecs) + '%');
+                    element.fadeIn();
+                }
+            }
+
             $.post('@Url.Action("GetBundleStates")').success(function (data)
             {
                 for (var i = 0; i < data.length; i++)
                 {
                     var item = data[i];
-                    updateStatus($("#idBundleVersion" + item.id), bundleStates[item.state]);
+                    updateStatus($("#idBundleVersionState" + item.id), bundleStates[item.state]);
+                    updateProgress($("#idBundleVersionProgress" + item.id), item.elapsedSecs, item.totalSecs);
 
                     for (var j = 0; j < item.projects.length; j++)
                     {
                         var project = item.projects[j];
-                        updateStatus($("#idProjectVersion" + project.id), projectStates[project.state]);
+                        updateStatus($("#idProjectVersionState" + project.id), projectStates[project.state]);
                     }
                 }
 

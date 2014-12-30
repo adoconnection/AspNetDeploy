@@ -23,6 +23,7 @@ namespace AspNetDeploy.WebUI.Controllers
             List<SourceControl> sourceControls = this.Entities.SourceControl
                 .Include("SourceControlVersions.Properties")
                 .Include("SourceControlVersions.ProjectVersions.BundleVersions")
+                .Include("SourceControlVersions.ProjectVersions.Properties")
                 .Include("Properties")
                 .OrderBy(b => b.OrderIndex)
                 .ToList();

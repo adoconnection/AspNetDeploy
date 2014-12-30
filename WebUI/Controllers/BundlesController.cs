@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -6,6 +7,7 @@ using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
 using Newtonsoft.Json;
+using Environment = AspNetDeploy.Model.Environment;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
@@ -240,23 +242,83 @@ namespace AspNetDeploy.WebUI.Controllers
         public ActionResult GetBundleStates()
         {
             List<BundleVersion> bundleVersions = this.Entities.BundleVersion
-                .Include("ProjectVersions")
+                .Include("Properties")
+                .Include("ProjectVersions.SourceControlVersion.Properties")
                 .ToList();
 
-            var states = bundleVersions.Select(
-                bv => new
-                {
-                    id = bv.Id,
-                    state = this.taskRunner.GetBundleState(bv.Id).ToString(),
-                    projects = bv.ProjectVersions.Select(pv => new
-                    {
-                        id = pv.Id,
-                        state = this.taskRunner.GetProjectState(pv.Id).ToString()
-                    }).ToList()
-                })
-                .ToList();
+            var states = bundleVersions.Select(this.GetBundleVersionInfo).ToList();
 
             return this.Json(states, JsonRequestBehavior.AllowGet);
+        }
+
+        private object GetBundleVersionInfo(BundleVersion bundleVersion)
+        {
+            BundleState bundleState = this.taskRunner.GetBundleState(bundleVersion.Id);
+
+            double elapsedSecs = 0;
+            double totalSecs = 0;
+
+            if (bundleState == BundleState.Deploying)
+            {
+                
+
+                Publication publication = this.Entities.Publication.Where( p => p.State == PublicationState.InProgress && p.Package.BundleVersionId == bundleVersion.Id).OrderByDescending( p => p.CreatedDate).FirstOrDefault();
+
+                Environment environment = this.Entities.Environment.Include("PreviousEnvironment").FirstOrDefault( e => e.Id == publication.EnvironmentId);
+
+                if (publication != null)
+                {
+                    elapsedSecs = (DateTime.UtcNow - publication.CreatedDate).TotalSeconds;
+                    totalSecs = bundleVersion.GetDoubleProperty("LastDeploymentDuration-e" + publication.EnvironmentId);
+
+                    if (Math.Abs(totalSecs) < 1 && environment != null && environment.PreviousEnvironment.Count > 0)
+                    {
+                        totalSecs = bundleVersion.GetDoubleProperty("LastDeploymentDuration-e" + environment.PreviousEnvironment.First().Id);
+                    }
+                }
+            }
+
+            if (bundleState == BundleState.Packaging)
+            {
+                Package thisPackage = this.Entities.Package.Where(p => p.BundleVersionId == bundleVersion.Id && p.PackageDate == null).OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+                Package previousPackage = this.Entities.Package.Where(p => p.BundleVersionId == bundleVersion.Id && p.PackageDate != null).OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+
+                if (thisPackage != null && previousPackage != null && previousPackage.PackageDate.HasValue)
+                {
+                    elapsedSecs = (DateTime.UtcNow - thisPackage.CreatedDate).TotalSeconds;
+                    totalSecs = (previousPackage.PackageDate.Value - previousPackage.CreatedDate).TotalSeconds;
+                }
+            }
+
+            if (bundleState == BundleState.Building)
+            {
+                totalSecs = bundleVersion.GetDoubleProperty("LastBuildDuration");
+
+                if (totalSecs > 0)
+                {
+                    elapsedSecs = (DateTime.UtcNow - bundleVersion.GetDateTimeProperty("LastBuildStartDate", DateTime.UtcNow)).TotalSeconds;
+                }
+            }
+
+            return new
+            {
+                id = bundleVersion.Id,
+                elapsedSecs = (int)elapsedSecs,
+                totalSecs = (int)totalSecs,
+                state = bundleState.ToString(),
+                projects = bundleVersion.ProjectVersions.Select(this.GetProjectVersionInfo).ToList()
+            };
+        }
+
+        private object GetProjectVersionInfo(ProjectVersion pv)
+        {
+            ProjectState projectState = this.taskRunner.GetProjectState(pv.Id);
+
+            return new
+            {
+                id = pv.Id,
+                state = projectState.ToString()
+            };
         }
     }
 }

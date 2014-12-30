@@ -68,6 +68,8 @@
                             bool hasConsole = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Console);
                             bool hasDatabase = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Database);
                             bool hasZip = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.ZipArchive);
+                            double lastBuildDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastBuildDuration");
+                            double lastPackageDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastPackageDuration");
 
                             if (hasWeb || hasTest || hasConsole || hasDatabase || hasZip)
                             {
@@ -103,6 +105,39 @@
                                         else if (!projectVersionInfo.ProjectVersion.Project.GetBoolProperty("NotForDeployment"))
                                         {
                                             <img src="~/Resources/Layout/Images/Icons/new16.png" />
+                                        }
+                                        
+
+                                        @if (lastBuildDuration > 5)
+                                        {
+                                            <small class="text-danger"><b>build time @lastBuildDuration.ToString("#.0") sec</b></small>
+                                        } 
+                                        else if (lastBuildDuration > 1)
+                                        {
+                                            <small class="text-warning">build time @lastBuildDuration.ToString("#.0") sec</small>
+                                        }
+                                        else
+                                        {
+                                        }
+                                    
+                                        @if (lastPackageDuration > 30)
+                                        {
+                                            if (lastBuildDuration > 1)
+                                            {
+                                                <span>&nbsp;&nbsp;</span>
+                                            }
+                                            <small class="text-danger"><b>package time @lastPackageDuration.ToString("#.0") sec</b></small>
+                                        }
+                                        else if (lastPackageDuration > 5)
+                                        {
+                                            if (lastBuildDuration > 1)
+                                            {
+                                                <span>&nbsp;&nbsp;</span>
+                                            }
+                                            <small class="text-warning">package time @lastPackageDuration.ToString("#.0") sec</small>
+                                        }
+                                        else
+                                        {
                                         }
                                     
                                         <span id="@("idProjectVersion" + projectVersionInfo.ProjectVersion.Id)">

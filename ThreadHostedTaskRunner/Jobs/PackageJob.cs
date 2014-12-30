@@ -19,6 +19,8 @@ namespace ThreadHostedTaskRunner.Jobs
                 .Include("Properties")
                 .First(bv => bv.Id == bundleId);
 
+            DateTime packageStart = DateTime.UtcNow;
+
             PackageManager packageManager = Factory.GetInstance<PackageManager>();
             packageManager.PackageBundle(bundleId);
 
@@ -27,6 +29,8 @@ namespace ThreadHostedTaskRunner.Jobs
                 projectVersion.SetStringProperty("LastPackageRevision", projectVersion.SourceControlVersion.GetStringProperty("Revision"));
                 projectVersion.SetStringProperty("LastPackageDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
             }
+
+            bundleVersion.SetStringProperty("LastPackageDuration", (DateTime.UtcNow - packageStart).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
             entities.SaveChanges();
         }

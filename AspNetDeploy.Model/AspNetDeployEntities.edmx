@@ -239,6 +239,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BundleVersionId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="PackageDate" Type="datetime" />
         </EntityType>
         <EntityType Name="PackageApprovedOnEnvironment">
           <Key>
@@ -1917,6 +1918,7 @@
           <NavigationProperty Name="Publications" Relationship="AspNetDeployModel.FK_Publication_Package" FromRole="Package" ToRole="Publication" />
           <NavigationProperty Name="ApprovedOnEnvironments" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Package" FromRole="Package" ToRole="PackageApprovedOnEnvironment" />
           <NavigationProperty Name="PackageEntry" Relationship="AspNetDeployModel.FK_PackageEntry_Package" FromRole="Package" ToRole="PackageEntry" />
+          <Property Name="PackageDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Publication">
           <Key>
@@ -2659,6 +2661,7 @@
           <EntitySetMapping Name="Package">
             <EntityTypeMapping TypeName="AspNetDeployModel.Package">
               <MappingFragment StoreEntitySet="Package">
+                <ScalarProperty Name="PackageDate" ColumnName="PackageDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="BundleVersionId" ColumnName="BundleVersionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

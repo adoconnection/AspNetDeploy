@@ -29,6 +29,18 @@ namespace AspNetDeploy.Model
             return int.Parse(stringProperty);
         }
 
+        public double GetDoubleProperty(string key, int defaultValue = 0)
+        {
+            string stringProperty = this.GetStringProperty(key);
+
+            if (string.IsNullOrEmpty(stringProperty))
+            {
+                return defaultValue;
+            }
+
+            return double.Parse(stringProperty);
+        }
+
         public string GetStringProperty(string key, string defaultValue = null)
         {
             BundleVersionProperty property = this.Properties.FirstOrDefault(p => p.Key.ToLower() == key.ToLower());

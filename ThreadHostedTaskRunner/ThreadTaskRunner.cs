@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -238,6 +239,7 @@ namespace ThreadHostedTaskRunner
         private static void BuildProjects(AspNetDeployEntities entities)
         {
             List<BundleVersion> bundleVersions = entities.BundleVersion
+                .Include("Properties")
                 .Include("ProjectVersions.SourceControlVersion.Properties")
                 .ToList();
 
@@ -251,8 +253,7 @@ namespace ThreadHostedTaskRunner
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
                         pv.ProjectType.HasFlag(ProjectType.Web)
                     ))
-                .Where(pv => 
-                    pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
+                .Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
                 .ToList();
 
             List<BundleVersion> affectedBundleVersions = projectVersions
@@ -260,7 +261,15 @@ namespace ThreadHostedTaskRunner
                 .Where(bv => !bv.IsDeleted)
                 .ToList();
 
-            affectedBundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building));
+            DateTime buildStartDate = DateTime.UtcNow;
+
+            affectedBundleVersions.ForEach(bv =>
+            {
+                TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building);
+                bv.SetStringProperty("LastBuildStartDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
+            });
+
+            entities.SaveChanges();
 
             foreach (var pair in projectVersions.Select(pv => new { pv.SolutionFile, pv.SourceControlVersion }).Distinct())
             {
@@ -288,7 +297,13 @@ namespace ThreadHostedTaskRunner
                 }
             }
 
-            affectedBundleVersions.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle));
+            affectedBundleVersions.ForEach(bv =>
+            {
+                TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle);
+                bv.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildStartDate).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+            });
+
+            entities.SaveChanges();
         }
 
         private static void TakeSources(AspNetDeployEntities entities)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -17,6 +18,17 @@ namespace AspNetDeploy.Model
 
             return int.Parse(stringProperty);
         }
+        public double GetDoubleProperty(string key, int defaultValue = 0)
+        {
+            string stringProperty = this.GetStringProperty(key);
+
+            if (string.IsNullOrEmpty(stringProperty))
+            {
+                return defaultValue;
+            }
+
+            return double.Parse(stringProperty);
+        }
 
         public bool GetBoolProperty(string key, bool defaultValue = false)
         {
@@ -28,6 +40,18 @@ namespace AspNetDeploy.Model
             }
 
             return bool.Parse(stringProperty);
+        }
+
+        public DateTime? GetDateProperty(string key, DateTime? defaultValue = null)
+        {
+            string stringProperty = this.GetStringProperty(key);
+
+            if (string.IsNullOrEmpty(stringProperty))
+            {
+                return defaultValue;
+            }
+
+            return DateTime.Parse(stringProperty);
         }
 
         public dynamic GetDynamicProperty(string key)

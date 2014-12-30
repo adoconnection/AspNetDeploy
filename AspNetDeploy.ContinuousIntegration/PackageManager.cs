@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -53,7 +54,10 @@ namespace AspNetDeploy.ContinuousIntegration
 
                     if (!File.Exists(projectPackagePath))
                     {
-                        projectPackager.Package(projectPath, projectPackagePath); 
+                        DateTime packageStartDate = DateTime.UtcNow;
+                        projectPackager.Package(projectPath, projectPackagePath);
+                        projectVersion.SetStringProperty("LastPackageDuration", (DateTime.UtcNow - packageStartDate).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+                        entities.SaveChanges();
                     }
                     
                     zipFile.AddFile(projectPackagePath, "/");
@@ -68,6 +72,7 @@ namespace AspNetDeploy.ContinuousIntegration
                 zipFile.Save(this.pathServices.GetBundlePackagePath(bundleVersionId, package.Id));
             }
 
+            package.PackageDate = DateTime.UtcNow;
             entities.SaveChanges();
 
             foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)

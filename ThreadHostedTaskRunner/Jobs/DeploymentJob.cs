@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Model;
@@ -19,6 +20,8 @@ namespace ThreadHostedTaskRunner.Jobs
 
             DeploymentManager deploymentManager = Factory.GetInstance<DeploymentManager>();
 
+            DateTime deploymentStart = DateTime.UtcNow;
+
             deploymentManager.Deploy(
                 publication.Id,
                 machineId =>
@@ -31,6 +34,7 @@ namespace ThreadHostedTaskRunner.Jobs
                 });
 
             publication.Package.BundleVersion.SetStringProperty("LastPublicationAttemptPackage", publication.PackageId.ToString());
+            publication.Package.BundleVersion.SetStringProperty("LastDeploymentDuration-e" + publication.EnvironmentId, (DateTime.UtcNow - deploymentStart).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
             entities.SaveChanges();
         }

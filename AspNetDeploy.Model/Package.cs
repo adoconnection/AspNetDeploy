@@ -24,6 +24,7 @@ namespace AspNetDeploy.Model
         public int Id { get; set; }
         public int BundleVersionId { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public Nullable<System.DateTime> PackageDate { get; set; }
     
         public virtual BundleVersion BundleVersion { get; set; }
         public virtual ICollection<Publication> Publications { get; set; }
