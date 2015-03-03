@@ -29,7 +29,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
             binding.ReaderQuotas.MaxArrayLength = 1024 * 1024 * 10;
 
             binding.OpenTimeout = openTimeoutSpan ?? new TimeSpan(0, 10, 0);
-            binding.CloseTimeout = new TimeSpan(0, 10, 0);
+            binding.CloseTimeout = openTimeoutSpan ?? new TimeSpan(0, 10, 0);
             binding.SendTimeout = new TimeSpan(3, 0, 0);
             binding.ReceiveTimeout = new TimeSpan(3, 0, 0);
             

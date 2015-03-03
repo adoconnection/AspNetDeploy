@@ -88,15 +88,18 @@
 
 @helper RenderControlButtons(BundleVersion bundleVersion, DeploymentStep deploymentStep)
 {
-    <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-        <img src="~/Resources/Layout/Images/Icons/up16.png" />
-    </a>
-    <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new { bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-        <img src="~/Resources/Layout/Images/Icons/down16.png" />
-    </a>
-    <a class="btn btn-default" href="@Url.Action("EditStep", "BundleVersionDeployment", new { id = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-        <img src="~/Resources/Layout/Images/Icons/settings16.png" />
-    </a>
+    if (this.ViewBag.AllowedActions.Contains(UserRoleAction.DeploymentChangeSteps))
+    {
+         <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+             <img src="~/Resources/Layout/Images/Icons/up16.png" />
+         </a>
+         <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+             <img src="~/Resources/Layout/Images/Icons/down16.png" />
+         </a>
+         <a class="btn btn-default" href="@Url.Action("EditStep", "BundleVersionDeployment", new {id = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+             <img src="~/Resources/Layout/Images/Icons/settings16.png" />
+         </a>
+    }
 }
 
 @helper RednerDeployWebSiteStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)

@@ -13,6 +13,9 @@ namespace AspNetDeploy.Model
         [Display(Name = "Developer")]
         Developer = 10,
 
+        [Display(Name = "Power Developer")]
+        PowerDeveloper = 20,
+
         [Display(Name = "Tester")]
         Tester = 100,
 

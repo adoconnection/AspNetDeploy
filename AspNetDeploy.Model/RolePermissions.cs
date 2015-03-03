@@ -27,6 +27,23 @@ namespace AspNetDeploy.Model
                 }
             },
             {
+                UserRole.PowerDeveloper,
+                new List<UserRoleAction>()
+                {
+                    UserRoleAction.DeploymentChangeSteps,
+
+                    UserRoleAction.ReleasePublishTest,
+                    UserRoleAction.ReleasePublishLive,
+                    UserRoleAction.ReleaseCancel,
+
+                    UserRoleAction.VersionCreate,
+                    UserRoleAction.ViewLogs,
+
+                    UserRoleAction.EnvironmentCreate,
+                    UserRoleAction.EnvironmentChangeVariables,
+                }
+            },
+            {
                 UserRole.Tester,
                 new List<UserRoleAction>()
                 {

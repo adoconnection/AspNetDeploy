@@ -77,7 +77,15 @@
 
     foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
     {
-        <h3>@sourceControlVersion.Name</h3>
+        <h3>
+            @sourceControlVersion.Name
+            
+            @if (sourceControlVersion.IsArchived)
+            {
+                <small>Archived</small>
+            }
+
+        </h3>
 
         <div class="row">
             <div class="col-sm-7">

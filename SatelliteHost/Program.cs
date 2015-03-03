@@ -83,7 +83,7 @@ namespace SatelliteConsoleHost
 
             /*
              
-             netsh http add sslcert ipport=0.0.0.0:8090 certhash=969e746fb374e0dd102b0a3c197c7b5d66b0900e appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc}
+             netsh http add sslcert ipport=0.0.0.0:8090 certhash=111fdaf48275953db528be89fac8f0324c735297 appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc}
             
              * sc create "AspNetDeploy Satellite" binpath= "D:\Services\AspNetDeploySatellite\Service\SatelliteServiceHost.exe"
              * 

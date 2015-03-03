@@ -20,6 +20,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult MoveUp(int bundleVersionId, int deploymentStepId)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("DeploymentSteps")
                 .First(bv => bv.Id == bundleVersionId);
@@ -41,6 +43,8 @@ namespace AspNetDeploy.WebUI.Controllers
         }
         public ActionResult MoveDown(int bundleVersionId, int deploymentStepId)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("DeploymentSteps")
                 .First(bv => bv.Id == bundleVersionId);
@@ -63,6 +67,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult AddStep(int id, DeploymentStepType deploymentStepType = DeploymentStepType.Undefined)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("DeploymentSteps")
                 .First(bv => bv.Id == id);
@@ -177,6 +183,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult EditStep(int id, int deploymentStepId)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             DeploymentStep deploymentStep = this.Entities.DeploymentStep
                 .Include("Properties")
                 .Include("MachineRoles")
@@ -327,6 +335,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveConfigStep(ConfigDeploymentStepModel model)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View("EditConfigStep", model);
@@ -349,6 +359,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveHostsStep(HostsDeploymentStepModel model)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View("EditHostsStep", model);
@@ -370,6 +382,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveSQLStep(SqlScriptDeploymentStepModel model)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View("EditSqlScriptStep", model);
@@ -393,6 +407,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveWebSiteStep(WebSiteDeploymentStepModel model)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View("EditWebsiteStep", model);
@@ -418,6 +434,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveDacpacStep(DacpacDeploymentStepModel model)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View("EditDacpacStep", model);
@@ -443,6 +461,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveZipArchiveStep(ZipArchiveDeploymentStepModel model)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View("EditZipArchiveStep", model);
@@ -466,6 +486,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult DeleteStep(int id, int deploymentStepId)
         {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
             DeploymentStep deploymentStep = this.Entities.DeploymentStep
                 .Include("Properties")
                 .Include("MachineRoles")

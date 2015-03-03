@@ -364,6 +364,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="1000" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsHead" Type="bit" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -1737,6 +1738,7 @@
           <Property Name="ParentVersionId" Type="Int32" />
           <NavigationProperty Name="ChildSourceControlVersions" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersion1" />
           <NavigationProperty Name="ParentSourceControlVersion" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion1" ToRole="SourceControlVersion" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -2591,6 +2593,7 @@
           <EntitySetMapping Name="SourceControlVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlVersion">
               <MappingFragment StoreEntitySet="SourceControlVersion">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
                 <ScalarProperty Name="ParentVersionId" ColumnName="ParentVersionId" />
                 <ScalarProperty Name="IsHead" ColumnName="IsHead" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />

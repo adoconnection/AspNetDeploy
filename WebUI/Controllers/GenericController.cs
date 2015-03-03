@@ -11,12 +11,11 @@ namespace AspNetDeploy.WebUI.Controllers
     [ValidateInput(false)]
     public class GenericController : Controller
     {
-        protected User ActiveUser { get; private set; }
+        protected User ActiveUser { get; set; }
+
         protected AspNetDeployEntities Entities { get; private set; }
 
         private readonly ILoggingService loggingService;
-
-        
 
         public GenericController(ILoggingService loggingService)
         {
@@ -31,29 +30,12 @@ namespace AspNetDeploy.WebUI.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             this.Entities = new AspNetDeployEntities();
-
-            if (filterContext.HttpContext.User.Identity.IsAuthenticated)
-            {
-                Guid guid = new Guid(filterContext.HttpContext.User.Identity.Name);
-                User user = this.Entities.User.FirstOrDefault(u => u.Guid == guid);
-
-                if (user == null || user.IsDisabled)
-                {
-                    filterContext.Result = this.RedirectToAction("Logout", "Account");
-                    return;
-                }
-
-                this.ActiveUser = user;
-                this.ViewBag.AllowedActions = RolePermissions.MappingDictionary[this.ActiveUser.Role];
-                this.ViewBag.ActiveUser = user;
-            }
-
             base.OnActionExecuting(filterContext);
         }
 
         protected void Log(Exception e)
         {
-            this.loggingService.Log(e, this.ActiveUser.Id);
+            this.loggingService.Log(e, this.ActiveUser != null ? this.ActiveUser.Id : (int?)null);
         }
 
         protected override void OnException(ExceptionContext filterContext)

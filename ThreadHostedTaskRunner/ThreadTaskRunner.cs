@@ -313,12 +313,7 @@ namespace ThreadHostedTaskRunner
                 .Include("Properties")
                 .Include("ProjectVersions.BundleVersions")
                 .Include("SourceControl.Properties")
-                .ToList();
-
-            IList<BundleVersion> bundleVersions = sourceControlVersions
-                .SelectMany(scv => scv.ProjectVersions)
-                .SelectMany(pv => pv.BundleVersions)
-                .Where(bv => !bv.IsDeleted)
+                .Where( scv => !scv.IsArchived)
                 .ToList();
 
             sourceControlVersions

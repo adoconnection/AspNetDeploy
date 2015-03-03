@@ -31,18 +31,20 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            if (Directory.Exists((string) this.configuration.destination))
-            {
-                this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
-                DirectoryHelper.DeleteContents((string)this.configuration.destination);
-            }
-
-            packageRepository.ExtractProject(
-                (int)this.configuration.projectId, 
-                (string)this.configuration.destination);
-
             using (ServerManager serverManager = new ServerManager())
             {
+                this.StopSite(serverManager, (string)this.configuration.siteName);
+
+                if (Directory.Exists((string) this.configuration.destination))
+                {
+                    this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
+                    DirectoryHelper.DeleteContents((string)this.configuration.destination);
+                }
+
+                packageRepository.ExtractProject(
+                    (int)this.configuration.projectId, 
+                    (string)this.configuration.destination);
+            
                 Site site = this.Site(serverManager, (string) this.configuration.siteName);
                 //this.backupSiteConfigurationGuid = this.BackupRepository.StoreObject(site);
 
@@ -88,6 +90,8 @@ namespace SatelliteService.Operations
                         break;
                     }
                 }
+
+                this.StartSite(serverManager, (string)this.configuration.siteName);
 
                 serverManager.CommitChanges();
             }
@@ -154,6 +158,62 @@ namespace SatelliteService.Operations
                 }
             }*/
 
+        }
+
+        private void StopSite(ServerManager iisManager, string siteName)
+        {
+            if (iisManager.Sites[siteName] == null)
+            {
+                return;
+            }
+
+            switch (iisManager.Sites[siteName].State)
+            {
+                case ObjectState.Started:
+                    iisManager.Sites[siteName].Stop();
+                    break;
+
+                case ObjectState.Starting:
+                    ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Started, 3);
+                    iisManager.Sites[siteName].Stop();
+                    break;
+
+                case ObjectState.Stopping:
+                    break;
+
+                case ObjectState.Stopped:
+                    return;
+            }
+
+            ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Stopped, 3);
+        }
+
+        private void StartSite(ServerManager iisManager, string siteName)
+        {
+            if (iisManager.Sites[siteName] == null)
+            {
+                return;
+            }
+
+            switch (iisManager.Sites[siteName].State)
+            {
+                case ObjectState.Started:
+                    return;
+
+                case ObjectState.Starting:
+                    break;
+
+                case ObjectState.Stopped:
+                    iisManager.Sites[siteName].Start();
+                    break;
+
+                case ObjectState.Stopping:
+                    ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Stopped, 3);
+                    iisManager.Sites[siteName].Start();
+                    break;
+            }
+
+            ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Started, 3);
         }
     }
 }

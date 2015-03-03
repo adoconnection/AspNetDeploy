@@ -125,6 +125,10 @@ namespace AspNetDeploy.WebUI.Controllers
                 newBundleVersion.IsHead = true;
             }
 
+            if (sourceBundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
+            {
+                newBundleVersion.SetStringProperty("AutoDeployToEnvironment", sourceBundleVersion.GetIntProperty("AutoDeployToEnvironment").ToString(CultureInfo.InvariantCulture));
+            }
 
             this.Entities.BundleVersion.Add(newBundleVersion);
 
@@ -264,10 +268,11 @@ namespace AspNetDeploy.WebUI.Controllers
 
                 Publication publication = this.Entities.Publication.Where( p => p.State == PublicationState.InProgress && p.Package.BundleVersionId == bundleVersion.Id).OrderByDescending( p => p.CreatedDate).FirstOrDefault();
 
-                Environment environment = this.Entities.Environment.Include("PreviousEnvironment").FirstOrDefault( e => e.Id == publication.EnvironmentId);
 
                 if (publication != null)
                 {
+                    Environment environment = this.Entities.Environment.Include("PreviousEnvironment").FirstOrDefault(e => e.Id == publication.EnvironmentId);
+
                     elapsedSecs = (DateTime.UtcNow - publication.CreatedDate).TotalSeconds;
                     totalSecs = bundleVersion.GetDoubleProperty("LastDeploymentDuration-e" + publication.EnvironmentId);
 
