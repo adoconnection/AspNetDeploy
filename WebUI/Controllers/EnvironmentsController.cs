@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.MachineSummary;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.WebUI.Controllers
@@ -24,12 +25,20 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Machines.MachineRoles")
                 .ToList();
 
-            Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines).Where( m => m.Name == "Sand")
+            Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines)
                 .Distinct()
+                .AsParallel()
                 .Select(m => new {m, alive = this.satelliteMonitor.IsAlive(m)})
                 .ToDictionary(k => k.m, k => k.alive);
 
+            Dictionary<Machine, IServerSummary> summaries = environments.SelectMany(e => e.Machines)
+                .Distinct()
+                .AsParallel()
+                .Select(m => new { m, summary = dictionary[m] == SatelliteState.Alive ? this.satelliteMonitor.GetServerSummary(m) : null })
+                .ToDictionary(k => k.m, k => k.summary);
+
             this.ViewBag.MachineStates = dictionary;
+            this.ViewBag.MachineSummaries = summaries;
             this.ViewBag.Environments = environments;
 
             return this.View();

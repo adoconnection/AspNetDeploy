@@ -19,17 +19,19 @@ namespace SatelliteServiceHost
 
             ObjectFactoryConfigurator.Configure();
 
-            bool isAuthorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authrization.Enabled"]);
+            bool isAuthorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authorization.Enabled"]);
             bool isMetadataEnabled = bool.Parse(ConfigurationManager.AppSettings["Metadata.Enabled"]);
-            string certificateName = ConfigurationManager.AppSettings["Authrization.CertificateFriendlyName"];
+            string certificateName = ConfigurationManager.AppSettings["Authorization.CertificateFriendlyName"];
 
-            Uri deploymentServiceUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Endpoint.URI"]);
+            Uri serviceGenericUri = new Uri(ConfigurationManager.AppSettings["Service.URI"]);
+
+            Uri deploymentServiceUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Endpoint.URI"] ?? (serviceGenericUri + "/DeploymentService"));
             Uri deploymentServicMetadataeUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata");
 
-            Uri monitoringServiceUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Endpoint.URI"]);
+            Uri monitoringServiceUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Endpoint.URI"] ?? (serviceGenericUri + "/MonitoringService"));
             Uri monitoringServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata");
-            
-            Uri informationServiceUri = new Uri(ConfigurationManager.AppSettings["InformationService.Endpoint.URI"]);
+
+            Uri informationServiceUri = new Uri(ConfigurationManager.AppSettings["InformationService.Endpoint.URI"] ?? (serviceGenericUri + "/InformationService"));
             Uri informationServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["InformationService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata");
 
             ServiceHostFactory serviceHostFactory = new ServiceHostFactory();

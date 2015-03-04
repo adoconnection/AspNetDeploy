@@ -1,4 +1,5 @@
 ﻿@using AspNetDeploy.Contracts
+@using AspNetDeploy.Contracts.MachineSummary
 @using Environment = AspNetDeploy.Model.Environment
 
 @{
@@ -7,19 +8,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     IDictionary<Machine, SatelliteState> machineStates = this.ViewBag.MachineStates;
+    IDictionary<Machine, IServerSummary> machineSummaries = this.ViewBag.MachineSummaries;
 }
 
 <div class="container">
 
-    @foreach (Environment environment in ((IList<Environment>)this.ViewBag.Environments).Take(1))
+    @foreach (Environment environment in ((IList<Environment>)this.ViewBag.Environments))
     {
         <h1> @Html.ActionLink(environment.Name, "Details", new { id = environment.Id }) </h1>
         <hr />
 
         foreach (Machine machine in environment.Machines)
         {
+            IServerSummary machineSummary = machineSummaries[machine];
+            
             <div class="row machine">
-                <div class="col-sm-8 col-md-4">
+                <div class="col-sm-6 col-md-4">
                     <div class="name">
                         <div class="roles pull-right">
                             @foreach (MachineRole role in machine.MachineRoles)
@@ -62,20 +66,71 @@
                     </div>
                     
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-md-8">
                     @if (machineStates[machine] == SatelliteState.UnableToEstablishSecureConnection)
                     {
                         <div><small>Unable to establish secure connection: check credentials, server time and and port ssl binding</small></div>
                     }
-                    
+
                     @if (machineStates[machine] == SatelliteState.Inactive)
                     {
                         <div><small>Unable to connect to server: check URL, Satellite agent, firewall settings and port ssl binding</small></div>
                     }
-                    
+
                     @if (machineStates[machine] == SatelliteState.NotConfigured)
                     {
                         <div><small>Server is not configured: check URL and credentials</small></div>
+                    }
+
+                    @if (machineSummary != null)
+                    {
+                        double freeRamGb = Math.Round(machineSummary.AvailableMemoryMB / 1024, 1);
+                        double totalRamGb = Math.Round(machineSummary.TotalMemoryMB / 1024, 1);
+
+                        string ramProgressStyle = "progress-bar-success";
+
+                        if (freeRamGb < 2)
+                        {
+                            ramProgressStyle = "progress-bar-warning";
+                        }
+
+
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <small style="display:inline-block; width: 100%; line-height: 10px;"><span class="pull-left">Memory</span> <span class="text-muted pull-right">@freeRamGb of @totalRamGb Gb free</span></small>
+                                <div class="progress" style="height: 7px; margin-bottom: 4px">
+                                    <div class="progress-bar @ramProgressStyle" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: @(Math.Round((machineSummary.TotalMemoryMB - machineSummary.AvailableMemoryMB) / machineSummary.TotalMemoryMB * 100))%">
+                                        <span class="sr-only"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @foreach (IDriveInfo driveInfo in machineSummary.Drives)
+                            {
+                                double freeSpaceGb = Math.Round(driveInfo.FreeSpaceMB / 1024, 1);
+                                string driveProgressStyle = "progress-bar-success";
+
+                                if (freeSpaceGb < 10)
+                                {
+                                    driveProgressStyle = "progress-bar-warning";
+                                }
+                                else if (freeSpaceGb < 5)
+                                {
+                                    driveProgressStyle = "progress-bar-danger";
+                                }
+                                <div class="col-sm-3">
+                                    <small style="display:inline-block; width: 100%; line-height: 10px;"><span class="pull-left">@driveInfo.Name</span> <span class="text-muted pull-right">@freeSpaceGb Gb free</span></small>
+                                    <div class="progress" style="height: 7px; margin-bottom: 4px">
+                                        <div class="progress-bar @driveProgressStyle" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: @(Math.Round((driveInfo.TotalSpaceMB - driveInfo.FreeSpaceMB) / driveInfo.TotalSpaceMB * 100))%">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+
                     }
                 </div>
             </div>

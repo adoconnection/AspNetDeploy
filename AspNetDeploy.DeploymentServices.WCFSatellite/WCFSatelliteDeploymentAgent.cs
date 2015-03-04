@@ -25,7 +25,6 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
             this.variableProcessor = variableProcessor;
 
             WSHttpBinding binding = new WSHttpBinding(SecurityMode.TransportWithMessageCredential);
-            EndpointAddress endpointAddress = new EndpointAddress(new Uri(endpoint));
 
             binding.MaxBufferPoolSize = 1024 * 1024 * 10;
             binding.MaxReceivedMessageSize = 1024 * 1024 * 10;
@@ -41,15 +40,15 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             binding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
 
-            this.deploymentClient = new DeploymentServiceClient(binding, endpointAddress);
+            this.deploymentClient = new DeploymentServiceClient(binding, new EndpointAddress(new Uri(endpoint + "/DeploymentService")));
             this.deploymentClient.ClientCredentials.UserName.UserName = login;
             this.deploymentClient.ClientCredentials.UserName.Password = password;
 
-            this.monitoringClient = new MonitoringServiceClient(binding, endpointAddress);
+            this.monitoringClient = new MonitoringServiceClient(binding, new EndpointAddress(new Uri(endpoint + "/MonitoringService")));
             this.monitoringClient.ClientCredentials.UserName.UserName = login;
             this.monitoringClient.ClientCredentials.UserName.Password = password;
 
-            this.informationClient = new InformationServiceClient(binding, endpointAddress);
+            this.informationClient = new InformationServiceClient(binding, new EndpointAddress(new Uri(endpoint + "/InformationService")));
             this.informationClient.ClientCredentials.UserName.UserName = login;
             this.informationClient.ClientCredentials.UserName.Password = password;
         }

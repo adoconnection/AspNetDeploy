@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using WUApiLib;
 
@@ -12,7 +13,7 @@ namespace SatelliteService
 
             this.FillMemoryInfo(serverSummary);
             this.FillDrivesInfo(serverSummary);
-            this.FillUpdatesInfo(serverSummary);
+          //  this.FillUpdatesInfo(serverSummary);
 
             return serverSummary;
         }
@@ -38,6 +39,7 @@ namespace SatelliteService
         private void FillDrivesInfo(ServerSummary serverSummary)
         {
             serverSummary.Drives = System.IO.DriveInfo.GetDrives()
+                .Where( di => di.IsReady && (di.DriveType == DriveType.Fixed || di.DriveType == DriveType.Ram))
                 .Select(di => new DriveInfo()
                 {
                     Name = di.Name,

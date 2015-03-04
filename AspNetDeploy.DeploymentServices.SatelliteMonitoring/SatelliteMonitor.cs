@@ -52,7 +52,7 @@ namespace AspNetDeploy.DeploymentServices.SatelliteMonitoring
                 return null;
             }
 
-            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 2));
+            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 10));
 
             try
             {
