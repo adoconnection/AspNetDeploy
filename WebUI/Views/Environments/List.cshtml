@@ -89,7 +89,7 @@
 
                         string ramProgressStyle = "progress-bar-success";
 
-                        if (freeRamGb < 2)
+                        if (freeRamGb < 0.5 && freeRamGb / totalRamGb < 0.6)
                         {
                             ramProgressStyle = "progress-bar-warning";
                         }
@@ -130,10 +130,11 @@
 
                         </div>
 
-
+                        <br class="visible-xs" />
                     }
                 </div>
             </div>
+           
         }
         <br/>
     }

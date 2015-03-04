@@ -69,14 +69,18 @@
                             </div>
                         }
                     }
+
                 </div>
+                
+                <br class="visible-xs" />
+
                 <div class="col-sm-6 text-center">
                     @foreach (Environment environment in this.ViewBag.Environments)
                     {
                         List<Publication> publications = bundleVersionInfo.BundleVersion.Packages.SelectMany(p => p.Publications).ToList();
                         Publication publication = publications.OrderByDescending(p => p.CreatedDate).FirstOrDefault(p => p.Environment == environment);
                         
-                        <div class="col-sm-3">
+                        <div class="col-xs-4 col-sm-3">
                             <div>
                                 @environment.Name
                             </div>

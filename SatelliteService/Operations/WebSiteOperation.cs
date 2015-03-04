@@ -33,26 +33,26 @@ namespace SatelliteService.Operations
         {
             using (ServerManager serverManager = new ServerManager())
             {
-                this.StopSite(serverManager, (string)this.configuration.siteName);
+                this.StopSite(serverManager, (string) this.configuration.siteName);
 
                 if (Directory.Exists((string) this.configuration.destination))
                 {
                     this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
-                    DirectoryHelper.DeleteContents((string)this.configuration.destination);
+                    DirectoryHelper.DeleteContents((string) this.configuration.destination);
                 }
 
                 packageRepository.ExtractProject(
-                    (int)this.configuration.projectId, 
-                    (string)this.configuration.destination);
-            
+                    (int) this.configuration.projectId,
+                    (string) this.configuration.destination);
+
                 Site site = this.Site(serverManager, (string) this.configuration.siteName);
                 //this.backupSiteConfigurationGuid = this.BackupRepository.StoreObject(site);
 
                 ApplicationPool applicationPool = this.ApplicationPool(serverManager, (string) this.configuration.applicationPoolName);
-                Application application = this.Application(serverManager, site, (string)this.configuration.destination);
+                Application application = this.Application(serverManager, site, (string) this.configuration.destination);
 
-                site.Applications["/"].VirtualDirectories["/"].PhysicalPath = (string)this.configuration.destination;
-                site.ApplicationDefaults.ApplicationPoolName = (string)configuration.applicationPoolName;
+                site.Applications["/"].VirtualDirectories["/"].PhysicalPath = (string) this.configuration.destination;
+                site.ApplicationDefaults.ApplicationPoolName = (string) configuration.applicationPoolName;
                 site.ServerAutoStart = true;
                 applicationPool.AutoStart = true;
 
@@ -62,8 +62,8 @@ namespace SatelliteService.Operations
                 {
                     Binding binding = site.Bindings.CreateElement();
 
-                    binding.Protocol = (string)bindingConfig.protocol;
-                    binding.BindingInformation = ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
+                    binding.Protocol = (string) bindingConfig.protocol;
+                    binding.BindingInformation = ":" + (int) bindingConfig.port + ":" + (string) bindingConfig.host;
 
                     switch (binding.Protocol.ToLower())
                     {
@@ -87,13 +87,24 @@ namespace SatelliteService.Operations
 
                             store.Close();
                         }
-                        break;
+                            break;
                     }
                 }
 
-                this.StartSite(serverManager, (string)this.configuration.siteName);
-
                 serverManager.CommitChanges();
+            }
+
+            try
+            {
+                using (ServerManager serverManager = new ServerManager())
+                {
+                    this.StartSite(serverManager, (string) this.configuration.siteName);
+                    serverManager.CommitChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                // ignore, will pop for just created sites
             }
         }
 
