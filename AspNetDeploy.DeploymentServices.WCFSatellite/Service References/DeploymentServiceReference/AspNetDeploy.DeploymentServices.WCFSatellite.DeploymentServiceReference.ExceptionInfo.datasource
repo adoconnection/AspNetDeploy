@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="ExceptionInfo" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo, Service References.SatelliteServiceReference.Reference.cs, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+   <TypeInfo>AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionInfo, Service References.DeploymentServiceReference.Reference.cs, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

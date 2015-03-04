@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="1cd1d80b-1af5-4c52-809d-20b6c0beb65e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MonitoringServiceMetadata.xsd" MetadataType="Schema" ID="5a3cbe7f-c077-44b4-8944-44860d466558" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata?xsd=xsd0" />
+    <MetadataFile FileName="MonitoringServiceMetadata1.xsd" MetadataType="Schema" ID="fbc7b4c4-dfb6-43c6-b057-95cfa159f4d3" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata?xsd=xsd1" />
+    <MetadataFile FileName="MonitoringServiceMetadata2.xsd" MetadataType="Schema" ID="f07c4743-2c19-40c8-b8b6-37c331f0a6c4" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata?xsd=xsd2" />
+    <MetadataFile FileName="MonitoringService.wsdl" MetadataType="Wsdl" ID="56f64b4f-7919-47e6-9ec6-ffd69a3dca10" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

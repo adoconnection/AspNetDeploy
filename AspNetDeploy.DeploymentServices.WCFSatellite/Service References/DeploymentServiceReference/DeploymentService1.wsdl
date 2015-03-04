@@ -9,9 +9,9 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/SatelliteService" />
+      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/SatelliteService" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IDeploymentService_IsReady_InputMessage">
@@ -92,12 +92,6 @@
   <wsdl:message name="IDeploymentService_RunSQLScript_OutputMessage">
     <wsdl:part name="parameters" element="tns:RunSQLScriptResponse" />
   </wsdl:message>
-  <wsdl:message name="IDeploymentService_GetVersion_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetVersion" />
-  </wsdl:message>
-  <wsdl:message name="IDeploymentService_GetVersion_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetVersionResponse" />
-  </wsdl:message>
   <wsdl:message name="IDeploymentService_ApplyDacpac_InputMessage">
     <wsdl:part name="parameters" element="tns:ApplyDacpac" />
   </wsdl:message>
@@ -162,10 +156,6 @@
     <wsdl:operation name="RunSQLScript">
       <wsdl:input wsaw:Action="http://tempuri.org/IDeploymentService/RunSQLScript" message="tns:IDeploymentService_RunSQLScript_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDeploymentService/RunSQLScriptResponse" message="tns:IDeploymentService_RunSQLScript_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetVersion">
-      <wsdl:input wsaw:Action="http://tempuri.org/IDeploymentService/GetVersion" message="tns:IDeploymentService_GetVersion_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IDeploymentService/GetVersionResponse" message="tns:IDeploymentService_GetVersion_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="ApplyDacpac">
       <wsdl:input wsaw:Action="http://tempuri.org/IDeploymentService/ApplyDacpac" message="tns:IDeploymentService_ApplyDacpac_InputMessage" />
@@ -289,15 +279,6 @@
     </wsdl:operation>
     <wsdl:operation name="RunSQLScript">
       <soap12:operation soapAction="http://tempuri.org/IDeploymentService/RunSQLScript" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetVersion">
-      <soap12:operation soapAction="http://tempuri.org/IDeploymentService/GetVersion" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

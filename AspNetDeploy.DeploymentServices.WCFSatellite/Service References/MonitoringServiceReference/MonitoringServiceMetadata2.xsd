@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SatelliteService" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SatelliteService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ServerSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AvailableMemoryMB" type="xs:double" />
+      <xs:element minOccurs="0" name="Drives" nillable="true" type="tns:ArrayOfDriveInfo" />
+      <xs:element minOccurs="0" name="TotalMemoryMB" type="xs:double" />
+      <xs:element minOccurs="0" name="Updates" nillable="true" type="tns:ArrayOfServerUpdateInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServerSummary" nillable="true" type="tns:ServerSummary" />
+  <xs:complexType name="ArrayOfDriveInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DriveInfo" nillable="true" type="tns:DriveInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDriveInfo" nillable="true" type="tns:ArrayOfDriveInfo" />
+  <xs:complexType name="DriveInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FreeSpaceMB" type="xs:double" />
+      <xs:element minOccurs="0" name="Label" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TotalSpaceMB" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DriveInfo" nillable="true" type="tns:DriveInfo" />
+  <xs:complexType name="ArrayOfServerUpdateInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ServerUpdateInfo" nillable="true" type="tns:ServerUpdateInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfServerUpdateInfo" nillable="true" type="tns:ArrayOfServerUpdateInfo" />
+  <xs:complexType name="ServerUpdateInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsDownloaded" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsMandatory" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ReleaseDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Title" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServerUpdateInfo" nillable="true" type="tns:ServerUpdateInfo" />
+</xs:schema>

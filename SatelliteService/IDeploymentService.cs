@@ -43,10 +43,7 @@ namespace SatelliteService
 
         [OperationContract]
         void RunSQLScript(string json);
-
-        [OperationContract]
-        int GetVersion();
-
+        
         [OperationContract]
         void ApplyDacpac(string jsonConfig);
 

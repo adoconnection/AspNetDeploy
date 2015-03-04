@@ -24,7 +24,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Machines.MachineRoles")
                 .ToList();
 
-            Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines)
+            Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines).Where( m => m.Name == "Sand")
                 .Distinct()
                 .Select(m => new {m, alive = this.satelliteMonitor.IsAlive(m)})
                 .ToDictionary(k => k.m, k => k.alive);

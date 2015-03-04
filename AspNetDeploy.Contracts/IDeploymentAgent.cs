@@ -1,5 +1,6 @@
 ﻿using System;
 using AspNetDeploy.Contracts.Exceptions;
+using AspNetDeploy.Contracts.MachineSummary;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.Contracts
@@ -7,6 +8,7 @@ namespace AspNetDeploy.Contracts
     public interface IDeploymentAgent
     {
         bool IsReady();
+        int GetVersion();
         bool BeginPublication(int publicationId);
         bool ExecuteNextOperation();
         bool Complete();
@@ -16,5 +18,6 @@ namespace AspNetDeploy.Contracts
         void ResetPackage();
         void ProcessDeploymentStep(DeploymentStep deploymentStep);
         IExceptionInfo GetLastException();
+        IServerSummary GetServerSummary();
     }
 }

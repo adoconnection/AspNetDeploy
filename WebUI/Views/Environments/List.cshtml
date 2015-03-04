@@ -11,7 +11,7 @@
 
 <div class="container">
 
-    @foreach (Environment environment in this.ViewBag.Environments)
+    @foreach (Environment environment in ((IList<Environment>)this.ViewBag.Environments).Take(1))
     {
         <h1> @Html.ActionLink(environment.Name, "Details", new { id = environment.Id }) </h1>
         <hr />

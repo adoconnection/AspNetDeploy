@@ -64,6 +64,9 @@
     <Compile Include="ITaskRunner.cs" />
     <Compile Include="IVariableProcessor.cs" />
     <Compile Include="IVariableProcessorFactory.cs" />
+    <Compile Include="MachineSummary\IDriveInfo.cs" />
+    <Compile Include="MachineSummary\IServerSummary.cs" />
+    <Compile Include="MachineSummary\IServerUpdateInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SatelliteState.cs" />
   </ItemGroup>

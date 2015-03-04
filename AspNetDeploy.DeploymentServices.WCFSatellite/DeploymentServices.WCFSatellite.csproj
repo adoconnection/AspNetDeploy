@@ -45,10 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DriveInfo.cs" />
     <Compile Include="ExceptionDataInfoExtender.cs" />
     <Compile Include="ExceptionInfoExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\SatelliteServiceReference\Reference.cs">
+    <Compile Include="ServerSummary.cs" />
+    <Compile Include="ServerUpdateInfo.cs" />
+    <Compile Include="Service References\DeploymentServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\InformationServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\MonitoringServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -61,31 +74,53 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\SatelliteServiceReference\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\SatelliteServiceReference\AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo.datasource">
+    <None Include="Service References\DeploymentServiceReference\AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionInfo.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\SatelliteServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\InformationServiceReference\InformationService.wsdl" />
+    <None Include="Service References\InformationServiceReference\InformationServiceMetadata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\InformationServiceReference\InformationServiceMetadata1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MonitoringServiceReference\AspNetDeploy.DeploymentServices.WCFSatellite.MonitoringServiceReference.ServerSummary.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MonitoringServiceReference\MonitoringService.wsdl" />
+    <None Include="Service References\MonitoringServiceReference\MonitoringServiceMetadata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MonitoringServiceReference\MonitoringServiceMetadata1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MonitoringServiceReference\MonitoringServiceMetadata2.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\SatelliteServiceReference\configuration.svcinfo" />
+    <WCFMetadataStorage Include="Service References\DeploymentServiceReference\" />
+    <WCFMetadataStorage Include="Service References\InformationServiceReference\" />
+    <WCFMetadataStorage Include="Service References\MonitoringServiceReference\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\SatelliteServiceReference\DeploymentService.wsdl" />
-    <None Include="Service References\SatelliteServiceReference\Metadata.xsd">
+    <None Include="Service References\DeploymentServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DeploymentServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DeploymentServiceReference\DeploymentService1.wsdl" />
+    <None Include="Service References\DeploymentServiceReference\DeploymentServiceMetadata.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\SatelliteServiceReference\Metadata1.xsd">
+    <None Include="Service References\DeploymentServiceReference\DeploymentServiceMetadata1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\SatelliteServiceReference\Metadata2.xsd">
+    <None Include="Service References\DeploymentServiceReference\DeploymentServiceMetadata2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\SatelliteServiceReference\Reference.svcmap">
+    <None Include="Service References\DeploymentServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -99,6 +134,30 @@
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MonitoringServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MonitoringServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MonitoringServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\InformationServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\InformationServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\InformationServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

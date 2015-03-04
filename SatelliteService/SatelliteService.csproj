@@ -62,13 +62,19 @@
   <ItemGroup>
     <Compile Include="ConfigSourceValidator.cs" />
     <Compile Include="DeploymentService.cs" />
+    <Compile Include="DriveInfo.cs" />
     <Compile Include="ExceptionDataInfo.cs" />
     <Compile Include="ExceptionInfo.cs" />
     <Compile Include="ExceptionInfoFactory.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\XmlMerger.cs" />
     <Compile Include="IDeploymentService.cs" />
+    <Compile Include="IInformationService.cs" />
+    <Compile Include="IMonitoringService.cs" />
+    <Compile Include="InformationService.cs" />
     <Compile Include="IUploadService.cs" />
+    <Compile Include="MemoryHelper.cs" />
+    <Compile Include="MonitoringService.cs" />
     <Compile Include="Operations\ConfigOperation.cs" />
     <Compile Include="Operations\CopyFilesOperation.cs" />
     <Compile Include="Operations\DacpacOperation.cs" />
@@ -78,6 +84,8 @@
     <Compile Include="Operations\WebSiteOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SatelliteServiceException.cs" />
+    <Compile Include="ServerSummary.cs" />
+    <Compile Include="ServerUpdateInfo.cs" />
     <Compile Include="ServiceHostFactory.cs" />
     <Compile Include="ThreadService.cs" />
     <Compile Include="UploadService.cs" />
@@ -104,6 +112,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WUApiLib">
+      <Guid>{B596CC9F-56E5-419E-A622-E01BB457431E}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

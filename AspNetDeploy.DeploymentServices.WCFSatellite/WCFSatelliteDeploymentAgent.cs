@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.ServiceModel;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
-using AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference;
+using AspNetDeploy.Contracts.MachineSummary;
+using AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference;
+using AspNetDeploy.DeploymentServices.WCFSatellite.InformationServiceReference;
+using AspNetDeploy.DeploymentServices.WCFSatellite.MonitoringServiceReference;
 using AspNetDeploy.Model;
 using Newtonsoft.Json;
 
@@ -15,7 +16,9 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
     public class WCFSatelliteDeploymentAgent : IDeploymentAgent, IDisposable
     {
         private readonly IVariableProcessor variableProcessor;
-        private readonly DeploymentServiceClient client;
+        private readonly DeploymentServiceClient deploymentClient;
+        private readonly MonitoringServiceClient monitoringClient;
+        private readonly InformationServiceClient informationClient;
 
         public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password, TimeSpan? openTimeoutSpan = null)
         {
@@ -38,12 +41,27 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             binding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
 
-            this.client = new DeploymentServiceClient(binding, endpointAddress);
-            this.client.ClientCredentials.UserName.UserName = login;
-            this.client.ClientCredentials.UserName.Password = password;
+            this.deploymentClient = new DeploymentServiceClient(binding, endpointAddress);
+            this.deploymentClient.ClientCredentials.UserName.UserName = login;
+            this.deploymentClient.ClientCredentials.UserName.Password = password;
+
+            this.monitoringClient = new MonitoringServiceClient(binding, endpointAddress);
+            this.monitoringClient.ClientCredentials.UserName.UserName = login;
+            this.monitoringClient.ClientCredentials.UserName.Password = password;
+
+            this.informationClient = new InformationServiceClient(binding, endpointAddress);
+            this.informationClient.ClientCredentials.UserName.UserName = login;
+            this.informationClient.ClientCredentials.UserName.Password = password;
         }
 
         public void Dispose()
+        {
+            Dispose(this.deploymentClient);
+            Dispose(this.monitoringClient);
+            Dispose(this.informationClient);
+        }
+
+        private void Dispose(ICommunicationObject client)
         {
             if (client != null)
             {
@@ -56,30 +74,40 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         public bool IsReady()
         {
-            return this.client.IsReady();
+            return this.deploymentClient.IsReady();
+        }
+
+        public int GetVersion()
+        {
+            return this.informationClient.GetVersion();
+        }
+
+        public IServerSummary GetServerSummary()
+        {
+            return this.monitoringClient.GetServerSummary();
         }
 
         public IExceptionInfo GetLastException()
         {
-            return this.client.GetLastException();
+            return this.deploymentClient.GetLastException();
         }
 
         public bool BeginPublication(int publicationId)
         {
-            return this.client.BeginPublication(publicationId);
+            return this.deploymentClient.BeginPublication(publicationId);
         }
         public bool ExecuteNextOperation()
         {
-            return this.client.ExecuteNextOperation();
+            return this.deploymentClient.ExecuteNextOperation();
         }
         public bool Complete()
         {
-            return this.client.Complete();
+            return this.deploymentClient.Complete();
         }
 
         public void Rollback()
         {
-            this.client.Rollback();
+            this.deploymentClient.Rollback();
         }
 
         public void UploadPackage(string file, Action<int, int> progress = null)
@@ -99,7 +127,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                     position += readSize;
                     length -= readSize;
 
-                    client.UploadPackageBuffer(buffer);
+                    this.deploymentClient.UploadPackageBuffer(buffer);
 
                     if (progress != null)
                     {
@@ -111,7 +139,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         public void ResetPackage()
         {
-            this.client.ResetPackage();
+            this.deploymentClient.ResetPackage();
         }
 
         public void ProcessDeploymentStep(DeploymentStep deploymentStep)
@@ -161,7 +189,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                 blockOnPossibleDataLoss = (bool)customConfig.blockOnPossibleDataLoss,
             });
 
-            this.client.ApplyDacpac(configuration);
+            this.deploymentClient.ApplyDacpac(configuration);
         }
 
         private void ProcessSQLStep(DeploymentStep deploymentStep)
@@ -172,12 +200,12 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                 command = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("Command")),
             });
 
-            this.client.RunSQLScript(configuration);
+            this.deploymentClient.RunSQLScript(configuration);
         }
 
         private void ProcessHostsStep(DeploymentStep deploymentStep)
         {
-            this.client.UpdateHostsFile(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConfigurationJson")));
+            this.deploymentClient.UpdateHostsFile(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConfigurationJson")));
         }
 
         private void ProcessCopyFilesStep(DeploymentStep deploymentStep)
@@ -198,7 +226,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                 mode = mode
             });
 
-            this.client.CopyFiles(configuration);
+            this.deploymentClient.CopyFiles(configuration);
         }
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)
@@ -214,7 +242,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                 bindings = ((IEnumerable<dynamic>)bindings)
             });
 
-            this.client.DeployWebSite(configuration);
+            this.deploymentClient.DeployWebSite(configuration);
         }
 
         private void ProcessConfigurationStep(DeploymentStep deploymentStep)
@@ -225,7 +253,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                 content = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("SetValues"))
             });
 
-            this.client.ProcessConfigFile(configuration);
+            this.deploymentClient.ProcessConfigFile(configuration);
         }
     }
 }

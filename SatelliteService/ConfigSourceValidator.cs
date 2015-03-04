@@ -8,12 +8,12 @@ namespace SatelliteService
     {
         public override void Validate(string userName, string password)
         {
-            if (ConfigurationManager.AppSettings["Authrozation.UserName"] != userName)
+            if (ConfigurationManager.AppSettings["Authorization.UserName"] != userName)
             {
                 throw new SecurityTokenException("Invalid credentials");
             }
 
-            if (ConfigurationManager.AppSettings["Authrozation.Password"] != password)
+            if (ConfigurationManager.AppSettings["Authorization.Password"] != password)
             {
                 throw new SecurityTokenException("Invalid credentials");
             }

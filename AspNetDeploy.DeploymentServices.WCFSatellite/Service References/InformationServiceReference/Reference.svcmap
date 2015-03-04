@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="828ae781-20b6-4ca4-a4d9-1c56d01d5722" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="InformationService.wsdl" MetadataType="Wsdl" ID="6e1133ab-f6cc-430d-a86a-24ce6e3eb327" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata" />
+    <MetadataFile FileName="InformationServiceMetadata.xsd" MetadataType="Schema" ID="052ffde9-f180-4eae-be09-1509ff23096c" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata?xsd=xsd1" />
+    <MetadataFile FileName="InformationServiceMetadata1.xsd" MetadataType="Schema" ID="aff1e43c-cb6b-4f2f-b6a1-939971649f3b" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

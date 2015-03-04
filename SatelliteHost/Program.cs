@@ -15,71 +15,38 @@ namespace SatelliteConsoleHost
         {
             ObjectFactoryConfigurator.Configure();
 
-            Uri serviceUri = new Uri(ConfigurationManager.AppSettings["Service.URI"]);
+            ObjectFactoryConfigurator.Configure();
+
             bool isAuthorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authorization.Enabled"]);
-            string certificateName = ConfigurationManager.AppSettings["Authorization.CertificateFriendlyName"];
             bool isMetadataEnabled = bool.Parse(ConfigurationManager.AppSettings["Metadata.Enabled"]);
-            Uri metadataUri = new Uri(ConfigurationManager.AppSettings["Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/Metadata");
+            string certificateName = ConfigurationManager.AppSettings["Authorization.CertificateFriendlyName"];
+
+            Uri deploymentServiceUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Endpoint.URI"]);
+            Uri deploymentServicMetadataeUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata");
+
+            Uri monitoringServiceUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Endpoint.URI"]);
+            Uri monitoringServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata");
+
+            Uri informationServiceUri = new Uri(ConfigurationManager.AppSettings["InformationService.Endpoint.URI"]);
+            Uri informationServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["InformationService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata");
 
             ServiceHostFactory serviceHostFactory = new ServiceHostFactory();
-            
-            ServiceHost serviceHost = serviceHostFactory.Create(
-                serviceUri, 
-                isAuthorizationEnabled, 
-                isMetadataEnabled, 
-                metadataUri, 
-                certificateName);
 
-            serviceHost.Open();
-            serviceHost.Faulted += (sender, eventArgs) =>
-            {
-                Console.WriteLine("Error");
-                Close = true;
-            };
+            ServiceHost deploymentServiceHost = serviceHostFactory.Create(typeof(DeploymentService), typeof(IDeploymentService), deploymentServiceUri, isAuthorizationEnabled, isMetadataEnabled, deploymentServicMetadataeUri, certificateName);
+            ServiceHost managementServiceHost = serviceHostFactory.Create(typeof(MonitoringService), typeof(IMonitoringService), monitoringServiceUri, isAuthorizationEnabled, isMetadataEnabled, monitoringServiceMetadataUri, certificateName);
+            ServiceHost informationService = serviceHostFactory.Create(typeof(InformationService), typeof(IInformationService), informationServiceUri, isAuthorizationEnabled, isMetadataEnabled, informationServiceMetadataUri, certificateName);
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Running");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Version: " + (new DeploymentService()).GetVersion());
-            Console.WriteLine("URL: " + serviceUri);
-            
-            if (isAuthorizationEnabled)
-            {
-                Console.WriteLine("CertificateName: " + certificateName);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Authrozation Enabled: True");
-                Console.ForegroundColor = ConsoleColor.Gray;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Authrozation Enabled: FALSE");
-                Console.ForegroundColor = ConsoleColor.Gray;
-            }
-
-            if (isMetadataEnabled)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Metadata Enabled: TRUE");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("Metadata URL: " + metadataUri);
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Metadata Enabled: False");
-                Console.ForegroundColor = ConsoleColor.Gray;
-            }
+            StartService(deploymentServiceHost);
+            StartService(managementServiceHost);
+            StartService(informationService);
 
 
-            while (!Close)
-            {
-                Thread.Sleep(1000);
-            }
+            Console.WriteLine("STARTED, press any key to terminate");
+            Console.ReadKey();
 
-            Console.WriteLine("Closed");
-
-            serviceHost.Close();
+            deploymentServiceHost.Close();
+            managementServiceHost.Close();
+            informationService.Close();
 
             /*
              
@@ -90,6 +57,16 @@ namespace SatelliteConsoleHost
              */
 
 
+        }
+
+        private static void StartService(ServiceHost deploymentServiceHost)
+        {
+            deploymentServiceHost.Open();
+            deploymentServiceHost.Faulted += (sender, eventArgs) =>
+            {
+                deploymentServiceHost.Close();
+                deploymentServiceHost.Open();
+            };
         }
     }
 }

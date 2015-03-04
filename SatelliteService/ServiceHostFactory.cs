@@ -10,9 +10,9 @@ namespace SatelliteService
 {
     public class ServiceHostFactory
     {
-        public ServiceHost Create(Uri serviceUri, bool isAuthorizationEnabled, bool isMetadataEnabled, Uri metadataUri, string certificateFriendlyName)
+        public ServiceHost Create(Type serviceImplementationType, Type serviceInterfaceType, Uri serviceUri, bool isAuthorizationEnabled, bool isMetadataEnabled, Uri metadataUri, string certificateFriendlyName)
         {
-            ServiceHost serviceHost = new ServiceHost(typeof(DeploymentService), serviceUri);
+            ServiceHost serviceHost = new ServiceHost(serviceImplementationType, serviceUri);
 
             WSHttpBinding wsHttpBinding = new WSHttpBinding();
             wsHttpBinding.MaxBufferPoolSize = 1024 * 1024 * 10;
@@ -28,7 +28,7 @@ namespace SatelliteService
             wsHttpBinding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
             wsHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
-            serviceHost.AddServiceEndpoint(typeof(IDeploymentService), wsHttpBinding, "");
+            serviceHost.AddServiceEndpoint(serviceInterfaceType, wsHttpBinding, "");
 
             if (isMetadataEnabled)
             {

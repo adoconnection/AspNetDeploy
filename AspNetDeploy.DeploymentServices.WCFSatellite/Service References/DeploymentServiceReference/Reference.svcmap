@@ -18,13 +18,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8091/AspNetDeploySatellite/Metadata" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Metadata1.xsd" MetadataType="Schema" ID="330c78bc-1c29-44fa-bf6e-9f213bb5611a" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd1" />
-    <MetadataFile FileName="DeploymentService.wsdl" MetadataType="Wsdl" ID="4e571620-f7f6-4746-bebe-0f8844cf345f" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata" />
-    <MetadataFile FileName="Metadata.xsd" MetadataType="Schema" ID="ce11b38a-1f32-4fa5-8eb7-188a591f0760" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd0" />
-    <MetadataFile FileName="Metadata2.xsd" MetadataType="Schema" ID="07cca957-05a7-442e-9b16-5a5c8dadc8be" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/Metadata?xsd=xsd2" />
+    <MetadataFile FileName="DeploymentServiceMetadata.xsd" MetadataType="Schema" ID="d2d240b8-b36b-4c20-8760-3743f6dc1e77" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata?xsd=xsd1" />
+    <MetadataFile FileName="DeploymentServiceMetadata1.xsd" MetadataType="Schema" ID="bf15b81e-8039-4061-848d-b3aa9cc7e077" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata?xsd=xsd2" />
+    <MetadataFile FileName="DeploymentService1.wsdl" MetadataType="Wsdl" ID="fd614c5f-6b9a-48c0-a0e3-d90807c7e677" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata" />
+    <MetadataFile FileName="DeploymentServiceMetadata2.xsd" MetadataType="Schema" ID="df57192d-2ead-4234-8556-c100e97b6eca" SourceId="1" SourceUrl="http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

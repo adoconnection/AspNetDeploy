@@ -2,7 +2,7 @@
 using System.Linq;
 using AspNetDeploy.Contracts.Exceptions;
 
-namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
+namespace AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference
 {
     public partial class ExceptionInfo : IExceptionInfo
     {

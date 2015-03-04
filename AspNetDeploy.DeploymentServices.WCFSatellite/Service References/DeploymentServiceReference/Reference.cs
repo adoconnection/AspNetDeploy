@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference {
+namespace AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference {
     using System.Runtime.Serialization;
     using System;
     
@@ -26,10 +26,10 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         private string AssemblyQualifiedTypeNameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionDataInfo[] ExceptionDataField;
+        private AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionDataInfo[] ExceptionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo InnerExceptionField;
+        private AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionInfo InnerExceptionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MessageField;
@@ -67,7 +67,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionDataInfo[] ExceptionData {
+        public AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionDataInfo[] ExceptionData {
             get {
                 return this.ExceptionDataField;
             }
@@ -80,7 +80,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo InnerException {
+        public AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionInfo InnerException {
             get {
                 return this.InnerExceptionField;
             }
@@ -232,7 +232,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="SatelliteServiceReference.IDeploymentService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="DeploymentServiceReference.IDeploymentService")]
     public interface IDeploymentService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/IsReady", ReplyAction="http://tempuri.org/IDeploymentService/IsReadyResponse")]
@@ -274,23 +274,20 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/RunSQLScript", ReplyAction="http://tempuri.org/IDeploymentService/RunSQLScriptResponse")]
         void RunSQLScript(string json);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/GetVersion", ReplyAction="http://tempuri.org/IDeploymentService/GetVersionResponse")]
-        int GetVersion();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/ApplyDacpac", ReplyAction="http://tempuri.org/IDeploymentService/ApplyDacpacResponse")]
         void ApplyDacpac(string jsonConfig);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDeploymentService/GetLastException", ReplyAction="http://tempuri.org/IDeploymentService/GetLastExceptionResponse")]
-        AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo GetLastException();
+        AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionInfo GetLastException();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IDeploymentServiceChannel : AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.IDeploymentService, System.ServiceModel.IClientChannel {
+    public interface IDeploymentServiceChannel : AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.IDeploymentService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class DeploymentServiceClient : System.ServiceModel.ClientBase<AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.IDeploymentService>, AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.IDeploymentService {
+    public partial class DeploymentServiceClient : System.ServiceModel.ClientBase<AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.IDeploymentService>, AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.IDeploymentService {
         
         public DeploymentServiceClient() {
         }
@@ -363,15 +360,11 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference
             base.Channel.RunSQLScript(json);
         }
         
-        public int GetVersion() {
-            return base.Channel.GetVersion();
-        }
-        
         public void ApplyDacpac(string jsonConfig) {
             base.Channel.ApplyDacpac(jsonConfig);
         }
         
-        public AspNetDeploy.DeploymentServices.WCFSatellite.SatelliteServiceReference.ExceptionInfo GetLastException() {
+        public AspNetDeploy.DeploymentServices.WCFSatellite.DeploymentServiceReference.ExceptionInfo GetLastException() {
             return base.Channel.GetLastException();
         }
     }
