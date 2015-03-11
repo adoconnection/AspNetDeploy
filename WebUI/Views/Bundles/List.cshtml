@@ -21,7 +21,7 @@
         foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo.OrderByDescending(bv => bv.BundleVersion.Name).Take(2))
         {
             <h3>
-                @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionProjects", new { id = bundleVersionInfo.BundleVersion.Id })
+                @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionPackages", new { id = bundleVersionInfo.BundleVersion.Id })
 
                 @if (bundleVersionInfo.BundleVersion.IsHead)
                 {

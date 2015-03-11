@@ -6,6 +6,7 @@ using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
+using MvcSiteMapProvider.Linq;
 
 namespace AspNetDeploy.WebUI.Controllers
 {

@@ -24,7 +24,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Default()
         {
-            return this.RedirectToAction("List", "Sources");
+            return this.RedirectToAction("List", "Bundles");
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)

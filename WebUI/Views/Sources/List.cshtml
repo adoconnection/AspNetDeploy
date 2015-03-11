@@ -39,7 +39,7 @@
                 int index = 0;
             }
 
-            @foreach (SourceControlVersionInfo sourceControlVersionInfo in sourceControlInfo.SourceControlVersionsInfo)
+            @foreach (SourceControlVersionInfo sourceControlVersionInfo in sourceControlInfo.SourceControlVersionsInfo.Where( scv => !scv.SourceControlVersion.IsArchived).OrderByDescending( scv => scv.SourceControlVersion.Name).Take(4))
             {
                 IEnumerable<IGrouping<string, ProjectVersionInfo>> groups = sourceControlVersionInfo.ProjectVersionsInfo.GroupBy(pvs => pvs.ProjectVersion.SolutionFile);
             
