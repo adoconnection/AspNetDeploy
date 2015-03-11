@@ -13,6 +13,7 @@ namespace SatelliteService.Contracts
         void RestoreFile(Guid guid, string file = null);
 
         void RestoreDirectory(Guid guid, string path = null);
+        //void Cleanup();
 
         T RestoreObject<T>(Guid guid);
     }

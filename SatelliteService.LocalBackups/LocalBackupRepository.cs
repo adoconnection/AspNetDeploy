@@ -3,7 +3,9 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using Enums;
 using Ionic.Zip;
+using Ionic.Zlib;
 using Newtonsoft.Json;
 using SatelliteService.Contracts;
 
@@ -42,6 +44,9 @@ namespace SatelliteService.LocalBackups
 
             using (ZipFile zipFile = new ZipFile())
             {
+                CompressionLevel compressionLevel;
+
+                zipFile.CompressionLevel = Enum.TryParse(ConfigurationManager.AppSettings["LocalBackups.CompressionLevel"], out compressionLevel) ? compressionLevel : CompressionLevel.BestCompression;
                 zipFile.AddDirectory(path, "/");
                 zipFile.Save(this.GetBackupFileContentPath(guid));
             }

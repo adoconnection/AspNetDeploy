@@ -118,6 +118,7 @@
     <Content Include="Resources\JavaScripts\Ace\autocomplete\text_completer.js" />
     <Content Include="Resources\JavaScripts\Ace\autocomplete\util.js" />
     <Content Include="Resources\JavaScripts\Common.js" />
+    <Content Include="Resources\JavaScripts\d3\tip.js" />
     <Content Include="Resources\JavaScripts\Editor.js" />
     <Content Include="Resources\JavaScripts\Ace\ext-searchbox.js" />
     <Content Include="Resources\JavaScripts\Ace\language_tools.js" />
@@ -182,6 +183,8 @@
     <Content Include="Resources\Layout\Images\Icons\VsConsoleProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsWebProject.PNG" />
     <Content Include="Resources\Layout\site.css" />
+    <Content Include="Resources\JavaScripts\d3\d3.js" />
+    <Content Include="Resources\JavaScripts\d3\d3.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -282,6 +285,7 @@
     <Content Include="Views\Sources\CreateNewVersionFileSystem.cshtml" />
     <Content Include="Views\Logs\List.cshtml" />
     <Content Include="Views\Logs\Details.cshtml" />
+    <Content Include="Resources\JavaScripts\d3\LICENSE" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

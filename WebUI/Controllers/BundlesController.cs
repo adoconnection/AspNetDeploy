@@ -51,7 +51,7 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateNewVersion(int id)
+        public ActionResult CreateNewVersion(int id, bool isHotfix = false)
         {
             this.CheckPermission(UserRoleAction.VersionCreate);
 
@@ -62,18 +62,19 @@ namespace AspNetDeploy.WebUI.Controllers
                 .First(bv => bv.Id == id );
 
             this.ViewBag.BundleVersion = bundleVersion;
+            this.ViewBag.IsHotfix = isHotfix;
 
             return this.View();
         }
         
         [HttpPost]
-        public ActionResult CreateNewVersion(int fromBundleVersionId, string jsonData, string newVersionName)
+        public ActionResult CreateNewVersion(int fromBundleVersionId, string jsonData, string newVersionName, bool isHotfix = false)
         {
             this.CheckPermission(UserRoleAction.VersionCreate);
 
             if (string.IsNullOrWhiteSpace(newVersionName))
             {
-                return this.RedirectToAction("CreateNewVersion", new {id = fromBundleVersionId});
+                return this.RedirectToAction("CreateNewVersion", new { id = fromBundleVersionId, isHotfix });
             }
 
             BundleVersion sourceBundleVersion = this.Entities.BundleVersion
@@ -176,6 +177,20 @@ namespace AspNetDeploy.WebUI.Controllers
 
             this.Entities.SaveChanges();
 
+            if (isHotfix)
+            {
+                List<BundleVersion> children = this.Entities.BundleVersion.Where( bv => bv.ParentBundleVersionId == sourceBundleVersion.Id).ToList();
+
+                foreach (BundleVersion bundleVersion in children)
+                {
+                    bundleVersion.ParentBundleVersionId = newBundleVersion.Id;
+                }
+
+                newBundleVersion.ParentBundleVersion = sourceBundleVersion;
+            }
+
+            this.Entities.SaveChanges();
+
             return this.RedirectToAction("Details", "Bundles", new { id = newBundleVersion.Bundle.Id});
         }
 
@@ -186,6 +201,9 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("BundleVersions.ProjectVersions.SourceControlVersion.SourceControl")
                 .First( b => b.Id == id);
 
+            List<object> tree = bundle.BundleVersions.Where(bv => bv.ParentBundleVersion == null).Select(TreeSelector).ToList();
+
+            this.ViewBag.BundleVersionsTree = tree;
             this.ViewBag.Bundle = bundle;
 
             return this.View();
@@ -323,6 +341,19 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 id = pv.Id,
                 state = projectState.ToString()
+            };
+        }
+
+        private object TreeSelector(BundleVersion bundleVersion)
+        {
+            return new
+            {
+                id = bundleVersion.Id,
+                name = bundleVersion.Name,
+                isAutoDeploy = bundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0,
+                isDeleted = bundleVersion.IsDeleted,
+                isHead = bundleVersion.IsHead,
+                children = bundleVersion.ChildBundleVersions.Select(TreeSelector).ToList()
             };
         }
     }
