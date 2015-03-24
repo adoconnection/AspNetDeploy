@@ -133,6 +133,11 @@ H3 > a:hover
   stroke-width: 1.5px;
 }
 
+.diagram .node circle.deleted
+{
+    stroke: #aaa;
+}
+
 .diagram .node 
 {
   font: 10px sans-serif;

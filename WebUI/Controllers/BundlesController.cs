@@ -28,28 +28,45 @@ namespace AspNetDeploy.WebUI.Controllers
                 .OrderBy( b => b.OrderIndex)
                 .ToList();
 
-            this.ViewBag.Environments = this.Entities.Environment.ToList();
+            List<Environment> environments = this.Entities.Environment
+                .Include("NextEnvironment")
+                .ToList();
+
+            this.ViewBag.Environments = environments;
 
             this.ViewBag.Bundles = bundles.Select( b => new BundleInfo
             {
                 Bundle = b,
                 BundleVersionsInfo = b.BundleVersions
                     .Where(bv => !bv.IsDeleted)
-                    .Select(bv => new BundleVersionInfo()
+                    .Select(bv =>
                     {
-                        BundleVersion = bv,
-                        State = this.taskRunner.GetBundleState(b.Id),
-                        ProjectsVersionsInfo = bv.ProjectVersions.Select( pv => new ProjectVersionInfo
+                        BundleVersionInfo bundleVersionInfo = new BundleVersionInfo()
                         {
-                            ProjectVersion = pv,
-                            ProjectState = this.taskRunner.GetProjectState(pv.Id)
-                        }).ToList()
+                            BundleVersion = bv,
+                            State = this.taskRunner.GetBundleState(b.Id),
+                            ProjectsVersionsInfo = bv.ProjectVersions.Select(pv => new ProjectVersionInfo
+                            {
+                                ProjectVersion = pv,
+                                ProjectState = this.taskRunner.GetProjectState(pv.Id)
+                            }).ToList()
+                        };
+
+                        bundleVersionInfo.Environments = new List<Environment>();
+                        int homeEnvironmentId = bv.GetIntProperty("HomeEnvironment");
+
+                        if (homeEnvironmentId > 0)
+                        {
+                            bundleVersionInfo.Environments = environments.First(e => e.Id == homeEnvironmentId).GetNextEnvironments();
+                        }
+
+                        return bundleVersionInfo;
                     }).ToList()
             }).ToList();
 
             return this.View();
         }
-
+        
         [HttpGet]
         public ActionResult CreateNewVersion(int id, bool isHotfix = false)
         {
@@ -129,6 +146,11 @@ namespace AspNetDeploy.WebUI.Controllers
             if (sourceBundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
             {
                 newBundleVersion.SetStringProperty("AutoDeployToEnvironment", sourceBundleVersion.GetIntProperty("AutoDeployToEnvironment").ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (sourceBundleVersion.GetIntProperty("HomeEnvironment") > 0)
+            {
+                newBundleVersion.SetStringProperty("HomeEnvironment", sourceBundleVersion.GetIntProperty("HomeEnvironment").ToString(CultureInfo.InvariantCulture));
             }
 
             this.Entities.BundleVersion.Add(newBundleVersion);
@@ -221,7 +243,20 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Packages.ApprovedOnEnvironments")
                 .First( b => b.Id == id);
 
-            List<Environment> environments = this.Entities.Environment.ToList();
+            IList<Environment> environments = this.Entities.Environment
+                .Include("NextEnvironment")
+                .ToList();
+
+            int homeEnvironment = bundleVersion.GetIntProperty("HomeEnvironment");
+
+            if (homeEnvironment > 0)
+            {
+                environments = environments.First(e => e.Id == homeEnvironment).GetNextEnvironments();
+            }
+            else
+            {
+                environments = new List<Environment>();
+            }
 
             this.ViewBag.Environments = environments;
             this.ViewBag.BundleVersion = bundleVersion;

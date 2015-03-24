@@ -75,40 +75,44 @@
                 <br class="visible-xs" />
 
                 <div class="col-sm-6 text-center">
-                    @foreach (Environment environment in this.ViewBag.Environments)
+                    
+                    @foreach (Environment environment in environments)
                     {
                         List<Publication> publications = bundleVersionInfo.BundleVersion.Packages.SelectMany(p => p.Publications).ToList();
                         Publication publication = publications.OrderByDescending(p => p.CreatedDate).FirstOrDefault(p => p.Environment == environment);
-                        
-                        <div class="col-xs-4 col-sm-3">
-                            <div>
-                                @environment.Name
-                            </div>
-                            @if (publication == null)
-                            {
-                                <img src="~/Resources/Layout/Images/Icons/box-empty64.png" />
-                            }
-                            else
-                            {
-                                switch (publication.State)
-                                {
-                                    case PublicationState.Complete:
-                                        <img src="~/Resources/Layout/Images/Icons/Package-Accept-64.png" />
-                                        break;
-                                    case PublicationState.Error:
-                                        <img src="~/Resources/Layout/Images/Icons/Package-Warning64.png" />
-                                        break;
-                                    case PublicationState.InProgress:
-                                        <img src="~/Resources/Layout/Images/Icons/Package-Progress64.png" />
-                                        break;
-                                    default:
-                                        <img src="~/Resources/Layout/Images/Icons/package64.png" />
-                                        break;
-                                }
 
-                                <div><small class="text-muted">@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy")</small></div>
-                            }
-                        </div>
+                        if (bundleVersionInfo.Environments.Contains(environment))
+                        {
+                            <div class="col-xs-4 col-sm-3">
+                                <div>
+                                    @environment.Name
+                                </div>
+                                @if (publication == null)
+                                {
+                                    <img src="~/Resources/Layout/Images/Icons/box-empty64.png" />
+                                }
+                                else
+                                {
+                                    switch (publication.State)
+                                    {
+                                        case PublicationState.Complete:
+                                            <img src="~/Resources/Layout/Images/Icons/Package-Accept-64.png" />
+                                            break;
+                                        case PublicationState.Error:
+                                            <img src="~/Resources/Layout/Images/Icons/Package-Warning64.png" />
+                                            break;
+                                        case PublicationState.InProgress:
+                                            <img src="~/Resources/Layout/Images/Icons/Package-Progress64.png" />
+                                            break;
+                                        default:
+                                            <img src="~/Resources/Layout/Images/Icons/package64.png" />
+                                            break;
+                                    }
+
+                                    <div><small class="text-muted">@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy")</small></div>
+                                }
+                            </div>
+                        }
                     }
 
                 </div>

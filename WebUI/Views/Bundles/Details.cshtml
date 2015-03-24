@@ -59,12 +59,14 @@
 
             var node = svg.selectAll("g.node")
                 .data(nodes)
-              .enter().append("g")
+                .enter()
+                .append("g")
                 .attr("class", "node")
                 .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
 
             node.append("circle")
-                .attr("r", 4.5);
+                .attr("r", 4.5)
+                .attr("class", function(d) { return d.isDeleted ? 'deleted' : ''; });
              //   .on('mouseover', tip.show)
             //    .on('mouseout', tip.hide);
 
@@ -100,7 +102,7 @@
 
     </div>
 
-    @foreach (BundleVersion bundleVersion in bundle.BundleVersions.Where(bv => !bv.IsDeleted))
+    @foreach (BundleVersion bundleVersion in bundle.BundleVersions.Where(bv => !bv.IsDeleted).OrderByDescending( bv => bv.Name))
     {
         <h3>
             @bundleVersion.Name

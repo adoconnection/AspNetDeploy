@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewBag.Title = "Index";
     ViewBag.PageClass = "bundlesPage";
 
@@ -61,13 +62,14 @@
                 <td>@Html.DropDownList(
                         "projectVersion-" + projectVersion.Id,
                         projectVersion.SourceControlVersion.SourceControl.SourceControlVersions
+                            .Where(scv => scv.GetStringProperty("Revision") != null)
                             .Select( scv => new SelectListItem()
                             {
                                 Text = projectVersion.SourceControlVersion.SourceControl.Name + " / " + scv.Name,
-                                Value = scv.Id.ToString()
+                                Value = scv.Id.ToString(CultureInfo.InvariantCulture)
                             })
                             .ToList(),
-                      new { Class = "projectSelector", ProjectId = projectVersion.Id }
+                        new { Class = "projectSelector", ProjectId = projectVersion.Id }
                         )</td>
             </tr>
         }

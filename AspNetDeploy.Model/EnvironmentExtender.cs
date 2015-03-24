@@ -6,6 +6,14 @@ namespace AspNetDeploy.Model
 {
     public partial class Environment
     {
+        public IList<Environment> GetNextEnvironments()
+        {
+            IList<Environment> nextEnvironments = new List<Environment>();
+            this.FillEnvironmentsRecursive(nextEnvironments, this);
+
+            return nextEnvironments;
+        }  
+
         public int GetIntProperty(string key, int defaultValue = 0)
         {
             string stringProperty = this.GetStringProperty(key);
@@ -83,5 +91,19 @@ namespace AspNetDeploy.Model
 
             property.Value = value;
         }
+        private void FillEnvironmentsRecursive(ICollection<Environment> environmens, Environment environment)
+        {
+            if (environmens.Contains(environment))
+            {
+                return;
+            }
+
+            environmens.Add(environment);
+
+            foreach (Environment nextEnvironment in environment.NextEnvironment)
+            {
+                this.FillEnvironmentsRecursive(environmens, nextEnvironment);
+            }
+        }    
     }
 }

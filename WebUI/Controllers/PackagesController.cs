@@ -23,7 +23,20 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("ApprovedOnEnvironments")
                 .First(p => p.Id == id);
 
-            List<Environment> environments = this.Entities.Environment.ToList();
+            IList<Environment> environments = this.Entities.Environment
+                .Include("NextEnvironment")
+                .ToList();
+
+            int homeEnvironment = package.BundleVersion.GetIntProperty("HomeEnvironment");
+
+            if (homeEnvironment > 0)
+            {
+                environments = environments.First(e => e.Id == homeEnvironment).GetNextEnvironments();
+            }
+            else
+            {
+                environments = new List<Environment>();
+            }
 
             this.ViewBag.Package = package;
             this.ViewBag.Environments = environments;
