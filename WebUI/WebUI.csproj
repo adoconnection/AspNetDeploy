@@ -266,7 +266,6 @@
     <Content Include="Views\BundleVersionDeployment\EditWebsiteStep.cshtml" />
     <Content Include="Views\Environments\Details.cshtml" />
     <Content Include="Views\Bundles\VersionPublication.cshtml" />
-    <Content Include="Views\Packages\Details.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_Layout_Empty.cshtml" />
     <Content Include="Views\Users\Add.cshtml" />
@@ -286,6 +285,7 @@
     <Content Include="Views\Logs\List.cshtml" />
     <Content Include="Views\Logs\Details.cshtml" />
     <Content Include="Resources\JavaScripts\d3\LICENSE" />
+    <Content Include="Views\Packages\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
