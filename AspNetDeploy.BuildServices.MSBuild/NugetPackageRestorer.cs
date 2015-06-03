@@ -17,7 +17,6 @@ namespace AspNetDeploy.BuildServices.MSBuild
             this.solutionDirectory = solutionDirectory;
         }
 
-
         public void Initialize(IEventSource eventSource)
         {
             eventSource.ProjectStarted += this.OnProjectBuildStarted;

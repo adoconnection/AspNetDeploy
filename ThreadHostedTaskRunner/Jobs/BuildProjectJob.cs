@@ -59,6 +59,8 @@ namespace ThreadHostedTaskRunner.Jobs
                     entities.SaveChanges();
                 });
 
+
+
             entities.SaveChanges();
         }
 

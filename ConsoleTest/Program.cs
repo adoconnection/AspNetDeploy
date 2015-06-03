@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.DeploymentServices.WCFSatellite;
 using AspNetDeploy.Model;
 using AspNetDeploy.Variables;
 using AspNetDeploy.WebUI.Bootstrapper;
+using BuildServices.NuGet;
+using LocalEnvironment;
 using ObjectFactory;
 using ThreadHostedTaskRunner;
 
@@ -26,7 +29,12 @@ namespace ConsoleTest
 
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
-            foreach (Machine machine in entities.Machine)
+            MSBuildBuildService service = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+            service.Build(
+                @"H:\AspNetDeployWorkingFolder\Sources\5\45\CodeBase.Documents.WebUI\CodeBase.Documents.WebUI.csproj",
+                s => Console.WriteLine("started: " + s), (s, b, arg3) => Console.WriteLine("done: " + arg3), (s, s1, arg3, arg4, arg5, arg6) => Console.WriteLine("Err: " + s));
+
+            /*foreach (Machine machine in entities.Machine)
             {
                 Console.Write(machine.Name + "...");
                 Console.WriteLine(Factory.GetInstance<ISatelliteMonitor>().IsAlive(machine));
@@ -34,7 +42,7 @@ namespace ConsoleTest
 
             Console.ReadKey();
 
-            RunScheduler();
+            RunScheduler();*/
 
             WriteLine("Main thread complete");
             Console.ReadKey();

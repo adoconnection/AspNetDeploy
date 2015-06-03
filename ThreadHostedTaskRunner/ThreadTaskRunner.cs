@@ -69,14 +69,12 @@ namespace ThreadHostedTaskRunner
         public static void ProcessTasks()
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
-
        
             TakeSources(entities);
             BuildProjects(entities);
             PackageBundles(entities);
             ScheduleAutoDeployToTest(entities);
             DeployScheduledPublications(entities);
-            
         }
 
         private static void DeployScheduledPublications(AspNetDeployEntities entities)
@@ -200,17 +198,25 @@ namespace ThreadHostedTaskRunner
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
                         pv.ProjectType.HasFlag(ProjectType.Web)
                 )
-                .Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastPackageRevision"))
+                .Where(pv => 
+                    pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastPackageRevision"))
                 .ToList();
 
             List<BundleVersion> bundleVersionsToPack = projectVersions.SelectMany( pv => pv.BundleVersions).Distinct().ToList();
-
-            bundleVersionsToPack.ForEach(bv => TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Packaging));
 
             List<BundleVersion> errorBundles = new List<BundleVersion>();
 
             bundleVersionsToPack.ForEach(bundleVersion =>
             {
+                if (bundleVersion.ProjectVersions.Any( pv => 
+                    TaskRunnerContext.GetProjectVersionState(pv.Id) != ProjectState.Idle ||
+                    pv.GetStringProperty("LastBuildResult") != "Done"))
+                {
+                    return;
+                }
+
+                TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Packaging);
+
                 try
                 {
                     PackageJob job = new PackageJob();
@@ -256,6 +262,11 @@ namespace ThreadHostedTaskRunner
                 .Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
                 .ToList();
 
+            foreach (var projectVersion in projectVersions.Where(pv => pv.GetStringProperty("LastBuildResult") == "Error"))
+            {
+                TaskRunnerContext.SetProjectVersionState(projectVersion.Id, ProjectState.Error);
+            }
+
             List<BundleVersion> affectedBundleVersions = projectVersions
                 .SelectMany( pv => pv.BundleVersions)
                 .Where(bv => !bv.IsDeleted)
@@ -271,22 +282,42 @@ namespace ThreadHostedTaskRunner
 
             entities.SaveChanges();
 
-            foreach (var pair in projectVersions.Select(pv => new { pv.SolutionFile, pv.SourceControlVersion }).Distinct())
+            foreach (var grouping in projectVersions.GroupBy(pv => new { pv.SolutionFile, pv.SourceControlVersion }))
             {
+                /*if (grouping.Any(pv => TaskRunnerContext.GetProjectVersionState(pv.Id) == ProjectState.Error))
+                {
+                    continue;
+                }*/
+
                 try
                 {
+                    foreach (ProjectVersion projectVersion in grouping)
+                    {
+                        projectVersion.SetStringProperty("LastBuildResult", "Not started");
+                    }
+
                     BuildProjectJob job = new BuildProjectJob();
                     job.Start(
-                        pair.SourceControlVersion.Id, 
-                        pair.SolutionFile, 
-                        projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building), 
-                        (projectId, isSuccess) => TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error));
+                        grouping.Key.SourceControlVersion.Id,
+                        grouping.Key.SolutionFile, 
+                        projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building),
+                        (projectId, isSuccess) =>
+                        {
+                            ProjectVersion handlerProjectVersion = projectVersions.FirstOrDefault(pv => pv.Id == projectId);
+
+                            if (handlerProjectVersion != null)
+                            {
+                                handlerProjectVersion.SetStringProperty("LastBuildResult", isSuccess ? "Done" : "Error");
+                            }
+
+                            TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
+                        });
                 }
                 catch (Exception e)
                 {
                     AspNetDeployException aspNetDeployException = new AspNetDeployException("Build project failed", e);
-                    aspNetDeployException.Data.Add("SourceControl version Id", pair.SourceControlVersion.Id);
-                    aspNetDeployException.Data.Add("Solution file", pair.SolutionFile);
+                    aspNetDeployException.Data.Add("SourceControl version Id", grouping.Key.SourceControlVersion.Id);
+                    aspNetDeployException.Data.Add("Solution file", grouping.Key.SolutionFile);
 
                     Factory.GetInstance<ILoggingService>().Log(aspNetDeployException, null);
 
@@ -297,10 +328,22 @@ namespace ThreadHostedTaskRunner
                 }
             }
 
+            foreach (ProjectVersion projectVersion in projectVersions)
+            {
+                if (projectVersion.GetStringProperty("LastBuildRevision") != projectVersion.SourceControlVersion.GetStringProperty("Revision"))
+                {
+                    projectVersion.SetStringProperty("LastBuildRevision", projectVersion.SourceControlVersion.GetStringProperty("Revision"));
+                }
+            }
+
             affectedBundleVersions.ForEach(bv =>
             {
                 TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle);
-                bv.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildStartDate).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+
+                if (bv.ProjectVersions.All(pv => TaskRunnerContext.GetProjectVersionState(pv.Id) == ProjectState.Idle))
+                {
+                    bv.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildStartDate).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+                }
             });
 
             entities.SaveChanges();

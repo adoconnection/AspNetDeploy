@@ -59,6 +59,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.BuildServices.MSBuild\BuildServices.MSBuild.csproj">
+      <Project>{264F8BF4-0F49-4167-9283-7F02D7A29731}</Project>
+      <Name>BuildServices.MSBuild</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.ContinuousIntegration\ContinuousIntegration.csproj">
       <Project>{BD2B7DB5-C23E-4D5E-943C-0150FE1E91D9}</Project>
       <Name>ContinuousIntegration</Name>
@@ -78,6 +82,14 @@
     <ProjectReference Include="..\AspNetDeploy.Variables\Variables.csproj">
       <Project>{B542EA6D-378B-4DA7-85F8-EE51CEBB457C}</Project>
       <Name>Variables</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BuildServices.NuGet\BuildServices.NuGet.csproj">
+      <Project>{F91D4165-BA2F-4C06-9BE7-2662C0EA7B0E}</Project>
+      <Name>BuildServices.NuGet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
+      <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
+      <Name>LocalEnvironment</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
