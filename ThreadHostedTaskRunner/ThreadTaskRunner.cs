@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
-using Microsoft.VisualBasic;
 using ObjectFactory;
 using ThreadHostedTaskRunner.Jobs;
-using Environment = AspNetDeploy.Model.Environment;
 
 namespace ThreadHostedTaskRunner
 {
@@ -145,7 +141,8 @@ namespace ThreadHostedTaskRunner
             List<BundleVersion> bundleVersionsWithAutoDeploy = bundleVersions
                 .Where(bv => 
                     bv.GetIntProperty("AutoDeployToEnvironment") > 0 && 
-                    bv.Packages.Any())
+                    bv.Packages.Any() &&
+                    bv.ProjectVersions.All(pv => !pv.SourceControlVersion.IsArchived))
                 .ToList();
 
             bundleVersionsWithAutoDeploy.ForEach(bundleVersion =>
@@ -202,18 +199,22 @@ namespace ThreadHostedTaskRunner
                     pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastPackageRevision"))
                 .ToList();
 
-            List<BundleVersion> bundleVersionsToPack = projectVersions.SelectMany( pv => pv.BundleVersions).Distinct().ToList();
+            List<BundleVersion> bundleVersionsToPack = projectVersions
+                .SelectMany( pv => pv.BundleVersions)
+                .Distinct()
+                .Where( bv => bv.ProjectVersions.All( pv => !pv.SourceControlVersion.IsArchived))
+                .ToList();
 
             List<BundleVersion> errorBundles = new List<BundleVersion>();
 
             bundleVersionsToPack.ForEach(bundleVersion =>
             {
-                if (bundleVersion.ProjectVersions.Any( pv => 
+                /*if (bundleVersion.ProjectVersions.Any( pv => 
                     TaskRunnerContext.GetProjectVersionState(pv.Id) != ProjectState.Idle ||
                     pv.GetStringProperty("LastBuildResult") != "Done"))
                 {
                     return;
-                }
+                }*/
 
                 TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Packaging);
 

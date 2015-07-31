@@ -42,18 +42,23 @@ namespace AspNetDeploy.SourceControls.SVN
                 {
                     return this.LoadSourcesFromScratch(sourceControlVersion, path, client);
                 }
-                
-                return this.LoadSourcesWithUpdate(path, client);
+
+                return this.LoadSourcesWithUpdate(sourceControlVersion, path, client);
             }
         }
 
-        private LoadSourcesResult LoadSourcesWithUpdate(string path, SvnClient client)
+        private LoadSourcesResult LoadSourcesWithUpdate(SourceControlVersion sourceControlVersion, string path, SvnClient client)
         {
             SvnUpdateResult result;
 
             try
             {
                 client.Update(path, out result);
+            }
+            catch (SvnInvalidNodeKindException e)
+            {
+                Directory.Delete(path, true);
+                return this.LoadSourcesFromScratch(sourceControlVersion, path, client);
             }
             catch (SvnWorkingCopyException e)
             {

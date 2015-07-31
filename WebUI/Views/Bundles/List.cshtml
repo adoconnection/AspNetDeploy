@@ -58,9 +58,15 @@
                     {
                         foreach (ProjectVersion projectVersion in bundleVersionInfo.BundleVersion.ProjectVersions)
                         {
+                            bool isArchived = projectVersion.SourceControlVersion.IsArchived;
+                            
                             <div>
-                                <small>
+                                <small class="@(isArchived ? "text-muted" : "")">
                                     @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name
+                                    @if (isArchived)
+                                    {
+                                        <span>(archived)</span>
+                                    }
                                     <span id="@("idProjectVersionState" + projectVersion.Id)">
                                         <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
                                         <span class="status text-muted" style="display: none;"></span>
