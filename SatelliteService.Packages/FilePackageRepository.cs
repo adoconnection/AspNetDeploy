@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Ionic.Zip;
@@ -15,7 +17,7 @@ namespace SatelliteService.Packages
             this.packagePath = packagePath;
         }
 
-        public void ExtractProject(int projectId, string destination)
+        public void ExtractProject(int projectId, string destination, Action<string, bool> beforeExtracting = null)
         {
             ReadOptions options = new ReadOptions();
             options.Encoding = Encoding.UTF8;
@@ -31,10 +33,47 @@ namespace SatelliteService.Packages
 
                     using (ZipFile projectZipFile = ZipFile.Read(extractedEntryStream, options))
                     {
-                        projectZipFile.ExtractAll(destination, ExtractExistingFileAction.OverwriteSilently);
+                        projectZipFile.ExtractProgress += (sender, args) =>
+                        {
+                            if (args.EventType == ZipProgressEventType.Extracting_BeforeExtractEntry)
+                            {
+                                if (beforeExtracting != null)
+                                {
+                                    beforeExtracting(args.ExtractLocation, args.CurrentEntry.IsDirectory);
+                                }
+                            }
+                        };
+
+                        projectZipFile.ExtractAll(destination, ExtractExistingFileAction.OverwriteSilently | ExtractExistingFileAction.InvokeExtractProgressEvent);
                     }
                 }
             }
+        }
+
+        public IList<string> ListFiles(int projectId)
+        {
+            ReadOptions options = new ReadOptions();
+            options.Encoding = Encoding.UTF8;
+
+            IList<string> result = new List<string>();
+
+            using (ZipFile packageZipFile = ZipFile.Read(this.packagePath, options))
+            {
+                ZipEntry projectZipEntry = packageZipFile.Entries.First(e => e.FileName.StartsWith("project-" + projectId + "-"));
+
+                using (MemoryStream extractedEntryStream = new MemoryStream())
+                {
+                    projectZipEntry.Extract(extractedEntryStream);
+                    extractedEntryStream.Position = 0;
+
+                    using (ZipFile projectZipFile = ZipFile.Read(extractedEntryStream, options))
+                    {
+                        this.ListEntriesRecursive(result, "/", projectZipFile.Entries);
+                    }
+                }
+            }
+
+            return result;
         }
 
         public Stream LoadProjectFile(int projectId, string file)
@@ -70,5 +109,16 @@ namespace SatelliteService.Packages
                 }
             }
         }
+
+        private void ListEntriesRecursive(IList<string> result, string parentPath, IEnumerable<ZipEntry> entries)
+        {
+            foreach (ZipEntry entry in entries)
+            {
+                result.Add(entry.FileName);
+
+            }
+        }
+
+
     }
 }

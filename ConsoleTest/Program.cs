@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using AspNetDeploy.BuildServices.MSBuild;
-using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.DeploymentServices.WCFSatellite;
 using AspNetDeploy.Model;
@@ -12,17 +12,72 @@ using AspNetDeploy.Variables;
 using AspNetDeploy.WebUI.Bootstrapper;
 using BuildServices.NuGet;
 using LocalEnvironment;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
+using Microsoft.Build.Framework;
 using ObjectFactory;
 using ThreadHostedTaskRunner;
 
 namespace ConsoleTest
 {
+    public class ConsoleLogger : ILogger
+    {
+        public void Initialize(IEventSource eventSource)
+        {
+            //eventSource.ProjectStarted += (sender, args) => Console.WriteLine("Started " + args.ProjectFile);
+            eventSource.ProjectFinished += (sender, args) => Console.WriteLine("finished " + args.ProjectFile);
+            eventSource.ErrorRaised += (sender, args) =>
+            {
+                Console.WriteLine("ERROR");
+                Console.WriteLine("* " + args.ProjectFile);
+                Console.WriteLine("* " + args.File);
+                Console.WriteLine("* " + args.LineNumber + " / " + args.ColumnNumber);
+                Console.WriteLine("* " + args.Message);
+            };
+        }
+
+        public void Shutdown()
+        {
+            
+        }
+
+        public LoggerVerbosity Verbosity { get; set; }
+        public string Parameters { get; set; }
+    }
+
     class Program
     {
         private static bool WorkerComplete = false;
 
+
+
         static void Main(string[] args)
         {
+            ProjectCollection projectCollection = new ProjectCollection();
+
+            Dictionary<string, string> globalProperty = new Dictionary<string, string>
+            {
+                {"Configuration", "Release"},
+                {"Platform", "Any CPU"}
+            };
+
+            string path = @"C:\AspNetDeployWorkingFolderO\Sources\5\63\Documentoved.sln";
+
+            BuildRequestData buildRequestData = new BuildRequestData(path, globalProperty, null, new[] { "Rebuild" }, null);
+
+            BuildParameters buildParameters = new BuildParameters(projectCollection);
+            buildParameters.MaxNodeCount = 1;
+            buildParameters.Loggers = new List<ILogger>
+            {
+                new ConsoleLogger()
+            };
+
+            BuildResult buildResult = Microsoft.Build.Execution.BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
+
+            Console.WriteLine("building " + buildResult.OverallResult);
+
+/*
+
             ObjectFactoryConfigurator.Configure();
 
             Console.WriteLine("Testing satellites");
@@ -32,7 +87,7 @@ namespace ConsoleTest
             MSBuildBuildService service = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
             service.Build(
                 @"H:\AspNetDeployWorkingFolder\Sources\5\45\CodeBase.Documents.WebUI\CodeBase.Documents.WebUI.csproj",
-                s => Console.WriteLine("started: " + s), (s, b, arg3) => Console.WriteLine("done: " + arg3), (s, s1, arg3, arg4, arg5, arg6) => Console.WriteLine("Err: " + s));
+                s => Console.WriteLine("started: " + s), (s, b, arg3) => Console.WriteLine("done: " + arg3), (s, s1, arg3, arg4, arg5, arg6) => Console.WriteLine("Err: " + s));*/
 
             /*foreach (Machine machine in entities.Machine)
             {

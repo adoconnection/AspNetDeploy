@@ -20,6 +20,8 @@ namespace AspNetDeploy.BuildServices.MSBuild
 
         public BuildSolutionResult Build(string solutionFilePath, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
         {
+            nugetPackageManager.RestorePackages(solutionFilePath);
+
             ProjectCollection projectCollection = new ProjectCollection();
 
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
@@ -34,7 +36,6 @@ namespace AspNetDeploy.BuildServices.MSBuild
             buildParameters.MaxNodeCount = 1;
             buildParameters.Loggers = new List<ILogger>
             {
-                new NugetPackageRestorer(nugetPackageManager, Path.GetDirectoryName(solutionFilePath)),
                 new MSBuildLogger(projectBuildStarted, projectBuildComplete, errorLogger)
             };
 

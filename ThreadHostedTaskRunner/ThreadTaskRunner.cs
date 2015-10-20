@@ -202,7 +202,9 @@ namespace ThreadHostedTaskRunner
             List<BundleVersion> bundleVersionsToPack = projectVersions
                 .SelectMany( pv => pv.BundleVersions)
                 .Distinct()
-                .Where( bv => bv.ProjectVersions.All( pv => !pv.SourceControlVersion.IsArchived))
+                .Where( bv => bv.ProjectVersions.All( 
+                    pv => !pv.SourceControlVersion.IsArchived && 
+                    pv.GetStringProperty("LastBuildResult") != "Error"))
                 .ToList();
 
             List<BundleVersion> errorBundles = new List<BundleVersion>();
@@ -295,6 +297,7 @@ namespace ThreadHostedTaskRunner
                     foreach (ProjectVersion projectVersion in grouping)
                     {
                         projectVersion.SetStringProperty("LastBuildResult", "Not started");
+                        entities.SaveChanges();
                     }
 
                     BuildProjectJob job = new BuildProjectJob();
@@ -309,6 +312,7 @@ namespace ThreadHostedTaskRunner
                             if (handlerProjectVersion != null)
                             {
                                 handlerProjectVersion.SetStringProperty("LastBuildResult", isSuccess ? "Done" : "Error");
+                                entities.SaveChanges();
                             }
 
                             TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
@@ -339,6 +343,12 @@ namespace ThreadHostedTaskRunner
 
             affectedBundleVersions.ForEach(bv =>
             {
+                if (bv.ProjectVersions.Any(pv => pv.GetStringProperty("LastBuildResult") == "Error"))
+                {
+                    TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Error);
+                    return;
+                }
+
                 TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle);
 
                 if (bv.ProjectVersions.All(pv => TaskRunnerContext.GetProjectVersionState(pv.Id) == ProjectState.Idle))

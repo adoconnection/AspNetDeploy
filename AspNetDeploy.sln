@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{716AC799-37AF-45F5-8716-8F6F415F3349}"
 EndProject
@@ -126,6 +126,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetDeploy.Logging.DatabaseLogger", "AspNetDeploy.Logging.DatabaseLogger\AspNetDeploy.Logging.DatabaseLogger.csproj", "{9C1E615D-45D7-42B7-BBF5-A49E6C18A481}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "Enums\Enums.csproj", "{7A050DF8-5017-4FBC-AF33-DBA7AAF4C781}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Man", "0. Man", "{5ED27A12-6731-43C0-8EE5-95BCCF951481}"
+	ProjectSection(SolutionItems) = preProject
+		Targets.txt = Targets.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

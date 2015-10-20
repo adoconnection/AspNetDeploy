@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using AspNetDeploy.Contracts;
 
 namespace BuildServices.NuGet
@@ -24,6 +25,22 @@ namespace BuildServices.NuGet
                 packagesConfigPath,
                 "https://www.nuget.org/api/v2/",
                 solutionDirectory);
+
+            process.Start();
+
+            process.WaitForExit();
+        }
+
+        public void RestorePackages(string solutionFile)
+        {
+            Process process = new Process();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+
+            process.StartInfo.FileName = this.pathServices.GetNugetPath();
+            process.StartInfo.Arguments = string.Format(
+                "restore \"{0}\"",
+                solutionFile);
 
             process.Start();
 

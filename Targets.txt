@@ -1,0 +1,17 @@
+CSPROJ
+
+remove:
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+
+  set:
+	<Project ToolsVersion="12" 
+
+
+
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB
+
+C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v10.0 copy to
+C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v11.0
