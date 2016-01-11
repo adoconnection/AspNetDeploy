@@ -63,6 +63,8 @@
                         "projectVersion-" + projectVersion.Id,
                         projectVersion.SourceControlVersion.SourceControl.SourceControlVersions
                             .Where(scv => scv.GetStringProperty("Revision") != null)
+                            .OrderBy(scv => scv.SourceControl.Name)
+                            .ThenByDescending(scv => scv.Name)
                             .Select( scv => new SelectListItem()
                             {
                                 Text = projectVersion.SourceControlVersion.SourceControl.Name + " / " + scv.Name,

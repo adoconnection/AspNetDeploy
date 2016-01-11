@@ -35,6 +35,7 @@
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsHead" Type="bit" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BundleVersionProperty">
           <Key>
@@ -364,7 +365,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="1000" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsHead" Type="bit" Nullable="false" />
-          <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="IsArchivedId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -386,6 +387,7 @@
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="IsDisabled" Type="bit" Nullable="false" />
+          <Property Name="ApiKey" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_AspNetDeployException_Exception">
           <End Role="Exception" Type="Self.Exception" Multiplicity="1" />
@@ -1586,6 +1588,7 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ChildBundleVersions" Relationship="AspNetDeployModel.FK_BundleVersion_BundleVersion" FromRole="BundleVersion" ToRole="BundleVersion1" />
           <NavigationProperty Name="ParentBundleVersion" Relationship="AspNetDeployModel.FK_BundleVersion_BundleVersion" FromRole="BundleVersion1" ToRole="BundleVersion" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -1738,7 +1741,7 @@
           <Property Name="ParentVersionId" Type="Int32" />
           <NavigationProperty Name="ChildSourceControlVersions" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersion1" />
           <NavigationProperty Name="ParentSourceControlVersion" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion1" ToRole="SourceControlVersion" />
-          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <Property Name="ArchiveState" Type="AspNetDeployModel.SourceControlVersionArchiveState" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -2242,6 +2245,7 @@
           <NavigationProperty Name="PackageApprovedOnEnvironment" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_User" FromRole="User" ToRole="PackageApprovedOnEnvironment" />
           <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_User" FromRole="User" ToRole="Publication" />
           <NavigationProperty Name="AspNetDeployException" Relationship="AspNetDeployModel.FK_AspNetDeployException_User" FromRole="User" ToRole="AspNetDeployException" />
+          <Property Name="ApiKey" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_PackageApprovedOnEnvironment_User">
           <End Type="AspNetDeployModel.User" Role="User" Multiplicity="1" />
@@ -2448,6 +2452,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EnumType Name="SourceControlVersionArchiveState" a:ExternalTypeName="SourceControlVersionArchiveState" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -2468,6 +2473,7 @@
           <EntitySetMapping Name="BundleVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.BundleVersion">
               <MappingFragment StoreEntitySet="BundleVersion">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="ParentBundleVersionId" ColumnName="ParentBundleVersionId" />
                 <ScalarProperty Name="IsHead" ColumnName="IsHead" />
@@ -2593,7 +2599,7 @@
           <EntitySetMapping Name="SourceControlVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlVersion">
               <MappingFragment StoreEntitySet="SourceControlVersion">
-                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="ArchiveState" ColumnName="IsArchivedId" />
                 <ScalarProperty Name="ParentVersionId" ColumnName="ParentVersionId" />
                 <ScalarProperty Name="IsHead" ColumnName="IsHead" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
@@ -2813,6 +2819,7 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="AspNetDeployModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ApiKey" ColumnName="ApiKey" />
                 <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
                 <ScalarProperty Name="Role" ColumnName="RoleId" />
                 <ScalarProperty Name="Password" ColumnName="Password" />

@@ -55,6 +55,14 @@ namespace SourceControls.FileSystem
             };
         }
 
+        public void Archive(SourceControlVersion sourceControlVersion, string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+        }
+
         private static void DeleteContents(string path)
         {
             foreach (string file in Directory.GetFiles(path))

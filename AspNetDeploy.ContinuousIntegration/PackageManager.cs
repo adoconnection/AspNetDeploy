@@ -32,12 +32,13 @@ namespace AspNetDeploy.ContinuousIntegration
                 .Include("ProjectVersions.SourceControlVersion.SourceControl")
                 .First(bv => bv.Id == bundleVersionId);
 
-            Package package = new Package();
-            package.BundleVersion = bundleVersion;
-            package.CreatedDate = DateTime.UtcNow;
+            Package package = new Package
+            {
+                BundleVersion = bundleVersion,
+                CreatedDate = DateTime.UtcNow
+            };
 
             entities.Package.Add(package);
-            entities.SaveChanges();
 
             using (ZipFile zipFile = new ZipFile(Encoding.UTF8))
             {
@@ -62,10 +63,13 @@ namespace AspNetDeploy.ContinuousIntegration
                     
                     zipFile.AddFile(projectPackagePath, "/");
 
-                    PackageEntry packageEntry = new PackageEntry();
-                    packageEntry.Package = package;
-                    packageEntry.ProjectVersion = projectVersion;
-                    packageEntry.Revision = projectVersion.SourceControlVersion.GetStringProperty("Revision");
+                    PackageEntry packageEntry = new PackageEntry
+                    {
+                        Package = package,
+                        ProjectVersion = projectVersion,
+                        Revision = projectVersion.SourceControlVersion.GetStringProperty("Revision")
+                    };
+
                     entities.PackageEntry.Add(packageEntry);
                 }
 

@@ -8,9 +8,9 @@ using ObjectFactory;
 
 namespace ThreadHostedTaskRunner.Jobs
 {
-    public class BuildProjectJob
+    public class BuildJob
     {
-        public void Start(int sourceControlVersionId, string solutionFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
+        public void Start(int sourceControlVersionId, string solutionOrProjectFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
@@ -23,7 +23,7 @@ namespace ThreadHostedTaskRunner.Jobs
             BuildManager buildManager = Factory.GetInstance<BuildManager>();
             buildManager.Build(
                 sourceControlVersionId,
-                solutionFileName,
+                solutionOrProjectFileName,
                 projectVersionId =>
                 {
                     projectBuildStarted(projectVersionId);

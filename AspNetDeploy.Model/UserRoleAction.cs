@@ -17,6 +17,8 @@
         EnvironmentChangeVariables,
 
         ManageUsers,
-        ViewLogs
+        ViewLogs,
+
+        SourceVersionsManage
     }
 }

@@ -50,6 +50,25 @@ namespace AspNetDeploy.ContinuousIntegration
             };
         }
 
+        public ArhiveResult Archive(int sourceControlVersionId)
+        {
+            AspNetDeployEntities entities = new AspNetDeployEntities();
+
+            SourceControlVersion sourceControlVersion = entities.SourceControlVersion
+                .Include("Properties")
+                .First(sc => sc.Id == sourceControlVersionId);
+
+            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControlId, sourceControlVersion.Id);
+
+            repository.Archive(sourceControlVersion, sourcesFolder);
+
+            sourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Archived;
+            entities.SaveChanges();
+
+            return new ArhiveResult() { IsSuccess = true};
+        }
+
         private LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string sourcesFolder)
         {
             ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);

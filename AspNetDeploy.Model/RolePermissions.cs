@@ -41,6 +41,8 @@ namespace AspNetDeploy.Model
 
                     UserRoleAction.EnvironmentCreate,
                     UserRoleAction.EnvironmentChangeVariables,
+
+                    UserRoleAction.SourceVersionsManage
                 }
             },
             {
@@ -81,6 +83,7 @@ namespace AspNetDeploy.Model
                     UserRoleAction.ManageUsers,
                     UserRoleAction.ViewLogs,
 
+                    UserRoleAction.SourceVersionsManage
                 }
             },
         };

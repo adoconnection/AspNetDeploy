@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -303,6 +304,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.ContinuousIntegration\ContinuousIntegration.csproj">
+      <Project>{BD2B7DB5-C23E-4D5E-943C-0150FE1E91D9}</Project>
+      <Name>ContinuousIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>

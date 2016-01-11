@@ -42,10 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Jobs\BuildProjectJob.cs" />
+    <Compile Include="Jobs\BuildJob.cs" />
     <Compile Include="Jobs\DeploymentJob.cs" />
     <Compile Include="Jobs\PackageJob.cs" />
     <Compile Include="Jobs\SourceControlJob.cs" />
+    <Compile Include="ProjectsBuildStrategy.cs" />
+    <Compile Include="SolutionBuildStrategy.cs" />
     <Compile Include="TaskRunnerContext.cs" />
     <Compile Include="ThreadTaskRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +64,10 @@
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Exceptions\Exceptions.csproj">
+      <Project>{676173f9-2e48-4306-901f-d1998cfd2057}</Project>
+      <Name>Exceptions</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>

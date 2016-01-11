@@ -20,15 +20,15 @@
                         break;
 
                     case SourceControlType.Git:
-                    <small>Git</small>
+                        <small>Git</small>
                         break;
 
                     case SourceControlType.FileSystem:
-                    <small>File system</small>
+                        <small>File system</small>
                         break;
 
                     default:
-                    <small>Other</small>
+                        <small>Other</small>
                         break;
                 }
             </div>
@@ -51,7 +51,7 @@
             break;
 
         case SourceControlType.FileSystem:
-        @RenderFileSystem(sourceControl)
+            @RenderFileSystem(sourceControl)
             break;
 
         default:
@@ -70,22 +70,14 @@
         <dt>Login</dt>
         <dd>@sourceControl.GetStringProperty("Login")</dd>
         @*<dt>Password</dt>
-        <dd>@sourceControl.GetStringProperty("Password")</dd>*@
+            <dd>@sourceControl.GetStringProperty("Password")</dd>*@
     </dl>
 
     <hr />
 
-    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
+    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions.OrderByDescending(bv => bv.Name))
     {
-        <h3>
-            @sourceControlVersion.Name
-            
-            @if (sourceControlVersion.IsArchived)
-            {
-                <small>Archived</small>
-            }
-
-        </h3>
+        @RenderName(sourceControlVersion)
 
         <div class="row">
             <div class="col-sm-7">
@@ -97,10 +89,14 @@
                 </dl>
             </div>
             <div class="col-sm-5 text-right">
-                <a href="@Url.Action("CreateNewVersion", new { id = sourceControlVersion.Id })" class="btn btn-default btn-lg">Create new version</a>
+                @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal)
+                {
+                    <a href="@Url.Action("ArchiveVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Archive</a>
+                }
+                <a href="@Url.Action("CreateNewVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Create new version</a>
             </div>
         </div>
-    
+
         <hr />
     }
 }
@@ -116,21 +112,49 @@
 
     <hr />
 
-    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
+    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions.OrderByDescending(bv => bv.Name))
     {
-        <h3>@sourceControlVersion.Name</h3>
-    <div class="row">
-        <div class="col-sm-7">
-            <dl class="dl-horizontal">
-                <dt>URL</dt>
-                <dd>@sourceControlVersion.GetStringProperty("Path")</dd>
-            </dl>
-        </div>
-        <div class="col-sm-5 text-right">
-            <a href="@Url.Action("CreateNewVersion", new { id = sourceControlVersion.Id })" class="btn btn-default btn-lg">Create new version</a>
-        </div>
-    </div>
+        @RenderName(sourceControlVersion)
 
+        <div class="row">
+            <div class="col-sm-7">
+                <dl class="dl-horizontal">
+                    <dt>URL</dt>
+                    <dd>@sourceControlVersion.GetStringProperty("Path")</dd>
+                </dl>
+            </div>
+            <div class="col-sm-5 text-right">
+
+                @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal)
+                {
+                    <a href="@Url.Action("ArchiveVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Archive</a>
+                }
+
+                <a href="@Url.Action("CreateNewVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Create new version</a>
+            </div>
+        </div>
         <hr />
     }
 }
+
+@helper RenderName(SourceControlVersion sourceControlVersion)
+{
+    <h3>
+        @sourceControlVersion.Name
+
+
+        @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archived)
+        {
+            <small>Archived</small>
+        }
+        else
+        {
+            if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archiving)
+            {
+                <small>Archiving</small>
+            }
+        }
+
+    </h3>
+}
+

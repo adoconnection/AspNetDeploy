@@ -15,7 +15,6 @@ namespace AspNetDeploy.SourceControls.Git
             if (Repository.IsValid(path))
             {
                 repository = new Repository(path);
-
             }
             else
             {
@@ -29,6 +28,11 @@ namespace AspNetDeploy.SourceControls.Git
                 command.Execute();
             }
 
+            throw new NotImplementedException();
+        }
+
+        public void Archive(SourceControlVersion sourceControlVersion, string path)
+        {
             throw new NotImplementedException();
         }
     }

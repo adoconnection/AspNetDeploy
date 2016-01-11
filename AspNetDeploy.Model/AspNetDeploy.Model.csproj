@@ -187,6 +187,7 @@
     <Compile Include="SourceControlVersion.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="SourceControlVersionArchiveState.cs" />
     <Compile Include="SourceControlVersionProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>

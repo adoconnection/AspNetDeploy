@@ -8,7 +8,7 @@ namespace AspNetDeploy.Contracts
 
         void WatchForSources();
 
-        SourceControlState GetSourceControlState(int sourceControlId);
+        SourceControlState GetSourceControlVersionState(int sourceControlId);
 
         ProjectState GetProjectState(int projectId);
 

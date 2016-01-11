@@ -17,6 +17,7 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using ObjectFactory;
 using ThreadHostedTaskRunner;
+using Microsoft.Build.Construction;
 
 namespace ConsoleTest
 {
@@ -57,11 +58,16 @@ namespace ConsoleTest
 
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
             {
-                {"Configuration", "Release"},
-                {"Platform", "Any CPU"}
+                {"Configuration", "Release"}
             };
 
-            string path = @"C:\AspNetDeployWorkingFolderO\Sources\5\63\Documentoved.sln";
+
+            string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
+
+            //  SolutionFile solutionFile = SolutionFile.Parse(path);
+
+           // ProjectRootElement element = ProjectRootElement.Open(@"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj");
+
 
             BuildRequestData buildRequestData = new BuildRequestData(path, globalProperty, null, new[] { "Rebuild" }, null);
 
@@ -71,6 +77,7 @@ namespace ConsoleTest
             {
                 new ConsoleLogger()
             };
+
 
             BuildResult buildResult = Microsoft.Build.Execution.BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
 

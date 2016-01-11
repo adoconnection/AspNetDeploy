@@ -14,10 +14,16 @@ namespace ThreadHostedTaskRunner.Jobs
             this.sourceControlVersionId = sourceControlVersionId;
         }
 
-        public void Start()
+        public void UpdateAndParse()
         {
             SourceControlManager sourceControlManager = Factory.GetInstance<SourceControlManager>();
             UpdateAndParseResult updateAndParseResult = sourceControlManager.UpdateAndParse(this.sourceControlVersionId);
+        }
+
+        public void Archive()
+        {
+            SourceControlManager sourceControlManager = Factory.GetInstance<SourceControlManager>();
+            ArhiveResult arhiveResult = sourceControlManager.Archive(this.sourceControlVersionId);
         }
 
     }

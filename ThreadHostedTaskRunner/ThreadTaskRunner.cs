@@ -6,6 +6,7 @@ using System.Threading;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
+using Exceptions;
 using ObjectFactory;
 using ThreadHostedTaskRunner.Jobs;
 
@@ -25,7 +26,7 @@ namespace ThreadHostedTaskRunner
         {
         }
 
-        public SourceControlState GetSourceControlState(int sourceControlId)
+        public SourceControlState GetSourceControlVersionState(int sourceControlId)
         {
             return TaskRunnerContext.GetSourceControlVersionState(sourceControlId);
         }
@@ -66,6 +67,7 @@ namespace ThreadHostedTaskRunner
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
        
+            ArchiveSources(entities);
             TakeSources(entities);
             BuildProjects(entities);
             PackageBundles(entities);
@@ -114,7 +116,7 @@ namespace ThreadHostedTaskRunner
 
                     Factory.GetInstance<ILoggingService>().Log(e, null);
 
-                    if (IsExceptionCritical(e))
+                    if (e.IsCritical())
                     {
                         throw;
                     }
@@ -142,7 +144,7 @@ namespace ThreadHostedTaskRunner
                 .Where(bv => 
                     bv.GetIntProperty("AutoDeployToEnvironment") > 0 && 
                     bv.Packages.Any() &&
-                    bv.ProjectVersions.All(pv => !pv.SourceControlVersion.IsArchived))
+                    bv.ProjectVersions.All(pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal))
                 .ToList();
 
             bundleVersionsWithAutoDeploy.ForEach(bundleVersion =>
@@ -203,7 +205,7 @@ namespace ThreadHostedTaskRunner
                 .SelectMany( pv => pv.BundleVersions)
                 .Distinct()
                 .Where( bv => bv.ProjectVersions.All( 
-                    pv => !pv.SourceControlVersion.IsArchived && 
+                    pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal && 
                     pv.GetStringProperty("LastBuildResult") != "Error"))
                 .ToList();
 
@@ -231,7 +233,7 @@ namespace ThreadHostedTaskRunner
                     Factory.GetInstance<ILoggingService>().Log(e, null);
                     errorBundles.Add(bundleVersion);
 
-                    if (IsExceptionCritical(e))
+                    if (e.IsCritical())
                     {
                         throw;
                     }
@@ -285,53 +287,8 @@ namespace ThreadHostedTaskRunner
 
             entities.SaveChanges();
 
-            foreach (var grouping in projectVersions.GroupBy(pv => new { pv.SolutionFile, pv.SourceControlVersion }))
-            {
-                /*if (grouping.Any(pv => TaskRunnerContext.GetProjectVersionState(pv.Id) == ProjectState.Error))
-                {
-                    continue;
-                }*/
-
-                try
-                {
-                    foreach (ProjectVersion projectVersion in grouping)
-                    {
-                        projectVersion.SetStringProperty("LastBuildResult", "Not started");
-                        entities.SaveChanges();
-                    }
-
-                    BuildProjectJob job = new BuildProjectJob();
-                    job.Start(
-                        grouping.Key.SourceControlVersion.Id,
-                        grouping.Key.SolutionFile, 
-                        projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building),
-                        (projectId, isSuccess) =>
-                        {
-                            ProjectVersion handlerProjectVersion = projectVersions.FirstOrDefault(pv => pv.Id == projectId);
-
-                            if (handlerProjectVersion != null)
-                            {
-                                handlerProjectVersion.SetStringProperty("LastBuildResult", isSuccess ? "Done" : "Error");
-                                entities.SaveChanges();
-                            }
-
-                            TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
-                        });
-                }
-                catch (Exception e)
-                {
-                    AspNetDeployException aspNetDeployException = new AspNetDeployException("Build project failed", e);
-                    aspNetDeployException.Data.Add("SourceControl version Id", grouping.Key.SourceControlVersion.Id);
-                    aspNetDeployException.Data.Add("Solution file", grouping.Key.SolutionFile);
-
-                    Factory.GetInstance<ILoggingService>().Log(aspNetDeployException, null);
-
-                    if (IsExceptionCritical(e))
-                    {
-                        throw;
-                    }
-                }
-            }
+            ProjectsBuildStrategy buildStrategy = new ProjectsBuildStrategy(entities);
+            buildStrategy.Build(projectVersions);
 
             foreach (ProjectVersion projectVersion in projectVersions)
             {
@@ -360,6 +317,39 @@ namespace ThreadHostedTaskRunner
             entities.SaveChanges();
         }
 
+        private static void ArchiveSources(AspNetDeployEntities entities)
+        {
+            List<SourceControlVersion> sourceControlVersions = entities.SourceControlVersion
+                .Include("ProjectVersions")
+                .Include("Properties")
+                .Include("ProjectVersions.BundleVersions")
+                .Include("SourceControl.Properties")
+                .Where(scv => scv.ArchiveState == SourceControlVersionArchiveState.Archiving)
+                .ToList();
+
+            sourceControlVersions
+                .ForEach(sourceControlVersion =>
+                {
+                    TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Archiving);
+
+                    try
+                    {
+                        (new SourceControlJob(sourceControlVersion.Id)).Archive();
+                        TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Idle);
+                    }
+                    catch (Exception e)
+                    {
+                        TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
+                        Factory.GetInstance<ILoggingService>().Log(new AspNetDeployException("Archive sources failed: " + sourceControlVersion.Id, e), null);
+
+                        if (e.IsCritical())
+                        {
+                            throw;
+                        }
+                    }
+                });
+        }
+
         private static void TakeSources(AspNetDeployEntities entities)
         {
             List<SourceControlVersion> sourceControlVersions = entities.SourceControlVersion
@@ -367,7 +357,7 @@ namespace ThreadHostedTaskRunner
                 .Include("Properties")
                 .Include("ProjectVersions.BundleVersions")
                 .Include("SourceControl.Properties")
-                .Where( scv => !scv.IsArchived)
+                .Where( scv => scv.ArchiveState == SourceControlVersionArchiveState.Normal)
                 .ToList();
 
             sourceControlVersions
@@ -383,7 +373,7 @@ namespace ThreadHostedTaskRunner
 
                     try
                     {
-                        (new SourceControlJob(sourceControlVersion.Id)).Start();
+                        (new SourceControlJob(sourceControlVersion.Id)).UpdateAndParse();
                         TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Idle);
                     }
                     catch (Exception e)
@@ -391,7 +381,7 @@ namespace ThreadHostedTaskRunner
                         TaskRunnerContext.SetSourceControlVersionState(sourceControlVersion.Id, SourceControlState.Error);
                         Factory.GetInstance<ILoggingService>().Log(new AspNetDeployException("Take sources failed: " + sourceControlVersion.Id, e), null);
                         
-                        if (IsExceptionCritical(e))
+                        if (e.IsCritical())
                         {
                             throw;
                         }
@@ -405,42 +395,6 @@ namespace ThreadHostedTaskRunner
 
                 });
         }
-
-        private static bool IsExceptionCritical(Exception exception)
-        {
-            if (exception is ThreadAbortException)
-            {
-                return true;
-            }
-
-            if (exception is OutOfMemoryException)
-            {
-                return true;
-            }
-
-            if (exception is AppDomainUnloadedException)
-            {
-                return true;
-            }
-
-            if (exception is BadImageFormatException)
-            {
-                return true;
-            }
-
-            if (exception is CannotUnloadAppDomainException)
-            {
-                return true;
-            }
-
-            if (exception is InvalidProgramException)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
     }
 
     

@@ -93,6 +93,14 @@ namespace AspNetDeploy.SourceControls.SVN
             };
         }
 
+        public void Archive(SourceControlVersion sourceControlVersion, string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+        }
+
         private string GetVersionURI(SourceControlVersion sourceControlVersion)
         {
             return sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL");

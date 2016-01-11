@@ -18,19 +18,19 @@ namespace AspNetDeploy.BuildServices.MSBuild
             this.nugetPackageManager = nugetPackageManager;
         }
 
-        public BuildSolutionResult Build(string solutionFilePath, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
+        public BuildSolutionResult Build(string projectOrSolutionFilePath, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
         {
-            nugetPackageManager.RestorePackages(solutionFilePath);
+            nugetPackageManager.RestorePackages(projectOrSolutionFilePath);
 
             ProjectCollection projectCollection = new ProjectCollection();
 
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
             {
                 {"Configuration", "Release"}, 
-                {"Platform", "Any CPU"}
+                //{"Platform", "Any CPU"}
             };
 
-            BuildRequestData buildRequestData = new BuildRequestData(solutionFilePath, globalProperty, null, new[] { "Rebuild" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(projectOrSolutionFilePath, globalProperty, null, new[] { "Rebuild" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.MaxNodeCount = 1;

@@ -31,6 +31,7 @@ namespace AspNetDeploy.Model
         public bool IsHead { get; set; }
         public Nullable<int> ParentBundleVersionId { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsArchived { get; set; }
     
         public virtual Bundle Bundle { get; set; }
         public virtual ICollection<DeploymentStep> DeploymentSteps { get; set; }

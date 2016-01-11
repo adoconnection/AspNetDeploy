@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Contracts;
-using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
-using MvcSiteMapProvider.Linq;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
@@ -36,7 +35,7 @@ namespace AspNetDeploy.WebUI.Controllers
                     SourceControlVersionsInfo = sc.SourceControlVersions.Select( scv => new SourceControlVersionInfo()
                     {
                         SourceControlVersion = scv,
-                        State = this.taskRunner.GetSourceControlState(scv.Id),
+                        State = this.taskRunner.GetSourceControlVersionState(scv.Id),
                         ProjectVersionsInfo = scv.ProjectVersions
                         .Select(pv =>
                             new ProjectVersionInfo
@@ -75,7 +74,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 scv => new 
                 {
                     id = scv.Id,
-                    state = this.taskRunner.GetSourceControlState(scv.Id).ToString(),
+                    state = this.taskRunner.GetSourceControlVersionState(scv.Id).ToString(),
                     projects = scv.ProjectVersions.Select(pv => new
                     {
                         id = pv.Id,
@@ -99,8 +98,30 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.View();
         }
 
+        public ActionResult ArchiveVersion(int id)
+        {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
+            SourceControlVersion sourceControlVersion = this.Entities.SourceControlVersion
+                .Include("Properties")
+                .Include("ProjectVersions.BundleVersions")
+                .First( sc => sc.Id == id);
+
+            if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archived || sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archiving)
+            {
+                return this.RedirectToAction("Details", new {id = sourceControlVersion.SourceControl.Id});
+            }
+
+            sourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Archiving;
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("Details", new { id = sourceControlVersion.SourceControl.Id });
+        }
+
         public ActionResult CreateNewVersion(int id)
         {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
             SourceControlVersion sourceControlVersion = this.Entities.SourceControlVersion
                 .Include("SourceControl.Properties")
                 .Include("Properties")
@@ -124,6 +145,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [HttpPost]
         public ActionResult CreateNewSvnVersion(CreateNewSvnVersion model)
         {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
             this.CheckPermission(UserRoleAction.VersionCreate);
             return CreateNewVersionInternal(model, scv => scv.SetStringProperty("URL", model.NewVersionURL.Trim('/')));
         }
@@ -131,6 +154,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [HttpPost]
         public ActionResult CreateNewFileSystemVersion(CreateNewFileSystemVersion model)
         {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
             this.CheckPermission(UserRoleAction.VersionCreate);
             return CreateNewVersionInternal(model, scv => scv.SetStringProperty("Path", model.NewVersionPath.Trim('/')));
         }
@@ -138,6 +163,8 @@ namespace AspNetDeploy.WebUI.Controllers
         [HttpGet]
         public ActionResult Add(SourceControlType sourceControlType = SourceControlType.Undefined)
         {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
             if (sourceControlType == SourceControlType.Undefined)
             {
                 return this.View("AddChooseSource");
@@ -164,6 +191,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             newSourceControlVersion.SourceControl = sourceControlVersion.SourceControl;
             newSourceControlVersion.Name = model.NewVersionName;
+            newSourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Normal;
 
             fillProperties(newSourceControlVersion);
 

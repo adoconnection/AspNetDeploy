@@ -8,6 +8,9 @@
         Loading = 21,
         Stopping = 30,
         Error = 40,
-        LockedByBundle = 100
+        LockedByBundle = 100,
+
+        ScheduledForArchive = 200,
+        Archiving = 201
     }
 }

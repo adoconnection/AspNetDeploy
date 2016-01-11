@@ -28,6 +28,7 @@ namespace AspNetDeploy.Model
         public string Password { get; set; }
         public UserRole Role { get; set; }
         public bool IsDisabled { get; set; }
+        public string ApiKey { get; set; }
     
         public virtual ICollection<PackageApprovedOnEnvironment> PackageApprovedOnEnvironment { get; set; }
         public virtual ICollection<Publication> Publication { get; set; }
