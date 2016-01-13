@@ -39,7 +39,7 @@ namespace SatelliteService.Packages
                             {
                                 if (beforeExtracting != null)
                                 {
-                                    beforeExtracting(args.ExtractLocation, args.CurrentEntry.IsDirectory);
+                                    beforeExtracting(Path.Combine(args.ExtractLocation, args.CurrentEntry.FileName), args.CurrentEntry.IsDirectory);
                                 }
                             }
                         };
