@@ -1,0 +1,30 @@
+﻿@model AspNetDeploy.WebUI.Models.Setup.DatabaseStructureStepModel
+@{
+    ViewBag.Title = "ConnectionString";
+    Layout = "~/Views/Shared/_Layout_Empty.cshtml";
+}
+
+<div class="container">
+    <h1>Setup</h1>
+    <h3>Step 2. Initialize database</h3>
+
+    @using (Html.BeginForm("DatabaseStructure", "Setup", new { }, FormMethod.Post, new { Class = "" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("Keyword", "OK")
+
+        <div class="alert alert-info" role="alert">You are ready to setup database structure</div>
+
+        <div >
+            
+        </div>
+
+        <br />
+        <br />
+        <hr />
+        <div>
+            @Html.ActionLink("Back", "ConnectionString", null, new { Class= "btn btn-default btn-lg "})
+            <button type="submit" class="btn btn-default btn-lg pull-right">Initialize database</button>
+        </div>
+    }
+</div>

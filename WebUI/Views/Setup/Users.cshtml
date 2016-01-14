@@ -1,0 +1,63 @@
+﻿@model AspNetDeploy.WebUI.Models.Setup.UsersStepModel
+@{
+    ViewBag.Title = "ConnectionString";
+    Layout = "~/Views/Shared/_Layout_Empty.cshtml";
+}
+
+<div class="container">
+    <h1>Setup</h1>
+    <h3>Step 4. Admin user</h3>
+
+    @using (Html.BeginForm("Users", "Setup", new { }, FormMethod.Post, new { Class = "" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <div>
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { Class = "form-control", placeholder = "" })
+
+                @if (!ViewData.ModelState.IsValidField("Email"))
+                {
+                    <br />
+                    <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Email)</div>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { Class = "form-control", placeholder = "" })
+
+                @if (!ViewData.ModelState.IsValidField("Password"))
+                {
+                    <br />
+                    <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Password)</div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword, new { Class = "form-control", placeholder = "" })
+
+                @if (!ViewData.ModelState.IsValidField("ConfirmPassword"))
+                {
+                    <br />
+                    <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.ConfirmPassword)</div>
+                }
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <hr />
+        <div>
+            @Html.ActionLink("Back", "DatabaseStructure", null, new { Class = "btn btn-default btn-lg " })
+            <button type="submit" class="btn btn-default btn-lg pull-right">Done</button>
+        </div>
+
+    }
+
+</div>

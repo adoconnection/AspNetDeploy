@@ -25,16 +25,17 @@
                 <div class="navbar-collapse collapse">
 
                     <ul class="nav navbar-nav navbar-right">
-
-                        @if (this.Request.IsAuthenticated)
-                        {
-                            <p class="navbar-text">@this.ViewBag.ActiveUser.Name</p>
-                            <li>@Html.ActionLink("Выйти", "LogOut", "Account")</li>
-                        }
-                        else
-                        {
-                            <li>@Html.ActionLink("Войти", "Login", "Account")</li>
-                        }
+                    @*
+    @if (this.Request.IsAuthenticated)
+    {
+        <p class="navbar-text">@this.ViewBag.ActiveUser.Name</p>
+        <li>@Html.ActionLink("Выйти", "LogOut", "Account")</li>
+    }
+    else
+    {
+        <li>@Html.ActionLink("Войти", "Login", "Account")</li>
+    }
+                    *@
                     </ul>
 
                 </div>

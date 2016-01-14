@@ -212,6 +212,7 @@
     <Compile Include="Controllers\ProjectVersionsController.cs" />
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\PublicationsController.cs" />
+    <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Controllers\SourcesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VariablesController.cs" />
@@ -227,6 +228,10 @@
     <Compile Include="Models\DeploymentSteps\ProjectRelatedDeploymentStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\SqlScriptDeploymentStepModel.cs" />
     <Compile Include="Models\EditNewSvnVersion.cs" />
+    <Compile Include="Models\Setup\ConnectionStringStepModel.cs" />
+    <Compile Include="Models\Setup\DatabaseStructureStepModel.cs" />
+    <Compile Include="Models\Setup\UsersStepModel.cs" />
+    <Compile Include="Models\Setup\WorkingFolderStepModel.cs" />
     <Compile Include="Models\VariableAddModel.cs" />
     <Compile Include="Models\Binding.cs" />
     <Compile Include="Models\BundleInfo.cs" />
@@ -288,6 +293,10 @@
     <Content Include="Views\Logs\Details.cshtml" />
     <Content Include="Resources\JavaScripts\d3\LICENSE" />
     <Content Include="Views\Packages\Details.cshtml" />
+    <Content Include="Views\Setup\ConnectionString.cshtml" />
+    <Content Include="Views\Setup\Users.cshtml" />
+    <Content Include="Views\Setup\DatabaseStructure.cshtml" />
+    <Content Include="Views\Setup\WorkingFolder.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

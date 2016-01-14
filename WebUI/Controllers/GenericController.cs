@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -30,6 +31,12 @@ namespace AspNetDeploy.WebUI.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             this.Entities = new AspNetDeployEntities();
+
+            if (this.IsSetupState() && !filterContext.RouteData.Values["controller"].Equals("Setup"))
+            {
+                filterContext.Result = this.RedirectToAction(ConfigurationManager.AppSettings["Settings.SetupState"], "Setup");
+            }
+
             base.OnActionExecuting(filterContext);
         }
 
@@ -40,6 +47,11 @@ namespace AspNetDeploy.WebUI.Controllers
 
         protected override void OnException(ExceptionContext filterContext)
         {
+            if (this.IsSetupState())
+            {
+                return;
+            }
+
             this.loggingService.Log(filterContext.Exception, this.ActiveUser != null ? this.ActiveUser.Id : (int?) null);
 
             base.OnException(filterContext);
@@ -56,6 +68,11 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 throw new HttpException((int)HttpStatusCode.Forbidden, "Not authorized");
             }
+        }
+
+        protected bool IsSetupState()
+        {
+            return !string.IsNullOrEmpty(ConfigurationManager.AppSettings["Settings.SetupState"]);
         }
     }
 }

@@ -54,6 +54,23 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+            MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+
+            DateTime? startDate = null;
+
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj", s =>
+            {
+                if (startDate == null)
+                {
+                    startDate = DateTime.Now;
+                }
+            }, null, null);
+            DateTime endDate = DateTime.Now;
+
+            Console.WriteLine(buildSolutionResult.IsSuccess);
+            Console.WriteLine((endDate - startDate.Value).TotalMilliseconds);
+
+
             ProjectCollection projectCollection = new ProjectCollection();
 
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
@@ -61,15 +78,16 @@ namespace ConsoleTest
                 {"Configuration", "Release"}
             };
 
-
-            string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
+/*
+            //string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
+            string path = @"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj";
 
             //  SolutionFile solutionFile = SolutionFile.Parse(path);
 
            // ProjectRootElement element = ProjectRootElement.Open(@"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj");
 
 
-            BuildRequestData buildRequestData = new BuildRequestData(path, globalProperty, null, new[] { "Rebuild" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(path, globalProperty, null, new[] { "Clean" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.MaxNodeCount = 1;
@@ -79,9 +97,13 @@ namespace ConsoleTest
             };
 
 
-            BuildResult buildResult = Microsoft.Build.Execution.BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
+            
 
-            Console.WriteLine("building " + buildResult.OverallResult);
+            BuildResult buildResult = Microsoft.Build.Execution.BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
+            */
+           
+
+            //Console.WriteLine("building " + buildResult.OverallResult);
 
 /*
 

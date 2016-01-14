@@ -49,7 +49,10 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 return;
             }
 
-            this.projectBuildStarted(projectStartedEventArgs.ProjectFile);
+            if (this.projectBuildStarted != null)
+            {
+                this.projectBuildStarted(projectStartedEventArgs.ProjectFile);
+            }
         }
 
         private void EventSourceOnProjectFinished(object sender, ProjectFinishedEventArgs projectFinishedEventArgs)
@@ -59,8 +62,10 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 return;
             }
 
-            this.projectBuildComplete(projectFinishedEventArgs.ProjectFile, projectFinishedEventArgs.Succeeded, projectFinishedEventArgs.Message);
-
+            if (this.projectBuildComplete != null)
+            {
+                this.projectBuildComplete(projectFinishedEventArgs.ProjectFile, projectFinishedEventArgs.Succeeded, projectFinishedEventArgs.Message);
+            }
         }
 
         public void Shutdown()

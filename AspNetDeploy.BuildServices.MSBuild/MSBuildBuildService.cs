@@ -33,7 +33,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
             BuildRequestData buildRequestData = new BuildRequestData(projectOrSolutionFilePath, globalProperty, null, new[] { "Rebuild" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
-            buildParameters.MaxNodeCount = 1;
+            buildParameters.MaxNodeCount = 4;
             buildParameters.Loggers = new List<ILogger>
             {
                 new MSBuildLogger(projectBuildStarted, projectBuildComplete, errorLogger)

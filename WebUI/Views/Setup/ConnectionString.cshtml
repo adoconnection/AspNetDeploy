@@ -1,0 +1,41 @@
+﻿@model AspNetDeploy.WebUI.Models.Setup.ConnectionStringStepModel
+@{
+    ViewBag.Title = "ConnectionString";
+    Layout = "~/Views/Shared/_Layout_Empty.cshtml";
+}
+
+<div class="container">
+    <h1>Setup</h1>
+    <h3>Step 1. Connection string</h3>
+    <p>Create new MSSQL database and enter connection string:</p>
+
+    @using (Html.BeginForm("ConnectionString", "Setup", new { }, FormMethod.Post, new { Class = "" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <div>
+                @Html.TextAreaFor(m => m.ConnectionString, new { Class = "form-control", placeholder = "" })
+
+                @if (!ViewData.ModelState.IsValidField("ConnectionString"))
+                {
+                    <br/>
+                    <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.ConnectionString)</div>
+                }
+                
+                <p >
+                    <div class="text-muted">data source=SqlServer,1433; initial catalog=AspNetDeploy; integrated security=True;</div>
+                    <div class="text-muted">data source=SqlServer,1433; initial catalog=AspNetDeploy; User Id=AspNetDeployUser; Pwd=AspNetDeployPassword;</div>
+                </p>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
+        <hr />         
+        <div>
+                <button type="submit" class="btn btn-default btn-lg pull-right">Continue</button>
+        </div>
+
+    }
+</div>

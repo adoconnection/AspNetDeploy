@@ -1,0 +1,41 @@
+﻿@model AspNetDeploy.WebUI.Models.Setup.WorkingFolderStepModel
+@{
+    ViewBag.Title = "ConnectionString";
+    Layout = "~/Views/Shared/_Layout_Empty.cshtml";
+}
+
+<div class="container">
+    <h1>Setup</h1>
+    <h3>Step 3. Working folder</h3>
+    <p>Set path to a folder, where AspNetDeploy will store sources and packages</p>
+
+    @using (Html.BeginForm("WorkingFolder", "Setup", new { }, FormMethod.Post, new { Class = "" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <div>
+                @Html.TextAreaFor(m => m.Path, new { Class = "form-control", placeholder = "" })
+
+                @if (!ViewData.ModelState.IsValidField("Path"))
+                {
+                    <br/>
+                    <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Path)</div>
+                }
+                
+                <p >
+                    <div class="text-muted">sample: C:\AspNetDeployWork</div>
+                </p>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
+        <hr />
+        <div>
+            @Html.ActionLink("Back", "DatabaseStructure", null, new { Class = "btn btn-default btn-lg " })
+            <button type="submit" class="btn btn-default btn-lg pull-right">Continue</button>
+        </div>
+
+    }
+</div>
