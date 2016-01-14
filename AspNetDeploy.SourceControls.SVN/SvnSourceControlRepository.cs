@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using SharpSvn;
 
@@ -28,7 +30,7 @@ namespace AspNetDeploy.SourceControls.SVN
             }
         }
 
-        public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
+        public TestSourceResult TestConnection(SourceControlVersion sourceControlVersion)
         {
             NetworkCredential credentials = new NetworkCredential(
                         sourceControlVersion.SourceControl.GetStringProperty("Login"),
@@ -36,14 +38,56 @@ namespace AspNetDeploy.SourceControls.SVN
 
             using (SvnClient client = new SvnClient())
             {
+                client.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
+
                 client.Authentication.DefaultCredentials = credentials;
 
-                if (!Directory.Exists(path))
+                try
                 {
-                    return this.LoadSourcesFromScratch(sourceControlVersion, path, client);
+                    SvnInfoEventArgs info;
+                    client.GetInfo(new Uri(this.GetVersionURI(sourceControlVersion)), out info);
+                }
+                catch (SvnException e)
+                {
+                    return new TestSourceResult()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = e.Message
+                    };
                 }
 
-                return this.LoadSourcesWithUpdate(sourceControlVersion, path, client);
+                return new TestSourceResult()
+                {
+                    IsSuccess = true,
+                };
+            }
+        }
+
+        public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
+        {
+            NetworkCredential credentials = new NetworkCredential(
+                        sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                        sourceControlVersion.SourceControl.GetStringProperty("Password"));
+
+            try
+            {
+                using (SvnClient client = new SvnClient())
+                {
+                    client.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
+
+                    client.Authentication.DefaultCredentials = credentials;
+
+                    if (!Directory.Exists(path))
+                    {
+                        return this.LoadSourcesFromScratch(sourceControlVersion, path, client);
+                    }
+
+                    return this.LoadSourcesWithUpdate(sourceControlVersion, path, client);
+                }
+            }
+            catch (SvnException e)
+            {
+                throw new AspNetDeployException("SvnClient failed to load sources", e);
             }
         }
 
@@ -103,7 +147,7 @@ namespace AspNetDeploy.SourceControls.SVN
 
         private string GetVersionURI(SourceControlVersion sourceControlVersion)
         {
-            return sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL");
+            return sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL").TrimStart('/');
         }
     }
 }

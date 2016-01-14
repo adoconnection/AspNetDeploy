@@ -1,0 +1,72 @@
+﻿@model AspNetDeploy.WebUI.Models.SourceControls.AddSvnModel
+@{
+    ViewBag.Title = "AddSvn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <h1>Add SVN source</h1>
+
+    <hr />
+
+    @using (Html.BeginForm("AddSvn", "Sources", new { }, FormMethod.Post, new { Class = "" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-7">
+                <form role="form" method="POST">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new { Class = "form-control", placeholder = "" })
+                        <p>
+                            Friendly name
+                        </p>
+                        @if (!ViewData.ModelState.IsValidField("Name"))
+                        {
+                            <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Name)</div>
+                        }
+
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Url)
+                        @Html.TextBoxFor(m => m.Url, new {Class = "form-control", placeholder = ""})
+                        <p>
+                            Enter the link to the root of your project repository
+                        </p>
+                        @if (!ViewData.ModelState.IsValidField("Url"))
+                        {
+                            <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Url)</div>
+                        }
+
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Login)
+                        @Html.TextBoxFor(m => m.Login, new {Class = "form-control", placeholder = ""})
+                        <p></p>
+                        @if (!ViewData.ModelState.IsValidField("Login"))
+                        {
+                            <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Login)</div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password)
+                        @Html.TextBoxFor(m => m.Password, new {Class = "form-control", placeholder = ""})
+                        <p></p>
+                        @if (!ViewData.ModelState.IsValidField("Password"))
+                        {
+                            <div class="alert alert-danger" role="alert">@Html.ValidationMessageFor(m => m.Password)</div>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn btn-default btn-lg">Create</button>
+                </form>
+            </div>
+            <div class="col-sm-5">
+                <img src="~/Resources/Layout/Images/Help/SvnUrl.png" class="img-responsive" />
+            </div>
+        </div>
+
+    }
+</div>

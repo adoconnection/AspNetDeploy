@@ -25,6 +25,11 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Default()
         {
+            if (!this.Entities.SourceControl.Any())
+            {
+                return this.RedirectToAction("Add", "Sources");
+            }
+
             return this.RedirectToAction("List", "Bundles");
         }
 

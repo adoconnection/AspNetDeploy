@@ -6,16 +6,19 @@ using AspNetDeploy.ContinuousIntegration;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
+using AspNetDeploy.WebUI.Models.SourceControls;
 
 namespace AspNetDeploy.WebUI.Controllers
 {
     public class SourcesController : AuthorizedAccessController
     {
         private readonly ITaskRunner taskRunner;
+        private readonly SourceControlManager sourceControlManager;
 
-        public SourcesController(ILoggingService loggingService, ITaskRunner taskRunner) : base(loggingService)
+        public SourcesController(ILoggingService loggingService, ITaskRunner taskRunner, SourceControlManager sourceControlManager) : base(loggingService)
         {
             this.taskRunner = taskRunner;
+            this.sourceControlManager = sourceControlManager;
         }
 
         public ActionResult List()
@@ -161,18 +164,64 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Add(SourceControlType sourceControlType = SourceControlType.Undefined)
+        public ActionResult Add()
+        {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+            
+            return this.View();
+        }
+
+        [HttpGet]
+        public ActionResult AddSvn()
         {
             this.CheckPermission(UserRoleAction.SourceVersionsManage);
 
-            if (sourceControlType == SourceControlType.Undefined)
+            return this.View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult AddSvn(AddSvnModel model)
+        {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
+            if (!this.ModelState.IsValid)
             {
-                return this.View("AddChooseSource");
+                return this.View(model);
             }
 
-            this.ViewBag.SourceControlType = sourceControlType;
+            SourceControl sourceControl = new SourceControl
+            {
+                Type = SourceControlType.Svn,
+                Name = model.Name,
+                IsDeleted = false,
+                OrderIndex = this.Entities.SourceControl.Count()
+            };
 
-            return this.View("AddConfigure");
+            sourceControl.SetStringProperty("URL", model.Url.Trim());
+            sourceControl.SetStringProperty("Login", model.Login.Trim());
+            sourceControl.SetStringProperty("Password", model.Password.Trim());
+
+            SourceControlVersion sourceControlVersion = new SourceControlVersion();
+            sourceControlVersion.SourceControl = sourceControl;
+            sourceControlVersion.SetStringProperty("URL", "/");
+
+            TestSourceResult testSourceResult = this.sourceControlManager.TestConnection(sourceControlVersion);
+
+            if (!testSourceResult.IsSuccess)
+            {
+                this.ModelState.AddModelError("URL", testSourceResult.ErrorMessage);
+                return this.View(model);
+            }
+
+            sourceControlVersion.SourceControl = null;
+
+            this.Entities.SourceControl.Add(sourceControl);
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("List");
         }
 
         private ActionResult CreateNewVersionInternal(CreateNewSourceControlVersion model, Action<SourceControlVersion> fillProperties)

@@ -55,6 +55,11 @@ namespace SourceControls.FileSystem
             };
         }
 
+        public TestSourceResult TestConnection(SourceControlVersion sourceControlVersion)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Archive(SourceControlVersion sourceControlVersion, string path)
         {
             if (Directory.Exists(path))

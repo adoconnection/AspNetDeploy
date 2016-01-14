@@ -69,6 +69,7 @@
     <Compile Include="MachineSummary\IServerUpdateInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SatelliteState.cs" />
+    <Compile Include="TestSourceResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">

@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "sourcesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+
+    <h1>
+        Add source
+    </h1>
+
+   
+    <div class="row sourceSelector">
+        <div class="col-md-6">
+            <div class="list-group">
+                <a href="@Url.Action("AddSvn")" class="list-group-item">
+                    <h3><img src="~/Resources/Layout/Images/Icons/SVN-Icon.jpg" /> SVN</h3>
+                </a>
+               @* <a href="@Url.Action("Add", new { sourceControlType = SourceControlType.Git })" class="list-group-item">
+        <h3><img src="~/Resources/Layout/Images/Icons/Git-Icon.png" /> Git</h3>
+    </a>
+    <a href="@Url.Action("Add", new { sourceControlType = SourceControlType.FileSystem })" class="list-group-item">
+        <h3><span class="empty"></span>File system</h3>
+    </a>*@
+            </div>
+        </div>
+    </div>
+
+
+</div>

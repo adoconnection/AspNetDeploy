@@ -4,6 +4,7 @@ namespace AspNetDeploy.Contracts
 {
     public interface ISourceControlRepository
     {
+        TestSourceResult TestConnection(SourceControlVersion sourceControlVersion);
         LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path);
         void Archive(SourceControlVersion sourceControlVersion, string path);
     }

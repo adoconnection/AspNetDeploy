@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using Guids;
 
@@ -46,7 +50,47 @@ namespace AspNetDeploy.ContinuousIntegration
             return new UpdateAndParseResult
             {
                 HasChanges = true,
-                Projects = entities.Project.Where(p => p.SourceControlId == sourceControlVersion.Id).Select( p => p.Id).ToList()
+                Projects = entities.Project.Where(p => p.SourceControlId == sourceControlVersion.Id).Select(p => p.Id).ToList()
+            };
+        }
+
+        public TestSourceResult TestConnection(SourceControlVersion sourceControlVersion)
+        {
+            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            return repository.TestConnection(sourceControlVersion);
+
+            /*string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControl.Id, sourceControlVersion.Id);
+            string revisionId = null;
+            string exceptionMessage = null;
+
+            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            repository.Archive(sourceControlVersion, sourcesFolder);
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    LoadSourcesResult loadSourcesResult = this.LoadSources(sourceControlVersion, sourcesFolder);
+                    revisionId = loadSourcesResult.RevisionId;
+                }
+                catch (AspNetDeployException e)
+                {
+                    exceptionMessage = e.InnerException.Message;
+                }
+            }).Wait(1000);
+
+            
+
+
+            return new TestSourceResult()
+            {
+                IsSuccess = revisionId != null,
+                ErrorMessage = exceptionMessage
+            };*/
+
+            return new TestSourceResult
+            {
+                IsSuccess = true
             };
         }
 
@@ -66,7 +110,7 @@ namespace AspNetDeploy.ContinuousIntegration
             sourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Archived;
             entities.SaveChanges();
 
-            return new ArhiveResult() { IsSuccess = true};
+            return new ArhiveResult() { IsSuccess = true };
         }
 
         private LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string sourcesFolder)
