@@ -254,67 +254,68 @@ namespace ThreadHostedTaskRunner
                 .Include("ProjectVersions.SourceControlVersion.Properties")
                 .ToList();
 
-            List<ProjectVersion> projectVersions = bundleVersions
-                .SelectMany( scv=> scv.ProjectVersions)
-                .Where(pv => 
+            foreach (BundleVersion bundleVersion in bundleVersions)
+            {
+                List<ProjectVersion> projectVersions = bundleVersion.ProjectVersions.Where(pv =>
                     (
-                        pv.ProjectType.HasFlag(ProjectType.Database) || 
-                        pv.ProjectType.HasFlag(ProjectType.WindowsApplication) || 
+                        pv.ProjectType.HasFlag(ProjectType.Database) ||
+                        pv.ProjectType.HasFlag(ProjectType.WindowsApplication) ||
                         pv.ProjectType.HasFlag(ProjectType.Service) ||
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
                         pv.ProjectType.HasFlag(ProjectType.Web)
-                    ))
-                .Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision"))
-                .ToList();
+                        ))
+                    .ToList();
 
-            foreach (var projectVersion in projectVersions.Where(pv => pv.GetStringProperty("LastBuildResult") == "Error"))
-            {
-                TaskRunnerContext.SetProjectVersionState(projectVersion.Id, ProjectState.Error);
+                foreach (ProjectVersion projectVersion in projectVersions.Where(pv => pv.GetStringProperty("LastBuildResult") == "Error"))
+                {
+                    TaskRunnerContext.SetProjectVersionState(projectVersion.Id, ProjectState.Error);
+                }
+
+                List<ProjectVersion> projectVersionsToRebuild = projectVersions.Where(pv => pv.SourceControlVersion.GetStringProperty("Revision") != pv.GetStringProperty("LastBuildRevision")).ToList();
+
+                if (projectVersionsToRebuild.Count == 0)
+                {
+                    continue;
+                }
+
+                List<BundleVersion> affectedBundleVersions = projectVersionsToRebuild
+                    .SelectMany(pv => pv.BundleVersions)
+                    .Where(bv => !bv.IsDeleted)
+                    .ToList();
+
+                DateTime buildStartDate = DateTime.UtcNow;
+
+                foreach (BundleVersion affectedBundleVersion in affectedBundleVersions)
+                {
+                    TaskRunnerContext.SetBundleVersionState(affectedBundleVersion.Id, BundleState.Building);
+                }
+
+                bundleVersion.SetStringProperty("LastBuildStartDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
+                entities.SaveChanges();
+
+                ProjectsBuildStrategy buildStrategy = new ProjectsBuildStrategy(entities);
+                buildStrategy.Build(projectVersionsToRebuild);
+
+                bool buildFailed = projectVersionsToRebuild.Any(pv => pv.GetStringProperty("LastBuildResult") == "Error");
+
+                foreach (BundleVersion affectedBundleVersion in affectedBundleVersions)
+                {
+                    if (buildFailed)
+                    {
+                        TaskRunnerContext.SetBundleVersionState(affectedBundleVersion.Id, BundleState.Error);
+                        continue;
+                    }
+
+                    TaskRunnerContext.SetBundleVersionState(affectedBundleVersion.Id, BundleState.Idle);
+                }
+
+                if (bundleVersion.ProjectVersions.All(pv => TaskRunnerContext.GetProjectVersionState(pv.Id) == ProjectState.Idle))
+                {
+                    bundleVersion.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildStartDate).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+                }
+
+                entities.SaveChanges();
             }
-
-            List<BundleVersion> affectedBundleVersions = projectVersions
-                .SelectMany( pv => pv.BundleVersions)
-                .Where(bv => !bv.IsDeleted)
-                .ToList();
-
-            DateTime buildStartDate = DateTime.UtcNow;
-
-            affectedBundleVersions.ForEach(bv =>
-            {
-                TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Building);
-                bv.SetStringProperty("LastBuildStartDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
-            });
-
-            entities.SaveChanges();
-
-            ProjectsBuildStrategy buildStrategy = new ProjectsBuildStrategy(entities);
-            buildStrategy.Build(projectVersions);
-
-            foreach (ProjectVersion projectVersion in projectVersions)
-            {
-                if (projectVersion.GetStringProperty("LastBuildRevision") != projectVersion.SourceControlVersion.GetStringProperty("Revision"))
-                {
-                    projectVersion.SetStringProperty("LastBuildRevision", projectVersion.SourceControlVersion.GetStringProperty("Revision"));
-                }
-            }
-
-            affectedBundleVersions.ForEach(bv =>
-            {
-                if (bv.ProjectVersions.Any(pv => pv.GetStringProperty("LastBuildResult") == "Error"))
-                {
-                    TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Error);
-                    return;
-                }
-
-                TaskRunnerContext.SetBundleVersionState(bv.Id, BundleState.Idle);
-
-                if (bv.ProjectVersions.All(pv => TaskRunnerContext.GetProjectVersionState(pv.Id) == ProjectState.Idle))
-                {
-                    bv.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildStartDate).TotalSeconds.ToString(CultureInfo.InvariantCulture));
-                }
-            });
-
-            entities.SaveChanges();
         }
 
         private static void ArchiveSources(AspNetDeployEntities entities)

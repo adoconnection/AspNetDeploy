@@ -32,8 +32,9 @@ namespace AspNetDeploy.ContinuousIntegration
                 .Include("Environment.Machines.MachineRoles")
                 .First(p => p.Id == publicationId);
 
-            IDictionary<Machine, IDeploymentAgent> agents = this.CreateDeploymentAgents(publication);
-            IDictionary<Machine, MachinePublication> machinePublications = this.CreateMachinePublications(publication, entities);
+            IList<Machine> affectedMachines = this.GetAffectedMachines(publication);
+            IDictionary<Machine, IDeploymentAgent> agents = this.CreateDeploymentAgents(affectedMachines, publication.Package);
+            IDictionary<Machine, MachinePublication> machinePublications = this.CreateMachinePublications(affectedMachines, publication, entities);
 
             if (!this.ValidateDeploymentAgents(agents))
             {
@@ -250,33 +251,50 @@ namespace AspNetDeploy.ContinuousIntegration
             return true;
         }
 
-        private IDictionary<Machine, IDeploymentAgent> CreateDeploymentAgents(Publication publication)
+
+        private IList<Machine> GetAffectedMachines(Publication publication)
         {
-            IDictionary<Machine, IDeploymentAgent> agents = new Dictionary<Machine, IDeploymentAgent>();
+            IList<Machine> machines = new List<Machine>();
 
             foreach (Machine machine in publication.Environment.Machines)
             {
-                agents[machine] = this.deploymentAgentFactory.Create(machine, publication.Package.BundleVersion);
+                if (this.GetMachineDeploymentSteps(publication.Package, machine).Count > 0)
+                {
+                    machines.Add(machine);
+                }
+            }
+
+            return machines;
+        }
+
+        private IDictionary<Machine, IDeploymentAgent> CreateDeploymentAgents(IList<Machine> affectedMachines, Package package)
+        {
+            IDictionary<Machine, IDeploymentAgent> agents = new Dictionary<Machine, IDeploymentAgent>();
+
+            foreach (Machine machine in affectedMachines)
+            {
+                agents[machine] = this.deploymentAgentFactory.Create(machine, package.BundleVersion);
             }
 
             return agents;
         }
 
-        private IDictionary<Machine, MachinePublication> CreateMachinePublications(Publication publication, AspNetDeployEntities entities)
+        private IDictionary<Machine, MachinePublication> CreateMachinePublications(IList<Machine> affectedMachines, Publication publication, AspNetDeployEntities entities)
         {
             IDictionary<Machine, MachinePublication> machinePublications = new Dictionary<Machine, MachinePublication>();
 
-            foreach (Machine machine in publication.Environment.Machines)
+            foreach (Machine machine in affectedMachines)
             {
                 MachinePublication machinePublication = entities.MachinePublication.FirstOrDefault(mp => mp.MachineId == machine.Id && mp.PublicationId == publication.Id);
 
                 if (machinePublication == null)
                 {
-                    machinePublication = new MachinePublication();
-
-                    machinePublication.Publication = publication;
-                    machinePublication.Machine = machine;
-                    machinePublication.CreatedDate = DateTime.UtcNow;
+                    machinePublication = new MachinePublication
+                    {
+                        Publication = publication,
+                        Machine = machine,
+                        CreatedDate = DateTime.UtcNow
+                    };
 
                     entities.MachinePublication.Add(machinePublication);
                     entities.SaveChanges();

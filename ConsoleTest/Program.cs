@@ -54,11 +54,11 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
-            MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+            /*MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
 
             DateTime? startDate = null;
 
-            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj", s =>
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"H:\Documentoved\Latest\Management.WebUI\Management.WebUI.csproj", s =>
             {
                 if (startDate == null)
                 {
@@ -71,23 +71,27 @@ namespace ConsoleTest
             Console.WriteLine((endDate - startDate.Value).TotalMilliseconds);
 
 
-            ProjectCollection projectCollection = new ProjectCollection();
+           
+
+            
+*/
+
+            //string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
+            string path = @"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj";
+
+            //  SolutionFile solutionFile = SolutionFile.Parse(path);
+
+            // ProjectRootElement element = ProjectRootElement.Open(@"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj");
+
 
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
             {
                 {"Configuration", "Release"}
             };
 
-/*
-            //string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
-            string path = @"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj";
+            ProjectCollection projectCollection = new ProjectCollection();
 
-            //  SolutionFile solutionFile = SolutionFile.Parse(path);
-
-           // ProjectRootElement element = ProjectRootElement.Open(@"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj");
-
-
-            BuildRequestData buildRequestData = new BuildRequestData(path, globalProperty, null, new[] { "Clean" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(path, globalProperty, "14.0", new[] { "Rebuild" }, null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.MaxNodeCount = 1;
@@ -100,7 +104,7 @@ namespace ConsoleTest
             
 
             BuildResult buildResult = Microsoft.Build.Execution.BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
-            */
+      
            
 
             //Console.WriteLine("building " + buildResult.OverallResult);

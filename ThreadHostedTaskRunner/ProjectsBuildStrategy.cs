@@ -44,6 +44,7 @@ namespace ThreadHostedTaskRunner
                             if (handlerProjectVersion != null)
                             {
                                 handlerProjectVersion.SetStringProperty("LastBuildResult", isSuccess ? "Done" : "Error");
+                                handlerProjectVersion.SetStringProperty("LastBuildRevision", projectVersion.SourceControlVersion.GetStringProperty("Revision"));
                                 entities.SaveChanges();
                             }
 

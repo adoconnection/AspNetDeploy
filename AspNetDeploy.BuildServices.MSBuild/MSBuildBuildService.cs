@@ -30,10 +30,19 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 //{"Platform", "Any CPU"}
             };
 
-            BuildRequestData buildRequestData = new BuildRequestData(projectOrSolutionFilePath, globalProperty, null, new[] { "Rebuild" }, null);
+            BuildRequestData buildRequestData = new BuildRequestData(
+                projectOrSolutionFilePath, 
+                globalProperty, 
+                this.LatestToolsVersion(), 
+                new[]
+                {
+                    "Rebuild"
+                }, 
+                null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.MaxNodeCount = 4;
+            
             buildParameters.Loggers = new List<ILogger>
             {
                 new MSBuildLogger(projectBuildStarted, projectBuildComplete, errorLogger)
@@ -45,6 +54,21 @@ namespace AspNetDeploy.BuildServices.MSBuild
             {
                 IsSuccess = buildResult.OverallResult == BuildResultCode.Success
             };
+        }
+
+        private string LatestToolsVersion()
+        {
+            if (Directory.Exists(@"C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v14.0"))
+            {
+                return "14.0";
+            }
+
+            if (Directory.Exists(@"C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v12.0"))
+            {
+                return "12.0";
+            }
+
+            return null;
         }
     }
 }
