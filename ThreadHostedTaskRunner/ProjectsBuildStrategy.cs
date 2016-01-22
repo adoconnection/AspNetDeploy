@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
@@ -34,8 +35,7 @@ namespace ThreadHostedTaskRunner
 
                     BuildJob job = new BuildJob();
                     job.Start(
-                        projectVersion.SourceControlVersion.Id,
-                        projectVersion.ProjectFile,
+                        projectVersion.Id,
                         projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building),
                         (projectId, isSuccess) =>
                         {

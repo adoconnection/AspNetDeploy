@@ -10,51 +10,56 @@ namespace ThreadHostedTaskRunner.Jobs
 {
     public class BuildJob
     {
-        public void Start(int sourceControlVersionId, string solutionOrProjectFileName, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
+        public void Start(int projectVersionId, Action<int> projectBuildStarted, Action<int, bool> projectBuildComplete)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
+            ProjectVersion projectVersion = entities.ProjectVersion
+                .Include("Properties")
+                .First(pv => pv.Id == projectVersionId);
+
+
             SourceControlVersion sourceControlVersion = entities.SourceControlVersion
                 .Include("Properties")
-                .First( scv => scv.Id == sourceControlVersionId);
+                .First( scv => scv.Id == projectVersion.SourceControlVersionId);
 
             IDictionary<int, DateTime> buildTiming = new Dictionary<int, DateTime>();
 
             BuildManager buildManager = Factory.GetInstance<BuildManager>();
             buildManager.Build(
-                sourceControlVersionId,
-                solutionOrProjectFileName,
-                projectVersionId =>
+                sourceControlVersion.Id,
+                projectVersionId,
+                projectVersionBuildId =>
                 {
-                    projectBuildStarted(projectVersionId);
+                    projectBuildStarted(projectVersionBuildId);
 
-                    if (buildTiming.ContainsKey(projectVersionId))
+                    if (buildTiming.ContainsKey(projectVersionBuildId))
                     {
-                        buildTiming.Remove(projectVersionId);
+                        buildTiming.Remove(projectVersionBuildId);
                     }
 
-                    ProjectVersion projectVersion = entities.ProjectVersion
+                    ProjectVersion projectVersionBuild = entities.ProjectVersion
                         .Include("Properties")
-                        .First(pv => pv.Id == projectVersionId);
+                        .First(pv => pv.Id == projectVersionBuildId);
 
-                    projectVersion.SetStringProperty("LastBuildStartDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
+                    projectVersionBuild.SetStringProperty("LastBuildStartDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
                     entities.SaveChanges();
 
-                    buildTiming[projectVersionId] = DateTime.UtcNow;
+                    buildTiming[projectVersionBuildId] = DateTime.UtcNow;
 
                 },
-                (projectVersionId, isSuccess) =>
+                (projectVersionBuildId, isSuccess) =>
                 {
-                    projectBuildComplete(projectVersionId, isSuccess);
+                    projectBuildComplete(projectVersionBuildId, isSuccess);
 
-                    ProjectVersion projectVersion = entities.ProjectVersion
+                    ProjectVersion projectVersionBuild = entities.ProjectVersion
                         .Include("Properties")
-                        .First(pv => pv.Id == projectVersionId);
+                        .First(pv => pv.Id == projectVersionBuildId);
 
-                    projectVersion.SetStringProperty("LastBuildRevision", sourceControlVersion.GetStringProperty("Revision"));
-                    projectVersion.SetStringProperty("LastBuildDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
-                    projectVersion.SetStringProperty("LastBuildResult", isSuccess.ToString());
-                    projectVersion.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildTiming[projectVersionId]).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+                    projectVersionBuild.SetStringProperty("LastBuildRevision", sourceControlVersion.GetStringProperty("Revision"));
+                    projectVersionBuild.SetStringProperty("LastBuildDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
+                    projectVersionBuild.SetStringProperty("LastBuildResult", isSuccess.ToString());
+                    projectVersionBuild.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildTiming[projectVersionBuildId]).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
                     entities.SaveChanges();
                 });

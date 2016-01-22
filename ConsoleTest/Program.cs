@@ -54,17 +54,35 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
-            /*MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+            MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
 
             DateTime? startDate = null;
 
-            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"H:\Documentoved\Latest\Management.WebUI\Management.WebUI.csproj", s =>
+            ProjectVersion projectVersion = new ProjectVersion()
             {
-                if (startDate == null)
+               // ProjectFile = @"ZelbikeRace2Database\ZelbikeRace2Database.sqlproj",
+                ProjectFile = @"WebUI\EventPublicUI.csproj",
+                SolutionFile = @"ZelBikeRace2.sln"
+            };
+
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\9\67", projectVersion,
+                s =>
                 {
-                    startDate = DateTime.Now;
-                }
-            }, null, null);
+                    if (startDate == null)
+                    {
+                        startDate = DateTime.Now;
+                    }
+                },
+                (s, b, arg3) =>
+                {
+                    Console.WriteLine(s + " - " + b);
+                },
+                (s, s1, arg3, arg4, arg5, arg6) =>
+                {
+                    // e.ProjectFile, e.File, e.Code, e.LineNumber, e.ColumnNumber, e.Message
+                    Console.WriteLine(s + "\n" + arg6);
+                });
+
             DateTime endDate = DateTime.Now;
 
             Console.WriteLine(buildSolutionResult.IsSuccess);
@@ -73,8 +91,7 @@ namespace ConsoleTest
 
            
 
-            
-*/
+/*
 
             //string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
             string path = @"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj";
@@ -105,7 +122,7 @@ namespace ConsoleTest
 
             BuildResult buildResult = Microsoft.Build.Execution.BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
       
-           
+           */
 
             //Console.WriteLine("building " + buildResult.OverallResult);
 

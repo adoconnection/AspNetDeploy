@@ -13,29 +13,12 @@ namespace BuildServices.NuGet
             this.pathServices = pathServices;
         }
 
-        public void RestorePackages(string packagesConfigPath, string solutionDirectory)
+        public void RestoreSolutionPackages(string solutionFile)
         {
             Process process = new Process();
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
-
-            process.StartInfo.FileName = this.pathServices.GetNugetPath();
-            process.StartInfo.Arguments = string.Format(
-                "install \"{0}\" -source \"{1}\" -solutionDir \"{2}\"",
-                packagesConfigPath,
-                "https://www.nuget.org/api/v2/",
-                solutionDirectory);
-
-            process.Start();
-
-            process.WaitForExit();
-        }
-
-        public void RestorePackages(string solutionFile)
-        {
-            Process process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(solutionFile);
 
             process.StartInfo.FileName = this.pathServices.GetNugetPath();
             process.StartInfo.Arguments = string.Format(
@@ -46,5 +29,32 @@ namespace BuildServices.NuGet
 
             process.WaitForExit();
         }
+
+        public void RestoreProjectPackages(string projectFile, string solutionDirectory)
+        {
+            string directoryName = Path.GetDirectoryName(projectFile);
+            string packageFile = Path.Combine(directoryName, "packages.config");
+
+            if (!File.Exists(packageFile))
+            {
+                return;
+            }
+
+            Process process = new Process();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.WorkingDirectory = solutionDirectory;
+
+            process.StartInfo.FileName = this.pathServices.GetNugetPath();
+            process.StartInfo.Arguments = string.Format(
+                "restore \"{0}\" -solutiondirectory \"{1}\"",
+                packageFile,
+                directoryName);
+
+            process.Start();
+
+            process.WaitForExit();
+        }
+
     }
 }

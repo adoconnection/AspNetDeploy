@@ -18,31 +18,42 @@ namespace AspNetDeploy.BuildServices.MSBuild
             this.nugetPackageManager = nugetPackageManager;
         }
 
-        public BuildSolutionResult Build(string projectOrSolutionFilePath, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
+        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
         {
-            nugetPackageManager.RestorePackages(projectOrSolutionFilePath);
+            nugetPackageManager.RestoreSolutionPackages(Path.Combine(sourcesFolder, projectVersion.SolutionFile));
+            return this.BuildInternal(Path.Combine(sourcesFolder, projectVersion.ProjectFile), projectBuildStarted, projectBuildComplete, errorLogger);
+        }
 
+       /* public BuildSolutionResult Build(string solutionFile, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
+        {
+            nugetPackageManager.RestoreSolutionPackages(solutionFile);
+            return this.BuildInternal(solutionFile, projectBuildStarted, projectBuildComplete, errorLogger);
+        }
+        */
+
+        private BuildSolutionResult BuildInternal(string targetFile, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
+        {
             ProjectCollection projectCollection = new ProjectCollection();
 
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
             {
-                {"Configuration", "Release"}, 
+                {"Configuration", "Release"},
                 //{"Platform", "Any CPU"}
             };
 
             BuildRequestData buildRequestData = new BuildRequestData(
-                projectOrSolutionFilePath, 
-                globalProperty, 
-                this.LatestToolsVersion(), 
+                targetFile,
+                globalProperty,
+                this.LatestToolsVersion(),
                 new[]
                 {
                     "Rebuild"
-                }, 
+                },
                 null);
 
             BuildParameters buildParameters = new BuildParameters(projectCollection);
             buildParameters.MaxNodeCount = 4;
-            
+
             buildParameters.Loggers = new List<ILogger>
             {
                 new MSBuildLogger(projectBuildStarted, projectBuildComplete, errorLogger)

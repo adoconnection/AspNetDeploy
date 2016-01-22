@@ -47,7 +47,6 @@
     <Compile Include="Jobs\PackageJob.cs" />
     <Compile Include="Jobs\SourceControlJob.cs" />
     <Compile Include="ProjectsBuildStrategy.cs" />
-    <Compile Include="SolutionBuildStrategy.cs" />
     <Compile Include="TaskRunnerContext.cs" />
     <Compile Include="ThreadTaskRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
