@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{716AC799-37AF-45F5-8716-8F6F415F3349}"
 EndProject
@@ -68,6 +68,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Server", "2. Server", "{DEF70926-942F-472E-916B-021E74EE4E60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Satellite", "3. Satellite", "{998D1C30-5AE8-434D-A602-E6670066118C}"
+	ProjectSection(SolutionItems) = preProject
+		Setup.txt = Setup.txt
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SatelliteService", "SatelliteService\SatelliteService.csproj", "{87C8F2EC-BA8B-4EFF-A320-23AFBD070738}"
 EndProject
@@ -129,6 +132,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "Enums\Enums.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Man", "0. Man", "{5ED27A12-6731-43C0-8EE5-95BCCF951481}"
 	ProjectSection(SolutionItems) = preProject
+		CreateDatabase.sql = CreateDatabase.sql
+		InitializeDatabaseData.sql = InitializeDatabaseData.sql
 		Targets.txt = Targets.txt
 	EndProjectSection
 EndProject
