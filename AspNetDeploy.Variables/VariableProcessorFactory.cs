@@ -14,6 +14,7 @@ namespace AspNetDeploy.Variables
             List<DataField> dataFields = entities.DataField
                 .Include("DataFieldValues.Environments")
                 .Include("DataFieldValues.Machines")
+                .Where( df => !df.IsDeleted)
                 .ToList();
 
             BundleVersion bundleVersion = entities.BundleVersion
