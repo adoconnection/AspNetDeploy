@@ -17,7 +17,7 @@ namespace AspNetDeploy.DeploymentServices.SatelliteMonitoring
                 return SatelliteState.NotConfigured;
             }
 
-            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 2));
+            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 3), new TimeSpan(0, 0, 0, 3));
 
             try
             {
@@ -52,7 +52,7 @@ namespace AspNetDeploy.DeploymentServices.SatelliteMonitoring
                 return null;
             }
 
-            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 10));
+            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 2), new TimeSpan(0, 0, 0, 2));
 
             try
             {

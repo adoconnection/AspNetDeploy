@@ -92,9 +92,17 @@
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.DeploymentServices.SatelliteMonitoring\DeploymentServices.SatelliteMonitoring.csproj">
+      <Project>{624A245B-5332-4217-AD35-26FA6B1F8ED5}</Project>
+      <Name>DeploymentServices.SatelliteMonitoring</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.DeploymentServices.WCFSatellite\DeploymentServices.WCFSatellite.csproj">
       <Project>{D599826D-2EBD-4C3F-904A-A404E790841B}</Project>
       <Name>DeploymentServices.WCFSatellite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.DeploymentServices\DeploymentServices.csproj">
+      <Project>{6192E2D0-88B7-4ED5-B556-19A7959D1788}</Project>
+      <Name>DeploymentServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>

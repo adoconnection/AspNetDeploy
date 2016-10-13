@@ -46,13 +46,16 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Approve(int id, int environmentid)
         {
-            this.CheckPermission(UserRoleAction.ReleaseApprove);
-
             Package package = this.Entities.Package
                 .Include("ApprovedOnEnvironments")
                 .First(p => p.Id == id);
 
             Environment environment = this.Entities.Environment.First( e => e.Id == environmentid);
+
+            if (!environment.GetBoolProperty("AllowTestDeployment", false))
+            {
+                this.CheckPermission(UserRoleAction.ReleaseApprove);
+            }
 
             if (package.ApprovedOnEnvironments.Any(a => a.Environment == environment))
             {
@@ -74,13 +77,16 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult Reject(int id, int environmentid)
         {
-            this.CheckPermission(UserRoleAction.ReleaseApprove);
-
             Package package = this.Entities.Package
                 .Include("ApprovedOnEnvironments.ApprovedBy")
                 .First(p => p.Id == id);
 
             Environment environment = this.Entities.Environment.First(e => e.Id == environmentid);
+
+            if (!environment.GetBoolProperty("AllowTestDeployment", false))
+            {
+                this.CheckPermission(UserRoleAction.ReleaseApprove);
+            }
 
             PackageApprovedOnEnvironment packageApprovedOnEnvironment = package.ApprovedOnEnvironments.FirstOrDefault(a => a.Environment == environment);
 
