@@ -25,6 +25,11 @@ namespace AspNetDeploy.Variables
 
         private string ProcessValueInternal(string value, ICollection<string> nestedVariableNames)
         {
+            if (value == null)
+            {
+                return null;
+            }
+
             return parseRegex.Replace(value, delegate(Match match)
             {
                 string variableName = match.Groups["name"].Value.ToLowerInvariant();

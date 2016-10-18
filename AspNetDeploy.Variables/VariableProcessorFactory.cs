@@ -28,7 +28,6 @@ namespace AspNetDeploy.Variables
             IDictionary<string, string> environmentDictionary = this.CreateEnvironmentDictionary(bundleVersion);
 
             return new VariableProcessor(dataFieldsDictionary, environmentDictionary);
-
         }
 
         private static IDictionary<string, string> CreateDataFieldsDictionary(int machineId, IEnumerable<DataField> dataFields, int environmentId)
