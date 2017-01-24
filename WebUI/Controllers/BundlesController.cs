@@ -48,7 +48,7 @@ namespace AspNetDeploy.WebUI.Controllers
                             ProjectsVersionsInfo = bv.ProjectVersions.Select(pv => new ProjectVersionInfo
                             {
                                 ProjectVersion = pv,
-                                ProjectState = this.taskRunner.GetProjectState(pv.Id)
+                                //ProjectState = this.taskRunner.GetProjectState(pv.Id)
                             }).ToList()
                         };
 

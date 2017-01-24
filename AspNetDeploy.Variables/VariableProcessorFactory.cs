@@ -43,7 +43,7 @@ namespace AspNetDeploy.Variables
                     continue;
                 }
 
-                DataFieldValue machineValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.Machines.Any(m => m.Id == machineId));
+                DataFieldValue machineValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.MachineId == machineId && dfv.EnvironmentId == environmentId);
 
                 if (machineValue != null)
                 {
@@ -51,7 +51,7 @@ namespace AspNetDeploy.Variables
                     continue;
                 }
 
-                DataFieldValue environmentValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.Environments.Any(e => e.Id == environmentId));
+                DataFieldValue environmentValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.EnvironmentId == environmentId );
 
                 if (environmentValue != null)
                 {

@@ -44,9 +44,9 @@
                 }
                 else
                 {
-                    foreach (DataFieldValue dataFieldValue in dataFieldValues)
+                    foreach (DataFieldValue dataFieldValue in dataFieldValues.Where( dfv => dfv.MachineId == null))
                     {
-                        if (dataFieldValue == null || string.IsNullOrWhiteSpace(dataFieldValue.Value))
+                        if (string.IsNullOrWhiteSpace(dataFieldValue.Value))
                         {
                             continue;
                         }
@@ -61,6 +61,36 @@
                         }
                     }
                 }
+                <br />
+                <br />
+                <ul class="list-unstyled">
+                    @foreach (Machine machine in environment.Machines)
+                    {
+                        <li>
+                            <div>
+                                @machine.Name – <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id, machineId = machine.Id })">Alter</a>
+                            </div>
+
+                            @foreach (DataFieldValue dataFieldValue in dataFieldValues.Where( dfv => dfv.MachineId == machine.Id))
+                            {
+                                if (string.IsNullOrWhiteSpace(dataFieldValue.Value))
+                                {
+                                    continue;
+                                }
+
+                                if (dataField.IsSensitive && hideSensitiveValues)
+                                {
+                                    <code>••••••••••••••••••••••••••••••</code>
+                                }
+                                else
+                                {
+                                    <code>@dataFieldValue.Value</code>
+                                }
+                            }
+                        </li>
+                    }
+                </ul>
+
             </div>
             <div class="col-sm-2">
                 <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id })">Edit</a>

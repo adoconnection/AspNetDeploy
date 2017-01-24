@@ -16,8 +16,8 @@ namespace AspNetDeploy.WebUI.Controllers
         public ActionResult Details(int id)
         {
             DataField dataField = this.Entities.DataField
-                .Include("DataFieldValues.Environments")
-                .Include("DataFieldValues.Machines")
+                .Include("DataFieldValues.Environment.Machines")
+                .Include("DataFieldValues.Machine")
                 .Include("BundleVersions")
                 .First(df => df.Id == id && !df.IsDeleted);
 
@@ -30,15 +30,19 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Add(int environmentId)
+        public ActionResult Add(int environmentId, int? machineId)
         {
             VariableEditModel model = new VariableEditModel()
             {
                 EnvironmentId = environmentId
             };
 
-            Environment environment = this.Entities.Environment
-                .First(e => e.Id == environmentId);
+            Environment environment = this.Entities.Environment.Include("Machines").First(e => e.Id == environmentId);
+
+            if (model.MachineId.HasValue && environment.Machines.All(m => m.Id != model.MachineId))
+            {
+                return this.Redirect("/");
+            }
 
             this.ViewBag.Environment = environment;
 
@@ -46,18 +50,17 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int id, int environmentId)
+        public ActionResult Edit(int id, int environmentId, int? machineId)
         {
             this.CheckPermission(UserRoleAction.EnvironmentChangeVariables);
 
             DataField dataField = this.Entities.DataField
-                .Include("DataFieldValues.Environments")
-                .Include("DataFieldValues.Machines")
+                .Include("DataFieldValues.Environment")
+                .Include("DataFieldValues.Machine")
                 .Include("BundleVersions")
                 .First(df => df.Id == id && !df.IsDeleted);
 
-            Environment environment = this.Entities.Environment
-                .First(e => e.Id == environmentId);
+            Environment environment = this.Entities.Environment.First(e => e.Id == environmentId);
 
             this.ViewBag.DataField = dataField;
             this.ViewBag.Environment = environment;
@@ -65,9 +68,10 @@ namespace AspNetDeploy.WebUI.Controllers
             VariableEditModel model = new VariableEditModel()
             {
                 Name = dataField.Key,
-                Value = dataField.DataFieldValues.Where(v => v.Environments.Any(e => e == environment)).Select(v => v.Value).FirstOrDefault(),
+                Value = dataField.DataFieldValues.Where(v => v.EnvironmentId == environment.Id && v.MachineId == machineId).Select(v => v.Value).FirstOrDefault(),
                 VariableId = id,
                 EnvironmentId = environmentId,
+                MachineId = machineId,
                 IsSensitive = dataField.IsSensitive
             };
 
@@ -93,14 +97,18 @@ namespace AspNetDeploy.WebUI.Controllers
             else
             {
                 dataField = this.Entities.DataField
-                    .Include("DataFieldValues.Environments")
-                    .Include("DataFieldValues.Machines")
+                    .Include("DataFieldValues.Environment")
+                    .Include("DataFieldValues.Machine")
                     .Include("BundleVersions")
                     .First(df => df.Id == model.VariableId && !df.IsDeleted);
             }
 
-            Environment environment = this.Entities.Environment
-                .First(e => e.Id == model.EnvironmentId);
+            Environment environment = this.Entities.Environment.Include("Machines").First(e => e.Id == model.EnvironmentId);
+
+            if (model.MachineId.HasValue && environment.Machines.All(m => m.Id != model.MachineId))
+            {
+                return this.Redirect("/");
+            }
 
             if (!this.ModelState.IsValid)
             {
@@ -110,13 +118,14 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.RedirectToAction("Edit", new { id = model.VariableId, environmentId = model.EnvironmentId });
             }
 
-            DataFieldValue value = dataField.DataFieldValues.FirstOrDefault(v => v.Environments.Any(e => e == environment));
+            DataFieldValue value = dataField.DataFieldValues.FirstOrDefault(v => v.EnvironmentId == environment.Id && v.MachineId == model.MachineId);
 
             if (value == null)
             {
                 value = new DataFieldValue();
                 value.DataField = dataField;
-                value.Environments.Add(environment);
+                value.Environment = environment;
+                value.MachineId = model.MachineId;
                 this.Entities.DataFieldValue.Add(value);
             }
 

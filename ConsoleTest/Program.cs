@@ -22,6 +22,9 @@ using Microsoft.Build.Framework;
 using ObjectFactory;
 using ThreadHostedTaskRunner;
 using Microsoft.Build.Construction;
+using Microsoft.Web.Administration;
+using Newtonsoft.Json;
+using SatelliteService.Operations;
 using Environment = AspNetDeploy.Model.Environment;
 
 namespace ConsoleTest
@@ -53,22 +56,43 @@ namespace ConsoleTest
 
     class Program
     {
+        
+
+
         private static bool WorkerComplete = false;
 
         
 
         static void Main(string[] args)
         {
+            dynamic bindingConfig = JsonConvert.DeserializeObject("{ port:80, host:'abc.local'}");
+
+            using (ServerManager serverManager = new ServerManager())
+            {
+                Site site = serverManager.Sites["Account Service Latest"];
+
+                foreach (Binding siteBinding in site.Bindings)
+                {
+                    siteBinding.BindingInformation = (string.IsNullOrWhiteSpace((string)bindingConfig.IP) ? "" : (string)bindingConfig.IP) + ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
+                }
+
+                serverManager.CommitChanges();
+            }
+
+            return;
+
             AspNetDeployEntities entities = new AspNetDeployEntities();
-/*
 
-            Machine machine = entities.Machine.First( m => m.Name == "Lake");
 
-            WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 1), new TimeSpan(0, 0, 0, 1));
+            /*
 
-            Console.WriteLine("Runnning");
-            Console.WriteLine(agent.IsReady());
-*/
+                        Machine machine = entities.Machine.First( m => m.Name == "Lake");
+
+                        WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 1), new TimeSpan(0, 0, 0, 1));
+
+                        Console.WriteLine("Runnning");
+                        Console.WriteLine(agent.IsReady());
+            */
 
             /*
 
@@ -125,7 +149,7 @@ namespace ConsoleTest
                 SolutionFile = @"Documentoved.sln"
             };
 
-            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\5\132", projectVersion,
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\5\140", projectVersion,
                 s =>
                 {
                     if (startDate == null)

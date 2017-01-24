@@ -62,8 +62,10 @@ namespace SatelliteService.Operations
                 {
                     Binding binding = site.Bindings.CreateElement();
 
+                    string ip = (string) bindingConfig.IP;
+
                     binding.Protocol = (string) bindingConfig.protocol;
-                    binding.BindingInformation = ":" + (int) bindingConfig.port + ":" + (string) bindingConfig.host;
+                    binding.BindingInformation = (string.IsNullOrWhiteSpace(ip) ? "" : ip) + ":" + (int) bindingConfig.port + ":" + (string) bindingConfig.host;
 
                     switch (binding.Protocol.ToLower())
                     {

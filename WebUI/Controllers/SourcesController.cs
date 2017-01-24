@@ -23,32 +23,44 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult List()
         {
-            List<SourceControl> sourceControls = this.Entities.SourceControl
-                .Include("SourceControlVersions.Properties")
-                .Include("SourceControlVersions.ProjectVersions.BundleVersions")
-                .Include("SourceControlVersions.ProjectVersions.Properties")
-                .Include("Properties")
-                .OrderBy(b => b.OrderIndex)
-                .ToList();
+            List<SourceControl> sourceControls = this.Entities.SourceControl.AsNoTracking()
+                    .Include("SourceControlVersions")
+                    .ToList();
 
-            this.ViewBag.SourceControls = sourceControls.Select( 
-                sc => new SourceControlInfo
-                {
-                    SourceControl = sc,
-                    SourceControlVersionsInfo = sc.SourceControlVersions.Select( scv => new SourceControlVersionInfo()
+            var list = sourceControls
+                    .OrderBy(b => b.OrderIndex)
+                    .Select(sc => new
                     {
-                        SourceControlVersion = scv,
-                        State = this.taskRunner.GetSourceControlVersionState(scv.Id),
-                        ProjectVersionsInfo = scv.ProjectVersions
-                        .Select(pv =>
-                            new ProjectVersionInfo
-                            {
-                                ProjectVersion = pv,
-                                ProjectState = this.taskRunner.GetProjectState(pv.Id)
-                            })
-                        .ToList()
-                    }).ToList(),
-                })
+                        sourceControl = sc,
+                        sourceControlVersions = sc.SourceControlVersions
+                            .OrderByDescending(scv => scv.Name)
+                            .Take(4)
+                    }).ToList();
+
+            int[] array = sourceControls.SelectMany( sc => sc.SourceControlVersions ).Select( scv => scv.Id).Distinct().ToArray();
+
+            List<ProjectVersion> projectVersions = this.Entities.ProjectVersion.Include("Properties").AsNoTracking().Where( pv => array.Contains(pv.SourceControlVersionId)).Distinct().ToList();
+
+            this.ViewBag.SourceControls = list
+                .OrderBy(item => item.sourceControl.OrderIndex)
+                .Select( 
+                    item => new SourceControlInfo
+                    {
+                        SourceControl = item.sourceControl,
+                        SourceControlVersionsInfo = item.sourceControlVersions
+                            .OrderByDescending(scv => scv.Name)
+                            .Select( scv => new SourceControlVersionInfo()
+                                {
+                                    SourceControlVersion = scv,
+                                    ProjectVersionsInfo = projectVersions.Where( pv => pv.SourceControlVersionId == scv.Id)
+                                        .Select(pv =>
+                                            new ProjectVersionInfo
+                                            {
+                                                ProjectVersion = pv,
+                                            })
+                                        .ToList()
+                            }).ToList(),
+                    })
                 .ToList();
 
             return this.View();
@@ -71,7 +83,7 @@ namespace AspNetDeploy.WebUI.Controllers
         [HttpPost]
         public ActionResult GetSourceControlStates()
         {
-            List<SourceControlVersion> sourceControlVersions = this.Entities.SourceControlVersion.ToList();
+            List<SourceControlVersion> sourceControlVersions = this.Entities.SourceControlVersion.AsNoTracking().ToList();
 
             var states = sourceControlVersions.Select(
                 scv => new 

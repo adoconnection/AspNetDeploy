@@ -49,12 +49,12 @@ namespace AspNetDeploy.Model
         public virtual DbSet<MachinePublicationProperty> MachinePublicationProperty { get; set; }
         public virtual DbSet<EnvironmentProperty> EnvironmentProperty { get; set; }
         public virtual DbSet<DataField> DataField { get; set; }
-        public virtual DbSet<DataFieldValue> DataFieldValue { get; set; }
         public virtual DbSet<PackageApprovedOnEnvironment> PackageApprovedOnEnvironment { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<PackageEntry> PackageEntry { get; set; }
         public virtual DbSet<AspNetDeployExceptionEntry> AspNetDeployExceptionEntry { get; set; }
         public virtual DbSet<ExceptionEntryData> ExceptionEntryData { get; set; }
         public virtual DbSet<ExceptionEntry> ExceptionEntry { get; set; }
+        public virtual DbSet<DataFieldValue> DataFieldValue { get; set; }
     }
 }

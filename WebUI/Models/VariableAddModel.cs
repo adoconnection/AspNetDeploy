@@ -7,6 +7,8 @@ namespace AspNetDeploy.WebUI.Models
         [Required]
         public int EnvironmentId { get; set; }
 
+        public int? MachineId { get; set; }
+
         [Required]
         [DataType(DataType.Text)]
         public string Name { get; set; }
