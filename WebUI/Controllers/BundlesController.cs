@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,7 +24,6 @@ namespace AspNetDeploy.WebUI.Controllers
         public ActionResult List()
         {
             List<Bundle> bundles = this.Entities.Bundle
-                .Include("BundleVersions.ProjectVersions")
                 .Include("BundleVersions.Properties")
                 .OrderBy( b => b.OrderIndex)
                 .ToList();
@@ -32,20 +32,26 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("NextEnvironment")
                 .ToList();
 
+            int[] array = bundles.SelectMany( b => b.BundleVersions).Select( bv => bv.Id).Distinct().ToArray();
+
+            List<ProjectVersion> projectVersions = this.Entities.ProjectVersion.Where( pv => array.Contains(pv.Id)).ToList();
+
             this.ViewBag.Environments = environments;
 
             this.ViewBag.Bundles = bundles.Select( b => new BundleInfo
             {
                 Bundle = b,
                 BundleVersionsInfo = b.BundleVersions
+                    .OrderByDescending(bv => bv.Name).Take(2)
                     .Where(bv => !bv.IsDeleted)
+                    .AsParallel()
                     .Select(bv =>
                     {
                         BundleVersionInfo bundleVersionInfo = new BundleVersionInfo()
                         {
                             BundleVersion = bv,
                             State = this.taskRunner.GetBundleState(b.Id),
-                            ProjectsVersionsInfo = bv.ProjectVersions.Select(pv => new ProjectVersionInfo
+                            ProjectsVersionsInfo = projectVersions.Where( pv => pv.BundleVersions.Any( bbv => bbv.Id == bv.Id)).Select(pv => new ProjectVersionInfo
                             {
                                 ProjectVersion = pv,
                                 //ProjectState = this.taskRunner.GetProjectState(pv.Id)
