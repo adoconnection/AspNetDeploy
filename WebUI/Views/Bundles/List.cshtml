@@ -18,7 +18,7 @@
         </h1>
         <hr />
 
-        foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo.OrderByDescending(bv => bv.BundleVersion.Name).Take(2))
+        foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo)
         {
             <h3>
                 @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionPackages", new { id = bundleVersionInfo.BundleVersion.Id })
@@ -86,7 +86,7 @@
                     
                     @foreach (Environment environment in environments)
                     {
-                        List<Publication> publications = bundleVersionInfo.BundleVersion.Packages.SelectMany(p => p.Publications).ToList();
+                        IEnumerable<Publication> publications = bundleVersionInfo.BundleVersion.Packages.SelectMany(p => p.Publications);
                         Publication publication = publications.OrderByDescending(p => p.CreatedDate).FirstOrDefault(p => p.Environment == environment);
 
                         if (bundleVersionInfo.Environments.Contains(environment))
@@ -95,6 +95,7 @@
                                 <div>
                                     @environment.Name
                                 </div>
+
                                 @if (publication == null)
                                 {
                                     <img src="~/Resources/Layout/Images/Icons/box-empty64.png" />
@@ -119,6 +120,7 @@
 
                                     <div><small class="text-muted">@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy")</small></div>
                                 }
+
                             </div>
                         }
                     }

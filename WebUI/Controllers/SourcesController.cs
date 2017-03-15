@@ -33,8 +33,10 @@ namespace AspNetDeploy.WebUI.Controllers
                     {
                         sourceControl = sc,
                         sourceControlVersions = sc.SourceControlVersions
-                            .OrderByDescending(scv => scv.Name)
+                            .Where(scv => scv.ArchiveState != SourceControlVersionArchiveState.Archived)
+                            .OrderByDescending(scv => scv.Id)
                             .Take(4)
+                            .ToList()
                     }).ToList();
 
             int[] array = sourceControls.SelectMany( sc => sc.SourceControlVersions ).Select( scv => scv.Id).Distinct().ToArray();
@@ -48,7 +50,7 @@ namespace AspNetDeploy.WebUI.Controllers
                     {
                         SourceControl = item.sourceControl,
                         SourceControlVersionsInfo = item.sourceControlVersions
-                            .OrderByDescending(scv => scv.Name)
+                            .OrderByDescending(scv => scv.Id)
                             .Select( scv => new SourceControlVersionInfo()
                                 {
                                     SourceControlVersion = scv,
@@ -59,7 +61,8 @@ namespace AspNetDeploy.WebUI.Controllers
                                                 ProjectVersion = pv,
                                             })
                                         .ToList()
-                            }).ToList(),
+                            })
+                            .ToList(),
                     })
                 .ToList();
 

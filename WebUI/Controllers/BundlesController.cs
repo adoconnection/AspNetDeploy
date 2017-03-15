@@ -42,9 +42,9 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 Bundle = b,
                 BundleVersionsInfo = b.BundleVersions
-                    .OrderByDescending(bv => bv.Name).Take(2)
                     .Where(bv => !bv.IsDeleted)
-                    .AsParallel()
+                    .OrderByDescending(bv => bv.Id)
+                    .Take(2)
                     .Select(bv =>
                     {
                         BundleVersionInfo bundleVersionInfo = new BundleVersionInfo()
@@ -54,7 +54,6 @@ namespace AspNetDeploy.WebUI.Controllers
                             ProjectsVersionsInfo = projectVersions.Where( pv => pv.BundleVersions.Any( bbv => bbv.Id == bv.Id)).Select(pv => new ProjectVersionInfo
                             {
                                 ProjectVersion = pv,
-                                //ProjectState = this.taskRunner.GetProjectState(pv.Id)
                             }).ToList()
                         };
 

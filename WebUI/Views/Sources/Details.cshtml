@@ -75,7 +75,7 @@
 
     <hr />
 
-    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions.OrderByDescending(bv => bv.Name))
+    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions.OrderByDescending(bv => bv.Id))
     {
         @RenderName(sourceControlVersion)
 

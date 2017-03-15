@@ -12,8 +12,8 @@ namespace AspNetDeploy.Variables
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
             List<DataField> dataFields = entities.DataField
-                .Include("DataFieldValues.Environments")
-                .Include("DataFieldValues.Machines")
+                .Include("DataFieldValues.Environment")
+                .Include("DataFieldValues.Machine")
                 .Where( df => !df.IsDeleted)
                 .ToList();
 
