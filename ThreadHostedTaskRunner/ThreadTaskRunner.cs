@@ -208,7 +208,7 @@ namespace ThreadHostedTaskRunner
                 .Distinct()
                 .Where( bv => bv.ProjectVersions.All( 
                     pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal && 
-                    pv.GetStringProperty("LastBuildResult") != "Error"))
+                    pv.GetStringProperty("LastBuildResult") == "Done"))
                 .ToList();
 
             List<BundleVersion> errorBundles = new List<BundleVersion>();

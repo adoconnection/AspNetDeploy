@@ -39,15 +39,6 @@ namespace ThreadHostedTaskRunner
                         projectId => TaskRunnerContext.SetProjectVersionState(projectId, ProjectState.Building),
                         (projectId, isSuccess) =>
                         {
-                            ProjectVersion handlerProjectVersion = projectVersions.FirstOrDefault(pv => pv.Id == projectId);
-
-                            if (handlerProjectVersion != null)
-                            {
-                                handlerProjectVersion.SetStringProperty("LastBuildResult", isSuccess ? "Done" : "Error");
-                                handlerProjectVersion.SetStringProperty("LastBuildRevision", projectVersion.SourceControlVersion.GetStringProperty("Revision"));
-                                entities.SaveChanges();
-                            }
-
                             TaskRunnerContext.SetProjectVersionState(projectId, isSuccess ? ProjectState.Idle : ProjectState.Error);
                         });
                 }

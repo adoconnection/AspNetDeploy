@@ -181,3 +181,15 @@ H3 > a:hover
   top: 100%;
   left: 0;
 }
+
+.status.text-muted.error
+{
+    color: #EA2D3F;
+    font-weight: bold;
+    background-image: url(Images/Icons/05_exclamation-3-16.png);
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}

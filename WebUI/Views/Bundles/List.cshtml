@@ -228,6 +228,7 @@
                 },
                 "Error": {
                     loadingIcon: false,
+                    css: 'error',
                     text: 'Error'
                 }
             }
@@ -237,11 +238,14 @@
                 var loadingIcon = element.find('.loadingIcon');
                 var statusBox = element.find('.status');
 
+                
+
                 if (newState.text == statusBox.data('text'))
                 {
                     return;
                 }
 
+                statusBox.attr('class', 'status text-muted ' + newState.css);
                 statusBox.data('text', newState.text);
 
                 loadingIcon[newState.loadingIcon ? 'fadeIn' : 'fadeOut']();

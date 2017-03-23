@@ -322,10 +322,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             if (bundleState == BundleState.Deploying)
             {
-                
-
                 Publication publication = this.Entities.Publication.Where( p => p.State == PublicationState.InProgress && p.Package.BundleVersionId == bundleVersion.Id).OrderByDescending( p => p.CreatedDate).FirstOrDefault();
-
 
                 if (publication != null)
                 {
