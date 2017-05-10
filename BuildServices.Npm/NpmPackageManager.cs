@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace BuildServices.Npm
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.WorkingDirectory = Path.GetDirectoryName(directory);
 
-            process.StartInfo.FileName = "npm.exe";
+            process.StartInfo.FileName = ConfigurationManager.AppSettings["Settings.NpmBinary"];
             process.StartInfo.Arguments = "install";
 
             process.Start();
