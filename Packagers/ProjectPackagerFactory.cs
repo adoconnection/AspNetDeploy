@@ -2,6 +2,7 @@
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using AspNetDeploy.Packagers.Zip;
+using Packagers.Gulp;
 using Packagers.VisualStudioProject;
 
 namespace Packagers
@@ -28,6 +29,11 @@ namespace Packagers
             if (projectType.HasFlag(ProjectType.ZipArchive))
             {
                 return new ZipProjectPackager();
+            }
+
+            if (projectType.HasFlag(ProjectType.GulpFile))
+            {
+                return new GulpProjectPackager();
             }
 
             throw new AspNetDeployException("Project type is not supported: " + projectType);

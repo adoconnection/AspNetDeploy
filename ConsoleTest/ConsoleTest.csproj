@@ -129,6 +129,10 @@
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
       <Name>ObjectFactory</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Packagers.Gulp\Packagers.Gulp.csproj">
+      <Project>{9C940383-09B0-46C9-8949-661AB623232E}</Project>
+      <Name>Packagers.Gulp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SatelliteService.Contracts\SatelliteService.Contracts.csproj">
       <Project>{cc40cdca-e692-4f7c-86f8-f4fa586b6cbb}</Project>
       <Name>SatelliteService.Contracts</Name>

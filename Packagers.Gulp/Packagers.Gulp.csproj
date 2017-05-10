@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35A84719-3B24-4D84-B632-B741AB9607BD}</ProjectGuid>
+    <ProjectGuid>{9C940383-09B0-46C9-8949-661AB623232E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Packagers</RootNamespace>
-    <AssemblyName>Packagers</AssemblyName>
+    <RootNamespace>Packagers.Gulp</RootNamespace>
+    <AssemblyName>Packagers.Gulp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,16 +30,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip, Version=1.9.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.3\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectPackagerFactory.cs" />
+    <Compile Include="GulpProjectPackager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -47,22 +52,9 @@
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
-      <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
-      <Name>AspNetDeploy.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.Packagers.Zip\Packagers.Zip.csproj">
-      <Project>{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}</Project>
-      <Name>Packagers.Zip</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Packagers.Gulp\Packagers.Gulp.csproj">
-      <Project>{9C940383-09B0-46C9-8949-661AB623232E}</Project>
-      <Name>Packagers.Gulp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Packagers.VisualStudioProject\Packagers.VisualStudioProject.csproj">
-      <Project>{83DCC20E-1E31-4E25-8384-507823BD4B1A}</Project>
-      <Name>Packagers.VisualStudioProject</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

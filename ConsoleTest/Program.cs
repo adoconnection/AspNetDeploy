@@ -24,6 +24,7 @@ using ThreadHostedTaskRunner;
 using Microsoft.Build.Construction;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
+using Packagers.Gulp;
 using SatelliteService.Operations;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -65,6 +66,15 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+
+            GulpProjectPackager gulpProjectPackager = new GulpProjectPackager();
+
+            gulpProjectPackager.Package(@"H:\Documentoved\Resources\documentoved.gulpfile.js", @"H:\Documentoved\Resources\result.zip");
+
+
+            return;
+
+
             dynamic bindingConfig = JsonConvert.DeserializeObject("{ port:80, host:'abc.local'}");
 
             using (ServerManager serverManager = new ServerManager())
