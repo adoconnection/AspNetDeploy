@@ -131,7 +131,8 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
                     .SelectMany(scv => scv.ProjectVersions)
-                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.ZipArchive) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.ZipArchive) || pv.ProjectType.HasFlag(ProjectType.GulpFile))
+                    .Where(pv => !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
                     .Select(pv => new SelectListItem
                     {
                         Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
@@ -240,7 +241,8 @@ namespace AspNetDeploy.WebUI.Controllers
 
                 this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
                     .SelectMany(scv => scv.ProjectVersions)
-                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.ZipArchive) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.ZipArchive) || pv.ProjectType.HasFlag(ProjectType.GulpFile))
+                    .Where(pv => !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
                     .Select(pv => new SelectListItem
                     {
                         Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,

@@ -3,6 +3,7 @@ using AspNetDeploy.Contracts;
 using AspNetDeploy.Projects.Contracts;
 using AspNetDeploy.Projects.VisualStudio2013;
 using AspNetDeploy.Projects.Zip;
+using Projects.Gulp;
 
 namespace AspNetDeploy.Projects
 {
@@ -32,7 +33,8 @@ namespace AspNetDeploy.Projects
             IList<IProjectParser> strategies = new List<IProjectParser>()
             {
                 new VisualStudioProjectParser(sourcesFolder),
-                new ZipFilesParser(sourcesFolder)
+                new ZipFilesParser(sourcesFolder),
+                new GulpParser(sourcesFolder)
             };
 
             return strategies;

@@ -73,10 +73,11 @@
                             bool hasConsole = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Console);
                             bool hasDatabase = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Database);
                             bool hasZip = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.ZipArchive);
+                            bool hasGulp  = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.GulpFile);
                             double lastBuildDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastBuildDuration");
                             double lastPackageDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastPackageDuration");
 
-                            if (hasWeb || hasTest || hasConsole || hasDatabase || hasZip)
+                            if (hasWeb || hasTest || hasConsole || hasDatabase || hasZip || hasGulp)
                             {
                                 <div>
                                     <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersionInfo.ProjectVersion.Id })">

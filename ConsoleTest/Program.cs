@@ -25,6 +25,7 @@ using Microsoft.Build.Construction;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
 using Packagers.Gulp;
+using Projects.Gulp;
 using SatelliteService.Operations;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -66,6 +67,10 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+
+            GulpParser gulpParser = new GulpParser(@"H:\Documentoved\Resources");
+
+            gulpParser.LoadProjects();
 
             GulpProjectPackager gulpProjectPackager = new GulpProjectPackager();
 
