@@ -206,7 +206,6 @@
     <Compile Include="UserRole.cs" />
     <Compile Include="UserRoleAction.cs" />
     <Compile Include="RolePermissions.cs" />
-    <Compile Include="SolutionType.cs" />
     <Compile Include="SourceControlExtender.cs" />
     <Compile Include="SourceControlState.cs" />
     <Compile Include="SourceControlVersionExtender.cs" />

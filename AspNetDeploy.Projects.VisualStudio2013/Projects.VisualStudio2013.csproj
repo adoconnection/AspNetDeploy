@@ -34,8 +34,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="VsProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VisualStudioProjectsStrategy.cs" />
+    <Compile Include="VisualStudioProjectParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
@@ -49,6 +50,10 @@
     <ProjectReference Include="..\AspNetDeploy.Projects.Contracts\Projects.Contracts.csproj">
       <Project>{94622F2D-3769-4FC4-9686-49ECA3E4077C}</Project>
       <Name>Projects.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.SolutionParsers.VisualStudio\VisualStudio2016Parser.csproj">
+      <Project>{3D9B4642-DC9C-4951-B0EC-A1AF2F764E38}</Project>
+      <Name>VisualStudio2016Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,7 +13,7 @@ namespace AspNetDeploy.BuildServices
             this.nugetPackageManager = nugetPackageManager;
         }
 
-        public IBuildService Create(SolutionType project)
+        public IBuildService Create(ProjectType projectType)
         {
             return new MSBuildBuildService(this.nugetPackageManager);
         }
