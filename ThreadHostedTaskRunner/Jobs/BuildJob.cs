@@ -58,7 +58,7 @@ namespace ThreadHostedTaskRunner.Jobs
 
                     projectVersionBuild.SetStringProperty("LastBuildRevision", sourceControlVersion.GetStringProperty("Revision"));
                     projectVersionBuild.SetStringProperty("LastBuildDate", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
-                    projectVersionBuild.SetStringProperty("LastBuildResult", isSuccess.ToString());
+                    projectVersionBuild.SetStringProperty("LastBuildResult", isSuccess ? "Done" : "Error");
                     projectVersionBuild.SetStringProperty("LastBuildDuration", (DateTime.UtcNow - buildTiming[projectVersionBuildId]).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
                     entities.SaveChanges();

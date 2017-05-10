@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
+using System.Threading;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Contracts.MachineSummary;
@@ -20,7 +21,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
         private readonly MonitoringServiceClient monitoringClient;
         private readonly InformationServiceClient informationClient;
 
-        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password, TimeSpan? openTimeoutSpan = null)
+        public WCFSatelliteDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password, TimeSpan? openTimeoutSpan = null, TimeSpan? waitTimeout = null)
         {
             this.variableProcessor = variableProcessor;
 
@@ -32,8 +33,8 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             binding.OpenTimeout = openTimeoutSpan ?? new TimeSpan(0, 10, 0);
             binding.CloseTimeout = openTimeoutSpan ?? new TimeSpan(0, 10, 0);
-            binding.SendTimeout = new TimeSpan(3, 0, 0);
-            binding.ReceiveTimeout = new TimeSpan(3, 0, 0);
+            binding.SendTimeout = waitTimeout ??  new TimeSpan(3, 0, 0);
+            binding.ReceiveTimeout = waitTimeout ?? new TimeSpan(3, 0, 0);
             
             binding.BypassProxyOnLocal = false;
             binding.UseDefaultWebProxy = true;
@@ -132,6 +133,8 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                     {
                         progress(position, length);
                     }
+
+                    Thread.Sleep(50);
                 }
             }
         }

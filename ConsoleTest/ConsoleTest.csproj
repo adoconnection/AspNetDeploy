@@ -61,6 +61,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\MSBuild\v14.0\Microsoft.Build.Utilities.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -92,9 +97,17 @@
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.DeploymentServices.SatelliteMonitoring\DeploymentServices.SatelliteMonitoring.csproj">
+      <Project>{624A245B-5332-4217-AD35-26FA6B1F8ED5}</Project>
+      <Name>DeploymentServices.SatelliteMonitoring</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.DeploymentServices.WCFSatellite\DeploymentServices.WCFSatellite.csproj">
       <Project>{D599826D-2EBD-4C3F-904A-A404E790841B}</Project>
       <Name>DeploymentServices.WCFSatellite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.DeploymentServices\DeploymentServices.csproj">
+      <Project>{6192E2D0-88B7-4ED5-B556-19A7959D1788}</Project>
+      <Name>DeploymentServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
@@ -115,6 +128,14 @@
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>
       <Name>ObjectFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService.Contracts\SatelliteService.Contracts.csproj">
+      <Project>{cc40cdca-e692-4f7c-86f8-f4fa586b6cbb}</Project>
+      <Name>SatelliteService.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatelliteService\SatelliteService.csproj">
+      <Project>{87C8F2EC-BA8B-4EFF-A320-23AFBD070738}</Project>
+      <Name>SatelliteService</Name>
     </ProjectReference>
     <ProjectReference Include="..\ThreadHostedTaskRunner\ThreadHostedTaskRunner.csproj">
       <Project>{940D1369-A1DA-4025-A9C4-64A760891626}</Project>

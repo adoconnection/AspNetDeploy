@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
@@ -15,38 +17,65 @@ namespace SatelliteConsoleHost
         {
             ObjectFactoryConfigurator.Configure();
 
-            ObjectFactoryConfigurator.Configure();
-
             bool isAuthorizationEnabled = bool.Parse(ConfigurationManager.AppSettings["Authorization.Enabled"]);
             bool isMetadataEnabled = bool.Parse(ConfigurationManager.AppSettings["Metadata.Enabled"]);
             string certificateName = ConfigurationManager.AppSettings["Authorization.CertificateFriendlyName"];
 
-            Uri deploymentServiceUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Endpoint.URI"]);
+            Uri serviceGenericUri = new Uri(ConfigurationManager.AppSettings["Service.URI"]);
+
+            Uri deploymentServiceUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Endpoint.URI"] ?? (serviceGenericUri + "/DeploymentService"));
             Uri deploymentServicMetadataeUri = new Uri(ConfigurationManager.AppSettings["DeploymentService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/DeploymentServiceMetadata");
 
-            Uri monitoringServiceUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Endpoint.URI"]);
+            Uri monitoringServiceUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Endpoint.URI"] ?? (serviceGenericUri + "/MonitoringService"));
             Uri monitoringServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["MonitoringService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/MonitoringServiceMetadata");
 
-            Uri informationServiceUri = new Uri(ConfigurationManager.AppSettings["InformationService.Endpoint.URI"]);
+            Uri informationServiceUri = new Uri(ConfigurationManager.AppSettings["InformationService.Endpoint.URI"] ?? (serviceGenericUri + "/InformationService"));
             Uri informationServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["InformationService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata");
 
-            ServiceHostFactory serviceHostFactory = new ServiceHostFactory();
+            IList<ServiceHostContainer> hostContainers = new List<ServiceHostContainer>()
+            {
+                new ServiceHostContainer(
+                    typeof(DeploymentService),
+                    typeof(IDeploymentService),
+                    deploymentServiceUri,
+                    deploymentServicMetadataeUri,
+                    isAuthorizationEnabled,
+                    isMetadataEnabled,
+                    certificateName),
 
-            ServiceHost deploymentServiceHost = serviceHostFactory.Create(typeof(DeploymentService), typeof(IDeploymentService), deploymentServiceUri, isAuthorizationEnabled, isMetadataEnabled, deploymentServicMetadataeUri, certificateName);
-            ServiceHost managementServiceHost = serviceHostFactory.Create(typeof(MonitoringService), typeof(IMonitoringService), monitoringServiceUri, isAuthorizationEnabled, isMetadataEnabled, monitoringServiceMetadataUri, certificateName);
-            ServiceHost informationService = serviceHostFactory.Create(typeof(InformationService), typeof(IInformationService), informationServiceUri, isAuthorizationEnabled, isMetadataEnabled, informationServiceMetadataUri, certificateName);
+                new ServiceHostContainer(
+                    typeof(MonitoringService),
+                    typeof(IMonitoringService),
+                    monitoringServiceUri,
+                    monitoringServiceMetadataUri,
+                    isAuthorizationEnabled,
+                    isMetadataEnabled,
+                    certificateName),
 
-            StartService(deploymentServiceHost);
-            StartService(managementServiceHost);
-            StartService(informationService);
+                new ServiceHostContainer(
+                    typeof(InformationService),
+                    typeof(IInformationService),
+                    informationServiceUri,
+                    informationServiceMetadataUri,
+                    isAuthorizationEnabled,
+                    isMetadataEnabled,
+                    certificateName),
+            };
 
+            foreach (ServiceHostContainer serviceHostContainer in hostContainers)
+            {
+                serviceHostContainer.StartService();
+                serviceHostContainer.StartMonitoring();
+            }
 
             Console.WriteLine("STARTED, press any key to terminate");
             Console.ReadKey();
 
-            deploymentServiceHost.Close();
-            managementServiceHost.Close();
-            informationService.Close();
+
+            foreach (ServiceHostContainer serviceHostContainer in hostContainers)
+            {
+                serviceHostContainer.Stop();
+            }
 
             /*
              
@@ -57,16 +86,6 @@ namespace SatelliteConsoleHost
              */
 
 
-        }
-
-        private static void StartService(ServiceHost deploymentServiceHost)
-        {
-            deploymentServiceHost.Open();
-            deploymentServiceHost.Faulted += (sender, eventArgs) =>
-            {
-                deploymentServiceHost.Close();
-                deploymentServiceHost.Open();
-            };
         }
     }
 }

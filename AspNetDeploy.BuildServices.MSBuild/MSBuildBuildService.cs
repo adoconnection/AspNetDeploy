@@ -38,13 +38,14 @@ namespace AspNetDeploy.BuildServices.MSBuild
             Dictionary<string, string> globalProperty = new Dictionary<string, string>
             {
                 {"Configuration", "Release"},
+                {"VisualStudioVersion", "14.0"},
                 //{"Platform", "Any CPU"}
             };
 
             BuildRequestData buildRequestData = new BuildRequestData(
                 targetFile,
                 globalProperty,
-                this.LatestToolsVersion(),
+                null,
                 new[]
                 {
                     "Rebuild"

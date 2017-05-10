@@ -62,8 +62,10 @@ namespace SatelliteService.Operations
                 {
                     Binding binding = site.Bindings.CreateElement();
 
+                    string ip = (string) bindingConfig.IP;
+
                     binding.Protocol = (string) bindingConfig.protocol;
-                    binding.BindingInformation = ":" + (int) bindingConfig.port + ":" + (string) bindingConfig.host;
+                    binding.BindingInformation = (string.IsNullOrWhiteSpace(ip) ? "" : ip) + ":" + (int) bindingConfig.port + ":" + (string) bindingConfig.host;
 
                     switch (binding.Protocol.ToLower())
                     {
@@ -173,20 +175,22 @@ namespace SatelliteService.Operations
 
         private void StopSite(ServerManager iisManager, string siteName)
         {
-            if (iisManager.Sites[siteName] == null)
+            Site site = iisManager.Sites[siteName];
+
+            if (site == null)
             {
                 return;
             }
 
-            switch (iisManager.Sites[siteName].State)
+            switch (site.State)
             {
                 case ObjectState.Started:
-                    iisManager.Sites[siteName].Stop();
+                    site.Stop();
                     break;
 
                 case ObjectState.Starting:
-                    ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Started, 3);
-                    iisManager.Sites[siteName].Stop();
+                    ThreadService.SleepUntil(() => site.State == ObjectState.Started, 3);
+                    site.Stop();
                     break;
 
                 case ObjectState.Stopping:
@@ -196,17 +200,46 @@ namespace SatelliteService.Operations
                     return;
             }
 
-            ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Stopped, 3);
+            ThreadService.SleepUntil(() => site.State == ObjectState.Stopped, 3);
+
+            List<string> appPoolNames = site.Applications.Select( app => app.ApplicationPoolName).Distinct().ToList();
+
+            foreach (string appPoolName in appPoolNames)
+            {
+                ApplicationPool applicationPool = iisManager.ApplicationPools[appPoolName];
+
+                switch (applicationPool.State)
+                {
+                    case ObjectState.Started:
+                        applicationPool.Stop();
+                        break;
+
+                    case ObjectState.Starting:
+                        ThreadService.SleepUntil(() => applicationPool.State == ObjectState.Started, 3);
+                        applicationPool.Stop();
+                        break;
+
+                    case ObjectState.Stopping:
+                        break;
+
+                    case ObjectState.Stopped:
+                        return;
+                }
+            }
+
+            ThreadService.SleepUntil(() => appPoolNames.All( a => iisManager.ApplicationPools[a].State == ObjectState.Stopped), 3);
         }
 
         private void StartSite(ServerManager iisManager, string siteName)
         {
-            if (iisManager.Sites[siteName] == null)
+            Site site = iisManager.Sites[siteName];
+
+            if (site == null)
             {
                 return;
             }
 
-            switch (iisManager.Sites[siteName].State)
+            switch (site.State)
             {
                 case ObjectState.Started:
                     return;
@@ -215,16 +248,43 @@ namespace SatelliteService.Operations
                     break;
 
                 case ObjectState.Stopped:
-                    iisManager.Sites[siteName].Start();
+                    site.Start();
                     break;
 
                 case ObjectState.Stopping:
-                    ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Stopped, 3);
-                    iisManager.Sites[siteName].Start();
+                    ThreadService.SleepUntil(() => site.State == ObjectState.Stopped, 3);
+                    site.Start();
                     break;
             }
 
-            ThreadService.SleepUntil(() => iisManager.Sites[siteName].State == ObjectState.Started, 3);
+            ThreadService.SleepUntil(() => site.State == ObjectState.Started, 3);
+
+            List<string> appPoolNames = site.Applications.Select(app => app.ApplicationPoolName).Distinct().ToList();
+
+            foreach (string appPoolName in appPoolNames)
+            {
+                ApplicationPool applicationPool = iisManager.ApplicationPools[appPoolName];
+
+                switch (applicationPool.State)
+                {
+                    case ObjectState.Started:
+                        return;
+
+                    case ObjectState.Starting:
+                        break;
+
+                    case ObjectState.Stopped:
+                        applicationPool.Start();
+                        break;
+
+                    case ObjectState.Stopping:
+                        ThreadService.SleepUntil(() => applicationPool.State == ObjectState.Stopped, 3);
+                        applicationPool.Start();
+                        break;
+                }
+            }
+
+            ThreadService.SleepUntil(() => appPoolNames.All(a => iisManager.ApplicationPools[a].State == ObjectState.Started), 3);
         }
     }
 }

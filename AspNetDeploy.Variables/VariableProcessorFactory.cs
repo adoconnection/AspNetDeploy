@@ -12,8 +12,9 @@ namespace AspNetDeploy.Variables
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
             List<DataField> dataFields = entities.DataField
-                .Include("DataFieldValues.Environments")
-                .Include("DataFieldValues.Machines")
+                .Include("DataFieldValues.Environment")
+                .Include("DataFieldValues.Machine")
+                .Where( df => !df.IsDeleted)
                 .ToList();
 
             BundleVersion bundleVersion = entities.BundleVersion
@@ -27,7 +28,6 @@ namespace AspNetDeploy.Variables
             IDictionary<string, string> environmentDictionary = this.CreateEnvironmentDictionary(bundleVersion);
 
             return new VariableProcessor(dataFieldsDictionary, environmentDictionary);
-
         }
 
         private static IDictionary<string, string> CreateDataFieldsDictionary(int machineId, IEnumerable<DataField> dataFields, int environmentId)
@@ -43,7 +43,7 @@ namespace AspNetDeploy.Variables
                     continue;
                 }
 
-                DataFieldValue machineValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.Machines.Any(m => m.Id == machineId));
+                DataFieldValue machineValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.MachineId == machineId && dfv.EnvironmentId == environmentId);
 
                 if (machineValue != null)
                 {
@@ -51,7 +51,7 @@ namespace AspNetDeploy.Variables
                     continue;
                 }
 
-                DataFieldValue environmentValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.Environments.Any(e => e.Id == environmentId));
+                DataFieldValue environmentValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.EnvironmentId == environmentId );
 
                 if (environmentValue != null)
                 {

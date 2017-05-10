@@ -156,6 +156,7 @@
     <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
     <Content Include="Resources\Layout\Images\Help\SvnUrl.png" />
+    <Content Include="Resources\Layout\Images\Icons\05_exclamation-3-16.png" />
     <Content Include="Resources\Layout\Images\Icons\box-empty64.png" />
     <Content Include="Resources\Layout\Images\Icons\box16-2.png" />
     <Content Include="Resources\Layout\Images\Icons\box16.png" />

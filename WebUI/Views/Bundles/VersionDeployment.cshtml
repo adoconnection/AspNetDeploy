@@ -131,10 +131,24 @@
                     @if (deploymentStep.GetDynamicProperty("IIS.Bindings") != null)
                     {
                         <ul>
-                                    
                             @foreach (dynamic binding in deploymentStep.GetDynamicProperty("IIS.Bindings"))
                             {
-                                <li>@binding.protocol, @binding.port, @binding.host</li>
+                                <li>@binding.protocol, @binding.host, @binding.port
+
+                                @if (!string.IsNullOrEmpty((string)binding.certificateName) || !string.IsNullOrEmpty((string)binding.IP))
+                                {
+                                    <ul>
+                                        @if (!string.IsNullOrEmpty((string)binding.certificateName))
+                                        {
+                                            <li>Certificate: @binding.certificateName</li>
+                                        }
+                                        @if (!string.IsNullOrEmpty((string)binding.IP))
+                                        {
+                                            <li>IP: @binding.IP</li>
+                                        }
+                                    </ul>
+                                }
+                                </li>
                             }
                         </ul>
                     }

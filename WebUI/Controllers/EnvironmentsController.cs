@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.MachineSummary;
@@ -25,20 +26,28 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Machines.MachineRoles")
                 .ToList();
 
-            Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines)
-                .Distinct()
-                .AsParallel()
-                .Select(m => new {m, alive = this.satelliteMonitor.IsAlive(m)})
-                .ToDictionary(k => k.m, k => k.alive);
+            IList<Machine> machines = environments.SelectMany(e => e.Machines).Distinct().ToList();
 
-            Dictionary<Machine, IServerSummary> summaries = environments.SelectMany(e => e.Machines)
-                .Distinct()
-                .AsParallel()
-                .Select(m => new { m, summary = dictionary[m] == SatelliteState.Alive ? this.satelliteMonitor.GetServerSummary(m) : null })
-                .ToDictionary(k => k.m, k => k.summary);
+            Task<Dictionary<Machine, SatelliteState>> isAliveTask = (new TaskFactory<Dictionary<Machine, SatelliteState>>()).StartNew(() =>
+            {
+                return machines
+                    .AsParallel()
+                    .Select(m => new { m, alive = this.satelliteMonitor.IsAlive(m) })
+                    .ToDictionary(k => k.m, k => k.alive);
+            });
 
-            this.ViewBag.MachineStates = dictionary;
-            this.ViewBag.MachineSummaries = summaries;
+            Task<Dictionary<Machine, IServerSummary>> getsummaryTask = (new TaskFactory<Dictionary<Machine, IServerSummary>>()).StartNew(() =>
+            {
+                return machines
+                    .AsParallel()
+                    .Select(m => new {m, summary = this.satelliteMonitor.GetServerSummary(m)})
+                    .ToDictionary(k => k.m, k => k.summary);
+            });
+
+            Task.WaitAll(isAliveTask, getsummaryTask);
+
+            this.ViewBag.MachineStates = isAliveTask.Result;
+            this.ViewBag.MachineSummaries = getsummaryTask.Result;
             this.ViewBag.Environments = environments;
 
             return this.View();
@@ -51,9 +60,11 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Properties")
                 .Include("Machines.MachineRoles")
                 .Include("DataFieldValues.DataField")
-                .First( e => e.Id == id);
+                .First( df => df.Id == id);
 
-            List<DataField> dataFields = this.Entities.DataField.ToList();
+            List<DataField> dataFields = this.Entities.DataField
+                .Where( df => !df.IsDeleted)
+                .ToList();
 
             this.ViewBag.Environment = environment;
             this.ViewBag.DataFields = dataFields;

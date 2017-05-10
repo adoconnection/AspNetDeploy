@@ -80,7 +80,9 @@ namespace ThreadHostedTaskRunner
             List<Publication> publications = entities.Publication
                 .Include("Package.BundleVersion")
                 .Include("Environment")
-                .Where( p => p.State == PublicationState.Queued)
+                .Where( p => 
+                    p.State == PublicationState.Queued &&
+                    !p.Package.Publications.Any( p2 => p2.CreatedDate > p.CreatedDate))
                 .ToList();
 
             List<IGrouping<BundleVersion, Publication>> groupedPublications = publications
@@ -206,7 +208,10 @@ namespace ThreadHostedTaskRunner
                 .Distinct()
                 .Where( bv => bv.ProjectVersions.All( 
                     pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal && 
-                    pv.GetStringProperty("LastBuildResult") != "Error"))
+                    (
+                        pv.ProjectType == ProjectType.ZipArchive ||
+                        pv.GetStringProperty("LastBuildResult") == "Done")
+                    ))
                 .ToList();
 
             List<BundleVersion> errorBundles = new List<BundleVersion>();
@@ -262,7 +267,8 @@ namespace ThreadHostedTaskRunner
                         pv.ProjectType.HasFlag(ProjectType.WindowsApplication) ||
                         pv.ProjectType.HasFlag(ProjectType.Service) ||
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
-                        pv.ProjectType.HasFlag(ProjectType.Web)
+                        pv.ProjectType.HasFlag(ProjectType.Web) ||
+                        pv.ProjectType.HasFlag(ProjectType.GulpFile) 
                         ))
                     .ToList();
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using AspNetDeploy.Contracts;
@@ -29,7 +28,7 @@ namespace AspNetDeploy.ContinuousIntegration
             ProjectVersion projectVersion = entities.ProjectVersion.Include("Properties").First( pv => pv.Id == projectVersionId);
 
             string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControl.Id, sourceControlVersion.Id);
-            IBuildService buildService = buildServiceFactory.Create(SolutionType.VisualStudio);
+            IBuildService buildService = buildServiceFactory.Create(projectVersion.ProjectType);
 
             BuildSolutionResult buildSolutionResult = buildService.Build(
                 sourcesFolder,

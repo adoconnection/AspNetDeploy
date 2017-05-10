@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure.Interception;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.MachineSummary;
+using AspNetDeploy.DeploymentServices;
+using AspNetDeploy.DeploymentServices.SatelliteMonitoring;
 using AspNetDeploy.DeploymentServices.WCFSatellite;
 using AspNetDeploy.Model;
 using AspNetDeploy.Variables;
@@ -18,6 +22,10 @@ using Microsoft.Build.Framework;
 using ObjectFactory;
 using ThreadHostedTaskRunner;
 using Microsoft.Build.Construction;
+using Microsoft.Web.Administration;
+using Newtonsoft.Json;
+using SatelliteService.Operations;
+using Environment = AspNetDeploy.Model.Environment;
 
 namespace ConsoleTest
 {
@@ -48,12 +56,88 @@ namespace ConsoleTest
 
     class Program
     {
+        
+
+
         private static bool WorkerComplete = false;
 
-
+        
 
         static void Main(string[] args)
         {
+            dynamic bindingConfig = JsonConvert.DeserializeObject("{ port:80, host:'abc.local'}");
+
+            using (ServerManager serverManager = new ServerManager())
+            {
+                Site site = serverManager.Sites["Account Service Latest"];
+
+                foreach (Binding siteBinding in site.Bindings)
+                {
+                    siteBinding.BindingInformation = (string.IsNullOrWhiteSpace((string)bindingConfig.IP) ? "" : (string)bindingConfig.IP) + ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
+                }
+
+                serverManager.CommitChanges();
+            }
+
+            return;
+
+            AspNetDeployEntities entities = new AspNetDeployEntities();
+
+
+            /*
+
+                        Machine machine = entities.Machine.First( m => m.Name == "Lake");
+
+                        WCFSatelliteDeploymentAgent agent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 0, 1), new TimeSpan(0, 0, 0, 1));
+
+                        Console.WriteLine("Runnning");
+                        Console.WriteLine(agent.IsReady());
+            */
+
+            /*
+
+                         List<Machine> machines = entities.Machine.ToList();
+
+                         machines.Where( m => !m.Name.Contains("FastVPS") && !m.Name.Contains("Snow")).ToList().AsParallel().ForAll(machine =>
+                         {
+                             WCFSatelliteDeploymentAgent deploymentAgent = new WCFSatelliteDeploymentAgent(null, machine.URL, machine.Login, machine.Password, new TimeSpan(0, 0, 1));
+                             Console.WriteLine(machine.Id + " - " + machine.Name + " - " + deploymentAgent.IsReady());
+                         });
+
+                        Console.WriteLine("-=====================-");
+
+                        ISatelliteMonitor satelliteMonitor = new SatelliteMonitor();
+
+                        List<Environment> environments = entities.Environment
+                            .Include("Properties")
+                            .Include("Machines.MachineRoles")
+                            .ToList();
+
+                        Dictionary<Machine, SatelliteState> dictionary = environments.SelectMany(e => e.Machines)
+                            .Distinct()
+                            .AsParallel()
+                            .Select(m => new { m, alive = satelliteMonitor.IsAlive(m) })
+                            .ToDictionary(k => k.m, k => k.alive);
+
+                        DateTime start = DateTime.Now;
+
+                        Dictionary<Machine, IServerSummary> summaries = environments.SelectMany(e => e.Machines)
+                            .Distinct()
+                            .AsParallel()
+                            .Select(m => new { m, summary = satelliteMonitor.GetServerSummary(m) })
+                            .ToDictionary(k => k.m, k => k.summary);
+
+                        DateTime end = DateTime.Now;
+
+                        Console.WriteLine((end-start).TotalSeconds);
+
+                        foreach (KeyValuePair<Machine, SatelliteState> serverSummary in dictionary)
+                        {
+                            Console.WriteLine(serverSummary.Key + " - " + serverSummary.Value);
+                        }
+            */
+
+
             MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
 
             DateTime? startDate = null;
@@ -61,11 +145,11 @@ namespace ConsoleTest
             ProjectVersion projectVersion = new ProjectVersion()
             {
                // ProjectFile = @"ZelbikeRace2Database\ZelbikeRace2Database.sqlproj",
-                ProjectFile = @"WebUI\EventPublicUI.csproj",
-                SolutionFile = @"ZelBikeRace2.sln"
+                ProjectFile = @"Databases.WidgetApi\Databases.WidgetApi.sqlproj",
+                SolutionFile = @"Documentoved.sln"
             };
 
-            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\9\67", projectVersion,
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\5\140", projectVersion,
                 s =>
                 {
                     if (startDate == null)
@@ -90,9 +174,7 @@ namespace ConsoleTest
 
 
            
-
-/*
-
+            /*
             //string path = @"H:\Documentoved\Latest\Services.ImsPrimary\Databases.ImsPrimary.sqlproj";
             string path = @"H:\Documentoved\Latest\Services.ExceptionHandlingService\Services.Logging.csproj";
 
@@ -126,18 +208,18 @@ namespace ConsoleTest
 
             //Console.WriteLine("building " + buildResult.OverallResult);
 
-/*
+            /*
 
-            ObjectFactoryConfigurator.Configure();
+                        ObjectFactoryConfigurator.Configure();
 
-            Console.WriteLine("Testing satellites");
+                        Console.WriteLine("Testing satellites");
 
-            AspNetDeployEntities entities = new AspNetDeployEntities();
+                        AspNetDeployEntities entities = new AspNetDeployEntities();
 
-            MSBuildBuildService service = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
-            service.Build(
-                @"H:\AspNetDeployWorkingFolder\Sources\5\45\CodeBase.Documents.WebUI\CodeBase.Documents.WebUI.csproj",
-                s => Console.WriteLine("started: " + s), (s, b, arg3) => Console.WriteLine("done: " + arg3), (s, s1, arg3, arg4, arg5, arg6) => Console.WriteLine("Err: " + s));*/
+                        MSBuildBuildService service = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+                        service.Build(
+                            @"H:\AspNetDeployWorkingFolder\Sources\5\45\CodeBase.Documents.WebUI\CodeBase.Documents.WebUI.csproj",
+                            s => Console.WriteLine("started: " + s), (s, b, arg3) => Console.WriteLine("done: " + arg3), (s, s1, arg3, arg4, arg5, arg6) => Console.WriteLine("Err: " + s));*/
 
             /*foreach (Machine machine in entities.Machine)
             {

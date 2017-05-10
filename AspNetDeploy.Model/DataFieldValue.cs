@@ -14,18 +14,14 @@ namespace AspNetDeploy.Model
     
     public partial class DataFieldValue
     {
-        public DataFieldValue()
-        {
-            this.Environments = new HashSet<Environment>();
-            this.Machines = new HashSet<Machine>();
-        }
-    
         public int Id { get; set; }
         public int DataFieldId { get; set; }
         public string Value { get; set; }
+        public Nullable<int> EnvironmentId { get; set; }
+        public Nullable<int> MachineId { get; set; }
     
         public virtual DataField DataField { get; set; }
-        public virtual ICollection<Environment> Environments { get; set; }
-        public virtual ICollection<Machine> Machines { get; set; }
+        public virtual Environment Environment { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

@@ -64,6 +64,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
                 if (!deploymentAgent.IsReady())
                 {
+                    this.RecordException(entities, null, new AspNetDeployException("Deployment agent not ready" ));
                     this.ChangePublicationResult(publication, PublicationState.Error, entities);
                     return;
                 }
@@ -92,6 +93,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         }
                         catch (Exception e)
                         {
+                            this.RecordException(entities, null, e);
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguringError, this.GetLastExceptionSafe(deploymentAgent));
                             throw;
                         }
@@ -116,6 +118,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         }
                         catch (Exception e)
                         {
+                            this.RecordException(entities, null, e);
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError, this.GetLastExceptionSafe(deploymentAgent));
                             throw;
                         }
@@ -129,6 +132,8 @@ namespace AspNetDeploy.ContinuousIntegration
                     machineDeploymentComplete(machine.Id, false);
                     this.ChangeMachinePublication(machinePublication, MachinePublicationState.Error, entities);
                     this.ChangePublicationResult(publication, PublicationState.Error, entities);
+                    this.RecordException(entities, null, e);
+
                     return;
                 }
 
@@ -206,9 +211,38 @@ namespace AspNetDeploy.ContinuousIntegration
             }
         }
 
+        private void RecordException(AspNetDeployEntities entities, ExceptionEntry parentException, Exception exception)
+        {
+            ExceptionEntry exceptionEntry = new ExceptionEntry();
+            exceptionEntry.Message = exception.Message;
+            exceptionEntry.Source = exception.Source;
+            exceptionEntry.StackTrace = exception.StackTrace;
+            exceptionEntry.TypeName = exception.GetType().FullName;
+            entities.ExceptionEntry.Add(exceptionEntry);
+
+            if (parentException != null)
+            {
+                parentException.InnerExceptionEntry = exceptionEntry;
+            }
+            else
+            {
+                AspNetDeployExceptionEntry aspNetDeployExceptionEntry = new AspNetDeployExceptionEntry();
+                aspNetDeployExceptionEntry.TimeStamp = DateTime.UtcNow;
+                aspNetDeployExceptionEntry.ExceptionEntry = exceptionEntry;
+                entities.AspNetDeployExceptionEntry.Add(aspNetDeployExceptionEntry);
+            }
+
+            if (exception.InnerException != null)
+            {
+                this.RecordException(entities, exceptionEntry, exception.InnerException);
+            }
+
+            entities.SaveChanges();
+        }
+
         private IList<DeploymentStep> GetMachineDeploymentSteps(Package package, Machine machine)
         {
-            return package.BundleVersion.DeploymentSteps.Where( ds => ds.MachineRoles.Intersect(machine.MachineRoles).Any()).ToList();
+            return package.BundleVersion.DeploymentSteps.Where( ds => ds.MachineRoles.Intersect(machine.MachineRoles).Any()).OrderBy( ds => ds.OrderIndex).ToList();
         }
 
         private bool ValidatePackage(string bundlePackagePath)
@@ -240,14 +274,18 @@ namespace AspNetDeploy.ContinuousIntegration
                 try
                 {
                     agent.Rollback();
-                    return agent.IsReady();
+
+                    if (!agent.IsReady())
+                    {
+                        return false;
+                    }
                 }
                 catch (Exception)
                 {
                     return false;
                 }
-                
             }
+
             return true;
         }
 

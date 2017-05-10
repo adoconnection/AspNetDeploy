@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
 using System.ServiceProcess;
+using System.Threading;
 using SatelliteService;
 using SatelliteService.Bootstrapper;
 
@@ -9,9 +11,7 @@ namespace SatelliteServiceHost
 {
     public partial class SatelliteServiceContainer : ServiceBase
     {
-        private readonly ServiceHost deploymentServiceHost;
-        private readonly ServiceHost managementServiceHost;
-        private readonly ServiceHost informationService;
+        private readonly IList<ServiceHostContainer> hostContainers;
 
         public SatelliteServiceContainer()
         {
@@ -34,42 +34,56 @@ namespace SatelliteServiceHost
             Uri informationServiceUri = new Uri(ConfigurationManager.AppSettings["InformationService.Endpoint.URI"] ?? (serviceGenericUri + "/InformationService"));
             Uri informationServiceMetadataUri = new Uri(ConfigurationManager.AppSettings["InformationService.Metadata.Uri"] ?? "http://localhost:8091/AspNetDeploySatellite/InformationServiceMetadata");
 
-            ServiceHostFactory serviceHostFactory = new ServiceHostFactory();
+            this.hostContainers = new List<ServiceHostContainer>()
+            {
+                new ServiceHostContainer(
+                    typeof(DeploymentService),
+                    typeof(IDeploymentService),
+                    deploymentServiceUri,
+                    deploymentServicMetadataeUri,
+                    isAuthorizationEnabled,
+                    isMetadataEnabled,
+                    certificateName),
 
-            this.deploymentServiceHost = serviceHostFactory.Create(typeof(DeploymentService), typeof(IDeploymentService), deploymentServiceUri, isAuthorizationEnabled, isMetadataEnabled, deploymentServicMetadataeUri, certificateName);
-            this.managementServiceHost = serviceHostFactory.Create(typeof(MonitoringService), typeof(IMonitoringService), monitoringServiceUri, isAuthorizationEnabled, isMetadataEnabled, monitoringServiceMetadataUri, certificateName);
-            this.informationService = serviceHostFactory.Create(typeof(InformationService), typeof(IInformationService), informationServiceUri, isAuthorizationEnabled, isMetadataEnabled, informationServiceMetadataUri, certificateName);
+                new ServiceHostContainer(
+                    typeof(MonitoringService),
+                    typeof(IMonitoringService),
+                    monitoringServiceUri,
+                    monitoringServiceMetadataUri,
+                    isAuthorizationEnabled,
+                    isMetadataEnabled,
+                    certificateName),
+
+                new ServiceHostContainer(
+                    typeof(InformationService),
+                    typeof(IInformationService),
+                    informationServiceUri,
+                    informationServiceMetadataUri,
+                    isAuthorizationEnabled,
+                    isMetadataEnabled,
+                    certificateName),
+            };
         }
 
         protected override void OnStart(string[] args)
         {
-            this.deploymentServiceHost.Open();
-            this.deploymentServiceHost.Faulted += (sender, eventArgs) =>
+            foreach (ServiceHostContainer serviceHostContainer in hostContainers)
             {
-                this.deploymentServiceHost.Close();
-                this.deploymentServiceHost.Open();
-            };
+                serviceHostContainer.StartService();
+                serviceHostContainer.StartMonitoring();
+            }
 
-            this.managementServiceHost.Open();
-            this.managementServiceHost.Faulted += (sender, eventArgs) =>
-            {
-                this.managementServiceHost.Close();
-                this.managementServiceHost.Open();
-            };
-
-            this.informationService.Open();
-            this.informationService.Faulted += (sender, eventArgs) =>
-            {
-                this.informationService.Close();
-                this.informationService.Open();
-            };
+            base.OnStart(args);
         }
 
-        protected override void OnStop()
+        protected override void OnShutdown()
         {
-            this.deploymentServiceHost.Close();
-            this.managementServiceHost.Close();
-            this.informationService.Close();
+            foreach (ServiceHostContainer serviceHostContainer in hostContainers)
+            {
+                serviceHostContainer.Stop();
+            }
+
+            base.OnShutdown();
         }
     }
 }
