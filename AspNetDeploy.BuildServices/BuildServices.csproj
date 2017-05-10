@@ -55,6 +55,10 @@
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BuildServices.Gulp\BuildServices.Gulp.csproj">
+      <Project>{C03F2436-D1E1-4A0A-83A3-D7E5683AC3AB}</Project>
+      <Name>BuildServices.Gulp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

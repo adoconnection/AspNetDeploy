@@ -18,7 +18,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
             this.nugetPackageManager = nugetPackageManager;
         }
 
-        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
+        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
         {
             nugetPackageManager.RestoreSolutionPackages(Path.Combine(sourcesFolder, projectVersion.SolutionFile));
             return this.BuildInternal(Path.Combine(sourcesFolder, projectVersion.ProjectFile), projectBuildStarted, projectBuildComplete, errorLogger);
@@ -31,7 +31,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
         }
         */
 
-        private BuildSolutionResult BuildInternal(string targetFile, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string, string, int, int, string> errorLogger)
+        private BuildSolutionResult BuildInternal(string targetFile, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
         {
             ProjectCollection projectCollection = new ProjectCollection();
 

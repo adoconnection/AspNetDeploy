@@ -52,6 +52,10 @@
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BuildServices.Npm\BuildServices.Npm.csproj">
+      <Project>{7F2A5635-44AC-460D-9CCA-CFB3C8344A12}</Project>
+      <Name>BuildServices.Npm</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

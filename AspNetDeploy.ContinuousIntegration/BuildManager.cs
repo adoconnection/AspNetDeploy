@@ -57,16 +57,12 @@ namespace AspNetDeploy.ContinuousIntegration
                         projectBuildComplete(projectVersionBuild.Id, success);
                     }
                 },
-                (projectFile, file, code, lineNumber, columnNumber, message) =>
+                (projectFile, data) =>
                 {
                     AspNetDeployException exception = new AspNetDeployException(
                         string.Format(
-                            "File: {0}. code: {1}, lineNumber: {2}, columnNumber: {3}, message: {4}", 
-                            file, 
-                            code,
-                            lineNumber, 
-                            columnNumber,
-                            message));
+                            "Data: {0}",
+                            data));
 
                     this.loggingService.Log(new AspNetDeployException("Project build failed: " + projectFile, exception), null);
                 });

@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76580B91-2151-48A4-941F-1AEF298B13DE}</ProjectGuid>
+    <ProjectGuid>{7F2A5635-44AC-460D-9CCA-CFB3C8344A12}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AspNetDeploy.Contracts</RootNamespace>
-    <AssemblyName>AspNetDeploy.Contracts</AssemblyName>
+    <RootNamespace>AspNetDeploy.BuildServices.Npm</RootNamespace>
+    <AssemblyName>BuildServices.Npm</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,45 +37,17 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\AspNetDeployException.cs" />
-    <Compile Include="Exceptions\IExceptionDataInfo.cs" />
-    <Compile Include="Exceptions\IExceptionInfo.cs" />
-    <Compile Include="IBuildService.cs" />
-    <Compile Include="IBuildServiceFactory.cs" />
-    <Compile Include="IBundleRepository.cs" />
-    <Compile Include="IContinuousIntegrationLogger.cs" />
-    <Compile Include="IDeploymentAgent.cs" />
-    <Compile Include="IDeploymentAgentFactory.cs" />
-    <Compile Include="IEnvironmentResourcesService.cs" />
-    <Compile Include="ILoggingService.cs" />
-    <Compile Include="INugetPackageManager.cs" />
-    <Compile Include="IPackageManager.cs" />
-    <Compile Include="IPathServices.cs" />
-    <Compile Include="IProjectPackagerFactory.cs" />
-    <Compile Include="IProjectPackager.cs" />
-    <Compile Include="IProjectParsingService.cs" />
-    <Compile Include="ISatelliteMonitor.cs" />
-    <Compile Include="ISolutionParser.cs" />
-    <Compile Include="ISolutionProject.cs" />
-    <Compile Include="ISourceControlRepository.cs" />
-    <Compile Include="ISourceControlRepositoryFactory.cs" />
-    <Compile Include="ITaskRunner.cs" />
-    <Compile Include="IVariableProcessor.cs" />
-    <Compile Include="IVariableProcessorFactory.cs" />
-    <Compile Include="MachineSummary\IDriveInfo.cs" />
-    <Compile Include="MachineSummary\IServerSummary.cs" />
-    <Compile Include="MachineSummary\IServerUpdateInfo.cs" />
+    <Compile Include="NpmPackageManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SatelliteState.cs" />
-    <Compile Include="TestSourceResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
-      <Project>{b22a302a-153f-4b7b-91ef-877412d3efbb}</Project>
-      <Name>AspNetDeploy.Model</Name>
+    <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
+      <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
+      <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
