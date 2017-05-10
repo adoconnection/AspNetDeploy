@@ -301,6 +301,7 @@
     <Content Include="Views\Setup\DatabaseStructure.cshtml" />
     <Content Include="Views\Setup\WorkingFolder.cshtml" />
     <Content Include="Views\Sources\AddSvn.cshtml" />
+    <Content Include="Views\Bundles\VersionVariables.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
