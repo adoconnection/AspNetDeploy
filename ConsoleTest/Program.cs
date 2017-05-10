@@ -161,10 +161,10 @@ namespace ConsoleTest
                 {
                     Console.WriteLine(s + " - " + b);
                 },
-                (s, s1, arg3, arg4, arg5, arg6) =>
+                (s, s1) =>
                 {
                     // e.ProjectFile, e.File, e.Code, e.LineNumber, e.ColumnNumber, e.Message
-                    Console.WriteLine(s + "\n" + arg6);
+                    Console.WriteLine(s + "\n" + s1);
                 });
 
             DateTime endDate = DateTime.Now;

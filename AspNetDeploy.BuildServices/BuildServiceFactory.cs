@@ -1,6 +1,7 @@
 ﻿using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using BuildServices.Gulp;
 
 namespace AspNetDeploy.BuildServices
 {
@@ -15,6 +16,11 @@ namespace AspNetDeploy.BuildServices
 
         public IBuildService Create(ProjectType projectType)
         {
+            if (projectType == ProjectType.GulpFile)
+            {
+                return new GulpBuildService();
+            }
+
             return new MSBuildBuildService(this.nugetPackageManager);
         }
     }
