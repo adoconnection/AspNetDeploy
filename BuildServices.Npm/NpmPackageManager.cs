@@ -15,9 +15,8 @@ namespace BuildServices.Npm
         public void RestorePackages(string directory)
         {
             Process process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(directory);
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.WorkingDirectory = directory;
 
             process.StartInfo.FileName = ConfigurationManager.AppSettings["Settings.NpmBinary"];
             process.StartInfo.Arguments = "install";

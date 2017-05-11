@@ -24,9 +24,9 @@ namespace BuildServices.Gulp
                 Process process = new Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(sourcesFolder);
+                process.StartInfo.WorkingDirectory = sourcesFolder;
 
-                process.StartInfo.FileName = Path.GetFileName(Path.Combine(Path.GetDirectoryName(sourcesFolder), @"node_modules\.bin\gulp.cmd"));
+                process.StartInfo.FileName = Path.Combine(sourcesFolder, @"node_modules\.bin\gulp.cmd");
                 process.StartInfo.Arguments = string.Format("--gulpfile {0}", targetFile);
 
                 process.Start();
