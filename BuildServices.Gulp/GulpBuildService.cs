@@ -27,9 +27,9 @@ namespace BuildServices.Gulp
                 Process process = new Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(sourcesFolder);
+                process.StartInfo.WorkingDirectory = sourcesFolder;
 
-                process.StartInfo.FileName = Path.GetFileName(Path.Combine(Path.GetDirectoryName(sourcesFolder), @"node_modules\.bin\gulp.cmd"));
+                process.StartInfo.FileName = Path.Combine(sourcesFolder, @"node_modules\.bin\gulp.cmd");
                 process.StartInfo.Arguments = string.Format("--gulpfile {0}", targetFile);
 
                 process.Start();
@@ -40,7 +40,7 @@ namespace BuildServices.Gulp
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    errorLogger(targetFile, string.Format("Message: {0}", error));
+                    errorLogger(targetFile, string.Format("Message: {0}, sources folder: {1}, target file: {2}", error, sourcesFolder, targetFile));
 
                     return new BuildSolutionResult()
                     {
@@ -50,7 +50,7 @@ namespace BuildServices.Gulp
             }
             catch (Exception ex)
             {
-                errorLogger(targetFile, string.Format("Message: {0}", ex.Message));
+                errorLogger(targetFile, string.Format("Message: {0}, sources folder: {1}, target file: {2}", ex.Message, sourcesFolder, targetFile));
 
                 return new BuildSolutionResult()
                 {
