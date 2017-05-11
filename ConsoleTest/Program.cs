@@ -153,7 +153,7 @@ namespace ConsoleTest
             */
 
 
-            MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+            MSBuildBuildService buildBuildService = new MSBuildBuildService(new PathServices());
 
             DateTime? startDate = null;
 

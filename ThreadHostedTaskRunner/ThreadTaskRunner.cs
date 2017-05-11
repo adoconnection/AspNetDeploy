@@ -210,10 +210,7 @@ namespace ThreadHostedTaskRunner
                 .Where( bv => bv.ProjectVersions.All( 
                     pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal && 
                     (
-                        (
-                            pv.ProjectType == ProjectType.ZipArchive ||
-                            pv.ProjectType == ProjectType.GulpFile
-                        ) && pv.GetStringProperty("LastBuildResult") == "Done")
+                        pv.ProjectType == ProjectType.ZipArchive || pv.GetStringProperty("LastBuildResult") == "Done")
                     ))
                 .ToList();
 

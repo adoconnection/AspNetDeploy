@@ -27,6 +27,11 @@ namespace LocalEnvironment
             return this.GetWorkingFolderPath(@"NuGet\NuGet.exe");
         }
 
+        public string GetNpmPath()
+        {
+            return ConfigurationManager.AppSettings["Settings.NpmBinary"];
+        }
+
         private string GetWorkingFolderPath(string path)
         {
             return Path.Combine(this.GetWorkingFolder(), path);

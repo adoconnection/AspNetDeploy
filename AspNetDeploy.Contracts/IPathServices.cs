@@ -6,5 +6,6 @@
         string GetBundlePackagePath(int bundleId, int packageId);
         string GetProjectPackagePath(int projectId, string revisionId);
         string GetNugetPath();
+        string GetNpmPath();
     }
 }

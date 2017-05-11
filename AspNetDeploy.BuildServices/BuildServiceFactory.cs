@@ -7,21 +7,21 @@ namespace AspNetDeploy.BuildServices
 {
     public class BuildServiceFactory : IBuildServiceFactory
     {
-        private readonly INugetPackageManager nugetPackageManager;
+        private readonly IPathServices pathServices;
 
-        public BuildServiceFactory(INugetPackageManager nugetPackageManager)
+        public BuildServiceFactory(IPathServices pathServices)
         {
-            this.nugetPackageManager = nugetPackageManager;
+            this.pathServices = pathServices;
         }
 
         public IBuildService Create(ProjectType projectType)
         {
             if (projectType == ProjectType.GulpFile)
             {
-                return new GulpBuildService();
+                return new GulpBuildService(this.pathServices);
             }
 
-            return new MSBuildBuildService(this.nugetPackageManager);
+            return new MSBuildBuildService(this.pathServices);
         }
     }
 }

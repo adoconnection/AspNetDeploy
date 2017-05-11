@@ -51,7 +51,7 @@
     <Compile Include="IEnvironmentResourcesService.cs" />
     <Compile Include="ILoggingService.cs" />
     <Compile Include="INugetPackageManager.cs" />
-    <Compile Include="IPackageManager.cs" />
+    <Compile Include="INpmPackageManager.cs" />
     <Compile Include="IPathServices.cs" />
     <Compile Include="IProjectPackagerFactory.cs" />
     <Compile Include="IProjectPackager.cs" />

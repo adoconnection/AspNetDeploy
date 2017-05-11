@@ -9,15 +9,20 @@ namespace BuildServices.Gulp
 {
     public class GulpBuildService : IBuildService
     {
+        private readonly INpmPackageManager npmPackageManager;
+
+        public GulpBuildService(IPathServices pathServices)
+        {
+            this.npmPackageManager = new NpmPackageManager(pathServices);
+        }
+
         public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
         {
             string targetFile = Path.Combine(sourcesFolder, projectVersion.ProjectFile);
 
-            // this interface may be useful later
-            IPackageManager packageManager = new NpmPackageManager();
-            packageManager.RestorePackages(sourcesFolder);
+            this.npmPackageManager.RestorePackages(sourcesFolder);
 
-            projectBuildStarted(projectVersion.ProjectFile);
+            projectBuildStarted(targetFile);
             
             try
             {
@@ -40,7 +45,7 @@ namespace BuildServices.Gulp
                     throw new Exception(error);
                 }
 
-                projectBuildComplete(projectVersion.ProjectFile, true, null);
+                projectBuildComplete(targetFile, true, null);
 
                 return new BuildSolutionResult()
                 {
@@ -49,8 +54,8 @@ namespace BuildServices.Gulp
             }
             catch (Exception ex)
             {
-                errorLogger(projectVersion.ProjectFile, "Message: " + ex.Message);
-                projectBuildComplete(projectVersion.ProjectFile, false, ex.Message);
+                errorLogger(targetFile, "Message: " + ex.Message);
+                projectBuildComplete(targetFile, false, ex.Message);
 
                 return new BuildSolutionResult()
                 {

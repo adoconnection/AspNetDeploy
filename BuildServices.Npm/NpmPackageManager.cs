@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using AspNetDeploy.Contracts;
 
 namespace BuildServices.Npm
 {
-    public class NpmPackageManager : IPackageManager
+    public class NpmPackageManager : INpmPackageManager
     {
+        private readonly IPathServices pathServices;
+
+        public NpmPackageManager(IPathServices pathServices)
+        {
+            this.pathServices = pathServices;
+        }
+
         public void RestorePackages(string directory)
         {
             Process process = new Process();
             process.StartInfo.UseShellExecute = true;
             process.StartInfo.WorkingDirectory = directory;
 
-            process.StartInfo.FileName = ConfigurationManager.AppSettings["Settings.NpmBinary"];
+            process.StartInfo.FileName = this.pathServices.GetNugetPath();
             process.StartInfo.Arguments = "install";
 
             process.Start();

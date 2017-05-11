@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using BuildServices.NuGet;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
@@ -13,14 +14,14 @@ namespace AspNetDeploy.BuildServices.MSBuild
     {
         private readonly INugetPackageManager nugetPackageManager;
 
-        public MSBuildBuildService(INugetPackageManager nugetPackageManager)
+        public MSBuildBuildService(IPathServices pathServices)
         {
-            this.nugetPackageManager = nugetPackageManager;
+            this.nugetPackageManager = new NugetPackageManager(pathServices);
         }
 
         public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
         {
-            nugetPackageManager.RestoreSolutionPackages(Path.Combine(sourcesFolder, projectVersion.SolutionFile));
+            this.nugetPackageManager.RestoreSolutionPackages(Path.Combine(sourcesFolder, projectVersion.SolutionFile));
             return this.BuildInternal(Path.Combine(sourcesFolder, projectVersion.ProjectFile), projectBuildStarted, projectBuildComplete, errorLogger);
         }
 
