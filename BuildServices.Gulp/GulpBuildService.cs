@@ -9,19 +9,16 @@ namespace BuildServices.Gulp
 {
     public class GulpBuildService : IBuildService
     {
-        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion,
-            Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete,
-            Action<string, string> errorLogger)
+        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
         {
+            string targetFile = Path.Combine(sourcesFolder, projectVersion.ProjectFile);
+
             // this interface may be useful later
             IPackageManager packageManager = new NpmPackageManager();
             packageManager.RestorePackages(sourcesFolder);
 
-            return this.BuildInternal(sourcesFolder, Path.Combine(sourcesFolder, projectVersion.ProjectFile), errorLogger);
-        }
-
-        private BuildSolutionResult BuildInternal(string sourcesFolder, string targetFile, Action<string, string> errorLogger)
-        {
+            projectBuildStarted(projectVersion.ProjectFile);
+            
             try
             {
                 Process process = new Process();
@@ -40,28 +37,26 @@ namespace BuildServices.Gulp
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    errorLogger(targetFile, string.Format("Message: {0}", error));
-
-                    return new BuildSolutionResult()
-                    {
-                        IsSuccess = false
-                    };
+                    throw new Exception(error);
                 }
+
+                projectBuildComplete(projectVersion.ProjectFile, true, null);
+
+                return new BuildSolutionResult()
+                {
+                    IsSuccess = true
+                };
             }
             catch (Exception ex)
             {
-                errorLogger(targetFile, string.Format("Message: {0}", ex.Message));
+                errorLogger(projectVersion.ProjectFile, "Message: " + ex.Message);
+                projectBuildComplete(projectVersion.ProjectFile, false, ex.Message);
 
                 return new BuildSolutionResult()
                 {
                     IsSuccess = false
                 };
             }
-
-            return new BuildSolutionResult()
-            {
-                IsSuccess = true
-            };
         }
     }
 }
