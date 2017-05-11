@@ -8,10 +8,10 @@ namespace AspNetDeploy.Projects
 {
     public class ProjectParsingManager
     {
-        private readonly IList<IProjectsStrategy> strategies;
+        private readonly IList<IProjectParser> strategies;
         private readonly ProjectParsingDataContext dataContext;
 
-        public ProjectParsingManager(IList<IProjectsStrategy> strategies, ProjectParsingDataContext dataContext)
+        public ProjectParsingManager(IList<IProjectParser> strategies, ProjectParsingDataContext dataContext)
         {
             this.strategies = strategies;
             this.dataContext = dataContext;
@@ -29,7 +29,7 @@ namespace AspNetDeploy.Projects
         {
             IList<Project> existingProjects = this.dataContext.ListExistingProjects();
 
-            foreach (IProjectsStrategy strategy in this.strategies)
+            foreach (IProjectParser strategy in this.strategies)
             {
                 IList<Guid> guids = strategy.ListProjectGuids();
 
@@ -56,7 +56,7 @@ namespace AspNetDeploy.Projects
             foreach (Project existingProject in this.dataContext.ListExistingProjects())
             {
                 ProjectVersion projectVersion = this.dataContext.GetProjectVersion(existingProject.Id);
-                IProjectsStrategy strategy = this.strategies.FirstOrDefault(s => s.IsExists(existingProject.Guid));
+                IProjectParser strategy = this.strategies.FirstOrDefault(s => s.IsExists(existingProject.Guid));
 
                 if (strategy == null)
                 {
@@ -80,7 +80,7 @@ namespace AspNetDeploy.Projects
 
         private void Initialize()
         {
-            foreach (IProjectsStrategy strategy in this.strategies)
+            foreach (IProjectParser strategy in this.strategies)
             {
                 strategy.LoadProjects();
             }

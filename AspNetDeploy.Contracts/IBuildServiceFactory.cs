@@ -4,6 +4,6 @@ namespace AspNetDeploy.Contracts
 {
     public interface IBuildServiceFactory
     {
-        IBuildService Create(SolutionType project);
+        IBuildService Create(ProjectType project);
     }
 }

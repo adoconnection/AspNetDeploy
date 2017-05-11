@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using AspNetDeploy.Contracts;
@@ -29,7 +28,7 @@ namespace AspNetDeploy.ContinuousIntegration
             ProjectVersion projectVersion = entities.ProjectVersion.Include("Properties").First( pv => pv.Id == projectVersionId);
 
             string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControl.Id, sourceControlVersion.Id);
-            IBuildService buildService = buildServiceFactory.Create(SolutionType.VisualStudio);
+            IBuildService buildService = buildServiceFactory.Create(projectVersion.ProjectType);
 
             BuildSolutionResult buildSolutionResult = buildService.Build(
                 sourcesFolder,
@@ -58,16 +57,12 @@ namespace AspNetDeploy.ContinuousIntegration
                         projectBuildComplete(projectVersionBuild.Id, success);
                     }
                 },
-                (projectFile, file, code, lineNumber, columnNumber, message) =>
+                (projectFile, data) =>
                 {
                     AspNetDeployException exception = new AspNetDeployException(
                         string.Format(
-                            "File: {0}. code: {1}, lineNumber: {2}, columnNumber: {3}, message: {4}", 
-                            file, 
-                            code,
-                            lineNumber, 
-                            columnNumber,
-                            message));
+                            "Data: {0}",
+                            data));
 
                     this.loggingService.Log(new AspNetDeployException("Project build failed: " + projectFile, exception), null);
                 });

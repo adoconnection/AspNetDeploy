@@ -8,12 +8,12 @@ using Guids;
 
 namespace AspNetDeploy.Projects.Zip
 {
-    public class ZipFilesStrategy : IProjectsStrategy
+    public class ZipFilesParser : IProjectParser
     {
         private readonly string sourcesFolder;
-        private IList<ParsedProject> parsedProjects;
+        private IList<ZipProject> parsedProjects;
 
-        public ZipFilesStrategy(string sourcesFolder)
+        public ZipFilesParser(string sourcesFolder)
         {
             this.sourcesFolder = sourcesFolder;
         }
@@ -21,7 +21,7 @@ namespace AspNetDeploy.Projects.Zip
         public void LoadProjects()
         {
             this.parsedProjects = Directory.GetFiles(this.sourcesFolder, "*.zip", SearchOption.TopDirectoryOnly)
-                .Select(f => new ParsedProject
+                .Select(f => new ZipProject
                 {
                     FilePath = f,
                     FileName = Path.GetFileName(f),
@@ -32,13 +32,13 @@ namespace AspNetDeploy.Projects.Zip
 
         public void UpdateProject(Project project, Guid guid)
         {
-            ParsedProject parsedProject = this.parsedProjects.FirstOrDefault(g => g.Guid == guid);
+            ZipProject parsedProject = this.parsedProjects.FirstOrDefault(g => g.Guid == guid);
             project.Name = parsedProject.FileName;
         }
 
         public void UpdateProjectVersion(ProjectVersion projectVersion, Guid guid)
         {
-            ParsedProject parsedProject = this.parsedProjects.FirstOrDefault(g => g.Guid == guid);
+            ZipProject parsedProject = this.parsedProjects.FirstOrDefault(g => g.Guid == guid);
 
             projectVersion.Name = parsedProject.FileName;
             projectVersion.ProjectFile = parsedProject.FileName;
@@ -54,14 +54,6 @@ namespace AspNetDeploy.Projects.Zip
         public bool IsExists(Guid guid)
         {
             return this.parsedProjects.Any(g => g.Guid == guid);
-        }
-
-
-        private struct ParsedProject
-        {
-            public string FilePath { get; set; } 
-            public string FileName { get; set; } 
-            public Guid Guid { get; set; } 
         }
     }
 }

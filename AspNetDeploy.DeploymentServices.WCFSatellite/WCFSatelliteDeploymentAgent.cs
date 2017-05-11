@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
+using System.Threading;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Contracts.MachineSummary;
@@ -132,6 +133,8 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
                     {
                         progress(position, length);
                     }
+
+                    Thread.Sleep(50);
                 }
             }
         }

@@ -11,39 +11,62 @@ namespace AspNetDeploy.Variables
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
-            List<DataField> dataFields = entities.DataField
+            List<DataField> globalDataFields = entities.DataField
                 .Include("DataFieldValues.Environment")
                 .Include("DataFieldValues.Machine")
-                .Where( df => !df.IsDeleted)
+                .Where( df => !df.IsDeleted && df.Mode == DataFieldMode.Global)
                 .ToList();
 
             BundleVersion bundleVersion = entities.BundleVersion
                 .Include("Bundle")
                 .Include("ParentBundleVersion")
+                .Include("DataFields.DataFieldValues.Environment")
+                .Include("DataFields.DataFieldValues.Machine")
                 .First(bv => bv.Id == bundleVersionId);
+
+            List<DataField> bundleDataFields = bundleVersion.DataFields
+                .Where( df => !df.IsDeleted)
+                .ToList();
 
             int environmentId = entities.Machine.First(m => m.Id == machineId).Environments.First().Id;
 
-            IDictionary<string, string> dataFieldsDictionary = CreateDataFieldsDictionary(machineId, dataFields, environmentId);
+            IDictionary<string, string> dataFieldsDictionary = this.CreateDataFieldsDictionary(machineId, globalDataFields, bundleDataFields, environmentId);
             IDictionary<string, string> environmentDictionary = this.CreateEnvironmentDictionary(bundleVersion);
 
             return new VariableProcessor(dataFieldsDictionary, environmentDictionary);
         }
 
-        private static IDictionary<string, string> CreateDataFieldsDictionary(int machineId, IEnumerable<DataField> dataFields, int environmentId)
+        private IDictionary<string, string> CreateDataFieldsDictionary(int machineId, IEnumerable<DataField> globalDataFields, IEnumerable<DataField> bundleDataFields, int environmentId)
         {
             IDictionary<string, string> dataFieldsDictionary = new Dictionary<string, string>();
 
-            foreach (DataField dataField in dataFields)
+            foreach (DataField bundleDataField in bundleDataFields)
             {
-                string keyLower = dataField.Key.ToLowerInvariant();
+                string keyLower = bundleDataField.Key.ToLowerInvariant();
 
                 if (dataFieldsDictionary.ContainsKey(keyLower))
                 {
                     continue;
                 }
 
-                DataFieldValue machineValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.MachineId == machineId && dfv.EnvironmentId == environmentId);
+                DataFieldValue dataFieldValue = bundleDataField.DataFieldValues.FirstOrDefault();
+
+                if (dataFieldValue != null)
+                {
+                    dataFieldsDictionary.Add(keyLower, dataFieldValue.Value);
+                }
+            }
+
+            foreach (DataField globalDataField in globalDataFields)
+            {
+                string keyLower = globalDataField.Key.ToLowerInvariant();
+
+                if (dataFieldsDictionary.ContainsKey(keyLower))
+                {
+                    continue;
+                }
+
+                DataFieldValue machineValue = globalDataField.DataFieldValues.FirstOrDefault(dfv => dfv.MachineId == machineId && dfv.EnvironmentId == environmentId);
 
                 if (machineValue != null)
                 {
@@ -51,7 +74,7 @@ namespace AspNetDeploy.Variables
                     continue;
                 }
 
-                DataFieldValue environmentValue = dataField.DataFieldValues.FirstOrDefault(dfv => dfv.EnvironmentId == environmentId );
+                DataFieldValue environmentValue = globalDataField.DataFieldValues.FirstOrDefault(dfv => dfv.EnvironmentId == environmentId );
 
                 if (environmentValue != null)
                 {

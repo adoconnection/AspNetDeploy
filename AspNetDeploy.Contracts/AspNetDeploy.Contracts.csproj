@@ -51,13 +51,13 @@
     <Compile Include="IEnvironmentResourcesService.cs" />
     <Compile Include="ILoggingService.cs" />
     <Compile Include="INugetPackageManager.cs" />
+    <Compile Include="INpmPackageManager.cs" />
     <Compile Include="IPathServices.cs" />
     <Compile Include="IProjectPackagerFactory.cs" />
     <Compile Include="IProjectPackager.cs" />
     <Compile Include="IProjectParsingService.cs" />
     <Compile Include="ISatelliteMonitor.cs" />
     <Compile Include="ISolutionParser.cs" />
-    <Compile Include="ISolutionParsersFactory.cs" />
     <Compile Include="ISolutionProject.cs" />
     <Compile Include="ISourceControlRepository.cs" />
     <Compile Include="ISourceControlRepositoryFactory.cs" />

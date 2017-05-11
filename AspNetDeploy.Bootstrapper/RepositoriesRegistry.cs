@@ -4,7 +4,6 @@ using AspNetDeploy.DeploymentServices;
 using AspNetDeploy.DeploymentServices.SatelliteMonitoring;
 using AspNetDeploy.Logging.DatabaseLogger;
 using AspNetDeploy.Projects;
-using AspNetDeploy.SolutionParsers;
 using AspNetDeploy.SourceControls;
 using AspNetDeploy.Variables;
 using BuildServices.NuGet;
@@ -20,7 +19,6 @@ namespace AspNetDeploy.Bootstrapper
         public RepositoriesRegistry()
         {
             this.Map<ISourceControlRepositoryFactory, SourceControlRepositoryFactory>(LifecycleType.Application);
-            this.Map<ISolutionParsersFactory, SolutionParsersFactory>(LifecycleType.Application);
             this.Map<ITaskRunner, ThreadTaskRunner>(LifecycleType.Application);
             this.Map<IBuildServiceFactory, BuildServiceFactory>(LifecycleType.Application);
             this.Map<IProjectPackagerFactory, ProjectPackagerFactory>(LifecycleType.Application);

@@ -55,6 +55,10 @@
       <Project>{C4AA5103-38EB-4908-9932-C3FA0D0FEC4E}</Project>
       <Name>Packagers.Zip</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Packagers.Gulp\Packagers.Gulp.csproj">
+      <Project>{9C940383-09B0-46C9-8949-661AB623232E}</Project>
+      <Name>Packagers.Gulp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Packagers.VisualStudioProject\Packagers.VisualStudioProject.csproj">
       <Project>{83DCC20E-1E31-4E25-8384-507823BD4B1A}</Project>
       <Name>Packagers.VisualStudioProject</Name>

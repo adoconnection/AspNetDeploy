@@ -34,8 +34,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ZipProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ZipFilesStrategy.cs" />
+    <Compile Include="ZipFilesParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
