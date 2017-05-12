@@ -1,7 +1,7 @@
 {
-    "name": "react-cliene-app",
+    "name": "react-aspnetdeploy-app",
     "version": "0.0.1",
-    "description": "Cliene frontend",
+    "description": "single page frontend part of aspnetdeploy",
     "main": "src/index.js",
     "author": {
         "name": "Serj"
