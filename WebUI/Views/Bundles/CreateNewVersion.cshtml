@@ -77,15 +77,35 @@
         }
     </table>
     
+    @if (bundleVersion.DataFields.Count > 0)
+    {
+        <br/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Variable</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            @foreach (DataField dataField in bundleVersion.DataFields)
+            {
+                <tr>
+                    <td>@dataField.Key</td>
+                    <td style="width: 100%;"><input name="@dataField.Id" class="variableInput form-control" style="width: 100%;"/></td>
+                </tr>
+            }
+        </table>
+    }
+
     <br />
-    
+    <hr />
     @using (Html.BeginForm("CreateNewVersion", "Bundles", new { }, FormMethod.Post, new { id = "idForm", Class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
         @Html.Hidden("FromBundleVersionId", bundleVersion.Id)
         @Html.Hidden("IsHotfix", (bool)this.ViewBag.IsHotfix)
         @Html.Hidden("JsonData", "")
-        <hr />
+       
         <div class="row">
             <div class="col-md-6 ">
 
@@ -109,25 +129,35 @@
 {
     <script>
 
-        $(function() {
+        $(function()
+        {
+            $('#idCreate').click(function()
+            {
+                var projects = [];
+                var variables = [];
 
-            $('#idCreate').click(function() {
-
-                var result = [];
-
-                $('.projectSelector').each(function() {
-
-                    result.push({
+                $('.projectSelector').each(function()
+                {
+                    projects.push({
                         projectVersionId: $(this).attr('ProjectId'),
                         sourceControlVersionId: $(this).val()
                     });
-                    
                 });
 
-                $('#JsonData').val(JSON.stringify(result));
+                $('.variableInput').each(function()
+                {
+                    variables.push({
+                        id: $(this).attr('name'),
+                        value: $(this).val()
+                    });
+                });
+
+                $('#JsonData').val(JSON.stringify({
+                    "projects": projects,
+                    "variables": variables
+                }));
 
                 $('#idForm').submit();
-
             });
         });
 

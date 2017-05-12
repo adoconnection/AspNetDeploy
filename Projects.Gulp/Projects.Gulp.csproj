@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3D9B4642-DC9C-4951-B0EC-A1AF2F764E38}</ProjectGuid>
+    <ProjectGuid>{DCA0C9A3-F9E9-4591-B072-1958594D6A9C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AspNetDeploy.SolutionParsers.VisualStudio</RootNamespace>
-    <AssemblyName>AspNetDeploy.SolutionParsers.VisualStudio</AssemblyName>
+    <RootNamespace>Projects.Gulp</RootNamespace>
+    <AssemblyName>Projects.Gulp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -36,21 +36,26 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="VisualStudio2013SolutionParser.cs" />
+    <Compile Include="GulpProject.cs" />
+    <Compile Include="GulpParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VisualStudioSolutionProject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
-      <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
-      <Name>AspNetDeploy.Contracts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Projects.Contracts\Projects.Contracts.csproj">
+      <Project>{94622F2D-3769-4FC4-9686-49ECA3E4077C}</Project>
+      <Name>Projects.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Guids\Guids.csproj">
+      <Project>{845C08E5-6953-42E0-A7DA-91DF6BEF62A9}</Project>
+      <Name>Guids</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

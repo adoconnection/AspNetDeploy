@@ -1,21 +1,27 @@
 ﻿using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using BuildServices.Gulp;
 
 namespace AspNetDeploy.BuildServices
 {
     public class BuildServiceFactory : IBuildServiceFactory
     {
-        private readonly INugetPackageManager nugetPackageManager;
+        private readonly IPathServices pathServices;
 
-        public BuildServiceFactory(INugetPackageManager nugetPackageManager)
+        public BuildServiceFactory(IPathServices pathServices)
         {
-            this.nugetPackageManager = nugetPackageManager;
+            this.pathServices = pathServices;
         }
 
-        public IBuildService Create(SolutionType project)
+        public IBuildService Create(ProjectType projectType)
         {
-            return new MSBuildBuildService(this.nugetPackageManager);
+            if (projectType == ProjectType.GulpFile)
+            {
+                return new GulpBuildService(this.pathServices);
+            }
+
+            return new MSBuildBuildService(this.pathServices);
         }
     }
 }

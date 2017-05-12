@@ -104,11 +104,16 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("ProjectVersions.Project")
                 .Include("ProjectVersions.SourceControlVersion.SourceControl")
                 .Include("Properties")
+                .Include("DataFields.DataFieldValues.Environment")
+                .Include("DataFields.DataFieldValues.Machine")
                 .Include("DeploymentSteps.Properties")
                 .Include("DeploymentSteps.MachineRoles")
                 .First(bv => bv.Id == fromBundleVersionId);
 
-            IEnumerable<dynamic> projects = (IEnumerable<dynamic>)JsonConvert.DeserializeObject(jsonData);
+            dynamic data = JsonConvert.DeserializeObject(jsonData);
+
+            IEnumerable<dynamic> projects = (IEnumerable<dynamic>) data.projects;
+            IEnumerable<dynamic> variables = (IEnumerable<dynamic>) data.variables;
 
             Dictionary<int, ProjectVersion> mapping = projects
                 .Select( p => new
@@ -157,8 +162,24 @@ namespace AspNetDeploy.WebUI.Controllers
             {
                 newBundleVersion.SetStringProperty("HomeEnvironment", sourceBundleVersion.GetIntProperty("HomeEnvironment").ToString(CultureInfo.InvariantCulture));
             }
-
+            
             this.Entities.BundleVersion.Add(newBundleVersion);
+
+            foreach (dynamic variable in variables)
+            {
+                int id = (int)variable.id;
+                string value = (string)variable.value;
+
+                DataField dataField = sourceBundleVersion.DataFields.First(df => df.Id == id && !df.IsDeleted);
+
+                newBundleVersion.DataFields.Add(dataField);
+
+                DataFieldValue dataFieldValue = new DataFieldValue();
+                dataFieldValue.DataFieldId = dataField.Id;
+                dataFieldValue.Value = value;
+
+                this.Entities.DataFieldValue.Add(dataFieldValue);
+            }
 
             IList<ProjectVersion> usedProjectVersions = new List<ProjectVersion>();
 
@@ -268,15 +289,27 @@ namespace AspNetDeploy.WebUI.Controllers
 
             return this.View();
         }
+
         public ActionResult VersionProjects(int id)
         {
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("Bundle")
                 .Include("ProjectVersions.Project.Properties")
                 .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
-                .Include("DeploymentSteps.Properties")
-                .Include("DeploymentSteps.MachineRoles")
-                .Include("Packages.Publications.Environment.Machines")
+                .First( b => b.Id == id);
+
+            this.ViewBag.BundleVersion = bundleVersion;
+
+            return this.View();
+        }
+
+
+        public ActionResult VersionVariables(int id)
+        {
+            BundleVersion bundleVersion = this.Entities.BundleVersion
+                .Include("Bundle")
+                .Include("DataFields.DataFieldValues.Environment")
+                .Include("DataFields.DataFieldValues.Machine")
                 .First( b => b.Id == id);
 
             this.ViewBag.BundleVersion = bundleVersion;
@@ -292,7 +325,6 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
                 .Include("DeploymentSteps.Properties")
                 .Include("DeploymentSteps.MachineRoles")
-                .Include("Packages.Publications.Environment.Machines")
                 .First( b => b.Id == id);
 
             this.ViewBag.BundleVersion = bundleVersion;

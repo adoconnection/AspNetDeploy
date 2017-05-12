@@ -195,6 +195,7 @@ namespace ThreadHostedTaskRunner
                         pv.ProjectType.HasFlag(ProjectType.WindowsApplication) || 
                         pv.ProjectType.HasFlag(ProjectType.Database) || 
                         pv.ProjectType.HasFlag(ProjectType.ZipArchive) || 
+                        pv.ProjectType.HasFlag(ProjectType.GulpFile) || 
                         pv.ProjectType.HasFlag(ProjectType.Service) ||
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
                         pv.ProjectType.HasFlag(ProjectType.Web)
@@ -209,8 +210,7 @@ namespace ThreadHostedTaskRunner
                 .Where( bv => bv.ProjectVersions.All( 
                     pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal && 
                     (
-                        pv.ProjectType == ProjectType.ZipArchive ||
-                        pv.GetStringProperty("LastBuildResult") == "Done")
+                        pv.ProjectType == ProjectType.ZipArchive || pv.GetStringProperty("LastBuildResult") == "Done")
                     ))
                 .ToList();
 
@@ -267,7 +267,8 @@ namespace ThreadHostedTaskRunner
                         pv.ProjectType.HasFlag(ProjectType.WindowsApplication) ||
                         pv.ProjectType.HasFlag(ProjectType.Service) ||
                         pv.ProjectType.HasFlag(ProjectType.Console) ||
-                        pv.ProjectType.HasFlag(ProjectType.Web)
+                        pv.ProjectType.HasFlag(ProjectType.Web) ||
+                        pv.ProjectType.HasFlag(ProjectType.GulpFile) 
                         ))
                     .ToList();
 

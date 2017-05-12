@@ -23,6 +23,7 @@ namespace AspNetDeploy.Model
         Database = 32,
         Test = 64,
         WindowsApplication = 128,
-        ZipArchive = 256
+        ZipArchive = 256,
+        GulpFile = 512
     }
 }

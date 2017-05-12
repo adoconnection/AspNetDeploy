@@ -13,7 +13,10 @@ namespace AspNetDeploy.Projects
 
         public SourceControlVersion SourceControlVersion
         {
-            get { return this.sourceControlVersion; }
+            get
+            {
+                return this.sourceControlVersion;
+            }
         }
 
         public void Initialize(int sourceControlVersionId)

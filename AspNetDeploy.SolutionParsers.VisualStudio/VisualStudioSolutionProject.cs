@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using AspNetDeploy.Contracts;
-using AspNetDeploy.Model;
 
 namespace AspNetDeploy.SolutionParsers.VisualStudio
 {
-    public class VisualStudioSolutionProject : ISolutionProject
+    public class VisualStudioSolutionProject
     {
         public string Name { get; set; }
         public string ProjectFile { get; set; }
         public Guid Guid { get; set; }
         public Guid TypeGuid { get; set; }
-        public ProjectType Type { get; set; }
+        public VsProjectType Type { get; set; }
         public string TargetFrameworkVersion { get; set; }
         public string OutputPath { get; set; }
         public int MvcVersion { get; set; }

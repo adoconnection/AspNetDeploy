@@ -1,0 +1,98 @@
+﻿@using Environment = AspNetDeploy.Model.Environment
+@{
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    BundleVersion bundleVersion = this.ViewBag.BundleVersion;
+}
+
+<div class="container">
+
+    <h1>
+        <div class="row">
+            <div class="col-md-10">
+                @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-default btn-lg">Configure</button>
+            </div>
+        </div>
+    </h1>
+
+    <hr />
+    
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation"><a href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
+        <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+        <li role="presentation" class="active"><a href="#">Local variables</a></li>
+    </ul>
+    
+    <hr />
+
+    <h3>Variables</h3>
+    
+    <br/>
+    <table class="table">
+        <tbody>
+        @{
+            List<DataField> dataFields = bundleVersion.DataFields.Where(df => !df.IsDeleted).ToList();
+
+            List<IGrouping<string, DataField>> groups = dataFields
+                .Where(df => df.Key.Contains("."))
+                .GroupBy(df => df.Key.Substring(0, df.Key.IndexOf(".", System.StringComparison.InvariantCulture)))
+                .OrderBy(g => g.Key)
+                .ToList();
+        }
+
+        @foreach (var group in groups)
+        {
+            @RenderVariables(group)
+            <tr>
+                <th><br/><br/></th>
+                <th><br/></th>
+            </tr>
+        }
+
+        @RenderVariables(dataFields.Where(df => !df.Key.Contains(".")))
+
+        </tbody>
+    </table>
+
+</div>
+
+@helper RenderVariables(IEnumerable<DataField> dataFields)
+{
+    foreach (DataField dataField in dataFields.OrderBy(df => df.Key))
+    {
+        <tr>
+            <td>
+                @dataField.Key
+            </td>
+            <td>
+                @{
+                    var dataFieldValues = dataField.DataFieldValues.ToList();
+                }
+
+                @if (dataFieldValues.Count == 0)
+                {
+                    <span>&mdash;</span>
+                }
+                else
+                {
+                    foreach (DataFieldValue dataFieldValue in dataFieldValues)
+                    {
+                        if (dataFieldValue == null || string.IsNullOrWhiteSpace(dataFieldValue.Value))
+                        {
+                            continue;
+                        }
+                        
+                        <code>@dataFieldValue.Value</code>
+                    }
+                }
+            </td>
+        </tr>
+    }
+        
+}

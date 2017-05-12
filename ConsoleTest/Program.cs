@@ -24,6 +24,8 @@ using ThreadHostedTaskRunner;
 using Microsoft.Build.Construction;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
+using Packagers.Gulp;
+using Projects.Gulp;
 using SatelliteService.Operations;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -65,6 +67,19 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+
+            GulpParser gulpParser = new GulpParser(@"H:\Documentoved\Resources");
+
+            gulpParser.LoadProjects();
+
+            GulpProjectPackager gulpProjectPackager = new GulpProjectPackager();
+
+            gulpProjectPackager.Package(@"H:\Documentoved\Resources\documentoved.gulpfile.js", @"H:\Documentoved\Resources\result.zip");
+
+
+            return;
+
+
             dynamic bindingConfig = JsonConvert.DeserializeObject("{ port:80, host:'abc.local'}");
 
             using (ServerManager serverManager = new ServerManager())
@@ -138,7 +153,7 @@ namespace ConsoleTest
             */
 
 
-            MSBuildBuildService buildBuildService = new MSBuildBuildService(new NugetPackageManager(new PathServices()));
+            MSBuildBuildService buildBuildService = new MSBuildBuildService(new PathServices());
 
             DateTime? startDate = null;
 
@@ -161,10 +176,10 @@ namespace ConsoleTest
                 {
                     Console.WriteLine(s + " - " + b);
                 },
-                (s, s1, arg3, arg4, arg5, arg6) =>
+                (s, s1) =>
                 {
                     // e.ProjectFile, e.File, e.Code, e.LineNumber, e.ColumnNumber, e.Message
-                    Console.WriteLine(s + "\n" + arg6);
+                    Console.WriteLine(s + "\n" + s1);
                 });
 
             DateTime endDate = DateTime.Now;

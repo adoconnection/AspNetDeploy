@@ -4,22 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using AspNetDeploy.Contracts;
-using AspNetDeploy.Model;
 
 namespace AspNetDeploy.SolutionParsers.VisualStudio
 {
-    public class VisualStudio2013SolutionParser : ISolutionParser
+    public class VisualStudio2013SolutionParser
     {
         readonly Regex projectParser = new Regex(@"Project\(""\{(?<type>[A-F0-9-]+)\}""\) = ""(?<name>[^""]+)"", ""(?<file>[^""]+)"", ""\{(?<guid>[A-F0-9-]+)\}""", RegexOptions.Singleline | RegexOptions.IgnoreCase);
         readonly Regex guidParser = new Regex(@"{(?<guid>[^}]+)}", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
-        public IList<ISolutionProject> Parse(string solutionFilePath)
+        public IList<VisualStudioSolutionProject> Parse(string solutionFilePath)
         {
             string text = File.ReadAllText(solutionFilePath);
             string folder = Path.GetDirectoryName(solutionFilePath);
 
-            IList<ISolutionProject> result = new List<ISolutionProject>();
+            IList<VisualStudioSolutionProject> result = new List<VisualStudioSolutionProject>();
 
             Match match = projectParser.Match(text);
 
@@ -92,19 +90,19 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
 
             if (outputTypeElement != null && outputTypeElement.Value == "Exe")
             {
-                visualStudioProject.Type |= ProjectType.Console;
+                visualStudioProject.Type |= VsProjectType.Console;
             }
             else if (outputTypeElement != null && outputTypeElement.Value == "WinExe")
             {
-                visualStudioProject.Type |= ProjectType.WindowsApplication;
+                visualStudioProject.Type |= VsProjectType.WindowsApplication;
             }
             else if (outputTypeElement != null && outputTypeElement.Value == "Database")
             {
-                visualStudioProject.Type |= ProjectType.Database;
+                visualStudioProject.Type |= VsProjectType.Database;
             }
             else if (xDocument.Descendants(fileNamespace + "UseIISExpress").Any())
             {
-                visualStudioProject.Type |= ProjectType.Web;
+                visualStudioProject.Type |= VsProjectType.Web;
 
                 switch (typeGuid.ToUpper())
                 {
@@ -126,27 +124,27 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
             }
         }
 
-        private ProjectType GetTypeByGuid(string typeGuid)
+        private VsProjectType GetTypeByGuid(string typeGuid)
         {
             switch (typeGuid.ToUpper())
             {
                 case "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC":
-                    return ProjectType.ClassLibrary;
+                    return VsProjectType.ClassLibrary;
 
                 case "A9ACE9BB-CECE-4E62-9AA4-C7E7C5BD2124":
-                    return ProjectType.Database;
+                    return VsProjectType.Database;
 
                 case "3AC096D0-A1C2-E12C-1390-A8335801FDAB":
-                    return ProjectType.Test;
+                    return VsProjectType.Test;
 
                 case "349C5851-65DF-11DA-9384-00065B846F21":
-                    return ProjectType.Web;
+                    return VsProjectType.Web;
 
                 case "00D1A9C2-B5F0-4AF3-8072-F6C62B433612":
-                    return ProjectType.Database;
+                    return VsProjectType.Database;
 
                 default:
-                    return ProjectType.Undefined;
+                    return VsProjectType.Undefined;
             }
         }
     }

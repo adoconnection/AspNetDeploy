@@ -71,10 +71,6 @@
       <Project>{E1B89197-95E6-46C4-B1C7-F3145BAA43B5}</Project>
       <Name>Projects</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.SolutionParsers\SolutionParsers.csproj">
-      <Project>{72F78680-6241-41E3-9593-C0BF8F67CF85}</Project>
-      <Name>SolutionParsers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.SourceControls\SourceControls.csproj">
       <Project>{2F548CB9-6147-4CFB-B1F6-BE5C0259D675}</Project>
       <Name>SourceControls</Name>

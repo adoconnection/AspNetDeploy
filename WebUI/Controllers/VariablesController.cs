@@ -19,7 +19,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("DataFieldValues.Environment.Machines")
                 .Include("DataFieldValues.Machine")
                 .Include("BundleVersions")
-                .First(df => df.Id == id && !df.IsDeleted);
+                .First(df => df.Id == id && !df.IsDeleted && df.Mode == DataFieldMode.Global);
 
             List<Environment> environments = this.Entities.Environment.ToList();
 
@@ -58,7 +58,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("DataFieldValues.Environment")
                 .Include("DataFieldValues.Machine")
                 .Include("BundleVersions")
-                .First(df => df.Id == id && !df.IsDeleted);
+                .First(df => df.Id == id && !df.IsDeleted && df.Mode == DataFieldMode.Global);
 
             Environment environment = this.Entities.Environment.First(e => e.Id == environmentId);
 
@@ -100,7 +100,7 @@ namespace AspNetDeploy.WebUI.Controllers
                     .Include("DataFieldValues.Environment")
                     .Include("DataFieldValues.Machine")
                     .Include("BundleVersions")
-                    .First(df => df.Id == model.VariableId && !df.IsDeleted);
+                    .First(df => df.Id == model.VariableId && !df.IsDeleted && df.Mode == DataFieldMode.Global);
             }
 
             Environment environment = this.Entities.Environment.Include("Machines").First(e => e.Id == model.EnvironmentId);
