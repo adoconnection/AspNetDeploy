@@ -13,13 +13,13 @@ namespace AspNetDeploy.ContinuousIntegration
 {
     public class SourceControlManager
     {
-        private readonly ISourceControlRepositoryFactory sourceControlRepositoryFactory;
+        private readonly ISourceControlProviderFactory sourceControlProviderFactory;
         private readonly IPathServices pathServices;
         private readonly IProjectParsingService projectParsingService;
 
-        public SourceControlManager(ISourceControlRepositoryFactory sourceControlRepositoryFactory, IPathServices pathServices, IProjectParsingService projectParsingService)
+        public SourceControlManager(ISourceControlProviderFactory sourceControlProviderFactory, IPathServices pathServices, IProjectParsingService projectParsingService)
         {
-            this.sourceControlRepositoryFactory = sourceControlRepositoryFactory;
+            this.sourceControlProviderFactory = sourceControlProviderFactory;
             this.pathServices = pathServices;
             this.projectParsingService = projectParsingService;
         }
@@ -56,14 +56,14 @@ namespace AspNetDeploy.ContinuousIntegration
 
         public TestSourceResult TestConnection(SourceControlVersion sourceControlVersion)
         {
-            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            ISourceControlProvider repository = this.sourceControlProviderFactory.Create(sourceControlVersion.SourceControl.Type);
             return repository.TestConnection(sourceControlVersion);
 
             /*string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControl.Id, sourceControlVersion.Id);
             string revisionId = null;
             string exceptionMessage = null;
 
-            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            ISourceControlRepository repository = this.sourceControlProviderFactory.Create(sourceControlVersion.SourceControl.Type);
             repository.Archive(sourceControlVersion, sourcesFolder);
 
             Task.Run(() =>
@@ -102,7 +102,7 @@ namespace AspNetDeploy.ContinuousIntegration
                 .Include("Properties")
                 .First(sc => sc.Id == sourceControlVersionId);
 
-            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            ISourceControlProvider repository = this.sourceControlProviderFactory.Create(sourceControlVersion.SourceControl.Type);
             string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControlVersion.SourceControlId, sourceControlVersion.Id);
 
             repository.Archive(sourceControlVersion, sourcesFolder);
@@ -115,7 +115,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
         private LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string sourcesFolder)
         {
-            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            ISourceControlProvider repository = this.sourceControlProviderFactory.Create(sourceControlVersion.SourceControl.Type);
             return repository.LoadSources(sourceControlVersion, sourcesFolder);
         }
     }

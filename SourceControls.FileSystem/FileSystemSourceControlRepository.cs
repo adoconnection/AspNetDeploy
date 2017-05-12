@@ -9,7 +9,7 @@ using AspNetDeploy.Model;
 
 namespace SourceControls.FileSystem
 {
-    public class FileSystemSourceControlRepository : ISourceControlRepository
+    public class FileSystemSourceControlRepository : ISourceControlProvider
     {
         public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
         {

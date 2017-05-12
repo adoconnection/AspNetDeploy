@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2F548CB9-6147-4CFB-B1F6-BE5C0259D675}</ProjectGuid>
+    <ProjectGuid>{FABE3FFB-8643-46E6-8273-0619E127530B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AspNetDeploy.SourceControls</RootNamespace>
-    <AssemblyName>AspNetDeploy.SourceControls</AssemblyName>
+    <RootNamespace>AspNetDeploy.Notifications</RootNamespace>
+    <AssemblyName>AspNetDeploy.Notifications</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -36,32 +36,17 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SourceControlProviderFactory.cs" />
+    <Compile Include="EventsHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
-      <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
-      <Name>AspNetDeploy.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
-      <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
-      <Name>AspNetDeploy.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.SourceControls.Git\SourceControls.Git.csproj">
-      <Project>{F42DD6F1-CDC3-4C0E-B81F-91E9E446C626}</Project>
-      <Name>SourceControls.Git</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AspNetDeploy.SourceControls.SVN\SourceControls.SVN.csproj">
-      <Project>{A32D039E-8BE5-43BE-A2BE-C633F6A3C91E}</Project>
-      <Name>SourceControls.SVN</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SourceControls.FileSystem\SourceControls.FileSystem.csproj">
-      <Project>{F0FEBF20-BEBF-4BD0-9819-D4EA212F773B}</Project>
-      <Name>SourceControls.FileSystem</Name>
+    <ProjectReference Include="..\AspNetDeploy.Notifications.Model\AspNetDeploy.Notifications.Model.csproj">
+      <Project>{78D84FCC-14FF-4771-A05A-40B816052198}</Project>
+      <Name>AspNetDeploy.Notifications.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -19,7 +19,7 @@ namespace AspNetDeploy.Bootstrapper
     {
         public RepositoriesRegistry()
         {
-            this.Map<ISourceControlRepositoryFactory, SourceControlRepositoryFactory>(LifecycleType.Application);
+            this.Map<ISourceControlProviderFactory, SourceControlProviderFactory>(LifecycleType.Application);
             this.Map<ISolutionParsersFactory, SolutionParsersFactory>(LifecycleType.Application);
             this.Map<ITaskRunner, ThreadTaskRunner>(LifecycleType.Application);
             this.Map<IBuildServiceFactory, BuildServiceFactory>(LifecycleType.Application);

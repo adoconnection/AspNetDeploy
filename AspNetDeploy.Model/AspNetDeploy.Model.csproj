@@ -103,6 +103,7 @@
     <Compile Include="DeploymentStepType.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityFrameworkDataContext.cs" />
     <Compile Include="Environment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>

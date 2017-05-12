@@ -6,7 +6,7 @@ using GitSharp.Commands;
 
 namespace AspNetDeploy.SourceControls.Git
 {
-    public class GitSourceControlRepository : ISourceControlRepository
+    public class GitSourceControlRepository : ISourceControlProvider
     {
         public LoadSourcesResult LoadSources(SourceControlVersion sourceControlVersion, string path)
         {

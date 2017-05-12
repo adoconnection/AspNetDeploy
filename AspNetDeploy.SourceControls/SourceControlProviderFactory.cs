@@ -7,9 +7,9 @@ using SourceControls.FileSystem;
 
 namespace AspNetDeploy.SourceControls
 {
-    public class SourceControlRepositoryFactory : ISourceControlRepositoryFactory
+    public class SourceControlProviderFactory : ISourceControlProviderFactory
     {
-        public ISourceControlRepository Create(SourceControlType type)
+        public ISourceControlProvider Create(SourceControlType type)
         {
             switch (type)
             {

@@ -10,7 +10,7 @@ using SharpSvn;
 
 namespace AspNetDeploy.SourceControls.SVN
 {
-    public class SvnSourceControlRepository : ISourceControlRepository
+    public class SvnSourceControlRepository : ISourceControlProvider
     {
         public bool CreateNewVersion(SourceControlVersion from, SourceControlVersion to)
         {
