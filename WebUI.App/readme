@@ -1,0 +1,3 @@
+1. Install webpack globally by using "npm install webpack"
+1. Install required packages by "npm install"
+2. Use "node_modules/webpack" for bundling project manually or use "webpack --watch" for serve auto bundling on changes
