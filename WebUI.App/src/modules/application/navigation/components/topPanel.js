@@ -1,6 +1,5 @@
 import {connect} from 'react-redux';
 import {componentDidMount} from 'react-lifecycle-decorators';
-import {IndexLinkContainer} from 'react-router-bootstrap';
 
 import {Navbar, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
 
@@ -8,9 +7,7 @@ let TopPanel = ({router}) => (
     <Navbar inverse collapseOnSelect>
         <Navbar.Header>
             <Navbar.Brand>
-                <IndexLinkContainer to="/">
-                    <NavItem>ASP.NET Deploy</NavItem>
-                </IndexLinkContainer>
+                <NavItem>ASP.NET Deploy</NavItem>
             </Navbar.Brand>
             <Navbar.Toggle />
         </Navbar.Header>
