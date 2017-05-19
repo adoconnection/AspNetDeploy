@@ -740,6 +740,7 @@ CREATE TABLE [dbo].[User](
 	[RoleId] [int] NOT NULL,
 	[IsDisabled] [bit] NOT NULL,
 	[ApiKey] [nvarchar](50) NULL,
+	[IsOnline] [bit] NOT NULL 0
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

@@ -23,7 +23,7 @@ namespace AspNetDeploy.CommandProcessors.System
             AspNetDeployEntities entities = new AspNetDeployEntities();
             User user = entities.User.First(acc => acc.Guid == message.UserGuid);
 
-            //user.IsOnline = true;
+            user.IsOnline = true;
             entities.SaveChanges();
 
             IList<Guid> userGuids = entities.User.Where(u => !u.IsDisabled).Select(u => u.Guid).ToList();
