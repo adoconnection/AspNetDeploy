@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetDeploy.CommandProcessors;
 using AspNetDeploy.CommandProcessors.Domain.SourceControls;
+using AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands;
 using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions;
 using AspNetDeploy.CommandProcessors.System;
 using AspNetDeploy.CommandProcessors.Users;
@@ -24,6 +25,10 @@ namespace AspNetDeploy.WebUI.Hubs
             new ActiveUserProfile(),
 
             new SourceControlsList(),
+            new SourceControlTypes(),
+            new SourceControlAddSvn(),
+            new SourceControlUpdateSvn(),
+            new SourceControlDelete(),
 
             new SourceControlVersionsList()
         };

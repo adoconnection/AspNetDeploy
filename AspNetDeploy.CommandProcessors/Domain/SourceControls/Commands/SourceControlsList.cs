@@ -5,7 +5,7 @@ using AspNetDeploy.Notifications;
 using AspNetDeploy.Notifications.Model;
 using EventHandlers;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 {
     public class SourceControlsList : IAppCommandProcessor
     {
@@ -22,6 +22,8 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
             Guid userGuid = message.UserGuid;
 
             AspNetDeployEntities entities = new AspNetDeployEntities();
+            Serializers.SourceControlSerializer serializer = new Serializers.SourceControlSerializer();
+            
 
             EventsHub.TransmitApp.InvokeSafe(new AppConnectionResponse()
             {
@@ -29,12 +31,9 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
                 Name = "App/SourceControls/List",
                 Data = entities.SourceControl
                     .Where( sc => !sc.IsDeleted)
-                    .Select(sc => new
-                    {
-                        id = sc.Id,
-                        sc.Name,
-                        properties = sc.Properties.Select( scp => new { scp.Key, scp.Value }).ToList()
-                    }).ToList()
+                    .ToList()
+                    .Select(sc => serializer.SerializeDetails(sc))
+                    .ToList()
                 });
         }
     }

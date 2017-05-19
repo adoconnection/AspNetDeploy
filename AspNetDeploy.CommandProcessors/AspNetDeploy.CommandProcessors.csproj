@@ -49,10 +49,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppCommandProcessor.cs" />
+    <Compile Include="Domain\SourceControls\Commands\SourceControlAddSvn.cs" />
+    <Compile Include="Domain\SourceControls\Commands\SourceControlDelete.cs" />
+    <Compile Include="Domain\SourceControls\Commands\SourceControlTypes.cs" />
+    <Compile Include="Domain\SourceControls\Commands\SourceControlUpdateSvn.cs" />
+    <Compile Include="Domain\SourceControls\Serializers\SourceControlSerializer.cs" />
     <Compile Include="Domain\SourceControlVersions\SourceControlVersionsList.cs" />
     <Compile Include="IAppCommandProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Domain\SourceControls\SourceControlsList.cs" />
+    <Compile Include="Domain\SourceControls\Commands\SourceControlsList.cs" />
     <Compile Include="System\UserOffline.cs" />
     <Compile Include="System\UserOnline.cs" />
     <Compile Include="Users\ActiveUserProfile.cs" />

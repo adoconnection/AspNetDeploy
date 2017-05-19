@@ -26,6 +26,25 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions
 
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
+            SourceControl sourceControl = entities.SourceControl.FirstOrDefault( sc => sc.Id == sourceControlId && !sc.IsDeleted);
+
+            if (sourceControl == null)
+            {
+                EventsHub.TransmitApp.InvokeSafe(new AppConnectionResponse()
+                {
+                    ConnectionId = message.ConnectionId,
+                    Name = "App/Error/UnableToRunCommand",
+                    Data = new
+                    {
+                        command = this.CommandName,
+                        sourceControlId,
+                        type = "SourceControlNotFound"
+                    }
+                });
+
+                return;
+            }
+
             IQueryable<SourceControlVersion> query = entities.SourceControlVersion;
 
             if (normalOnly)
