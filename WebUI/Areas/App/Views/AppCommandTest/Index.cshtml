@@ -29,12 +29,32 @@
 <body>
     <div>
         <h1>Cliene</h1>
-        <p>App page</p>
+      
+        
+        <div>
+                    
+            <button class="snippet" text='{
+    name: "App/SourceControls/List"
+}'>App/SourceControls/List</button>
+
+            <button class="snippet" text='{
+    name: "App/SourceControlVersions/List",
+    data: 
+    {
+       sourceControlId: 5,
+       normalOnly: true
+    }
+}'>App/SourceControlVersions/List</button>
+        </div>
+        <br/>
         <textarea id="idCommand" style="width: 700px; height: 200px;">
 {
     name: "App/SourceControls/List"
 }
         </textarea>
+
+        
+
         <div>
             <input id="idExecute" type="button" value="Send "/>
         </div>
@@ -58,6 +78,11 @@
                     appHub.server.send(eval('x='+$('#idCommand').val()));
                 });
             });
+
+            $('.snippet').click(function()
+            {
+                $('#idCommand').val($(this).attr('text'));
+            })
 
         });
 

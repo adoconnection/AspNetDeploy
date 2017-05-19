@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetDeploy.CommandProcessors;
 using AspNetDeploy.CommandProcessors.Domain.SourceControls;
+using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions;
 using AspNetDeploy.CommandProcessors.System;
 using AspNetDeploy.CommandProcessors.Users;
 using AspNetDeploy.Model;
@@ -22,7 +23,9 @@ namespace AspNetDeploy.WebUI.Hubs
         {
             new ActiveUserProfile(),
 
-            new SourceControlsList()
+            new SourceControlsList(),
+
+            new SourceControlVersionsList()
         };
 
         public void Send(dynamic message)
