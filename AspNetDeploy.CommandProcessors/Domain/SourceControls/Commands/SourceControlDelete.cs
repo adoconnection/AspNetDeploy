@@ -38,6 +38,8 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
                 return;
             }
 
+            sourceControl.IsDeleted = true;
+
             this.Entities.SaveChanges();
 
             Serializers.SourceControlSerializer serializer = new Serializers.SourceControlSerializer();
