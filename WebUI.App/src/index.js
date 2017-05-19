@@ -5,12 +5,16 @@ import 'babel-polyfill';
 /*react libraries importing*/
 import React from 'react';
 import {render} from 'react-dom';
-import {Route, Router, browserHistory} from 'react-router';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, compose} from 'redux';
 import {syncHistoryWithStore} from 'react-router-redux'
 import {routerMiddleware} from 'react-router-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+
+import {createBrowserHistory} from 'history';
+
+let browserHistory = createBrowserHistory();
 
 /*tapping supporting for material ui*/
 injectTapEventPlugin();
@@ -40,7 +44,6 @@ import './resources/css/default-theme/theme.css'
 import './resources/css/vendor/animate.css';
 
 /*components for routing importing*/
-import application from './modules/application';
 
 /*debug supporting*/
 if (typeof window !== 'undefined') {
@@ -52,22 +55,16 @@ let onApplicationInit = (dispatch) => {
     // TODO: put initialization logic here
 };
 
+import App from './modules/application/components/App';
+
 /*provide store to react-redux-router-signalr configuration*/
 signalr.start(
     store, () => {
         render(
             <Provider store={store}>
-                <Router
-                    history={history}>
-                    <Route
-                        path="App"
-                        component={application.components.AppLayout}
-                        onEnter={onApplicationInit(store.dispatch)}>
-                        <Route
-                            path="Sources/List"
-                            component={application.data.sourceControl.components.SourceControlList}>
-                        </Route>
-                    </Route>
+                <Router history={history}>
+                    <App>
+                    </App>
                 </Router>
             </Provider>,
             document.getElementById('content')
