@@ -33,6 +33,7 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
                     {
                         id = sc.Id,
                         sc.Name,
+                        properties = sc.Properties.Select( scp => new { scp.Key, scp.Value }).ToList()
                     }).ToList()
                 });
         }

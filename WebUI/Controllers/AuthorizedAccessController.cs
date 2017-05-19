@@ -32,9 +32,6 @@ namespace AspNetDeploy.WebUI.Controllers
                 this.ViewBag.AllowedActions = RolePermissions.MappingDictionary[this.ActiveUser.Role];
                 this.ViewBag.ActiveUser = user;
             }
-
         }
-
-        
     }
 }

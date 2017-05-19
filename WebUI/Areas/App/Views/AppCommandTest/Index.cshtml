@@ -1,0 +1,67 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="~/Resources/JavaScripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <style>
+        .block
+        {
+                display: block;
+                font-family: monospace;
+                white-space: pre;
+                margin: 1em 0px 1em;
+                background-color: #e2e2e2;
+                padding: 1em;
+                font-size: 11px;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Cliene</h1>
+        <p>App page</p>
+        <textarea id="idCommand" style="width: 700px; height: 200px;">
+{
+    name: "App/SourceControls/List"
+}
+        </textarea>
+        <div>
+            <input id="idExecute" type="button" value="Send "/>
+        </div>
+        <div id="idState">waiting hub connection</div>
+        <div id="idOutput"></div>
+        <script>
+
+        $(function () {
+            var appHub = $.connection.appHub;
+
+            appHub.client.receive = function (message)
+            {
+                $('#idOutput').prepend($('<div class="block" />').text(JSON.stringify(message, null, 2)).hide().fadeIn());
+            };
+
+            $.connection.hub.start().done(function ()
+            {
+                $('#idState').text("connected");
+
+                $('#idExecute').click(function() {
+                    appHub.server.send(eval('x='+$('#idCommand').val()));
+                });
+            });
+
+        });
+
+        </script>
+    </div>
+</body>
+</html>

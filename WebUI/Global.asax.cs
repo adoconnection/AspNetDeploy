@@ -18,8 +18,9 @@ namespace AspNetDeploy.WebUI
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-
             ObjectFactoryConfigurator.Configure();
+
+            EventsConfig.Subscribe();
 
             ControllerBuilder.Current.SetControllerFactory(typeof(ControllerFactory));
 
