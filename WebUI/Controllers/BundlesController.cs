@@ -172,10 +172,18 @@ namespace AspNetDeploy.WebUI.Controllers
 
                 DataField dataField = sourceBundleVersion.DataFields.First(df => df.Id == id && !df.IsDeleted);
 
-                newBundleVersion.DataFields.Add(dataField);
+                DataField dataFieldCopy = new DataField();
+                dataFieldCopy.IsDeleted = false;
+                dataFieldCopy.IsSensitive = dataField.IsSensitive;
+                dataFieldCopy.Key = dataField.Key;
+                dataFieldCopy.TypeId = dataField.TypeId;
+                dataFieldCopy.Mode = dataField.Mode;
+                this.Entities.DataField.Add(dataFieldCopy);
+
+                newBundleVersion.DataFields.Add(dataFieldCopy);
 
                 DataFieldValue dataFieldValue = new DataFieldValue();
-                dataFieldValue.DataFieldId = dataField.Id;
+                dataFieldValue.DataField = dataFieldCopy;
                 dataFieldValue.Value = value;
 
                 this.Entities.DataFieldValue.Add(dataFieldValue);
