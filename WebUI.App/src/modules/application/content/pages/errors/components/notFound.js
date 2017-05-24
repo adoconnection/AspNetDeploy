@@ -1,24 +1,23 @@
 import { connect } from 'react-redux';
 import { componentDidMount } from 'react-lifecycle-decorators';
 
-import TopPanel from '../navigation/components/TopPanel';
-import Main from './Main';
-
-let App = () => (
+let NotFound = () => (
     <div>
-        <TopPanel />
-        <Main />
+        404 not found
     </div>
 );
 
-App = componentDidMount(
+NotFound = componentDidMount(
     (props) => {
     }
-)(App);
+)(NotFound);
 
 export default connect(
     (state) => {
         return state;
     }
-)(App);
+)(NotFound);
+
+
+
 

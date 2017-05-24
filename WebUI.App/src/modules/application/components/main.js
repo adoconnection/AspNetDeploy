@@ -3,12 +3,14 @@ import { componentDidMount } from 'react-lifecycle-decorators';
 import {Switch, Route} from 'react-router-dom';
 
 import Welcome from './Welcome';
-import Sources from './../content/sources/components/Sources';
+import Sources from '../content/pages/sources/components/Sources';
+import NotFound from '../content/pages/errors/components/NotFound';
 
 let Main = () => (
     <Switch>
         <Route exact path="/App" component={Welcome} />
-        <Route path="/App/Sources" conponent={Sources} />
+        <Route path="/App/Sources" component={Sources} />
+        <Route component={NotFound} />
     </Switch>
 );
 

@@ -7,14 +7,9 @@ import React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, compose} from 'redux';
-import {syncHistoryWithStore} from 'react-router-redux'
-import {routerMiddleware} from 'react-router-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-
-import {createBrowserHistory} from 'history';
-
-let browserHistory = createBrowserHistory();
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 
 /*tapping supporting for material ui*/
 injectTapEventPlugin();
@@ -26,7 +21,9 @@ import signalr from './modules/signalr';
 
 /*react redux store initialization*/
 import combineReducers from './modules/rootReducer';
-const middleware = routerMiddleware(browserHistory);
+
+const history = createHistory();
+const middleware = routerMiddleware(history);
 const store = createStore(
     combineReducers,
     compose(
@@ -35,7 +32,6 @@ const store = createStore(
         window.devToolsExtension ? window.devToolsExtension() : f => f
     )
 );
-const history = syncHistoryWithStore(browserHistory, store);
 
 /*styles importing*/
 import './resources/css/vendor/bootstrap/bootstrap.css'
@@ -62,10 +58,10 @@ signalr.start(
     store, () => {
         render(
             <Provider store={store}>
-                <Router history={history}>
+                <ConnectedRouter history={history}>
                     <App>
                     </App>
-                </Router>
+                </ConnectedRouter>
             </Provider>,
             document.getElementById('content')
         );

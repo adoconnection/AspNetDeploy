@@ -1,1 +1,0 @@
-export TopPanel from './topPanel';

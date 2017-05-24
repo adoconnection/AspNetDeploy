@@ -1,4 +1,4 @@
-import * as components from './components';
-import * as data from './data';
+import localization from './localization';
+import content from './content';
 
-export default {components, data}
+export default { localization, content };
