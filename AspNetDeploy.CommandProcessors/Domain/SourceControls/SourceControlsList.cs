@@ -3,7 +3,7 @@ using System.Linq;
 using AspNetDeploy.Model;
 using AspNetDeploy.SourceControls;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
 {
     public class SourceControlsList : AppCommandProcessor
     {

@@ -3,7 +3,7 @@ using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.SourceControls;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions
 {
     public class SourceControlVersionDetails : AppCommandProcessor
     {

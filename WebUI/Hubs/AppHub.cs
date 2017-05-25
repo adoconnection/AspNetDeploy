@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetDeploy.CommandProcessors;
-using AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands;
-using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands;
+using AspNetDeploy.CommandProcessors.Domain.SourceControls;
+using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions;
 using AspNetDeploy.CommandProcessors.System;
 using AspNetDeploy.CommandProcessors.Users;
 using AspNetDeploy.Model;
@@ -31,6 +31,7 @@ namespace AspNetDeploy.WebUI.Hubs
             new SourceControlDelete(),
 
             new SourceControlVersionsList(),
+            new SourceControlVersionDetails(),
             new SourceControlVersionAdd(),
             new SourceControlVersionUpdate(),
             new SourceControlVersionArchive(),

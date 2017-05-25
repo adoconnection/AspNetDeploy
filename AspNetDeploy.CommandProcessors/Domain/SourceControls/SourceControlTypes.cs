@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
 {
     public class SourceControlTypes : AppCommandProcessor
     {

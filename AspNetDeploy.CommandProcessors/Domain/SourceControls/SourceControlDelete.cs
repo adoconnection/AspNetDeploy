@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AspNetDeploy.Model;
-using AspNetDeploy.Notifications;
-using AspNetDeploy.Notifications.Model;
-using EventHandlers;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
 {
     public class SourceControlDelete : AppCommandProcessor
     {

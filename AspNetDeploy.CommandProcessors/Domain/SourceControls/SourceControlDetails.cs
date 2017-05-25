@@ -8,7 +8,7 @@ using AspNetDeploy.Notifications.Model;
 using AspNetDeploy.SourceControls;
 using EventHandlers;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
 {
     public class SourceControlDetails : AppCommandProcessor
     {

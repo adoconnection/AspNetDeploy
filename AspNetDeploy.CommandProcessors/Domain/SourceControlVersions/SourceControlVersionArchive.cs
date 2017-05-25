@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using AspNetDeploy.Model;
 
-namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
+namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions
 {
     public class SourceControlVersionArchive : AppCommandProcessor
     {
