@@ -18,15 +18,19 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
             }
         }
 
-        public override void Process(AppCommand message)
+        public override void Process()
         {
-            Guid userGuid = message.UserGuid;
-            int id = message.Data.id;
-            string safeWord = message.Data.safeWord;
+            if (!this.HasPermission(UserRoleAction.SourceVersionsManage))
+            {
+                return;
+            }
+
+            int id = this.Data.id;
+            string safeWord = this.Data.safeWord;
 
             if (safeWord != "DELETE")
             {
-                this.TrnsmitUnableToExecute(message.ConnectionId, "SafeWordRequired", id);
+                this.TrnsmitUnableToExecute("SafeWordRequired", id);
                 return;
             }
 
@@ -34,7 +38,7 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 
             if (sourceControl == null)
             {
-                this.TrnsmitUnableToExecute(message.ConnectionId, "SourceControlNotFound", id);
+                this.TrnsmitUnableToExecute("SourceControlNotFound", id);
                 return;
             }
 
@@ -42,11 +46,12 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 
             this.Entities.SaveChanges();
 
-            Serializers.SourceControlSerializer serializer = new Serializers.SourceControlSerializer();
-
             this.TransmitAllUsers(
                 "App/SourceControls/Delete",
-                serializer.SerializeDeleted(sourceControl));
+                new
+                {
+                    id = sourceControl.Id
+                });
         }
     }
 }

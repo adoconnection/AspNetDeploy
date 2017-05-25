@@ -72,8 +72,6 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DataFieldId" Type="int" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" />
-          <Property Name="EnvironmentId" Type="int" />
-          <Property Name="MachineId" Type="int" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -351,7 +349,8 @@
           <Property Name="Name" Type="nvarchar" MaxLength="1000" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsHead" Type="bit" Nullable="false" />
-          <Property Name="IsArchivedId" Type="int" Nullable="false" />
+          <Property Name="WorkStateId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -461,9 +460,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DataFieldValue_DataField">
-          <End Role="DataField" Type="Self.DataField" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="DataField" Type="Self.DataField" Multiplicity="1" />
           <End Role="DataFieldValue" Type="Self.DataFieldValue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DataField">
@@ -471,30 +468,6 @@
             </Principal>
             <Dependent Role="DataFieldValue">
               <PropertyRef Name="DataFieldId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DataFieldValue_Environment">
-          <End Role="Environment" Type="Self.Environment" Multiplicity="0..1" />
-          <End Role="DataFieldValue" Type="Self.DataFieldValue" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Environment">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="DataFieldValue">
-              <PropertyRef Name="EnvironmentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DataFieldValue_Machine">
-          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
-          <End Role="DataFieldValue" Type="Self.DataFieldValue" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="DataFieldValue">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1084,14 +1057,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_DataFieldValue_DataField" Association="Self.FK_DataFieldValue_DataField">
             <End Role="DataField" EntitySet="DataField" />
-            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DataFieldValue_Environment" Association="Self.FK_DataFieldValue_Environment">
-            <End Role="Environment" EntitySet="Environment" />
-            <End Role="DataFieldValue" EntitySet="DataFieldValue" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DataFieldValue_Machine" Association="Self.FK_DataFieldValue_Machine">
-            <End Role="Machine" EntitySet="Machine" />
             <End Role="DataFieldValue" EntitySet="DataFieldValue" />
           </AssociationSet>
           <AssociationSet Name="FK_DeploymentStep_BundleVersion" Association="Self.FK_DeploymentStep_BundleVersion">
@@ -1697,7 +1662,8 @@
           <Property Name="ParentVersionId" Type="Int32" />
           <NavigationProperty Name="ChildSourceControlVersions" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersion1" />
           <NavigationProperty Name="ParentSourceControlVersion" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion1" ToRole="SourceControlVersion" />
-          <Property Name="ArchiveState" Type="AspNetDeployModel.SourceControlVersionArchiveState" Nullable="false" />
+          <Property Name="WorkState" Type="AspNetDeployModel.SourceControlVersionWorkState" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -2378,7 +2344,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EnumType Name="SourceControlVersionArchiveState" a:ExternalTypeName="SourceControlVersionArchiveState" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
         <EntityType Name="DataFieldValue">
           <Key>
             <PropertyRef Name="Id" />
@@ -2428,6 +2393,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EnumType Name="SourceControlVersionWorkState">
+          <Member Name="Undefined" Value="0" />
+          <Member Name="LoadRequired" Value="1" />
+          <Member Name="Loading" Value="2" />
+          <Member Name="Normal" Value="3" />
+          <Member Name="ArchiveRequired" Value="4" />
+          <Member Name="Archiving" Value="5" />
+          <Member Name="Archived" Value="6" />
+        </EnumType>
             </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
@@ -2574,7 +2548,8 @@
           <EntitySetMapping Name="SourceControlVersion">
             <EntityTypeMapping TypeName="AspNetDeployModel.SourceControlVersion">
               <MappingFragment StoreEntitySet="SourceControlVersion">
-                <ScalarProperty Name="ArchiveState" ColumnName="IsArchivedId" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="WorkState" ColumnName="WorkStateId" />
                 <ScalarProperty Name="ParentVersionId" ColumnName="ParentVersionId" />
                 <ScalarProperty Name="IsHead" ColumnName="IsHead" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
@@ -2826,8 +2801,6 @@
           <EntitySetMapping Name="DataFieldValue">
             <EntityTypeMapping TypeName="AspNetDeployModel.DataFieldValue">
               <MappingFragment StoreEntitySet="DataFieldValue">
-                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
-                <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="DataFieldId" ColumnName="DataFieldId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

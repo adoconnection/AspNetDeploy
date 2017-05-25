@@ -40,6 +40,8 @@ namespace AspNetDeploy.WebUI
 
         private static void TransmitApp(AppUsersResponse response)
         {
+            response.
+
             IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<AppHub>();
 
             foreach (Guid guid in response.UserGuids)

@@ -27,7 +27,8 @@ namespace AspNetDeploy.Model
         public int OrderIndex { get; set; }
         public bool IsHead { get; set; }
         public Nullable<int> ParentVersionId { get; set; }
-        public SourceControlVersionArchiveState ArchiveState { get; set; }
+        public SourceControlVersionWorkState WorkState { get; set; }
+        public bool IsDeleted { get; set; }
     
         public virtual ICollection<ProjectVersion> ProjectVersions { get; set; }
         public virtual SourceControl SourceControl { get; set; }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using AspNetDeploy.Notifications;
-using AspNetDeploy.Notifications.Model;
-using EventHandlers;
+﻿using System.Collections.Generic;
 
 namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 {
-    public class SourceControlTypes : IAppCommandProcessor
+    public class SourceControlTypes : AppCommandProcessor
     {
-        public string CommandName
+        public override string CommandName
         {
             get
             {
@@ -16,15 +12,11 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
             }
         }
 
-        public void Process(AppCommand message)
+        public override void Process()
         {
-            Guid userGuid = message.UserGuid;
-
-            EventsHub.TransmitApp.InvokeSafe(new AppConnectionResponse()
-            {
-                ConnectionId = message.ConnectionId,
-                Name = "App/SourceControls/Types",
-                Data = new List<object>()
+            this.TransmitConnection(
+                "App/SourceControls/Types",
+                new List<object>()
                 {
                     new
                     {
@@ -86,8 +78,7 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
                             }
                         }
                     }
-                }
-            });
+                });
         }
     }
 }

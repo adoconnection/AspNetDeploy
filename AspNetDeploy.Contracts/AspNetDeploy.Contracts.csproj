@@ -59,8 +59,9 @@
     <Compile Include="ISatelliteMonitor.cs" />
     <Compile Include="ISolutionParser.cs" />
     <Compile Include="ISolutionProject.cs" />
-    <Compile Include="ISourceControlRepository.cs" />
-    <Compile Include="ISourceControlRepositoryFactory.cs" />
+    <Compile Include="SourceControls\ISourceControlModel.cs" />
+    <Compile Include="SourceControls\ISourceControlRepository.cs" />
+    <Compile Include="SourceControls\ISourceControlRepositoryFactory.cs" />
     <Compile Include="ITaskRunner.cs" />
     <Compile Include="IVariableProcessor.cs" />
     <Compile Include="IVariableProcessorFactory.cs" />

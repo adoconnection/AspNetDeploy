@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetDeploy.CommandProcessors;
-using AspNetDeploy.CommandProcessors.Domain.SourceControls;
 using AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands;
-using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions;
+using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands;
 using AspNetDeploy.CommandProcessors.System;
 using AspNetDeploy.CommandProcessors.Users;
 using AspNetDeploy.Model;
@@ -26,11 +25,15 @@ namespace AspNetDeploy.WebUI.Hubs
 
             new SourceControlsList(),
             new SourceControlTypes(),
-            new SourceControlAddSvn(),
-            new SourceControlUpdateSvn(),
+            new SourceControlAdd(),
+            new SourceControlUpdate(),
             new SourceControlDelete(),
 
-            new SourceControlVersionsList()
+            new SourceControlVersionsList(),
+            new SourceControlVersionAddSvn(),
+            new SourceControlVersionUpdateSvn(),
+            new SourceControlVersionArchive(),
+            new SourceControlVersionDelete()
         };
 
         public void Send(dynamic message)

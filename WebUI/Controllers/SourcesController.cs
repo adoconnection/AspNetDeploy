@@ -33,7 +33,7 @@ namespace AspNetDeploy.WebUI.Controllers
                     {
                         sourceControl = sc,
                         sourceControlVersions = sc.SourceControlVersions
-                            .Where(scv => scv.ArchiveState != SourceControlVersionArchiveState.Archived)
+                            .Where(scv => scv.WorkState != SourceControlVersionWorkState.Archived)
                             .OrderByDescending(scv => scv.Id)
                             .Take(4)
                             .ToList()
@@ -116,26 +116,6 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.View();
         }
 
-        public ActionResult ArchiveVersion(int id)
-        {
-            this.CheckPermission(UserRoleAction.SourceVersionsManage);
-
-            SourceControlVersion sourceControlVersion = this.Entities.SourceControlVersion
-                .Include("Properties")
-                .Include("ProjectVersions.BundleVersions")
-                .First( sc => sc.Id == id);
-
-            if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archived || sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archiving)
-            {
-                return this.RedirectToAction("Details", new {id = sourceControlVersion.SourceControl.Id});
-            }
-
-            sourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Archiving;
-            this.Entities.SaveChanges();
-
-            return this.RedirectToAction("Details", new { id = sourceControlVersion.SourceControl.Id });
-        }
-
         public ActionResult CreateNewVersion(int id)
         {
             this.CheckPermission(UserRoleAction.SourceVersionsManage);
@@ -158,24 +138,6 @@ namespace AspNetDeploy.WebUI.Controllers
             }
             
             throw new NotSupportedException();
-        }
-
-        [HttpPost]
-        public ActionResult CreateNewSvnVersion(CreateNewSvnVersion model)
-        {
-            this.CheckPermission(UserRoleAction.SourceVersionsManage);
-
-            this.CheckPermission(UserRoleAction.VersionCreate);
-            return CreateNewVersionInternal(model, scv => scv.SetStringProperty("URL", model.NewVersionURL.Trim('/')));
-        }
-
-        [HttpPost]
-        public ActionResult CreateNewFileSystemVersion(CreateNewFileSystemVersion model)
-        {
-            this.CheckPermission(UserRoleAction.SourceVersionsManage);
-
-            this.CheckPermission(UserRoleAction.VersionCreate);
-            return CreateNewVersionInternal(model, scv => scv.SetStringProperty("Path", model.NewVersionPath.Trim('/')));
         }
 
         [HttpGet]
@@ -239,39 +201,6 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.RedirectToAction("List");
         }
 
-        private ActionResult CreateNewVersionInternal(CreateNewSourceControlVersion model, Action<SourceControlVersion> fillProperties)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.RedirectToAction("CreateNewVersion", new {id = model.FromSourceControlVersionId});
-            }
-
-            SourceControlVersion sourceControlVersion = this.Entities.SourceControlVersion
-                .Include("SourceControl.Properties")
-                .Include("Properties")
-                .First(sc => sc.Id == model.FromSourceControlVersionId);
-
-            SourceControlVersion newSourceControlVersion = new SourceControlVersion();
-
-            newSourceControlVersion.SourceControl = sourceControlVersion.SourceControl;
-            newSourceControlVersion.Name = model.NewVersionName;
-            newSourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Normal;
-
-            fillProperties(newSourceControlVersion);
-
-            newSourceControlVersion.ParentSourceControlVersion = sourceControlVersion;
-
-            if (sourceControlVersion.IsHead)
-            {
-                sourceControlVersion.IsHead = false;
-                newSourceControlVersion.IsHead = true;
-            }
-
-            this.Entities.SourceControlVersion.Add(newSourceControlVersion);
-            this.Entities.SaveChanges();
-
-            return this.RedirectToAction("Details", new {id = sourceControlVersion.SourceControl.Id});
-        }
 
         [HttpPost]
         [ActionName("Add")]

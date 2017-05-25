@@ -146,7 +146,7 @@ namespace ThreadHostedTaskRunner
                 .Where(bv => 
                     bv.GetIntProperty("AutoDeployToEnvironment") > 0 && 
                     bv.Packages.Any() &&
-                    bv.ProjectVersions.All(pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal))
+                    bv.ProjectVersions.All(pv => pv.SourceControlVersion.WorkState == SourceControlVersionWorkState.Normal && !pv.SourceControlVersion.IsDeleted))
                 .ToList();
 
             bundleVersionsWithAutoDeploy.ForEach(bundleVersion =>
@@ -208,7 +208,9 @@ namespace ThreadHostedTaskRunner
                 .SelectMany( pv => pv.BundleVersions)
                 .Distinct()
                 .Where( bv => bv.ProjectVersions.All( 
-                    pv => pv.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal && 
+                    pv => 
+                    pv.SourceControlVersion.WorkState == SourceControlVersionWorkState.Normal && 
+                    !pv.SourceControlVersion.IsDeleted &&
                     (
                         pv.ProjectType == ProjectType.ZipArchive || pv.GetStringProperty("LastBuildResult") == "Done")
                     ))
@@ -331,7 +333,7 @@ namespace ThreadHostedTaskRunner
                 .Include("Properties")
                 .Include("ProjectVersions.BundleVersions")
                 .Include("SourceControl.Properties")
-                .Where(scv => scv.ArchiveState == SourceControlVersionArchiveState.Archiving)
+                .Where(scv => scv.WorkState == SourceControlVersionWorkState.ArchiveRequired)
                 .ToList();
 
             sourceControlVersions
@@ -364,7 +366,7 @@ namespace ThreadHostedTaskRunner
                 .Include("Properties")
                 .Include("ProjectVersions.BundleVersions")
                 .Include("SourceControl.Properties")
-                .Where( scv => scv.ArchiveState == SourceControlVersionArchiveState.Normal)
+                .Where( scv => scv.WorkState == SourceControlVersionWorkState.Normal && !scv.IsDeleted)
                 .ToList();
 
             sourceControlVersions

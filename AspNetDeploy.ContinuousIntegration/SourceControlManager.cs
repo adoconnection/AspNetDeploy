@@ -107,7 +107,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
             repository.Archive(sourceControlVersion, sourcesFolder);
 
-            sourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Archived;
+            sourceControlVersion.WorkState = SourceControlVersionWorkState.Archived;
             entities.SaveChanges();
 
             return new ArhiveResult() { IsSuccess = true };
