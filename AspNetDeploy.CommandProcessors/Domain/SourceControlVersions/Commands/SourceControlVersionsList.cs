@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Serializers;
+﻿using System.Collections.Generic;
+using System.Linq;
 using AspNetDeploy.Model;
+using AspNetDeploy.SourceControls;
 
 namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
 {
@@ -32,7 +33,9 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
                 return;
             }
 
-            IQueryable<SourceControlVersion> query = this.Entities.SourceControlVersion.Where(scv => !scv.IsDeleted);
+            IQueryable<SourceControlVersion> query = this.Entities.SourceControlVersion
+                .Include("SourceControl")
+                .Where(scv => !scv.IsDeleted && !scv.SourceControl.IsDeleted);
 
             if (!includeArchived)
             {
@@ -43,12 +46,16 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
                 .OrderByDescending(scv => scv.Name.Length)
                 .ThenByDescending(scv => scv.Name);
 
+            List<SourceControlVersion> sourceControlVersions = query.ToList();
+
+            SourceControlModelFactory sourceControlModelFactory = new SourceControlModelFactory();
+
             this.TransmitConnection(
                 "App/SourceControlVersions/List",
                 new
                 {
                     id,
-                    versions = query.Select(SourceControlVersionSerializer.SerializeDetails).ToList()
+                    versions = sourceControlVersions.Select(scv => sourceControlModelFactory.Create(scv.SourceControl.Type).VersionDetailsSerializer).ToList()
                 });
         }
     }

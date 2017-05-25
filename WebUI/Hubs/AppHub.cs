@@ -30,8 +30,8 @@ namespace AspNetDeploy.WebUI.Hubs
             new SourceControlDelete(),
 
             new SourceControlVersionsList(),
-            new SourceControlVersionAddSvn(),
-            new SourceControlVersionUpdateSvn(),
+            new SourceControlVersionAdd(),
+            new SourceControlVersionUpdate(),
             new SourceControlVersionArchive(),
             new SourceControlVersionDelete()
         };

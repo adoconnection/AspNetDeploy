@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AspNetDeploy.CommandProcessors.Domain.SourceControls.Serializers;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.SourceControls;

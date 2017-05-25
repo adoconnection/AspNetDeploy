@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Serializers;
 using AspNetDeploy.Model;
 
 namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
