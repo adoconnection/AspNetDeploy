@@ -12,7 +12,15 @@ namespace SourceControls.FileSystem
         {
             id = sourceControl.Id,
             name = sourceControl.Name,
-            type = sourceControl.Type,
+            type = sourceControl.Type.ToString(),
+            path = sourceControl.Properties.Where(p => p.Key == "Path").Select(p => p.Value).FirstOrDefault(),
+        };
+
+        public Func<SourceControl, object> ListSerializer { get; } = sourceControl => new
+        {
+            id = sourceControl.Id,
+            name = sourceControl.Name,
+            type = sourceControl.Type.ToString(),
             path = sourceControl.Properties.Where(p => p.Key == "Path").Select(p => p.Value).FirstOrDefault(),
         };
 
@@ -27,6 +35,16 @@ namespace SourceControls.FileSystem
         };
 
         public Func<SourceControlVersion, object> VersionDetailsSerializer { get; } = scv => new
+        {
+            id = scv.Id,
+            parentId = scv.ParentVersionId,
+            sourceControlId = scv.SourceControlId,
+            scv.Name,
+            workState = scv.WorkState,
+            path = scv.Properties.Where(p => p.Key == "Path").Select(p => p.Value).FirstOrDefault(),
+        };
+
+        public Func<SourceControlVersion, object> VersionListSerializer { get; } = scv => new
         {
             id = scv.Id,
             parentId = scv.ParentVersionId,

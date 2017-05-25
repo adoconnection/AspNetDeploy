@@ -32,7 +32,7 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 
             SourceControlType sourceControlType;
 
-            if (!Enum.TryParse(type, out sourceControlType))
+            if (!Enum.TryParse(type, true, out sourceControlType))
             {
                 this.TrnsmitUnableToExecute("SourceControlInvalidType");
                 return;
@@ -63,14 +63,16 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 
             entities.SaveChanges();
 
-            IList<Guid> userGuids = entities.User.Where(u => !u.IsDisabled).Select(u => u.Guid).ToList();
+            this.TransmitAllUsers(
+                "App/SourceControls/Update",
+                sourceControlModel.ListSerializer(sourceControl));
 
-            EventsHub.TransmitApp.InvokeSafe(new AppUsersResponse()
-            {
-                UserGuids = userGuids,
-                Name = "App/SourceControls/Update",
-                Data = sourceControlModel.DetailsSerializer(sourceControl)
-            });
+            this.TransmitConnection(
+                "App/SourceControls/Add/Success",
+                new
+                {
+                    id = sourceControl.Id
+                });
         }
     }
 }

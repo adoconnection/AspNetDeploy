@@ -12,10 +12,18 @@ namespace AspNetDeploy.SourceControls.SVN
         {
             id = sourceControl.Id,
             name = sourceControl.Name,
-            type = sourceControl.Type,
+            type = sourceControl.Type.ToString(),
             url = sourceControl.Properties.Where(p => p.Key == "URL").Select(p => p.Value).FirstOrDefault(),
             login = sourceControl.Properties.Where(p => p.Key == "login").Select(p => p.Value).FirstOrDefault(),
             password = sourceControl.Properties.Where(p => p.Key == "password").Select(p => p.Value).FirstOrDefault()
+        };
+
+        public Func<SourceControl, object> ListSerializer { get; } = sourceControl => new
+        {
+            id = sourceControl.Id,
+            name = sourceControl.Name,
+            type = sourceControl.Type.ToString(),
+            url = sourceControl.Properties.Where(p => p.Key == "URL").Select(p => p.Value).FirstOrDefault(),
         };
 
         public Action<SourceControl, dynamic> PropertyUpdater { get; } = (sourceControl, data) =>
@@ -31,6 +39,16 @@ namespace AspNetDeploy.SourceControls.SVN
         };
 
         public Func<SourceControlVersion, object> VersionDetailsSerializer { get; } = scv => new
+        {
+            id = scv.Id,
+            parentId = scv.ParentVersionId,
+            sourceControlId = scv.SourceControlId,
+            scv.Name,
+            workState = scv.WorkState,
+            url = scv.Properties.Where( p => p.Key == "URL").Select( p => p.Value).FirstOrDefault()
+        };
+
+        public Func<SourceControlVersion, object> VersionListSerializer { get; } = scv => new
         {
             id = scv.Id,
             parentId = scv.ParentVersionId,

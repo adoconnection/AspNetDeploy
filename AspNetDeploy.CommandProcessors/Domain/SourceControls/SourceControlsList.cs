@@ -20,14 +20,14 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
             SourceControlModelFactory sourceControlModelFactory = new SourceControlModelFactory();
 
             List<SourceControl> sourceControls = this.Entities.SourceControl
-                    .Include("SourceControlProperties")
+                    .Include("Properties")
                     .Where(sc => !sc.IsDeleted)
                     .ToList();
 
             this.TransmitConnection(
                 "App/SourceControls/List",
                 sourceControls
-                    .Select(sc => sourceControlModelFactory.Create(sc.Type).DetailsSerializer)
+                    .Select(sc => sourceControlModelFactory.Create(sc.Type).ListSerializer(sc))
                     .ToList());
         }
     }

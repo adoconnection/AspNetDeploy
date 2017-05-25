@@ -24,6 +24,7 @@ namespace AspNetDeploy.WebUI.Hubs
             new ActiveUserProfile(),
 
             new SourceControlsList(),
+            new SourceControlDetails(),
             new SourceControlTypes(),
             new SourceControlAdd(),
             new SourceControlUpdate(),

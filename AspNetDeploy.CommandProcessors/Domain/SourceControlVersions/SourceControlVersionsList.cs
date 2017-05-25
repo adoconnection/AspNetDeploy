@@ -22,14 +22,14 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
                 return;
             }
 
-            int id = this.Data.id;
+            int sourceControlId = this.Data.sourceControlId;
             bool includeArchived = this.Data.includeArchived ?? false;
 
-            SourceControl sourceControl = this.Entities.SourceControl.FirstOrDefault( sc => sc.Id == id && !sc.IsDeleted);
+            SourceControl sourceControl = this.Entities.SourceControl.FirstOrDefault( sc => sc.Id == sourceControlId && !sc.IsDeleted);
 
             if (sourceControl == null)
             {
-                this.TrnsmitUnableToExecute("SourceControlNotFound", id);
+                this.TrnsmitUnableToExecute("SourceControlNotFound", sourceControlId);
                 return;
             }
 
@@ -54,8 +54,8 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
                 "App/SourceControlVersions/List",
                 new
                 {
-                    id,
-                    versions = sourceControlVersions.Select(scv => sourceControlModelFactory.Create(scv.SourceControl.Type).VersionDetailsSerializer).ToList()
+                    id = sourceControlId,
+                    versions = sourceControlVersions.Select(scv => sourceControlModelFactory.Create(scv.SourceControl.Type).VersionListSerializer(scv)).ToList()
                 });
         }
     }

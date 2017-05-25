@@ -36,16 +36,8 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
                 return;
             }
 
-            SourceControlType sourceControlType;
-
-            if (!Enum.TryParse(type, out sourceControlType))
-            {
-                this.TrnsmitUnableToExecute("SourceControlInvalidType", id);
-                return;
-            }
-
             SourceControlModelFactory sourceControlModelFactory = new SourceControlModelFactory();
-            ISourceControlModel sourceControlModel = sourceControlModelFactory.Create(sourceControlType);
+            ISourceControlModel sourceControlModel = sourceControlModelFactory.Create(sourceControl.Type);
 
             sourceControl.Name = name;
 
@@ -63,7 +55,7 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls.Commands
 
             this.TransmitAllUsers(
                 "App/SourceControls/Update",
-                sourceControlModel.DetailsSerializer(sourceControl));
+                sourceControlModel.ListSerializer(sourceControl));
         }
     }
 }

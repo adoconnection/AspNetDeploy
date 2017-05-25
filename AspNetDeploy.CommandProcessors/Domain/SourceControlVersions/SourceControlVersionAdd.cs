@@ -74,7 +74,14 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControlVersions.Commands
 
             this.TransmitAllUsers(
                 "App/SourceControlVersions/Update",
-                sourceControlModel.VersionDetailsSerializer(sourceControlVersion));
+                sourceControlModel.VersionListSerializer(sourceControlVersion));
+
+            this.TransmitConnection(
+                "App/SourceControlVersions/Add/Success",
+                new
+                {
+                    id = sourceControlVersion.Id
+                });
         }
     }
 }
