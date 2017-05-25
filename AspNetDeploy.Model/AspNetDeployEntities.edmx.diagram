@@ -77,7 +77,7 @@
         <AssociationConnector Association="AspNetDeployModel.FK_Exception_Exception1" />
         <AssociationConnector Association="AspNetDeployModel.FK_ExceptionData_Exception" />
         <AssociationConnector Association="AspNetDeployModel.FK_MachinePublicationLog_Exception" />
-        <EntityTypeShape EntityType="AspNetDeployModel.DataFieldValue" Width="1.5" PointX="2.75" PointY="19.25" />
+        <EntityTypeShape EntityType="AspNetDeployModel.DataFieldValue" Width="1.5" PointX="2.25" PointY="19.375" />
         <AssociationConnector Association="AspNetDeployModel.FK_DataFieldValue_DataField" />
         <AssociationConnector Association="AspNetDeployModel.FK_DataFieldValue_Environment" />
         <AssociationConnector Association="AspNetDeployModel.FK_DataFieldValue_Machine" />

@@ -22,7 +22,7 @@ namespace AspNetDeploy.Model
             this.PreviousEnvironment = new HashSet<Environment>();
             this.NextEnvironment = new HashSet<Environment>();
             this.ApprovedPackages = new HashSet<PackageApprovedOnEnvironment>();
-            this.DataFieldValues = new HashSet<DataFieldValue>();
+            this.DataFieldValue = new HashSet<DataFieldValue>();
         }
     
         public int Id { get; set; }
@@ -34,6 +34,6 @@ namespace AspNetDeploy.Model
         public virtual ICollection<Environment> PreviousEnvironment { get; set; }
         public virtual ICollection<Environment> NextEnvironment { get; set; }
         public virtual ICollection<PackageApprovedOnEnvironment> ApprovedPackages { get; set; }
-        public virtual ICollection<DataFieldValue> DataFieldValues { get; set; }
+        public virtual ICollection<DataFieldValue> DataFieldValue { get; set; }
     }
 }

@@ -58,7 +58,7 @@
                     {
                         foreach (ProjectVersion projectVersion in bundleVersionInfo.BundleVersion.ProjectVersions)
                         {
-                            bool isArchived = projectVersion.SourceControlVersion.ArchiveState != SourceControlVersionArchiveState.Normal;
+                            bool isArchived = projectVersion.SourceControlVersion.WorkState != SourceControlVersionWorkState.Normal;
                             
                             <div>
                                 <small class="@(isArchived ? "text-muted" : "")">

@@ -89,7 +89,7 @@
                 </dl>
             </div>
             <div class="col-sm-5 text-right">
-                @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal)
+                @if (sourceControlVersion.WorkState == SourceControlVersionWorkState.Normal)
                 {
                     <a href="@Url.Action("ArchiveVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Archive</a>
                 }
@@ -125,7 +125,7 @@
             </div>
             <div class="col-sm-5 text-right">
 
-                @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal)
+                @if (sourceControlVersion.WorkState == SourceControlVersionWorkState.Normal)
                 {
                     <a href="@Url.Action("ArchiveVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Archive</a>
                 }
@@ -143,13 +143,13 @@
         @sourceControlVersion.Name
 
 
-        @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archived)
+        @if (sourceControlVersion.WorkState == SourceControlVersionWorkState.Archived)
         {
             <small>Archived</small>
         }
         else
         {
-            if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archiving)
+            if (sourceControlVersion.WorkState == SourceControlVersionWorkState.Archiving)
             {
                 <small>Archiving</small>
             }

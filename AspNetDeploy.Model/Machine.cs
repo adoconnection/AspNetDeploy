@@ -19,7 +19,7 @@ namespace AspNetDeploy.Model
             this.Environments = new HashSet<Environment>();
             this.MachineRoles = new HashSet<MachineRole>();
             this.MachinePublication = new HashSet<MachinePublication>();
-            this.DataFieldValues = new HashSet<DataFieldValue>();
+            this.DataFieldValue = new HashSet<DataFieldValue>();
         }
     
         public int Id { get; set; }
@@ -31,6 +31,6 @@ namespace AspNetDeploy.Model
         public virtual ICollection<Environment> Environments { get; set; }
         public virtual ICollection<MachineRole> MachineRoles { get; set; }
         public virtual ICollection<MachinePublication> MachinePublication { get; set; }
-        public virtual ICollection<DataFieldValue> DataFieldValues { get; set; }
+        public virtual ICollection<DataFieldValue> DataFieldValue { get; set; }
     }
 }
