@@ -19,6 +19,9 @@ export default function middleware(store: any) {
                     case c.SOURCE_CONTROLS_DETAILS:
                         store.dispatch(sourceControlsDetails.actions.loaded(action.payload.data));
                         break;
+                    case c.SOURCE_CONTROL_VERSIONS_LIST:
+                        store.dispatch(sourceControls.actions.loadedVersions(action.payload.data));
+                        break;
                     default:
                         break;
                 }

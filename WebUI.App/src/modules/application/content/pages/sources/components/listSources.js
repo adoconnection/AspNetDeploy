@@ -1,18 +1,16 @@
 import { connect } from 'react-redux';
 import { componentDidMount } from 'react-lifecycle-decorators';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 import { sourceControls } from './../../../data';
+import ListSourcesItem from './../../../controls/components/items/listSourcesItem';
 
 let ListSources = ({ match, sourceControls }) => (
     <Switch>
         <Route exact path={match.url} render={ () =>
             <div className="container">
-                { sourceControls.data.map( (sc) => {
-                        return <h1 key={sc.id}>
-                            <Link to={"/App/Sources/Details/" + sc.id}>{sc.name}</Link>
-                            <small>{sc.type}</small>
-                        </h1>
+                { sourceControls.data.map((sc) => {
+                        return <ListSourcesItem key={sc.id} sourceControl={sc} />;
                 })}
             </div>
         } />
