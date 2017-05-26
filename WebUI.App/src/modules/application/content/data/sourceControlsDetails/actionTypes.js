@@ -1,1 +1,2 @@
-export const LIST = 'application/content/data/sourceControlsDetails/LIST';
+export const PREPARE_LOADING = 'application/content/data/sourceControlsDetails/PREPARE_LOADING';
+export const LOADED = 'application/content/data/sourceControlsDetails/LOADED';

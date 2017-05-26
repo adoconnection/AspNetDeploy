@@ -8,7 +8,7 @@ let ListSources = ({ match, sourceControls }) => (
     <Switch>
         <Route exact path={match.url} render={ () =>
             <div className="container">
-                { sourceControls.map( (sc) => {
+                { sourceControls.data.map( (sc) => {
                         return <h1 key={sc.id}>
                             <Link to={"/App/Sources/Details/" + sc.id}>{sc.name}</Link>
                             <small>{sc.type}</small>

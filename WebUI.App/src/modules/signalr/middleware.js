@@ -14,10 +14,10 @@ export default function middleware(store: any) {
                 switch(action.payload.name)
                 {
                     case c.SOURCE_CONTROLS_LIST:
-                        store.dispatch(sourceControls.actions.list(action.payload.data));
+                        store.dispatch(sourceControls.actions.loaded(action.payload.data));
                         break;
                     case c.SOURCE_CONTROLS_DETAILS:
-                        store.dispatch(sourceControlsDetails.actions.list(action.payload.data));
+                        store.dispatch(sourceControlsDetails.actions.loaded(action.payload.data));
                         break;
                     default:
                         break;
