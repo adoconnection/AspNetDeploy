@@ -1,1 +1,1 @@
-export const LOAD = 'application/content/data/sourceControls/LOAD';
+export const LIST = 'application/content/data/sourceControls/LIST';

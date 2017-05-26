@@ -1,31 +1,43 @@
 import { connect } from 'react-redux';
-import { componentDidMount } from 'react-lifecycle-decorators';
+import { componentWillMount } from 'react-lifecycle-decorators';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import { sourceControls } from './../../../data';
-import SourcesAdd from './sourcesAdd';
+import signalr from './../../../../../signalr';
 
-let Sources = ({ match, sourceControls }) => (
+import { sourceControls } from './../../../data';
+import AddSources from './addSources';
+import ListSources from './listSources';
+import SourceDetails from './sourceDetails';
+
+let Sources = ({ match, sourceControls, dispatch }) => (
     <Switch>
         <Route exact path={match.url} render={ () =>
-            sourceControls.length != 0
-                ? null
-                : <Redirect to={{
-                    pathname: match.url + '/Add'
-                }}/>
-        } />
-        <Route path={match.url + '/Add'} component={SourcesAdd} />
+            {
+                
+                return sourceControls.length != 0
+                    ? <Redirect to={{
+                        pathname: match.url + '/List'
+                    }}/>
+                    : <Redirect to={{
+                        pathname: match.url + '/Add'
+                    }}/>
+            }
+        }/>
+        <Route path={match.url + '/Add'} component={AddSources} />
+        <Route path={match.url + '/List'} component={ListSources} />
+        <Route path={match.url + '/Details/:id'} component={SourceDetails} />
     </Switch>
 );
 
-Sources = componentDidMount(
+Sources = componentWillMount(
     (props) => {
+        props.dispatch(signalr.actions.send({name: signalr.commands.SOURCE_CONTROLS_LIST}));
     }
 )(Sources);
     
 const mapStateToProps = (state) => {
     return {
-        sourceControls: state[sourceControls.constants.NAME].sourceControls
+        sourceControls: state[sourceControls.constants.NAME]
     }
 };
 
