@@ -14,7 +14,6 @@ export default (state = initialState, action) => {
             
             return state;
         case t.PREPARE_LOADING_VERSIONS:
-            
             indexOf = state.data.findIndex((sc) => sc.id == action.payload);
             if(indexOf != -1)
             {

@@ -10,7 +10,7 @@ let ListSources = ({ match, sourceControls }) => (
         <Route exact path={match.url} render={ () =>
             <div className="container">
                 { sourceControls.data.map((sc) => {
-                        return <ListSourcesItem key={sc.id} sourceControl={sc} />;
+                    return <ListSourcesItem key={sc.id} sourceControl={sc} />;
                 })}
             </div>
         } />
