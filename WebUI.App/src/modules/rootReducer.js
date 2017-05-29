@@ -9,5 +9,6 @@ export default combineReducers({
     [application.localization.constants.NAME]: application.localization.reducer,
     [application.content.data.sourceControls.constants.NAME]: application.content.data.sourceControls.reducer,
     [application.content.data.sourceControlsDetails.constants.NAME]: application.content.data.sourceControlsDetails.reducer,
+    [application.content.data.sourceControlVersions.constants.NAME]: application.content.data.sourceControlVersions.reducer,
     form: formReducer
 });

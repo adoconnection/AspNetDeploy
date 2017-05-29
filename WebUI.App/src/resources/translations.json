@@ -1,8 +1,12 @@
 {
-    "application": {
-        "ru": {
-        },
-        "en": {
-        }
+    "ru": {
+        "sources_edit": "Редактировать",
+        "sources_url": "URL",
+        "sources_login": "Логин"
+    },
+    "en": {
+        "sources_edit": "Edit",
+        "sources_url": "URL",
+        "sources_login": "Login"
     }
 }

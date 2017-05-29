@@ -1,6 +1,10 @@
 import * as t from './actionTypes';
 
-export const list = (source) => ({
-    type: t.LIST,
+export const prepareLoading = () => ({
+    type: t.PREPARE_LOADING
+});
+
+export const loaded = (source) => ({
+    type: t.LOADED,
     payload: source
 });

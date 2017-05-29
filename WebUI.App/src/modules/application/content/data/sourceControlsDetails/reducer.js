@@ -1,11 +1,19 @@
 import * as t from './actionTypes';
 
-const initialState = {};
+const initialState = {
+    isLoading: false,
+    data: {}
+};
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case t.LIST:
-            state = action.payload;
+        case t.PREPARE_LOADING:
+            state.isLoading = true;
+            
+            return state;
+        case t.LOADED:
+            state.isLoading = false;
+            state.data = action.payload;
             
             return state;
         default:
