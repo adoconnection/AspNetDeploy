@@ -52,6 +52,7 @@ namespace SourceControls.FileSystem
             scv.Name,
             workState = scv.WorkState,
             path = scv.Properties.Where(p => p.Key == "Path").Select(p => p.Value).FirstOrDefault(),
+            revision = scv.Properties.Where(p => p.Key == "Revision").Select(p => p.Value).FirstOrDefault(),
         };
 
         public Action<SourceControlVersion, dynamic> VersionPropertyUpdater { get; } = (sourceControlVersion, data) =>
