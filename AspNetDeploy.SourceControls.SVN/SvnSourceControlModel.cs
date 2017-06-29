@@ -55,7 +55,8 @@ namespace AspNetDeploy.SourceControls.SVN
             sourceControlId = scv.SourceControlId,
             scv.Name,
             workState = scv.WorkState,
-            url = scv.Properties.Where( p => p.Key == "URL").Select( p => p.Value).FirstOrDefault()
+            url = scv.Properties.Where( p => p.Key == "URL").Select( p => p.Value).FirstOrDefault(),
+            revision = scv.Properties.Where(p => p.Key == "Revision").Select(p => p.Value).FirstOrDefault(),
         };
 
         public Action<SourceControlVersion, dynamic> VersionPropertyUpdater { get; } = (sourceControlVersion, data) =>
