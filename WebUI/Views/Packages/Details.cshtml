@@ -9,8 +9,6 @@
     BundleVersion bundleVersion = package.BundleVersion;
 
 
-    IList<Package> orderedPackages = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).ToList();
-    Package latestPackage = orderedPackages.FirstOrDefault();
 }
 
 <div class="container">

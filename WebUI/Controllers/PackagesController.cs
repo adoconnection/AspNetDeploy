@@ -25,6 +25,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             IList<Environment> environments = this.Entities.Environment
                 .Include("NextEnvironment")
+                .Include("Publications.Package")
                 .ToList();
 
             int homeEnvironment = package.BundleVersion.GetIntProperty("HomeEnvironment");
