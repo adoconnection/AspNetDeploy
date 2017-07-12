@@ -51,6 +51,10 @@
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Dapper\AspNetDeploy.Dapper.csproj">
+      <Project>{242360D1-F2EC-4451-B3F5-C8F6F639657B}</Project>
+      <Name>AspNetDeploy.Dapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.DeploymentServices.SatelliteMonitoring\DeploymentServices.SatelliteMonitoring.csproj">
       <Project>{624A245B-5332-4217-AD35-26FA6B1F8ED5}</Project>
       <Name>DeploymentServices.SatelliteMonitoring</Name>

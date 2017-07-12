@@ -1,5 +1,6 @@
 ﻿using AspNetDeploy.BuildServices;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Dapper;
 using AspNetDeploy.DeploymentServices;
 using AspNetDeploy.DeploymentServices.SatelliteMonitoring;
 using AspNetDeploy.Logging.DatabaseLogger;
@@ -18,6 +19,9 @@ namespace AspNetDeploy.Bootstrapper
     {
         public RepositoriesRegistry()
         {
+            this.Map<IDataContext, DapperDataContext>(LifecycleType.HttpContext);
+
+
             this.Map<ISourceControlRepositoryFactory, SourceControlRepositoryFactory>(LifecycleType.Application);
             this.Map<ITaskRunner, ThreadTaskRunner>(LifecycleType.Application);
             this.Map<IBuildServiceFactory, BuildServiceFactory>(LifecycleType.Application);

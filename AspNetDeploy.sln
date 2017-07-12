@@ -145,6 +145,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServices.Gulp", "Build
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServices.Npm", "BuildServices.Npm\BuildServices.Npm.csproj", "{7F2A5635-44AC-460D-9CCA-CFB3C8344A12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetDeploy.Dapper", "AspNetDeploy.Dapper\AspNetDeploy.Dapper.csproj", "{242360D1-F2EC-4451-B3F5-C8F6F639657B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -351,6 +353,10 @@ Global
 		{7F2A5635-44AC-460D-9CCA-CFB3C8344A12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F2A5635-44AC-460D-9CCA-CFB3C8344A12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F2A5635-44AC-460D-9CCA-CFB3C8344A12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -419,6 +425,7 @@ Global
 		{9C940383-09B0-46C9-8949-661AB623232E} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
 		{C03F2436-D1E1-4A0A-83A3-D7E5683AC3AB} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
 		{7F2A5635-44AC-460D-9CCA-CFB3C8344A12} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
+		{242360D1-F2EC-4451-B3F5-C8F6F639657B} = {BCD681B9-D4C5-4DF3-87CB-80CA4FCC45EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
