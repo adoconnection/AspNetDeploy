@@ -34,13 +34,11 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
                 return;
             }
 
-            AspNetDeployEntities entities = new AspNetDeployEntities();
-
             SourceControl sourceControl = new SourceControl();
             sourceControl.Name = name;
             sourceControl.Type = sourceControlType;
             sourceControl.IsDeleted = false;
-            entities.SourceControl.Add(sourceControl);
+            this.Entities.SourceControl.Add(sourceControl);
 
             SourceControlModelFactory sourceControlModelFactory = new SourceControlModelFactory();
             ISourceControlModel sourceControlModel = sourceControlModelFactory.Create(sourceControlType);
@@ -57,7 +55,7 @@ namespace AspNetDeploy.CommandProcessors.Domain.SourceControls
 
             sourceControlModel.PropertyUpdater(sourceControl, this.Data);
 
-            entities.SaveChanges();
+            this.Entities.SaveChanges();
 
             this.TransmitAllUsers(
                 "App/SourceControls/Update",

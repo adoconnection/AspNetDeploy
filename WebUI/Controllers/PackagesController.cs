@@ -19,7 +19,6 @@ namespace AspNetDeploy.WebUI.Controllers
             Package package = this.Entities.Package
                 .Include("Publications.Environment")
                 .Include("BundleVersion.Bundle")
-                .Include("BundleVersion.Packages")
                 .Include("ApprovedOnEnvironments")
                 .First(p => p.Id == id);
 

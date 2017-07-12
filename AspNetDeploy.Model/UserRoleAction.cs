@@ -13,7 +13,7 @@
 
         DeploymentChangeSteps,
 
-        EnvironmentCreate,
+        EnvironmentsManage,
         EnvironmentChangeVariables,
 
         ManageUsers,

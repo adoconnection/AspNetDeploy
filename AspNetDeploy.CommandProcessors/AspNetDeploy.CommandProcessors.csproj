@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppCommandProcessor.cs" />
+    <Compile Include="Domain\Environments\EnvironmentsAdd.cs" />
     <Compile Include="Domain\SourceControls\SourceControlAdd.cs" />
     <Compile Include="Domain\SourceControls\SourceControlDelete.cs" />
     <Compile Include="Domain\SourceControls\SourceControlDetails.cs" />
