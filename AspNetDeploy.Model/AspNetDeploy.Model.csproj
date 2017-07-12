@@ -103,7 +103,6 @@
     <Compile Include="DeploymentStepType.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityDataContext.cs" />
     <Compile Include="Environment.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
@@ -180,7 +179,6 @@
     <Compile Include="PublicationState.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\BundleRepository.cs" />
     <Compile Include="SourceControl.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
