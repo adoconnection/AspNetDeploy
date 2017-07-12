@@ -25,6 +25,7 @@ namespace AspNetDeploy.WebUI.Controllers
         {
             List<Bundle> bundles = this.Entities.Bundle
                 .Include("BundleVersions.Properties")
+                .Include("BundleVersions")
                 .OrderBy( b => b.OrderIndex)
                 .ToList();
 
@@ -34,7 +35,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             int[] array = bundles.SelectMany( b => b.BundleVersions).Select( bv => bv.Id).Distinct().ToArray();
 
-            List<ProjectVersion> projectVersions = this.Entities.ProjectVersion.Where( pv => array.Contains(pv.Id)).ToList();
+            List<ProjectVersion> projectVersions = this.Entities.ProjectVersion.Include("BundleVersions").Where( pv => array.Contains(pv.Id)).ToList();
 
             this.ViewBag.Environments = environments;
 

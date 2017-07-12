@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
@@ -149,6 +153,7 @@
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\123.pubxml" />
     <None Include="Properties\PublishProfiles\Rain.pubxml" />
     <None Include="Resources\JavaScripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Resources\JavaScripts\bootstrap.js" />
@@ -325,6 +330,10 @@
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj">
       <Project>{76580B91-2151-48A4-941F-1AEF298B13DE}</Project>
       <Name>AspNetDeploy.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AspNetDeploy.Dapper\AspNetDeploy.Dapper.csproj">
+      <Project>{242360D1-F2EC-4451-B3F5-C8F6F639657B}</Project>
+      <Name>AspNetDeploy.Dapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
