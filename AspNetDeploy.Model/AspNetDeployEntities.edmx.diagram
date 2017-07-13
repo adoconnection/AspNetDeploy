@@ -14,7 +14,7 @@
         <EntityTypeShape EntityType="AspNetDeployModel.Machine" Width="1.875" PointX="5" PointY="19.125" />
         <EntityTypeShape EntityType="AspNetDeployModel.MachineRole" Width="1.5" PointX="5.25" PointY="16.5" />
         <EntityTypeShape EntityType="AspNetDeployModel.Project" Width="1.5" PointX="12.375" PointY="7.125" />
-        <EntityTypeShape EntityType="AspNetDeployModel.ProjectProperty" Width="1.5" PointX="14.625" PointY="7.25" />
+        <EntityTypeShape EntityType="AspNetDeployModel.ProjectProperty" Width="1.5" PointX="14.875" PointY="7.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.ProjectVersion" Width="1.875" PointX="9.5" PointY="6.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.SourceControl" Width="1.5" PointX="12.375" PointY="3.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.SourceControlProperty" Width="1.5" PointX="14.5" PointY="3.625" />

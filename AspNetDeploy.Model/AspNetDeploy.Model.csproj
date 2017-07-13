@@ -75,10 +75,12 @@
     <Compile Include="Bundle.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="BundleComparer.cs" />
     <Compile Include="BundleState.cs" />
     <Compile Include="BundleVersion.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="BundleVersionComparer.cs" />
     <Compile Include="BundleVersionExtender.cs" />
     <Compile Include="BundleVersionProperty.cs">
       <DependentUpon>AspNetDeployEntities.tt</DependentUpon>

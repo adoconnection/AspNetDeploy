@@ -42,11 +42,12 @@ namespace AspNetDeploy.WebUI.Controllers
                 {
                     sourceControl = sc,
                     sourceControlVersions = sc.SourceControlVersions
+                        .Where( scv => scv.ArchiveState != SourceControlVersionArchiveState.Archived)
                         .OrderByDescending(scv => scv.Id)
                         .ToList()
                 }).ToList();
 
-            IList<ProjectVersion> projectVersions = projectRepository.List();
+            IList<ProjectVersion> projectVersions = projectRepository.ListForSources();
 
             this.ViewBag.SourceControls = list
                 .OrderBy(item => item.sourceControl.OrderIndex)

@@ -20,11 +20,21 @@ namespace AspNetDeploy.Dapper
             Dictionary<int, SourceControl> sourceControlLookup = new Dictionary<int, SourceControl>();
 
             this.dataContext.Connection.Query<SourceControl, SourceControlVersion, SourceControl>(@"
-                    SELECT sc.Id Id, sc.Name Name, sc.TypeId Type, sc.IsDeleted IsDeleted, sc.OrderIndex OrderIndex, 
-                    scv.Id Id, scv.SourceControlId SourceControlId, scv.ParentVersionId ParentVersionId, scv.Name Name, scv.OrderIndex OrderIndex, scv.IsHead IsHead, scv.IsArchivedId ArchiveState
+                    SELECT 
+                        sc.Id, 
+                        sc.Name, 
+                        sc.TypeId AS Type, 
+                        sc.IsDeleted, 
+                        sc.OrderIndex, 
+                        scv.Id, 
+                        scv.SourceControlId, 
+                        scv.ParentVersionId, 
+                        scv.Name, 
+                        scv.OrderIndex, 
+                        scv.IsHead, 
+                        scv.IsArchivedId AS ArchiveState
                     FROM SourceControl sc
                     INNER JOIN SourceControlVersion scv ON sc.Id = scv.SourceControlId
-                    WHERE scv.IsArchivedId != 2
                 ", (sc, scv) =>
                 {
                     SourceControl sourceControl;

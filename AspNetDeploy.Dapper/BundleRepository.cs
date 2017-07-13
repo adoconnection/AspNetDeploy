@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
@@ -19,65 +18,46 @@ namespace AspNetDeploy.Dapper
 
         public IList<Bundle> List()
         {
-            IDictionary<int, Bundle> bundles = new Dictionary<int, Bundle>();
-            IDictionary<int, BundleVersion> bundleVersions = new Dictionary<int, BundleVersion>();
-
-            this.dataContext.Connection.Query<Bundle, BundleVersion, BundleVersionProperty, Bundle>(@"
+            List<Tuple<Bundle, BundleVersion, BundleVersionProperty>> list = dataContext.Connection.Query<Bundle, BundleVersion, BundleVersionProperty, Tuple<Bundle, BundleVersion, BundleVersionProperty>>(@"
 SELECT
 	b.*,
 	bv.*,
     bvp.*
 FROM [Bundle] b
-LEFT JOIN [BundleVersion] bv ON bv.BundleId = b.Id
-LEFT JOIN [BundleVersionProperty] bvp ON bvp.BundleVersionId = bv.Id
-WHERE bv.Id IN 
-(
-	SELECT TOP 2 bv2.Id
-	FROM BundleVersion bv2
-	WHERE bv2.BundleId = bv.BundleId
-	ORDER BY LEN(bv2.Name) DESC, bv2.Name
-)
+JOIN [BundleVersion] bv ON bv.BundleId = b.Id
+JOIN [BundleVersionProperty] bvp ON bvp.BundleVersionId = bv.Id
+WHERE 
+    b.IsDeleted = 0 AND
+    bv.IsDeleted = 0 /* AND
+    bv.Id IN 
+    (
+	    SELECT TOP 2 bv2.Id
+	    FROM BundleVersion bv2
+	    WHERE bv2.BundleId = bv.BundleId
+	    ORDER BY cast('/' + bv2.Name + '/' as hierarchyid
+    ) */
 ORDER by b.OrderIndex
+"
+                , (o, o1, arg3) => new Tuple<Bundle, BundleVersion, BundleVersionProperty>(o, o1, arg3)).ToList();
 
-                ", (b, bv, bvp) =>
-            {
-                Bundle bundle;
+            List<Bundle> bundles = list.GroupBy(
+                        k => k.Item1,
+                        new BundleComparer())
+                    .Select(b =>
+                    {
+                        b.Key.BundleVersions = b
+                                .GroupBy(k => k.Item2, v => v.Item3, new BundleVersionComparer())
+                                .Select(bv =>
+                                {
+                                    bv.Key.Properties = bv.ToList();
+                                    return bv.Key;
+                                }).ToList();
+                        return b.Key;
+                    })
+                    .ToList();
 
-                if (!bundles.TryGetValue(b.Id, out bundle))
-                {
-                    bundles.Add(b.Id, b);
-                    bundle = b;
-                }
 
-                if (bundle.BundleVersions == null)
-                {
-                    bundle.BundleVersions = new List<BundleVersion>();
-                }
-
-                if (bundle.BundleVersions == null)
-                {
-                    bundle.BundleVersions = new List<BundleVersion>();
-                }
-
-                BundleVersion bundleVersion;
-
-                if (!bundleVersions.TryGetValue(bv.Id, out bundleVersion))
-                {
-                    bundleVersions.Add(bv.Id, bv);
-                    bundleVersion = bv;
-                }
-
-                if (bundleVersion.Properties == null)
-                {
-                    bundleVersion.Properties = new List<BundleVersionProperty>();
-                }
-
-                bundleVersion.Properties.Add(bvp);
-
-                return b;
-            }).AsQueryable();
-
-            return bundles.Values.ToList();
+            return bundles;
         }
     }
 }

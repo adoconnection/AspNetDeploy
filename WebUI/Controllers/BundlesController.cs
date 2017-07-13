@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Dapper;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
 using Newtonsoft.Json;
@@ -15,19 +16,23 @@ namespace AspNetDeploy.WebUI.Controllers
     public class BundlesController : AuthorizedAccessController
     {
         private readonly ITaskRunner taskRunner;
+        private readonly BundleRepository bundleRepository;
+        private readonly ProjectRepository projectRepository;
+        private readonly SourceRepository sourceRepository;
+        private readonly PublicationRepository publicationRepository;
 
-        public BundlesController(ILoggingService loggingService, ITaskRunner taskRunner) : base(loggingService)
+        public BundlesController(ILoggingService loggingService, ITaskRunner taskRunner, BundleRepository bundleRepository, ProjectRepository projectRepository, SourceRepository sourceRepository, PublicationRepository publicationRepository) : base(loggingService)
         {
             this.taskRunner = taskRunner;
+            this.bundleRepository = bundleRepository;
+            this.projectRepository = projectRepository;
+            this.sourceRepository = sourceRepository;
+            this.publicationRepository = publicationRepository;
         }
 
         public ActionResult List()
         {
-            List<Bundle> bundles = this.Entities.Bundle
-                .Include("BundleVersions.Properties")
-                .Include("BundleVersions")
-                .OrderBy( b => b.OrderIndex)
-                .ToList();
+            IList<Bundle> bundles = this.bundleRepository.List();
 
             List<Environment> environments = this.Entities.Environment
                 .Include("NextEnvironment")
@@ -35,10 +40,21 @@ namespace AspNetDeploy.WebUI.Controllers
 
             int[] array = bundles.SelectMany( b => b.BundleVersions).Select( bv => bv.Id).Distinct().ToArray();
 
-            List<ProjectVersion> projectVersions = this.Entities.ProjectVersion.Include("BundleVersions").Where( pv => array.Contains(pv.Id)).ToList();
+            IDictionary<int, List<int>> bundleVersionProjects = this.projectRepository.ListBundleVersionProjects(array);
 
-            this.ViewBag.Environments = environments;
+            IList<ProjectVersion> projectVersions = projectRepository.ListForBundles(array);
+            IList<Publication> publications = this.publicationRepository.ListForBundles(array);
 
+            IDictionary<SourceControlVersion, SourceControl> sourceControls = new Dictionary<SourceControlVersion, SourceControl>();
+
+            foreach (SourceControl sourceControl in this.sourceRepository.List())
+            {
+                foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
+                {
+                    sourceControls.Add(sourceControlVersion, sourceControl);
+                }
+            }
+                
             this.ViewBag.Bundles = bundles.Select( b => new BundleInfo
             {
                 Bundle = b,
@@ -52,10 +68,23 @@ namespace AspNetDeploy.WebUI.Controllers
                         {
                             BundleVersion = bv,
                             State = this.taskRunner.GetBundleState(b.Id),
-                            ProjectsVersionsInfo = projectVersions.Where( pv => pv.BundleVersions.Any( bbv => bbv.Id == bv.Id)).Select(pv => new ProjectVersionInfo
-                            {
-                                ProjectVersion = pv,
-                            }).ToList()
+                            ProjectsVersionsInfo = bundleVersionProjects.ContainsKey(bv.Id) 
+                                ? bundleVersionProjects[bv.Id]
+                                    .Select(pvId =>
+                                        {
+                                            ProjectVersion projectVersion = projectVersions.FirstOrDefault(pv => pv.Id == pvId);
+                                            SourceControlVersion version = sourceControls.Keys.FirstOrDefault(scv => scv.Id == projectVersion.SourceControlVersionId);
+
+                                            return new ProjectVersionInfo
+                                            {
+                                                ProjectVersion = projectVersion,
+                                                SourceControlVersion = version,
+                                                SourceControl = sourceControls[version]
+                                            };
+                                        })
+                                    .ToList() 
+                                : new List<ProjectVersionInfo>(),
+                            Publications = publications.Where( p => p.Package.BundleVersionId == bv.Id).GroupBy( p => p.Environment.Id).ToDictionary( k => k.Key, v => v.ToList())
                         };
 
                         bundleVersionInfo.Environments = new List<Environment>();

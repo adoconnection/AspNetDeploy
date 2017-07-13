@@ -1500,6 +1500,7 @@
           <Member Name="Test" Value="64" />
           <Member Name="WindowsApplication" Value="128" />
           <Member Name="ZipArchive" Value="256" />
+          <Member Name="GulpFile" Value="512" />
         </EnumType>
         <EnumType Name="DeploymentStepType">
           <Member Name="Undefined" Value="0" />

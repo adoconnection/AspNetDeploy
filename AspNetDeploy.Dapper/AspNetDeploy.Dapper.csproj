@@ -49,6 +49,7 @@
     <Compile Include="DapperDataContext.cs" />
     <Compile Include="ProjectRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicationRepository.cs" />
     <Compile Include="SourceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
