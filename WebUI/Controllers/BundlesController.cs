@@ -47,7 +47,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             IDictionary<SourceControlVersion, SourceControl> sourceControls = new Dictionary<SourceControlVersion, SourceControl>();
 
-            foreach (SourceControl sourceControl in this.sourceRepository.List())
+            foreach (SourceControl sourceControl in this.sourceRepository.List(excludeArchived: false))
             {
                 foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions)
                 {

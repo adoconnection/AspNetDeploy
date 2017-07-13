@@ -15,7 +15,7 @@ namespace AspNetDeploy.Dapper
             this.dataContext = (DapperDataContext)dataContext;
         }
 
-        public IList<SourceControl> List()
+        public IList<SourceControl> List(bool excludeArchived = true)
         {
             Dictionary<int, SourceControl> sourceControlLookup = new Dictionary<int, SourceControl>();
 
@@ -35,6 +35,8 @@ namespace AspNetDeploy.Dapper
                         scv.IsArchivedId AS ArchiveState
                     FROM SourceControl sc
                     INNER JOIN SourceControlVersion scv ON sc.Id = scv.SourceControlId
+                    WHERE 
+                        (@excludeArchived = 0 OR (scv.IsArchivedId <> 2 AND @excludeArchived = 1))
                 ", (sc, scv) =>
                 {
                     SourceControl sourceControl;
@@ -52,6 +54,10 @@ namespace AspNetDeploy.Dapper
                     sourceControl.SourceControlVersions.Add(scv);
 
                     return sc;
+                },
+                new
+                {
+                    excludeArchived
                 }).AsQueryable();
 
             return sourceControlLookup.Values.ToList();
