@@ -32,7 +32,16 @@ namespace AspNetDeploy.Dapper
                     JOIN Environment e ON e.Id = pub.EnvironmentId
                     JOIN Package pack ON pack.Id = pub.PackageId
                     WHERE 
-                        pack.BundleVersionId IN @bundleVersionIds
+                        pack.BundleVersionId IN @bundleVersionIds AND
+	                    pub.CreatedDate = 
+						(
+							SELECT MAX(pub2.createdDate)
+	                        FROM Publication pub2
+		                    JOIN Package pack2 ON pack2.Id = pub2.PackageId
+	                        WHERE 
+			                    pub2.EnvironmentId = pub.EnvironmentId AND 
+			                    pack2.BundleVersionId = pack.BundleVersionId
+	                    )
                 ", (pub, e, pack) =>
                 {
 
