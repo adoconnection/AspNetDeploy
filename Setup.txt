@@ -1,7 +1,8 @@
 1. Bind SSL to PORT:
 ----------------------------------
 RUN:
-netsh http add sslcert ipport=0.0.0.0:8090 certhash=111fdaf48275953db528be89fac8f0324c735297 appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc}
+netsh http delete sslcert ipport=0.0.0.0:8090
+netsh http add sslcert ipport=0.0.0.0:8090 certhash=c081009e081d5bdaf4b1b5a5b0df6f97e69e4522 appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc}
 
 where 
 appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc} - random guid, use this

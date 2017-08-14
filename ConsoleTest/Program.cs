@@ -67,7 +67,7 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
-
+            /*
             GulpParser gulpParser = new GulpParser(@"H:\Documentoved\Resources");
 
             gulpParser.LoadProjects();
@@ -78,8 +78,8 @@ namespace ConsoleTest
 
 
             return;
-
-
+            */
+            /*
             dynamic bindingConfig = JsonConvert.DeserializeObject("{ port:80, host:'abc.local'}");
 
             using (ServerManager serverManager = new ServerManager())
@@ -95,6 +95,7 @@ namespace ConsoleTest
             }
 
             return;
+            */
 
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
@@ -160,11 +161,11 @@ namespace ConsoleTest
             ProjectVersion projectVersion = new ProjectVersion()
             {
                // ProjectFile = @"ZelbikeRace2Database\ZelbikeRace2Database.sqlproj",
-                ProjectFile = @"Databases.WidgetApi\Databases.WidgetApi.sqlproj",
-                SolutionFile = @"Documentoved.sln"
+                ProjectFile = @"SSO.WebUI\SSO.WebUI.csproj",
+                SolutionFile = @"SSO.sln"
             };
 
-            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\5\140", projectVersion,
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\13\200", projectVersion,
                 s =>
                 {
                     if (startDate == null)

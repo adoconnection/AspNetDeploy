@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MSBuildBuildService.cs" />
+    <Compile Include="MSBuildException.cs" />
     <Compile Include="MSBuildLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

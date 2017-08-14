@@ -16,7 +16,7 @@ namespace BuildServices.Gulp
             this.npmPackageManager = new NpmPackageManager(pathServices);
         }
 
-        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
+        public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, Exception> errorLogger)
         {
             string targetFile = Path.Combine(sourcesFolder, projectVersion.ProjectFile);
 
@@ -54,7 +54,11 @@ namespace BuildServices.Gulp
             }
             catch (Exception ex)
             {
-                errorLogger(targetFile, "Message: " + ex.Message);
+                GulpException exception = new GulpException("Build failed", ex);
+                exception.Data.Add("sourcesFolder", sourcesFolder);
+                exception.Data.Add("targetFile", targetFile);
+
+                errorLogger(targetFile, exception);
                 projectBuildComplete(targetFile, false, ex.Message);
 
                 return new BuildSolutionResult()

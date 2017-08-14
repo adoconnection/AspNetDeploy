@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Microsoft.Build.Framework;
 
 namespace AspNetDeploy.BuildServices.MSBuild
@@ -8,11 +7,11 @@ namespace AspNetDeploy.BuildServices.MSBuild
     {
         private readonly Action<string> projectBuildStarted;
         private readonly Action<string, bool, string> projectBuildComplete;
-        private readonly Action<string, string> errorLogger;
+        private readonly Action<string, Exception> errorLogger;
         public LoggerVerbosity Verbosity { get; set; }
         public string Parameters { get; set; }
 
-        public MSBuildLogger(Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, string> errorLogger)
+        public MSBuildLogger(Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, Exception> errorLogger)
         {
             this.projectBuildStarted = projectBuildStarted;
             this.projectBuildComplete = projectBuildComplete;
@@ -39,7 +38,15 @@ namespace AspNetDeploy.BuildServices.MSBuild
                 return;
             }
 
-            this.errorLogger(e.ProjectFile, string.Format("File: {0}, code: {1}, lineNumber: {2}, columnNumber: {3}, message: {4}", e.File, e.Code, e.LineNumber, e.ColumnNumber, e.Message));
+            MSBuildException buildException = new MSBuildException("Build error");
+            buildException.Data.Add("File", e.File);
+            buildException.Data.Add("Code", e.Code);
+            buildException.Data.Add("LineNumber", e.LineNumber);
+            buildException.Data.Add("ColumnNumber", e.ColumnNumber);
+            buildException.Data.Add("Message", e.Message);
+
+
+            this.errorLogger(e.ProjectFile, buildException);
         }
 
         private void EventSourceOnProjectStarted(object sender, ProjectStartedEventArgs projectStartedEventArgs)
