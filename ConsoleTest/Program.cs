@@ -97,8 +97,6 @@ namespace ConsoleTest
             return;
             */
 
-            AspNetDeployEntities entities = new AspNetDeployEntities();
-
 
             /*
 
@@ -161,11 +159,13 @@ namespace ConsoleTest
             ProjectVersion projectVersion = new ProjectVersion()
             {
                // ProjectFile = @"ZelbikeRace2Database\ZelbikeRace2Database.sqlproj",
-                ProjectFile = @"SSO.WebUI\SSO.WebUI.csproj",
-                SolutionFile = @"SSO.sln"
+                ProjectFile = @"Services.Accounts\Services.Accounts.csproj",
+                SolutionFile = @"Documentoved.sln"
             };
 
-            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\13\200", projectVersion,
+            Console.WriteLine("Starting");
+
+            BuildSolutionResult buildSolutionResult = buildBuildService.Build(@"C:\AspNetDeployWorkingFolderO\Sources\5\207", projectVersion,
                 s =>
                 {
                     if (startDate == null)

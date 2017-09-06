@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using AspNetDeploy.Contracts;
 
@@ -26,6 +27,8 @@ namespace BuildServices.NuGet
                 solutionFile);
 
             process.Start();
+
+            process.StandardOutput.ReadToEnd();
 
             process.WaitForExit();
         }
