@@ -12,6 +12,7 @@ Features
 * Builtin monitoring
 * Automatic VS projects recognition
 * Websites, file packages, MSSQL DACPAC updates etc.
+* Environment variables
 
 Sources
 ============
