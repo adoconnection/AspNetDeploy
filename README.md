@@ -1,7 +1,7 @@
 AspNetDeploy ![Sources](http://ad-resources.personal.ado.me.uk/vs-loading-colored-24.gif)
 ============
 
-CI + deploy service for ASP.NET applications
+CI + deploy service for ASP.NET 4.5+ applications
 
 Features
 ============
