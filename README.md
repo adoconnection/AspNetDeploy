@@ -16,12 +16,15 @@ Features
 
 Sources
 ============
+Here you manage all your source code sources.
+AspNetDeploy will analyze your sources, split it on separate projects and make them ready to be deployed.
 
 ![Sources](http://ad-resources.personal.ado.me.uk/sources-list.PNG)
 
 
 Bundles
 ============
+Bunbles is a way you publish projects. One bundle is a set of projects to be deployed at once.
 
 ![Bundles](http://ad-resources.personal.ado.me.uk/bundles-list.PNG)
 
@@ -32,6 +35,14 @@ Bundles
 
 Environments
 ============
+Environments is a list of destinations where you deploy your bundles. Environments are linked together. 
+Once you pushed bundle to Test environment you can now push it further to Staging etc.
 
 ![Environments](http://ad-resources.personal.ado.me.uk/environments-list.PNG)
+
+Available roles
+* Developers
+* Testers
+* Publishers
+
 ![Approve](http://ad-resources.personal.ado.me.uk/publications-approvement.PNG)
