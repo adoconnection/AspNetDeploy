@@ -11,6 +11,7 @@ Features
 * Build and deploy service in one box
 * Builtin monitoring
 * Automatic VS projects recognition
+* Websites, file packages, MSSQL DACPAC updates etc.
 
 Sources
 ============
