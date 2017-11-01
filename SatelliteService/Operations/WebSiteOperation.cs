@@ -126,8 +126,12 @@ namespace SatelliteService.Operations
 
             if (site == null)
             {
+                long nextId = serverManager.Sites.Count == 0
+                    ? 1
+                    : serverManager.Sites.Max(s => s.Id) + 1;
+
                 site = serverManager.Sites.CreateElement();
-                site.Id = serverManager.Sites.Max(s => s.Id) + 1;
+                site.Id = nextId;
                 site.Name = siteName;
                 serverManager.Sites.Add(site);
             }
