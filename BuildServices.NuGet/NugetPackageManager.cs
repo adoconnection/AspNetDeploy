@@ -28,9 +28,17 @@ namespace BuildServices.NuGet
 
             process.Start();
 
-            process.StandardOutput.ReadToEnd();
+            string output = process.StandardOutput.ReadToEnd();
 
             process.WaitForExit();
+
+            if (process.ExitCode != 0)
+            {
+                NugetException exception = new NugetException("Nuget returned: " + process.ExitCode);
+                exception.Data.Add("Output", output);
+
+                throw exception;
+            }
         }
 
         public void RestoreProjectPackages(string projectFile, string solutionDirectory)
