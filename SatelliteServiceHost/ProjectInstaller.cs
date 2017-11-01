@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceProcess;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 using Microsoft.Win32;
@@ -194,9 +195,22 @@ namespace SatelliteServiceHost
 
             foreach (X509Certificate2 certificate in store.Certificates.Cast<X509Certificate2>())
             {
-                if (certificate.NotBefore > DateTime.UtcNow || certificate.NotAfter < DateTime.UtcNow)
+                if (certificate.NotBefore > DateTime.Now || certificate.NotAfter < DateTime.Now)
                 {
                     continue;
+                }
+
+
+                Regex regex = new Regex(@"CN=(?<val>[^;,\s\n\r]+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+
+                if (!string.IsNullOrWhiteSpace(certificate.Subject))
+                {
+                    Match match = regex.Match(certificate.Subject);
+
+                    if (match.Success && !string.IsNullOrWhiteSpace(match.Groups["val"].Value) && hostName.EndsWith(match.Groups["val"].Value, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return certificate;
+                    }
                 }
 
                 foreach (X509Extension extension in certificate.Extensions)
