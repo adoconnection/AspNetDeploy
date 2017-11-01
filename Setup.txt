@@ -8,11 +8,14 @@ where
 appid={2f244ac1-9d8d-45d8-b46b-8ba79a326ebc} - random guid, use this
 certhash=111fdaf48275953db528be89fac8f0324c735297 - hash of your SSL cert to use, you can find one in SSL cert properties
 
+
 2. Register satellite as a service
 ----------------------------------
 RUN:
+sc stop "AspNetDeploy Satellite"
+sc delete "AspNetDeploy Satellite"
 sc create "AspNetDeploy Satellite" binpath= "D:\Services\AspNetDeploySatellite\Service\SatelliteServiceHost.exe"
 
 
 3. Fill APP.CONFIG with valid data
-No nice GUI yet :(
+----------------------------------
