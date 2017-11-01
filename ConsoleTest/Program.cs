@@ -172,6 +172,8 @@ namespace ConsoleTest
                     {
                         startDate = DateTime.Now;
                     }
+
+                    Console.WriteLine(s + " - started" );
                 },
                 (s, b, arg3) =>
                 {
@@ -181,6 +183,7 @@ namespace ConsoleTest
                 {
                     // e.ProjectFile, e.File, e.Code, e.LineNumber, e.ColumnNumber, e.Message
                     Console.WriteLine(s + "\n" + s1);
+                    Console.WriteLine(s1.Message + "\n" + s1);
                 });
 
             DateTime endDate = DateTime.Now;

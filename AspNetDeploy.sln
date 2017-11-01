@@ -147,6 +147,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServices.Npm", "BuildS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetDeploy.Dapper", "AspNetDeploy.Dapper\AspNetDeploy.Dapper.csproj", "{242360D1-F2EC-4451-B3F5-C8F6F639657B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Variables.Tests", "Variables.Tests\Variables.Tests.csproj", "{EF1DAE56-4215-4BE9-AD4B-3DB304D319EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Setup", "4. Setup", "{0ED84DA0-02FA-42DC-BCDE-61512AAD508A}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SatelliteServiceHost.Setup", "SatelliteServiceHost.Setup\SatelliteServiceHost.Setup.vdproj", "{CC13C43D-EAFB-4C5F-9D69-F235DACDCF46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -357,6 +363,12 @@ Global
 		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{242360D1-F2EC-4451-B3F5-C8F6F639657B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1DAE56-4215-4BE9-AD4B-3DB304D319EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1DAE56-4215-4BE9-AD4B-3DB304D319EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1DAE56-4215-4BE9-AD4B-3DB304D319EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1DAE56-4215-4BE9-AD4B-3DB304D319EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC13C43D-EAFB-4C5F-9D69-F235DACDCF46}.Debug|Any CPU.ActiveCfg = Debug
+		{CC13C43D-EAFB-4C5F-9D69-F235DACDCF46}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -426,6 +438,9 @@ Global
 		{C03F2436-D1E1-4A0A-83A3-D7E5683AC3AB} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
 		{7F2A5635-44AC-460D-9CCA-CFB3C8344A12} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
 		{242360D1-F2EC-4451-B3F5-C8F6F639657B} = {BCD681B9-D4C5-4DF3-87CB-80CA4FCC45EC}
+		{EF1DAE56-4215-4BE9-AD4B-3DB304D319EA} = {6083A989-2E29-42A7-B124-8077AE3A2DEE}
+		{0ED84DA0-02FA-42DC-BCDE-61512AAD508A} = {998D1C30-5AE8-434D-A602-E6670066118C}
+		{CC13C43D-EAFB-4C5F-9D69-F235DACDCF46} = {0ED84DA0-02FA-42DC-BCDE-61512AAD508A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
