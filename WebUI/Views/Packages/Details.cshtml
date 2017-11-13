@@ -114,9 +114,11 @@
                 }
                 else
                 {
+                    bool isFeature = package.BundleVersion.GetBoolProperty("IsFeature"); // ishead means the same as isfeature
+
                     bool isApprovedForDeploy = environment.PreviousEnvironment.Count == 0 || environment.PreviousEnvironment.Any(pe => pe.ApprovedPackages.Any(p => p.Package == package));
-                    bool isEligableForDeploy = (!package.BundleVersion.IsHead || environment.GetBoolProperty("AllowTestDeployment"));
-                    
+                    bool isEligableForDeploy = (!package.BundleVersion.IsHead && !isFeature) || environment.GetBoolProperty("AllowTestDeployment");
+
                     if (isApprovedForDeploy && isEligableForDeploy)
                     {
                         <a class="btn btn-default" href="@Url.Action("Schedule", new {id = package.Id, environmentId = environment.Id})">

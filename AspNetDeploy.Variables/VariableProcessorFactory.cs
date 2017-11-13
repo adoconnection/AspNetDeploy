@@ -94,8 +94,11 @@ namespace AspNetDeploy.Variables
             IDictionary<string, string> environmentDictionary = new Dictionary<string, string>();
 
             environmentDictionary.Add("version", bundleVersion.Name);
+
             environmentDictionary.Add("year", DateTime.Now.Year.ToString());
-            environmentDictionary.Add("previousversion",  bundleVersion.ParentBundleVersion != null  ? bundleVersion.ParentBundleVersion.Name : "");
+
+            environmentDictionary.Add("version.previous", bundleVersion.ParentBundleVersion != null ? bundleVersion.ParentBundleVersion.Name : "");
+            environmentDictionary.Add("previousversion",  bundleVersion.ParentBundleVersion != null ? bundleVersion.ParentBundleVersion.Name : "");
 
             environmentDictionary.Add("bundle", bundleVersion.Bundle.Name);
             return environmentDictionary;

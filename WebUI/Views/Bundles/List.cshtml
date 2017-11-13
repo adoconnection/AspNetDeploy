@@ -19,12 +19,19 @@
 
         foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo)
         {
+            bool isFeature = bundleVersionInfo.BundleVersion.GetBoolProperty("IsFeature");
+
             <h3>
                 @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionPackages", new { id = bundleVersionInfo.BundleVersion.Id })
 
                 @if (bundleVersionInfo.BundleVersion.IsHead)
                 {
                     <small>Head</small>
+                }
+
+                @if (isFeature)
+                {
+                    <small>/ Feature</small>
                 }
 
                 @if (bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
@@ -87,6 +94,13 @@
                     
                     @foreach (Environment environment in bundleVersionInfo.Environments)
                     {
+                        bool isTest = environment.GetBoolProperty("AllowTestDeployment", true);
+
+                        if (isFeature && !isTest)
+                        {
+                            continue;
+                        }
+
                         <div class="col-xs-4 col-sm-3">
                             <div>
                                 @environment.Name
