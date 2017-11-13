@@ -46,3 +46,9 @@ Available roles
 * Publishers
 
 ![Approve](http://ad-resources.personal.ado.me.uk/publications-approvement.PNG)
+
+Satellite setup
+============
+Satellite listens for AspNetDeploy commands over secure connection and apply chenges to current server
+![satellite setup](http://ad-resources.personal.ado.me.uk/satellite-config.PNG)
+
