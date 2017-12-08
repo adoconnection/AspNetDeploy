@@ -53,6 +53,13 @@ namespace AspNetDeploy.ContinuousIntegration
                    
                     IProjectPackager projectPackager = projectPackagerFactory.Create(projectVersion.ProjectType);
 
+                    if (projectPackager == null) // no need to package
+                    {
+                        projectVersion.SetStringProperty("LastPackageDuration", "0");
+                        entities.SaveChanges();
+                        continue;
+                    }
+
                     if (!File.Exists(projectPackagePath))
                     {
                         DateTime packageStartDate = DateTime.UtcNow;

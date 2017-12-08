@@ -145,9 +145,17 @@
       <Project>{87C8F2EC-BA8B-4EFF-A320-23AFBD070738}</Project>
       <Name>SatelliteService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestRunners\TestRunners.csproj">
+      <Project>{5D8F0748-EB61-4C0B-9019-D695CA57C9E7}</Project>
+      <Name>TestRunners</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ThreadHostedTaskRunner\ThreadHostedTaskRunner.csproj">
       <Project>{940D1369-A1DA-4025-A9C4-64A760891626}</Project>
       <Name>ThreadHostedTaskRunner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VsTestLibrary\VsTestLibrary.csproj">
+      <Project>{30CE4242-159E-4F76-8DB2-ECC83303D7E1}</Project>
+      <Name>VsTestLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebUI.Bootstrapper\WebUI.Bootstrapper.csproj">
       <Project>{4B65D3BA-D8F5-4ED6-86C0-D57202444EEC}</Project>

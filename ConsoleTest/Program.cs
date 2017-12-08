@@ -27,6 +27,8 @@ using Newtonsoft.Json;
 using Packagers.Gulp;
 using Projects.Gulp;
 using SatelliteService.Operations;
+using TestRunners;
+using VsTestLibrary;
 using Environment = AspNetDeploy.Model.Environment;
 
 namespace ConsoleTest
@@ -67,6 +69,61 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+
+            VariableProcessorFactory variableProcessorFactory = new VariableProcessorFactory();
+            ProjectTestRunnerFactory projectTestRunnerFactory = new ProjectTestRunnerFactory(new PathServices());
+
+            IVariableProcessor variableProcessor = variableProcessorFactory.Create(278, 9);
+
+            AspNetDeployEntities entities = new AspNetDeployEntities();
+            ProjectVersion projectVersion2 = entities.ProjectVersion.Include("SourceControlVersion").First( v => v.Id == 14746);
+
+
+            IProjectTestRunner projectTestRunner = projectTestRunnerFactory.Create(projectVersion2.ProjectType, variableProcessor);
+
+            IList<TestResult> testResults = projectTestRunner.Run(projectVersion2);
+
+            /*
+
+            VsTestParser parser = new VsTestParser();
+            IList<VsTestClassInfo> testClasses = parser.Parse(@"H:\AspNetDeploy\Variables.Tests\bin\Debug\Variables.Tests.dll");
+
+            Dictionary<string, string> dictionary = new Dictionary<string, string>()
+            {
+                {"nick", "shade"}
+            };
+
+            foreach (VsTestClassInfo testClass in testClasses)
+            {
+                VsTestRunner runner = new VsTestRunner();
+
+                Console.WriteLine(testClass.Type.FullName);
+
+                foreach (string testMethod in testClass.TestMethods)
+                {
+                    VsTestRunResult vsTestRunResult = runner.Run(testClass.Type, testClass.InitializeMethod, testMethod, testClass.CleanupMethod, s => dictionary[s]);
+
+                    if (vsTestRunResult.IsSuccess)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("PASS");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine(" - " + testMethod);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("FAIL");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine(" - " + testMethod + " - " + vsTestRunResult.Exception?.Message);
+                    }
+                }
+            }*/
+
+            Console.WriteLine("DONE");
+            Console.ReadKey();
+
+
             /*
             GulpParser gulpParser = new GulpParser(@"H:\Documentoved\Resources");
 

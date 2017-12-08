@@ -50,6 +50,9 @@
     <p>
         <a href="@Url.Action("AddStep", new { id = bundleVersion.Id, deploymentStepType = DeploymentStepType.DeployDacpac })" class="btn btn-default btn-lg">Dacpac deployment step</a>
     </p>
+    <p>
+        <a href="@Url.Action("AddStep", new { id = bundleVersion.Id, deploymentStepType = DeploymentStepType.RunVsTests })" class="btn btn-default btn-lg">Run Visual Studio tests step</a>
+    </p>
     
 
 </div>

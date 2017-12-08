@@ -81,8 +81,17 @@
             case DeploymentStepType.DeployDacpac:
             @RenderDacpacStep(bundleVersion, deploymentStep, stepCounter)
                 break;
+
+            case DeploymentStepType.RunVsTests:
+            @RenderRunVsTestsStep(bundleVersion, deploymentStep, stepCounter)
+                break;
+
+            default:
+                <div>Unknown step</div>
+                break;
         }
-        
+
+
         <br/>
     }
 }
@@ -90,7 +99,7 @@
 @helper RenderControlButtons(BundleVersion bundleVersion, DeploymentStep deploymentStep)
 {
     if (this.ViewBag.AllowedActions.Contains(UserRoleAction.DeploymentChangeSteps))
-    {
+            {
          <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
              <img src="~/Resources/Layout/Images/Icons/up16.png" />
          </a>
@@ -158,6 +167,37 @@
                         <span>not set</span>
                     }
                 </li>
+            </ul>
+        </div>
+    </div>
+}
+
+@helper RenderRunVsTestsStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
+{
+    ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
+
+    <h3>
+        <div class="row">
+            <div class="col-sm-7">
+                @(stepCounter). Run Tests: @deploymentStep.GetStringProperty("Step.Title") <small>Tests</small>
+            </div>
+            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+        </div>
+    </h3>
+    <div class="row text-muted">
+        <div class="col-md-6">
+            <ul>
+                <li>Roles:
+                                
+                    @foreach (MachineRole role in deploymentStep.MachineRoles)
+                    {
+                        <span class="label label-default">@role.Name</span>
+                    }
+                </li>
+                <li>Project: @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
+                <li>Stop on failure: @deploymentStep.GetStringProperty("StopOnFailure")</li>
+                <li>Filters: @deploymentStep.GetStringProperty("FiltersJson")</li>
+                 
             </ul>
         </div>
     </div>

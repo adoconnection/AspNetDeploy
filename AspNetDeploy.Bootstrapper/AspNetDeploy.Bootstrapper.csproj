@@ -99,6 +99,10 @@
       <Project>{35A84719-3B24-4D84-B632-B741AB9607BD}</Project>
       <Name>Packagers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestRunners\TestRunners.csproj">
+      <Project>{5D8F0748-EB61-4C0B-9019-D695CA57C9E7}</Project>
+      <Name>TestRunners</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ThreadHostedTaskRunner\ThreadHostedTaskRunner.csproj">
       <Project>{940D1369-A1DA-4025-A9C4-64A760891626}</Project>
       <Name>ThreadHostedTaskRunner</Name>

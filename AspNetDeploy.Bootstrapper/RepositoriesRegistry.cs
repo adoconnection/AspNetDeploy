@@ -11,6 +11,7 @@ using BuildServices.NuGet;
 using LocalEnvironment;
 using ObjectFactory;
 using Packagers;
+using TestRunners;
 using ThreadHostedTaskRunner;
 
 namespace AspNetDeploy.Bootstrapper
@@ -28,6 +29,7 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<IProjectPackagerFactory, ProjectPackagerFactory>(LifecycleType.Application);
             this.Map<IPathServices, PathServices>(LifecycleType.Application);
             this.Map<IDeploymentAgentFactory, DeploymentAgentFactory>(LifecycleType.Application);
+            this.Map<IProjectTestRunnerFactory, ProjectTestRunnerFactory>(LifecycleType.Application);
             this.Map<IVariableProcessorFactory, VariableProcessorFactory>();
             this.Map<ISatelliteMonitor, SatelliteMonitor>();
             this.Map<IProjectParsingService, ProjectParsingService>();

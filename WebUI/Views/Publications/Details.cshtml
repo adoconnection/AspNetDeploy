@@ -90,6 +90,14 @@
                                 case DeploymentStepType.UpdateHostsFile:
                                     <span>Update hosts</span>
                                     break;
+
+                                case DeploymentStepType.RunVsTests:
+                                    <span>Run tests</span>
+                                    break;
+
+                                default:
+                                    <span>Unknown step</span>
+                                    break;
                             }
                       
                             @switch (deploymentStep.Type)

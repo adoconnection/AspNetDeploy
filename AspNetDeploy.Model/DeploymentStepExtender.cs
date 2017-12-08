@@ -18,6 +18,18 @@ namespace AspNetDeploy.Model
             return int.Parse(stringProperty);
         }
 
+        public bool GetBoolProperty(string key, bool defaultValue = false)
+        {
+            string stringProperty = this.GetStringProperty(key);
+
+            if (string.IsNullOrEmpty(stringProperty))
+            {
+                return defaultValue;
+            }
+
+            return bool.Parse(stringProperty);
+        }
+
         public dynamic GetDynamicProperty(string key)
         {
             string stringProperty = this.GetStringProperty(key);

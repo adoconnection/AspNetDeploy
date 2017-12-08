@@ -233,6 +233,7 @@
     <Compile Include="Models\DeploymentSteps\DeploymentStepEditModelFactory.cs" />
     <Compile Include="Models\DeploymentSteps\HostsDeploymentStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\ProjectRelatedDeploymentStepModel.cs" />
+    <Compile Include="Models\DeploymentSteps\RunVsTestStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\SqlScriptDeploymentStepModel.cs" />
     <Compile Include="Models\EditNewSvnVersion.cs" />
     <Compile Include="Models\Setup\ConnectionStringStepModel.cs" />
@@ -307,6 +308,7 @@
     <Content Include="Views\Setup\WorkingFolder.cshtml" />
     <Content Include="Views\Sources\AddSvn.cshtml" />
     <Content Include="Views\Bundles\VersionVariables.cshtml" />
+    <Content Include="Views\BundleVersionDeployment\EditRunTestStep.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

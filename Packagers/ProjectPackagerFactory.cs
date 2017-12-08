@@ -36,7 +36,13 @@ namespace Packagers
                 return new GulpProjectPackager();
             }
 
+            if (projectType.HasFlag(ProjectType.Test))
+            {
+                return null;
+            }
+
             throw new AspNetDeployException("Project type is not supported: " + projectType);
         }
     }
+
 }

@@ -178,6 +178,27 @@ namespace AspNetDeploy.WebUI.Controllers
 
                 return this.View("EditConfigStep", model);
             }
+
+            if (deploymentStepType == DeploymentStepType.RunVsTests)
+            {
+                this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
+                        .SelectMany(scv => scv.ProjectVersions)
+                        .Where(pv => pv.ProjectType.HasFlag(ProjectType.Test) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                        .Select(pv => new SelectListItem
+                        {
+                            Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
+                            Value = pv.Id.ToString()
+                        })
+                        .OrderBy(sli => sli.Text)
+                        .ToList();
+
+                RunVsTestStepModel model = new RunVsTestStepModel
+                {
+                    BundleVersionId = bundleVersion.Id
+                };
+
+                return this.View("EditRunTestStep", model);
+            }
             
             throw new AspNetDeployException("Invalid deployment step type");
         }
@@ -330,6 +351,34 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("EditDacpacStep", model);
             }
 
+            if (deploymentStep.Type == DeploymentStepType.RunVsTests)
+            {
+                RunVsTestStepModel model = new RunVsTestStepModel
+                {
+                    OrderIndex = deploymentStep.OrderIndex,
+                    BundleVersionId = deploymentStep.BundleVersionId,
+                    DeploymentStepId = deploymentStepId,
+                    Roles = string.Join(", ", deploymentStep.MachineRoles.Select(mr => mr.Name)),
+                    StepTitle = deploymentStep.GetStringProperty("Step.Title"),
+                    ProjectId = deploymentStep.GetIntProperty("ProjectId"),
+                    FiltersJson = deploymentStep.GetStringProperty("FiltersJson"),
+                    StopOnFailure = deploymentStep.GetBoolProperty("StopOnFailure")
+                };
+
+                this.ViewBag.ProjectsSelect = this.Entities.SourceControlVersion
+                    .SelectMany(scv => scv.ProjectVersions)
+                    .Where(pv => pv.ProjectType.HasFlag(ProjectType.Test) && !pv.Project.Properties.Any(p => p.Key == "NotForDeployment" && p.Value == "true"))
+                    .Select(pv => new SelectListItem
+                    {
+                        Text = pv.SourceControlVersion.SourceControl.Name + " / " + pv.SourceControlVersion.Name + " / " + pv.Name,
+                        Value = pv.Id.ToString()
+                    })
+                    .OrderBy(sli => sli.Text)
+                    .ToList();
+
+                return this.View("EditRunTestStep", model);
+            }
+
             return this.Content("Unsupported step type");
         }
 
@@ -475,6 +524,33 @@ namespace AspNetDeploy.WebUI.Controllers
             deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
             deploymentStep.SetStringProperty("DestinationPath", model.Destination);
             deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfigurationJson);
+            deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
+
+            this.UpdateProjectReference(model, deploymentStep);
+
+            this.SaveRoles(model, deploymentStep);
+
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("VersionDeployment", "Bundles", new {id = deploymentStep.BundleVersionId});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveRunVsTestsStep(RunVsTestStepModel model)
+        {
+            this.CheckPermission(UserRoleAction.DeploymentChangeSteps);
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("EditRunTestStep", model);
+            }
+
+            DeploymentStep deploymentStep = this.GetDeploymentStep(model, DeploymentStepType.RunVsTests);
+
+            deploymentStep.SetStringProperty("Step.Title", model.StepTitle);
+            deploymentStep.SetStringProperty("FiltersJson", model.FiltersJson);
+            deploymentStep.SetStringProperty("StopOnFailure", model.StopOnFailure.ToString());
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
 
             this.UpdateProjectReference(model, deploymentStep);

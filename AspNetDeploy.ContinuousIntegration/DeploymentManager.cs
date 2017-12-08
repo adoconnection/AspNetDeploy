@@ -12,13 +12,16 @@ namespace AspNetDeploy.ContinuousIntegration
     {
         private readonly IPathServices pathServices;
         private readonly IDeploymentAgentFactory deploymentAgentFactory;
+        private readonly IProjectTestRunnerFactory projectTestRunnerFactory;
+        private readonly IVariableProcessorFactory variableProcessorFactory;
 
-        public DeploymentManager(IPathServices pathServices, IDeploymentAgentFactory deploymentAgentFactory)
+        public DeploymentManager(IPathServices pathServices, IDeploymentAgentFactory deploymentAgentFactory, IProjectTestRunnerFactory projectTestRunnerFactory, IVariableProcessorFactory variableProcessorFactory)
         {
             this.pathServices = pathServices;
             this.deploymentAgentFactory = deploymentAgentFactory;
+            this.projectTestRunnerFactory = projectTestRunnerFactory;
+            this.variableProcessorFactory = variableProcessorFactory;
         }
-
 
         public void Deploy(int publicationId, Action<int> machineDeploymentStarted, Action<int, bool> machineDeploymentComplete)
         {
@@ -26,6 +29,8 @@ namespace AspNetDeploy.ContinuousIntegration
 
             Publication publication = entities.Publication
                 .Include("Package.BundleVersion.Properties")
+                .Include("Package.BundleVersion.ProjectVersions")
+                .Include("Package.BundleVersion.ProjectVersions.SourceControlVersion")
                 .Include("Package.BundleVersion.DeploymentSteps.Properties")
                 .Include("Package.BundleVersion.DeploymentSteps.MachineRoles")
                 .Include("Environment.Properties")
@@ -85,6 +90,12 @@ namespace AspNetDeploy.ContinuousIntegration
 
                     foreach (DeploymentStep deploymentStep in machineDeploymentSteps)
                     {
+                        if (deploymentStep.Type == DeploymentStepType.RunVsTests)
+                        {
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguringComplete);
+                            continue;
+                        }
+
                         try
                         {
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepConfiguring);
@@ -103,6 +114,42 @@ namespace AspNetDeploy.ContinuousIntegration
 
                     foreach (DeploymentStep deploymentStep in machineDeploymentSteps)
                     {
+                        if (deploymentStep.Type == DeploymentStepType.RunVsTests)
+                        {
+                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecuting);
+
+                            IVariableProcessor variableProcessor = this.variableProcessorFactory.Create(publication.Package.BundleVersionId, machine.Id);
+                            ProjectVersion projectVersion = publication.Package.BundleVersion.ProjectVersions.First( pv => pv.Id == deploymentStep.GetIntProperty("ProjectId"));
+
+                            IProjectTestRunner projectTestRunner = this.projectTestRunnerFactory.Create(projectVersion.ProjectType, variableProcessor);
+
+                            IList<TestResult> testResults = projectTestRunner.Run(projectVersion);
+
+                            if (testResults.All(t => t.IsPass))
+                            {
+                                this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingComplete);
+                            }
+                            else
+                            {
+                                this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError, new ExceptionInfo()
+                                {
+                                    Message = string.Join(", ", testResults.Where( t => !t.IsPass).Select( t => t.TestClassName + "." + t.TestName)),
+                                    ExceptionData = testResults
+                                        .Where(t => !t.IsPass)
+                                        .Select( (t, index) => new ExceptionDataInfo()
+                                        {
+                                            Name = index + ". " + t.TestClassName + "." + t.TestName,
+                                            Value = t.Message,
+                                            IsProperty = true
+                                        })
+                                        .Cast<IExceptionDataInfo>()
+                                        .ToList()
+                                });
+                            }
+
+                            continue; 
+                        }
+
                         try
                         {
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecuting);

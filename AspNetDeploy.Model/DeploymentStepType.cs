@@ -20,6 +20,7 @@ namespace AspNetDeploy.Model
         Configuration = 4,
         UpdateHostsFile = 5,
         RunSQLScript = 6,
-        DeployDacpac = 7
+        DeployDacpac = 7,
+        RunVsTests = 8
     }
 }
