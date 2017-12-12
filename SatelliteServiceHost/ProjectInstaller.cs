@@ -38,8 +38,6 @@ namespace SatelliteServiceHost
             string secret = this.Context.Parameters["secret"];
             Uri uri = new Uri(this.Context.Parameters["uri"]);
 
-            
-
             string packagesPath = Path.Combine(directoryName, "Packages");
             string backupsPath = Path.Combine(directoryName, "Backups");
 
@@ -190,16 +188,41 @@ namespace SatelliteServiceHost
 
         private X509Certificate2 FindCertificate(string hostName)
         {
-            X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
-            store.Open(OpenFlags.OpenExistingOnly);
+            X509Certificate2 findCertificate;
 
-            foreach (X509Certificate2 certificate in store.Certificates.Cast<X509Certificate2>())
+            if (X509Certificate2(hostName, out findCertificate, new X509Store(StoreName.My, StoreLocation.LocalMachine)))
+            {
+                return findCertificate;
+            }
+
+            if (X509Certificate2(hostName, out findCertificate, new X509Store(StoreName.My, StoreLocation.CurrentUser)))
+            {
+                return findCertificate;
+            }
+
+            if (X509Certificate2(hostName, out findCertificate, new X509Store(StoreName.Root, StoreLocation.LocalMachine)))
+            {
+                return findCertificate;
+            }
+
+            if (X509Certificate2(hostName, out findCertificate, new X509Store(StoreName.Root, StoreLocation.CurrentUser)))
+            {
+                return findCertificate;
+            }
+
+            return null;
+        }
+
+        private static bool X509Certificate2(string hostName, out X509Certificate2 outCertificate, X509Store x509Store)
+        {
+            x509Store.Open(OpenFlags.OpenExistingOnly);
+
+            foreach (X509Certificate2 certificate in x509Store.Certificates.Cast<X509Certificate2>().OrderByDescending( s => s.NotAfter))
             {
                 if (certificate.NotBefore > DateTime.Now || certificate.NotAfter < DateTime.Now)
                 {
                     continue;
                 }
-
 
                 Regex regex = new Regex(@"CN=(?<val>[^;,\s\n\r]+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
@@ -207,9 +230,18 @@ namespace SatelliteServiceHost
                 {
                     Match match = regex.Match(certificate.Subject);
 
-                    if (match.Success && !string.IsNullOrWhiteSpace(match.Groups["val"].Value) && hostName.EndsWith(match.Groups["val"].Value, StringComparison.InvariantCultureIgnoreCase))
+                    string value = match.Groups["val"].Value;
+
+                    if (!string.IsNullOrWhiteSpace(value))
                     {
-                        return certificate;
+                        value = value.TrimStart('*');
+
+                        if (match.Success && hostName.EndsWith(value, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            Console.WriteLine("MATCH");
+                            outCertificate = certificate;
+                            return true;
+                        }
                     }
                 }
 
@@ -239,15 +271,29 @@ namespace SatelliteServiceHost
 
                         if (hostName.EndsWith(host, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            return certificate;
+                            {
+                                outCertificate = certificate;
+                                return true;
+                            }
                         }
                     }
                 }
             }
 
-            store.Close();
+            x509Store.Close();
+            outCertificate = null;
 
-            return null;
+            return false;
+        }
+
+        private void serviceProcessInstaller1_AfterInstall(object sender, InstallEventArgs e)
+        {
+
+        }
+
+        private void serviceProcessInstaller1_AfterRollback(object sender, InstallEventArgs e)
+        {
+
         }
     }
 }
