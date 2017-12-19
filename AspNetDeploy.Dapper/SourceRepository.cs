@@ -34,7 +34,7 @@ namespace AspNetDeploy.Dapper
                         scv.IsHead, 
                         scv.IsArchivedId AS ArchiveState
                     FROM SourceControl sc
-                    INNER JOIN SourceControlVersion scv ON sc.Id = scv.SourceControlId
+                    LEFT JOIN SourceControlVersion scv ON sc.Id = scv.SourceControlId
                     WHERE 
                         (@excludeArchived = 0 OR (scv.IsArchivedId <> 2 AND @excludeArchived = 1))
                 ", (sc, scv) =>

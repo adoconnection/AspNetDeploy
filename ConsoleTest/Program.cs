@@ -69,6 +69,8 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+            ThreadTaskRunner.ProcessTasks();
+
 
             VariableProcessorFactory variableProcessorFactory = new VariableProcessorFactory();
             ProjectTestRunnerFactory projectTestRunnerFactory = new ProjectTestRunnerFactory(new PathServices());

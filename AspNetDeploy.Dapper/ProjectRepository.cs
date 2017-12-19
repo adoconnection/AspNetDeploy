@@ -35,10 +35,10 @@ SELECT
     pvp.[Value] [Value],
     p.*
 FROM ProjectVersion pv
-INNER JOIN ProjectVersionProperty pvp ON pv.Id = pvp.ProjectVersionId
-INNER JOIN SourceControlVersion scv ON pv.SourceControlVersionId = scv.Id
-INNER JOIN Project p ON pv.ProjectId = p.Id
-WHERE scv.IsArchivedId != 2
+JOIN Project p ON pv.ProjectId = p.Id
+LEFT JOIN ProjectVersionProperty pvp ON pv.Id = pvp.ProjectVersionId
+LEFT JOIN SourceControlVersion scv ON pv.SourceControlVersionId = scv.Id
+WHERE scv.IsArchivedId != 2 OR scv.IsArchivedId IS NULL
                 ", (pv, pvp, p) =>
                 {
                     ProjectVersion projectVersion;
@@ -55,10 +55,13 @@ WHERE scv.IsArchivedId != 2
 
                     pv.Project = p;
 
-                    projectVersion.Properties.Add(pvp);
+                    if (pvp != null && pvp.Key != null)
+                    {
+                        projectVersion.Properties.Add(pvp);
+                    }
 
                     return pv;
-                }).AsQueryable();
+                }).ToList();
 
             return projectVersionLookup.Values.ToList();
         }

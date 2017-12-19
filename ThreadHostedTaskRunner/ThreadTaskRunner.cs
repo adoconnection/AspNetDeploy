@@ -273,7 +273,9 @@ namespace ThreadHostedTaskRunner
                         ))
                     .ToList();
 
-                foreach (ProjectVersion projectVersion in projectVersions.Where(pv => pv.GetStringProperty("LastBuildResult") == "Error"))
+                IList<ProjectVersion> errorProjects = projectVersions.Where(pv => pv.GetStringProperty("LastBuildResult") == "Error").ToList();
+
+                foreach (ProjectVersion projectVersion in errorProjects)
                 {
                     TaskRunnerContext.SetProjectVersionState(projectVersion.Id, ProjectState.Error);
                 }
@@ -282,6 +284,11 @@ namespace ThreadHostedTaskRunner
 
                 if (projectVersionsToRebuild.Count == 0)
                 {
+                    if (errorProjects.Count > 0)
+                    {
+                        TaskRunnerContext.SetBundleVersionState(bundleVersion.Id, BundleState.Error);
+                    }
+
                     continue;
                 }
 

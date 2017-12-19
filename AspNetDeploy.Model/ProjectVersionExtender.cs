@@ -73,6 +73,11 @@ namespace AspNetDeploy.Model
 
         public string GetStringProperty(string key, string defaultValue = null)
         {
+            if (this.Properties == null)
+            {
+                return defaultValue;
+            }
+
             ProjectVersionProperty property = this.Properties.FirstOrDefault(p => p.Key.ToLower() == key.ToLower());
 
             if (property == null)
@@ -85,6 +90,11 @@ namespace AspNetDeploy.Model
 
         public IList<string> GetStringProperties(string key)
         {
+            if (this.Properties == null)
+            {
+                return new List<string>();
+            }
+
             return this.Properties.Where(p => p.Key.ToLower() == key.ToLower()).Select(p => p.Value).ToList();
         }
 
