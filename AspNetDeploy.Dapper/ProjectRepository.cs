@@ -123,7 +123,10 @@ WHERE
 
                 pv.Project = p;
 
-                projectVersion.Properties.Add(pvp);
+                if (pvp != null && pvp.Key != null)
+                {
+                    projectVersion.Properties.Add(pvp);
+                }
 
                 return pv;
             }, new
