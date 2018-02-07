@@ -68,13 +68,16 @@ namespace VsTestLibrary
 
         private object CreateInstance(Type type, Func<string, object> configuration = null)
         {
-            foreach (ConstructorInfo constructorInfo in type.GetConstructors())
+            if (configuration != null)
             {
-                ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
-
-                if (parameterInfos.Length == 1 && parameterInfos[0].ParameterType == typeof(Func<string, object>))
+                foreach (ConstructorInfo constructorInfo in type.GetConstructors())
                 {
-                    return constructorInfo.Invoke(new object[] { configuration });
+                    ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
+
+                    if (parameterInfos.Length == 1 && parameterInfos[0].ParameterType == typeof(Func<string, object>))
+                    {
+                        return constructorInfo.Invoke(new object[] {configuration});
+                    }
                 }
             }
 

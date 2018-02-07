@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
@@ -40,20 +41,24 @@ namespace TestRunners.VsTests
             {
                 VsTestRunner runner = new VsTestRunner();
 
-                Console.WriteLine(testClass.Type.FullName);
-
-                foreach (string testMethod in testClass.TestMethods)
-                {
-                    VsTestRunResult vsTestRunResult = runner.Run(testClass.Type, testClass.InitializeMethod, testMethod, testClass.CleanupMethod, variableProcessor.ProcessValue);
-
-                    result.Add(new TestResult()
+                Parallel.ForEach(
+                    testClass.TestMethods,
+                    new ParallelOptions
                     {
-                        TestClassName = testClass.Type.FullName,
-                        TestName = testMethod,
-                        IsPass = vsTestRunResult.IsSuccess,
-                        Message = vsTestRunResult.Exception?.Message + ". " + vsTestRunResult.Exception?.InnerException?.Message
+                        MaxDegreeOfParallelism = 4
+                    },
+                    testMethod =>
+                    {
+                        VsTestRunResult vsTestRunResult = runner.Run(testClass.Type, testClass.InitializeMethod, testMethod, testClass.CleanupMethod, variableProcessor.ProcessValue);
+
+                        result.Add(new TestResult()
+                        {
+                            TestClassName = testClass.Type.FullName,
+                            TestName = testMethod,
+                            IsPass = vsTestRunResult.IsSuccess,
+                            Message = vsTestRunResult.Exception?.Message + ". " + vsTestRunResult.Exception?.InnerException?.Message
+                        });
                     });
-                }
             }
 
             return result;
