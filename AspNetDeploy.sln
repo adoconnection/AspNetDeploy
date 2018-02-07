@@ -161,6 +161,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunners", "TestRunners\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunners.VsTests", "TestRunners.VsTests\TestRunners.VsTests.csproj", "{671368FE-BFA2-4ABE-8259-A678774FB66C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServices.DotnetCore", "BuildServices.DotnetCore\BuildServices.DotnetCore.csproj", "{111359CD-237A-4F21-8C87-0CE728C77D3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -389,6 +391,10 @@ Global
 		{671368FE-BFA2-4ABE-8259-A678774FB66C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{671368FE-BFA2-4ABE-8259-A678774FB66C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{671368FE-BFA2-4ABE-8259-A678774FB66C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -465,6 +471,7 @@ Global
 		{D9EF607D-D099-48A2-A534-6BD2DA1075B1} = {2BAE3B06-63CF-483D-ACA2-6662C78B2422}
 		{5D8F0748-EB61-4C0B-9019-D695CA57C9E7} = {D9EF607D-D099-48A2-A534-6BD2DA1075B1}
 		{671368FE-BFA2-4ABE-8259-A678774FB66C} = {D9EF607D-D099-48A2-A534-6BD2DA1075B1}
+		{111359CD-237A-4F21-8C87-0CE728C77D3E} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .

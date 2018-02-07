@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using AspNetDeploy.Contracts.Exceptions;
 
-namespace BuildServices.NuGet
+namespace AspNetDeploy.BuildServices.NuGet
 {
     public class NugetException : AspNetDeployException
     {

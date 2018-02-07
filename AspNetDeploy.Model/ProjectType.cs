@@ -24,6 +24,7 @@ namespace AspNetDeploy.Model
         Test = 64,
         WindowsApplication = 128,
         ZipArchive = 256,
-        GulpFile = 512
+        GulpFile = 512,
+        NetCore = 1024
     }
 }

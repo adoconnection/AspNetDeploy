@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using AspNetDeploy.Projects.Contracts;
 using AspNetDeploy.SolutionParsers.VisualStudio;
@@ -84,6 +83,11 @@ namespace AspNetDeploy.Projects.VisualStudio2013
             if (vsProject.Project.Type.HasFlag(VsProjectType.WindowsApplication))
             {
                 projectType |= ProjectType.WindowsApplication;
+            }
+
+            if (vsProject.Project.Type.HasFlag(VsProjectType.NetCore))
+            {
+                projectType |= ProjectType.NetCore;
             }
 
             projectVersion.ProjectType = projectType;

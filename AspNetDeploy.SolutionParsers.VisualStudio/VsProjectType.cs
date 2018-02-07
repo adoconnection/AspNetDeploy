@@ -14,5 +14,6 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
         Database = 32,
         Test = 64,
         WindowsApplication = 128,
+        NetCore = 256
     }
 }

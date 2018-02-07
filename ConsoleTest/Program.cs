@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity.Infrastructure.Interception;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using AspNetDeploy.BuildServices.DotnetCore;
 using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.MachineSummary;
@@ -12,6 +15,7 @@ using AspNetDeploy.DeploymentServices;
 using AspNetDeploy.DeploymentServices.SatelliteMonitoring;
 using AspNetDeploy.DeploymentServices.WCFSatellite;
 using AspNetDeploy.Model;
+using AspNetDeploy.SolutionParsers.VisualStudio;
 using AspNetDeploy.Variables;
 using AspNetDeploy.WebUI.Bootstrapper;
 using BuildServices.NuGet;
@@ -25,6 +29,7 @@ using Microsoft.Build.Construction;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
 using Packagers.Gulp;
+using Packagers.VisualStudioProject;
 using Projects.Gulp;
 using SatelliteService.Operations;
 using TestRunners;
@@ -69,9 +74,47 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
-            ThreadTaskRunner.ProcessTasks();
+            VisualStudio2013SolutionParser solutionParser = new VisualStudio2013SolutionParser();
+            IList<VisualStudioSolutionProject> projects = solutionParser.Parse(@"H:\Documentoved\FiasOnline\FiasOnline.sln");
+
+            foreach (VisualStudioSolutionProject project in projects)
+            {
+                Console.WriteLine(project.Name + " - " + project.Type + " - " + project.Guid + " - " + project.TypeGuid);
+            }
+
+            DotnetCoreBuildService buildService = new DotnetCoreBuildService();
+
+            ProjectVersion pv = new ProjectVersion()
+            {
+                Name = "Blah",
+                ProjectType = ProjectType.Web | ProjectType.NetCore,
+                ProjectFile = @"FiasOnline.UI.API\FiasOnline.UI.API.csproj",
+                SolutionFile = @"H:\Documentoved\FiasOnline"
+            };
+
+            buildService.Build(@"H:\Documentoved\FiasOnline", pv, s =>
+            {
+            }, (s, b, arg3) =>
+            {
+            }, (s, exception) =>
+            {
+            });
+
+            if (File.Exists(@"H:\Documentoved\FiasOnline\blah.zip"))
+            {
+                File.Delete(@"H:\Documentoved\FiasOnline\blah.zip");
+            }
+
+            DotNetCoreProjectPackager projectPackager = new DotNetCoreProjectPackager();
+            projectPackager.Package(@"H:\Documentoved\FiasOnline\FiasOnline.UI.API\FiasOnline.UI.API.csproj", @"H:\Documentoved\FiasOnline\blah.zip");
+
+            Console.WriteLine(projects.Count);
 
 
+
+            //ThreadTaskRunner.ProcessTasks();
+
+            /*
             VariableProcessorFactory variableProcessorFactory = new VariableProcessorFactory();
             ProjectTestRunnerFactory projectTestRunnerFactory = new ProjectTestRunnerFactory(new PathServices());
 
@@ -85,42 +128,64 @@ namespace ConsoleTest
 
             IList<TestResult> testResults = projectTestRunner.Run(projectVersion2);
 
-            /*
+          */
 
             VsTestParser parser = new VsTestParser();
-            IList<VsTestClassInfo> testClasses = parser.Parse(@"H:\AspNetDeploy\Variables.Tests\bin\Debug\Variables.Tests.dll");
+            IList<VsTestClassInfo> testClasses = parser.Parse(@"H:\Documentoved\DocumentovedUITests\AccountTests\bin\Debug\AccountTests.dll");
 
-            Dictionary<string, string> dictionary = new Dictionary<string, string>()
+            IList<TestResult> result = new List<TestResult>();
+
+            IDictionary<string, string> d = new ConcurrentDictionary<string, string>();
+
+            string c = null;
+
+            Thread t = new Thread(() =>
             {
-                {"nick", "shade"}
-            };
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine(c);
+                    foreach (string dKey in d.Keys)
+                    {
+                        Console.WriteLine(" - " + dKey + " - " + d[dKey]);
+                    }
+
+                    Thread.Sleep(1000);
+                }
+            });
+
+            t.Start();
 
             foreach (VsTestClassInfo testClass in testClasses)
             {
-                VsTestRunner runner = new VsTestRunner();
+                
 
-                Console.WriteLine(testClass.Type.FullName);
+                c = testClass.Type.FullName;
+                d.Clear();
 
-                foreach (string testMethod in testClass.TestMethods)
+                Parallel.ForEach(testClass.TestMethods, new ParallelOptions
                 {
-                    VsTestRunResult vsTestRunResult = runner.Run(testClass.Type, testClass.InitializeMethod, testMethod, testClass.CleanupMethod, s => dictionary[s]);
+                    MaxDegreeOfParallelism = 5
+                }, testMethod =>
+                {
+                    d.Add(testMethod, "started");
 
-                    if (vsTestRunResult.IsSuccess)
+                    VsTestRunner runner = new VsTestRunner();
+                    VsTestRunResult vsTestRunResult = runner.Run(testClass.Type, testClass.InitializeMethod, testMethod, testClass.CleanupMethod);
+
+                    result.Add(new TestResult()
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("PASS");
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.WriteLine(" - " + testMethod);
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("FAIL");
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.WriteLine(" - " + testMethod + " - " + vsTestRunResult.Exception?.Message);
-                    }
-                }
-            }*/
+                        TestClassName = testClass.Type.FullName,
+                        TestName = testMethod,
+                        IsPass = vsTestRunResult.IsSuccess,
+                        Message = vsTestRunResult.Exception?.Message + ". " + vsTestRunResult.Exception?.InnerException?.Message
+                    });
+
+                    d[testMethod] = vsTestRunResult.IsSuccess ? "done" : "fail";
+                });
+            }
+
+            
 
             Console.WriteLine("DONE");
             Console.ReadKey();

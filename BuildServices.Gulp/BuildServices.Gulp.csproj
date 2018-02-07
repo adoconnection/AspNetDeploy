@@ -7,8 +7,8 @@
     <ProjectGuid>{C03F2436-D1E1-4A0A-83A3-D7E5683AC3AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BuildServices.Gulp</RootNamespace>
-    <AssemblyName>BuildServices.Gulp</AssemblyName>
+    <RootNamespace>AspNetDeploy.BuildServices.Gulp</RootNamespace>
+    <AssemblyName>AspNetDeploy.BuildServices.Gulp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

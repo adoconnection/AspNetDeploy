@@ -54,8 +54,47 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
 
             XNamespace fileNamespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 
-            this.DetermineProjectType(visualStudioProject, xDocument, fileNamespace);
-            this.DetermineProjectCLR(visualStudioProject, xDocument, fileNamespace);
+            if (xDocument.Descendants("Project").Attributes("Sdk").Select(a => a.Value).FirstOrDefault() != null)
+            {
+                this.ParseNetCore(visualStudioProject, xDocument);
+            }
+            else
+            {
+                this.DetermineProjectType(visualStudioProject, xDocument, fileNamespace);
+                this.DetermineProjectCLR(visualStudioProject, xDocument, fileNamespace);
+            }
+        }
+
+        private void ParseNetCore(VisualStudioSolutionProject visualStudioProject, XDocument xDocument)
+        {
+            string sdkValue = xDocument.Descendants("Project").Attributes("Sdk").Select(a => a.Value).FirstOrDefault();
+            visualStudioProject.Type = VsProjectType.NetCore;
+
+            if (sdkValue == "Microsoft.NET.Sdk.Web")
+            {
+                visualStudioProject.Type |= VsProjectType.Web;
+                return;
+            }
+
+            if (sdkValue == "Microsoft.NET.Sdk")
+            {
+                string outputType = xDocument.Descendants("OutputType").Select(a => a.Value).FirstOrDefault();
+
+                if (outputType != null && outputType.Equals("Exe", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    visualStudioProject.Type |= VsProjectType.Console;
+                }
+
+                if (xDocument.Descendants("PackageReference").Any(d => d.Attribute("Include")?.Value == "MSTest.TestFramework"))
+                {
+                    visualStudioProject.Type |= VsProjectType.Test;
+                }
+
+                if (xDocument.Descendants("PackageReference").Any(d => d.Attribute("Include")?.Value == "MSTest.TestFramework"))
+                {
+                    visualStudioProject.Type |= VsProjectType.ClassLibrary;
+                }
+            }
         }
 
         private void DetermineProjectCLR(VisualStudioSolutionProject visualStudioProject, XDocument xDocument, XNamespace fileNamespace)
@@ -84,7 +123,7 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
                 }
             }
 
-            string typeGuid = visualStudioProject.TypeGuid.ToString();
+            string typeGuid = visualStudioProject.TypeGuid.ToString().ToUpper();
 
             XElement outputTypeElement = xDocument.Descendants(fileNamespace + "OutputType").FirstOrDefault();
 
@@ -123,6 +162,7 @@ namespace AspNetDeploy.SolutionParsers.VisualStudio
                 }
             }
         }
+
 
         private VsProjectType GetTypeByGuid(string typeGuid)
         {
