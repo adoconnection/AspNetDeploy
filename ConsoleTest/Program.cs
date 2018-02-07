@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AspNetDeploy.BuildServices.DotnetCore;
 using AspNetDeploy.BuildServices.MSBuild;
 using AspNetDeploy.Contracts;
@@ -74,6 +75,22 @@ namespace ConsoleTest
 
         static void Main(string[] args)
         {
+            XDocument webConfig = XDocument.Load(@"H:\Documentoved\FiasOnline\FiasOnline.UI.API\bin\Release\netcoreapp2.0\publish\web.config");
+
+            if (webConfig.Descendants("aspNetCore").Any(dd => dd.Attribute("processPath")?.Value == "dotnet"))
+            {
+            }
+
+            using (ServerManager serverManager = new ServerManager())
+            {
+                //this.backupSiteConfigurationGuid = this.BackupRepository.StoreObject(site);
+
+                ApplicationPool applicationPool = ApplicationPool(serverManager, "AspNetDeploy");
+                ApplicationPool applicationPool2 = ApplicationPool(serverManager, "ButtonBackend1");
+            }
+
+
+
             VisualStudio2013SolutionParser solutionParser = new VisualStudio2013SolutionParser();
             IList<VisualStudioSolutionProject> projects = solutionParser.Parse(@"H:\Documentoved\FiasOnline\FiasOnline.sln");
 
@@ -453,6 +470,39 @@ namespace ConsoleTest
         public static void WriteLine(string value)
         {
             Console.WriteLine(new string(' ', Console.WindowWidth - 1) + "\r" + value);
+        }
+
+
+        private static Site Site(ServerManager serverManager, string siteName)
+        {
+            Site site = serverManager.Sites[siteName];
+
+            if (site == null)
+            {
+                long nextId = serverManager.Sites.Count == 0
+                    ? 1
+                    : serverManager.Sites.Max(s => s.Id) + 1;
+
+                site = serverManager.Sites.CreateElement();
+                site.Id = nextId;
+                site.Name = siteName;
+                serverManager.Sites.Add(site);
+            }
+
+            return site;
+        }
+
+
+        private static ApplicationPool ApplicationPool(ServerManager serverManager, string applicationPoolName)
+        {
+            ApplicationPool applicationPool = serverManager.ApplicationPools[applicationPoolName];
+
+            if (applicationPool == null)
+            {
+                applicationPool = serverManager.ApplicationPools.Add(applicationPoolName);
+            }
+
+            return applicationPool;
         }
     }
 }

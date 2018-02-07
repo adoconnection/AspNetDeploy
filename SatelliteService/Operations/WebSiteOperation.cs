@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Xml.Linq;
 using CertificateHelpers;
 using Microsoft.Web.Administration;
 using SatelliteService.Contracts;
@@ -55,6 +56,19 @@ namespace SatelliteService.Operations
                 site.ApplicationDefaults.ApplicationPoolName = (string) configuration.applicationPoolName;
                 site.ServerAutoStart = true;
                 applicationPool.AutoStart = true;
+                applicationPool.ManagedRuntimeVersion = "v4.0";
+
+                string webConfigPath = Path.Combine((string) this.configuration.destination, "web.config");
+
+                if (File.Exists(webConfigPath))
+                {
+                    XDocument webConfig = XDocument.Load(webConfigPath);
+
+                    if (webConfig.Descendants("aspNetCore").Any(d => d.Attribute("processPath")?.Value == "dotnet"))
+                    {
+                        applicationPool.ManagedRuntimeVersion = ""; // dotnetcore
+                    }
+                }
 
                 site.Bindings.Clear();
 
