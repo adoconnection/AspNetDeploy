@@ -18,7 +18,7 @@ namespace BuildServices.Npm
             process.StartInfo.UseShellExecute = true;
             process.StartInfo.WorkingDirectory = directory;
 
-            process.StartInfo.FileName = this.pathServices.GetNugetPath();
+            process.StartInfo.FileName = this.pathServices.GetNpmPath();
             process.StartInfo.Arguments = "install";
 
             process.Start();
