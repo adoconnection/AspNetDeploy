@@ -12,8 +12,32 @@ namespace AspNetDeploy.BuildServices.DotnetCore
         {
             var fullPath = Path.Combine(sourcesFolder, projectVersion.ProjectFile);
 
-            DoDotnet(Path.GetDirectoryName(fullPath), "restore");
-            DoDotnet(Path.GetDirectoryName(fullPath), "publish -c Release");
+            projectBuildStarted(fullPath);
+            string output;
+
+            if (DoDotnet(Path.GetDirectoryName(fullPath), "restore", out output) != 0)
+            {
+                errorLogger(fullPath, new DotnetCoreBuildServiceException(output));
+                projectBuildComplete(fullPath, false, output);
+
+                return new BuildSolutionResult()
+                {
+                    IsSuccess = false
+                };
+            }
+
+            if (DoDotnet(Path.GetDirectoryName(fullPath), "publish -c Release", out output) != 0)
+            {
+                errorLogger(fullPath, new DotnetCoreBuildServiceException(output));
+                projectBuildComplete(fullPath, false, output);
+
+                return new BuildSolutionResult()
+                {
+                    IsSuccess = false
+                };
+            }
+
+            projectBuildComplete(fullPath, true, null);
 
             return new BuildSolutionResult()
             {
@@ -21,7 +45,7 @@ namespace AspNetDeploy.BuildServices.DotnetCore
             };
         }
 
-        private static void DoDotnet(string workingDirectory, string arguments)
+        private static int DoDotnet(string workingDirectory, string arguments, out string output)
         {
             Process process = new Process();
             process.StartInfo.UseShellExecute = false;
@@ -33,17 +57,11 @@ namespace AspNetDeploy.BuildServices.DotnetCore
 
             process.Start();
 
-            string output = process.StandardOutput.ReadToEnd();
+            output = process.StandardOutput.ReadToEnd();
 
             process.WaitForExit();
 
-            if (process.ExitCode != 0)
-            {
-                DotnetCoreBuildServiceException exception = new DotnetCoreBuildServiceException("Nuget returned: " + process.ExitCode);
-                exception.Data.Add("Output", output);
-
-                throw exception;
-            }
+            return process.ExitCode;
         }
     }
 }

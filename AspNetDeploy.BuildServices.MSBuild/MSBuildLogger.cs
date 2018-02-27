@@ -79,7 +79,5 @@ namespace AspNetDeploy.BuildServices.MSBuild
         {
             
         }
-
-
     }
 }

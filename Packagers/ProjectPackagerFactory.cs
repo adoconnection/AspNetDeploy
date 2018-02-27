@@ -13,6 +13,11 @@ namespace Packagers
         {
             if (projectType.HasFlag(ProjectType.Web))
             {
+                if (projectType.HasFlag(ProjectType.NetCore))
+                {
+                    return new DotNetCoreProjectPackager();
+                }
+
                 return new WebProjectPackager();
             }
 

@@ -49,7 +49,7 @@ namespace ThreadHostedTaskRunner.Jobs
 
                 },
                 (projectVersionBuildId, isSuccess) =>
-                {
+                {   
                     projectBuildComplete(projectVersionBuildId, isSuccess);
 
                     ProjectVersion projectVersionBuild = entities.ProjectVersion
