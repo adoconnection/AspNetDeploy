@@ -112,14 +112,16 @@ namespace AspNetDeploy.ContinuousIntegration
 
                     this.ChangeMachinePublication(machinePublication, MachinePublicationState.Running, entities);
 
-                    foreach (DeploymentStep deploymentStep in machineDeploymentSteps)
+                    for (var i = 0; i < machineDeploymentSteps.Count; i++)
                     {
+                        DeploymentStep deploymentStep = machineDeploymentSteps[i];
+
                         if (deploymentStep.Type == DeploymentStepType.RunVsTests)
                         {
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecuting);
 
                             IVariableProcessor variableProcessor = this.variableProcessorFactory.Create(publication.Package.BundleVersionId, machine.Id);
-                            ProjectVersion projectVersion = publication.Package.BundleVersion.ProjectVersions.First( pv => pv.Id == deploymentStep.GetIntProperty("ProjectId"));
+                            ProjectVersion projectVersion = publication.Package.BundleVersion.ProjectVersions.First(pv => pv.Id == deploymentStep.GetIntProperty("ProjectId"));
 
                             IProjectTestRunner projectTestRunner = this.projectTestRunnerFactory.Create(projectVersion.ProjectType, variableProcessor);
 
@@ -131,32 +133,37 @@ namespace AspNetDeploy.ContinuousIntegration
                             }
                             else
                             {
-                                this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError, new ExceptionInfo()
-                                {
-                                    Message = string.Join(", ", testResults.Where( t => !t.IsPass).Select( t => t.TestClassName + "." + t.TestName)),
-                                    ExceptionData = testResults
-                                        .Where(t => !t.IsPass)
-                                        .Select( (t, index) => new ExceptionDataInfo()
-                                        {
-                                            Name = index + ". " + t.TestClassName + "." + t.TestName,
-                                            Value = t.Message,
-                                            IsProperty = true
-                                        })
-                                        .Cast<IExceptionDataInfo>()
-                                        .ToList()
-                                });
+                                this.LogMachinePublicationStep(
+                                    machinePublication, 
+                                    deploymentStep, 
+                                    entities, 
+                                    MachinePublicationLogEvent.DeploymentStepExecutingError, 
+                                    new ExceptionInfo()
+                                    {
+                                        Message = string.Join(", ", testResults.Where(t => !t.IsPass) .Select(t => t.TestClassName + "." + t.TestName)),
+                                        ExceptionData = testResults
+                                            .Where(t => !t.IsPass)
+                                            .Select((t, index) => new ExceptionDataInfo()
+                                            {
+                                                Name = index + ". " + t.TestClassName + "." + t.TestName,
+                                                Value = t.Message,
+                                                IsProperty = true
+                                            })
+                                            .Cast<IExceptionDataInfo>()
+                                            .ToList()
+                                    });
                             }
 
-                            continue; 
+                            continue;
                         }
 
                         try
                         {
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecuting);
-                            
+
                             if (deploymentAgent.ExecuteNextOperation())
                             {
-                                this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingComplete);    
+                                this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingComplete);
                             }
                             else
                             {
@@ -165,8 +172,19 @@ namespace AspNetDeploy.ContinuousIntegration
                         }
                         catch (Exception e)
                         {
+                            e.Data.Add("Deployment step id", deploymentStep.Id);
+                            e.Data.Add("Deployment ttep index", i + 1);
+                            e.Data.Add("Machine name", machine.Name);
+
                             this.RecordException(entities, null, e);
-                            this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecutingError, this.GetLastExceptionSafe(deploymentAgent));
+
+                            this.LogMachinePublicationStep(
+                                machinePublication, 
+                                deploymentStep, 
+                                entities,
+                                MachinePublicationLogEvent.DeploymentStepExecutingError,
+                                this.GetLastExceptionSafe(deploymentAgent));
+
                             throw;
                         }
                     }
@@ -175,6 +193,9 @@ namespace AspNetDeploy.ContinuousIntegration
                 }
                 catch (Exception e)
                 {
+                    e.Data.Add("Publication.Id", publication.Id);
+                    e.Data.Add("Publication.Package.Id", publication.Package.Id);
+
                     /*deploymentAgent.Rollback();*/
                     machineDeploymentComplete(machine.Id, false);
                     this.ChangeMachinePublication(machinePublication, MachinePublicationState.Error, entities);
