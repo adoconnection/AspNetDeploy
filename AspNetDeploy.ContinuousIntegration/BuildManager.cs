@@ -38,7 +38,7 @@ namespace AspNetDeploy.ContinuousIntegration
                     ProjectVersion projectVersionBuild = entities.ProjectVersion
                         .Where(p => p.SourceControlVersionId == sourceControlVersionId)
                         .ToList()
-                        .FirstOrDefault(p => Path.Combine(sourcesFolder, p.ProjectFile).ToLowerInvariant() == projectFileName.ToLowerInvariant());
+                        .FirstOrDefault(p => !p.IsDeleted && Path.Combine(sourcesFolder, p.ProjectFile).ToLowerInvariant() == projectFileName.ToLowerInvariant());
 
                     if (projectVersionBuild != null)
                     {
@@ -50,7 +50,7 @@ namespace AspNetDeploy.ContinuousIntegration
                     ProjectVersion projectVersionBuild = entities.ProjectVersion
                         .Where(p => p.SourceControlVersionId == sourceControlVersionId)
                         .ToList()
-                        .FirstOrDefault(p => Path.Combine(sourcesFolder, p.ProjectFile).ToLowerInvariant() == projectFileName.ToLowerInvariant());
+                        .FirstOrDefault(p => !p.IsDeleted && Path.Combine(sourcesFolder, p.ProjectFile).ToLowerInvariant() == projectFileName.ToLowerInvariant());
 
                     if (projectVersionBuild != null)
                     {
