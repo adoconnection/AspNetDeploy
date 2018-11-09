@@ -299,12 +299,13 @@ namespace AspNetDeploy.WebUI.Controllers
         }
 
         public ActionResult VersionPackages(int id)
-        {
-            BundleVersion bundleVersion = this.Entities.BundleVersion
+        { 
+            BundleVersion bundleVersion = this.Entities.BundleVersion 
                 .Include("Bundle")
                 .Include("ProjectVersions.Project.Properties")
                 .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
-                .Include("DeploymentSteps.Properties")
+                .Include("ProjectVersions.SourceControlVersion.Revisions.RevisionInfos")
+                .Include("DeploymentSteps.Properties") 
                 .Include("DeploymentSteps.MachineRoles")
                 .Include("Packages.Publications.Environment.Machines")
                 .Include("Packages.ApprovedOnEnvironments")
@@ -312,7 +313,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             IList<Environment> environments = this.Entities.Environment
                 .Include("NextEnvironment")
-                .ToList();
+                .ToList(); 
 
             int homeEnvironment = bundleVersion.GetIntProperty("HomeEnvironment");
 
@@ -327,6 +328,31 @@ namespace AspNetDeploy.WebUI.Controllers
 
             this.ViewBag.Environments = environments;
             this.ViewBag.BundleVersion = bundleVersion;
+
+            IList<BundleRevision> revisions = new List<BundleRevision>();
+
+            foreach(IGrouping < SourceControlVersion, ProjectVersion > group in bundleVersion.ProjectVersions.GroupBy(v => v.SourceControlVersion))
+            {
+                Revision latestRevision = group.Key.Revisions.OrderByDescending(r => r.CreatedDate).FirstOrDefault();
+
+                if (latestRevision == null)
+                {
+                    continue;
+                }
+
+                foreach (RevisionInfo revisionInfo in latestRevision.RevisionInfos.OrderByDescending(i => i.CreatedDate))
+                {
+                    revisions.Add(new BundleRevision
+                    {
+                        CreatedDate = revisionInfo.CreatedDate,
+                        Author = revisionInfo.Author,
+                        Commit = revisionInfo.Message,
+                        SourceName = group.Key.SourceControl.Name
+                    });
+                }
+            }
+
+            this.ViewBag.Revisions = revisions.OrderByDescending(r => r.CreatedDate).ToList();
 
             return this.View();
         }

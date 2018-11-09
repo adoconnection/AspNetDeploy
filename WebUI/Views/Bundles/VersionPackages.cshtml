@@ -1,4 +1,5 @@
-﻿@using Environment = AspNetDeploy.Model.Environment
+﻿@using AspNetDeploy.WebUI.Models
+@using Environment = AspNetDeploy.Model.Environment
 @{
     ViewBag.Title = "Index";
     ViewBag.PageClass = "bundlesPage";
@@ -11,6 +12,8 @@
 
     IList<Package> orderedPackages = bundleVersion.Packages.OrderByDescending( p => p.CreatedDate).ToList();
     Package latestPackage = orderedPackages.FirstOrDefault();
+
+	IList<BundleRevision> revisions = this.ViewBag.Revisions;
 }
 
 <div class="container">
@@ -36,21 +39,54 @@
     </ul>
     
     <hr />
+	
+	<h3>Latest changes</h3>
+	
+	@if (!revisions.Any())
+	{
+		<p>No changes</p>
+	}
+	else
+	{
+		<div>
+			@foreach (BundleRevision revision in revisions)
+			{
+				<div class="row">
+					<div class="col-md-5">
+						<span class="small">@revision.CreatedDate.ToLocalTime().ToString("dd MMMM yyyy H:mm") \ @revision.SourceName \ @revision.Author</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="commit">
+							@revision.Commit
+						</div>
+					</div>
+				</div>
+				<br/>
+			}
 
-    <h3>Latest package</h3>
+		</div>	
+	}
 
-    @if (latestPackage != null)
-    {
-        <p>@latestPackage.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @latestPackage.CreatedDate.ToLocalTime().ToString("H:mm")</p>
-    }
-    else
-    {
-        <p>no packages</p>
-    }
+	<hr/>
+	
+	<h3>Latest package</h3>
+
+	@if (latestPackage != null)
+	{
+		<p>@latestPackage.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @latestPackage.CreatedDate.ToLocalTime().ToString("H:mm")</p>
+	}
+	else
+	{
+		<p>no packages</p>
+	}
     
-    <br/>
+	<br/>
+	
+	<hr />
     
-    <h3>Packages</h3>
+	<h3>Packages</h3>
     
     <table class="table table-hover">
         <thead>

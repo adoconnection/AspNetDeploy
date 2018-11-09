@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
@@ -83,6 +85,62 @@ namespace AspNetDeploy.SourceControls.SVN
                     }
 
                     return this.LoadSourcesWithUpdate(sourceControlVersion, path, client);
+                }
+            }
+            catch (SvnException e)
+            {
+                throw new AspNetDeployException("SvnClient failed to load sources", e);
+            }
+        }
+
+        public LoadSourcesInfoResult LoadSourcesInfo(SourceControlVersion sourceControlVersion, string path)
+        {
+            NetworkCredential credentials = new NetworkCredential(
+                sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                sourceControlVersion.SourceControl.GetStringProperty("Password"));
+
+            Revision latestRevision =
+                sourceControlVersion.Revisions.OrderByDescending(r => r.CreatedDate).FirstOrDefault();
+
+            if (latestRevision == null)
+            {
+                return new LoadSourcesInfoResult
+                {
+                    SourcesInfos = new List<SourcesInfo>()
+                };
+            }
+
+            SvnRevisionRange range = new SvnRevisionRange(long.Parse(latestRevision.Name), long.Parse(latestRevision.Name));
+
+            if (latestRevision.ParentRevision != null)
+            {
+                range = new SvnRevisionRange(long.Parse(latestRevision.ParentRevision.Name) + 1, long.Parse(latestRevision.Name));
+            }
+
+            try
+            {
+                using (SvnClient client = new SvnClient())
+                {
+                    client.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
+
+                    client.Authentication.DefaultCredentials = credentials;
+
+                    Collection<SvnLogEventArgs> logEventArgs;
+
+                    client.GetLog(path, new SvnLogArgs
+                    {
+                        Range = range
+                    }, out logEventArgs);
+
+                    return new LoadSourcesInfoResult
+                    {
+                        SourcesInfos = logEventArgs.Select(e => new SourcesInfo
+                        {
+                            CreatedDate = e.Time,
+                            Author = e.Author,
+                            Message = e.LogMessage
+                        }).ToList()
+                    };
                 }
             }
             catch (SvnException e)

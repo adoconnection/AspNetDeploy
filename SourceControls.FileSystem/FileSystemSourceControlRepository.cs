@@ -55,6 +55,14 @@ namespace SourceControls.FileSystem
             };
         }
 
+        public LoadSourcesInfoResult LoadSourcesInfo(SourceControlVersion sourceControlVersion, string path)
+        {
+            return new LoadSourcesInfoResult
+            {
+                SourcesInfos = new List<SourcesInfo>()
+            };
+        }
+
         public TestSourceResult TestConnection(SourceControlVersion sourceControlVersion)
         {
             throw new NotImplementedException();

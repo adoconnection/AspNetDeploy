@@ -56,5 +56,7 @@ namespace AspNetDeploy.Model
         public virtual DbSet<ExceptionEntryData> ExceptionEntryData { get; set; }
         public virtual DbSet<ExceptionEntry> ExceptionEntry { get; set; }
         public virtual DbSet<DataFieldValue> DataFieldValue { get; set; }
+        public virtual DbSet<Revision> Revision { get; set; }
+        public virtual DbSet<RevisionInfo> RevisionInfo { get; set; }
     }
 }
