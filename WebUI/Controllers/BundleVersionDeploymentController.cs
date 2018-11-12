@@ -472,7 +472,7 @@ namespace AspNetDeploy.WebUI.Controllers
             deploymentStep.SetStringProperty("IIS.Bindings", model.BindingsJson);
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString());
 
-            this.UpdateProjectReference(model, deploymentStep);
+            this.UpdateProjectReference(model);
 
             this.SaveRoles(model, deploymentStep);
 
@@ -500,7 +500,7 @@ namespace AspNetDeploy.WebUI.Controllers
             deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfiguration);
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString());
 
-            this.UpdateProjectReference(model, deploymentStep);
+            this.UpdateProjectReference(model);
             this.SaveRoles(model, deploymentStep);
             this.Entities.SaveChanges();
 
@@ -526,7 +526,7 @@ namespace AspNetDeploy.WebUI.Controllers
             deploymentStep.SetStringProperty("CustomConfiguration", model.CustomConfigurationJson);
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
 
-            this.UpdateProjectReference(model, deploymentStep);
+            this.UpdateProjectReference(model);
 
             this.SaveRoles(model, deploymentStep);
 
@@ -553,7 +553,7 @@ namespace AspNetDeploy.WebUI.Controllers
             deploymentStep.SetStringProperty("StopOnFailure", model.StopOnFailure.ToString());
             deploymentStep.SetStringProperty("ProjectId", model.ProjectId.ToString(CultureInfo.InvariantCulture));
 
-            this.UpdateProjectReference(model, deploymentStep);
+            this.UpdateProjectReference(model);
 
             this.SaveRoles(model, deploymentStep);
 
@@ -582,7 +582,7 @@ namespace AspNetDeploy.WebUI.Controllers
                             BundleVersionId = deploymentStep.BundleVersionId,
                             DeploymentStepId = deploymentStep.Id,
                             ProjectId = 0
-                        }, deploymentStep);
+                        });
                         break;
             }
 
@@ -638,20 +638,18 @@ namespace AspNetDeploy.WebUI.Controllers
             return deploymentStep;
         }
 
-        private void UpdateProjectReference(ProjectRelatedDeploymentStepModel model, DeploymentStep deploymentStep)
+        private void UpdateProjectReference(ProjectRelatedDeploymentStepModel model)
         {
             BundleVersion bundleVersion = this.Entities.BundleVersion
                 .Include("ProjectVersions")
                 .Include("DeploymentSteps.Properties")
                 .First(bv => bv.Id == model.BundleVersionId);
 
-            var activeProjectId = deploymentStep.GetIntProperty("ProjectId");
-
-            if (activeProjectId > 0 && model.DeploymentStepId > 0) // remove unused project
+            foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)
             {
-                if (bundleVersion.DeploymentSteps.Where(ds => ds.Id != model.DeploymentStepId).All(ds => ds.GetIntProperty("ProjectId") != activeProjectId))
+                if (bundleVersion.DeploymentSteps.All(ds => ds.GetIntProperty("ProjectId") != projectVersion.Id))
                 {
-                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First(pv => pv.Id == activeProjectId);
+                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First(pv => pv.Id == projectVersion.Id);
                     bundleVersion.ProjectVersions.Remove(activeProjectVersion);
                 }
             }
