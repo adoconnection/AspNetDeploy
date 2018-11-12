@@ -81,6 +81,10 @@
         <AssociationConnector Association="AspNetDeployModel.FK_DataFieldValue_DataField" />
         <AssociationConnector Association="AspNetDeployModel.FK_DataFieldValue_Environment" />
         <AssociationConnector Association="AspNetDeployModel.FK_DataFieldValue_Machine" />
+        <EntityTypeShape EntityType="AspNetDeployModel.EnvironmentChain" Width="1.5" PointX="13" PointY="20.375" />
+        <AssociationConnector Association="AspNetDeployModel.FK_EnvironmentChain_BundleVersion" />
+        <AssociationConnector Association="AspNetDeployModel.FK_EnvironmentChain_Environment_Next" />
+        <AssociationConnector Association="AspNetDeployModel.FK_EnvironmentChain_Environment_Source" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

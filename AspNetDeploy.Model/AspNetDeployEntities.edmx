@@ -109,6 +109,15 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
         </EntityType>
+        <EntityType Name="EnvironmentChain">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BundleVersionId" Type="int" Nullable="false" />
+          <Property Name="NextEnvironmentId" Type="int" Nullable="false" />
+          <Property Name="SourceEnvironmentId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="EnvironmentProperty">
           <Key>
             <PropertyRef Name="Id" />
@@ -374,6 +383,7 @@
           <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="IsDisabled" Type="bit" Nullable="false" />
           <Property Name="ApiKey" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsOnline" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_AspNetDeployException_Exception">
           <End Role="Exception" Type="Self.Exception" Multiplicity="1" />
@@ -554,6 +564,42 @@
             </Principal>
             <Dependent Role="DeploymentStepToMachineRole">
               <PropertyRef Name="MachineRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EnvironmentChain_BundleVersion">
+          <End Role="BundleVersion" Type="Self.BundleVersion" Multiplicity="1" />
+          <End Role="EnvironmentChain" Type="Self.EnvironmentChain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BundleVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentChain">
+              <PropertyRef Name="BundleVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EnvironmentChain_Environment_Next">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="EnvironmentChain" Type="Self.EnvironmentChain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentChain">
+              <PropertyRef Name="NextEnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EnvironmentChain_Environment_Source">
+          <End Role="Environment" Type="Self.Environment" Multiplicity="1" />
+          <End Role="EnvironmentChain" Type="Self.EnvironmentChain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentChain">
+              <PropertyRef Name="SourceEnvironmentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1025,6 +1071,7 @@
           <EntitySet Name="DeploymentStepProperty" EntityType="Self.DeploymentStepProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeploymentStepToMachineRole" EntityType="Self.DeploymentStepToMachineRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Environment" EntityType="Self.Environment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EnvironmentChain" EntityType="Self.EnvironmentChain" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EnvironmentProperty" EntityType="Self.EnvironmentProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Exception" EntityType="Self.Exception" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExceptionData" EntityType="Self.ExceptionData" Schema="dbo" store:Type="Tables" />
@@ -1112,6 +1159,18 @@
           <AssociationSet Name="FK_DeploymentStepToMachineRole_MachineRole" Association="Self.FK_DeploymentStepToMachineRole_MachineRole">
             <End Role="MachineRole" EntitySet="MachineRole" />
             <End Role="DeploymentStepToMachineRole" EntitySet="DeploymentStepToMachineRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EnvironmentChain_BundleVersion" Association="Self.FK_EnvironmentChain_BundleVersion">
+            <End Role="BundleVersion" EntitySet="BundleVersion" />
+            <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EnvironmentChain_Environment_Next" Association="Self.FK_EnvironmentChain_Environment_Next">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EnvironmentChain_Environment_Source" Association="Self.FK_EnvironmentChain_Environment_Source">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
           </AssociationSet>
           <AssociationSet Name="FK_EnvironmentProperty_Environment" Association="Self.FK_EnvironmentProperty_Environment">
             <End Role="Environment" EntitySet="Environment" />
@@ -1482,6 +1541,19 @@
             <End Role="Machine" EntitySet="Machine" />
             <End Role="DataFieldValue" EntitySet="DataFieldValue" />
           </AssociationSet>
+          <EntitySet Name="EnvironmentChain" EntityType="AspNetDeployModel.EnvironmentChain" />
+          <AssociationSet Name="FK_EnvironmentChain_BundleVersion" Association="AspNetDeployModel.FK_EnvironmentChain_BundleVersion">
+            <End Role="BundleVersion" EntitySet="BundleVersion" />
+            <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EnvironmentChain_Environment_Next" Association="AspNetDeployModel.FK_EnvironmentChain_Environment_Next">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EnvironmentChain_Environment_Source" Association="AspNetDeployModel.FK_EnvironmentChain_Environment_Source">
+            <End Role="Environment" EntitySet="Environment" />
+            <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
+          </AssociationSet>
         </EntityContainer>
                 <EnumType Name="SourceControlType">
           <Member Name="Undefined" Value="0" />
@@ -1544,6 +1616,7 @@
           <NavigationProperty Name="ChildBundleVersions" Relationship="AspNetDeployModel.FK_BundleVersion_BundleVersion" FromRole="BundleVersion" ToRole="BundleVersion1" />
           <NavigationProperty Name="ParentBundleVersion" Relationship="AspNetDeployModel.FK_BundleVersion_BundleVersion" FromRole="BundleVersion1" ToRole="BundleVersion" />
           <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="EnvironmentChain" Relationship="AspNetDeployModel.FK_EnvironmentChain_BundleVersion" FromRole="BundleVersion" ToRole="EnvironmentChain" />
         </EntityType>
         <EntityType Name="DeploymentStep">
           <Key>
@@ -1583,6 +1656,8 @@
           <NavigationProperty Name="NextEnvironment" Relationship="AspNetDeployModel.NextEnvironment" FromRole="Environment1" ToRole="Environment" />
           <NavigationProperty Name="ApprovedPackages" Relationship="AspNetDeployModel.FK_PackageApprovedOnEnvironment_Environment" FromRole="Environment" ToRole="PackageApprovedOnEnvironment" />
           <NavigationProperty Name="DataFieldValues" Relationship="AspNetDeployModel.FK_DataFieldValue_Environment" FromRole="Environment" ToRole="DataFieldValue" />
+          <NavigationProperty Name="EnvironmentChain" Relationship="AspNetDeployModel.FK_EnvironmentChain_Environment_Next" FromRole="Environment" ToRole="EnvironmentChain" />
+          <NavigationProperty Name="EnvironmentChain1" Relationship="AspNetDeployModel.FK_EnvironmentChain_Environment_Source" FromRole="Environment" ToRole="EnvironmentChain" />
           </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -2170,6 +2245,7 @@
           <NavigationProperty Name="Publication" Relationship="AspNetDeployModel.FK_Publication_User" FromRole="User" ToRole="Publication" />
           <NavigationProperty Name="AspNetDeployException" Relationship="AspNetDeployModel.FK_AspNetDeployException_User" FromRole="User" ToRole="AspNetDeployException" />
           <Property Name="ApiKey" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsOnline" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_PackageApprovedOnEnvironment_User">
           <End Type="AspNetDeployModel.User" Role="User" Multiplicity="1" />
@@ -2423,6 +2499,54 @@
             </Principal>
             <Dependent Role="DataFieldValue">
               <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EnvironmentChain">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BundleVersionId" Type="Int32" Nullable="false" />
+          <Property Name="NextEnvironmentId" Type="Int32" Nullable="false" />
+          <Property Name="SourceEnvironmentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BundleVersion" Relationship="AspNetDeployModel.FK_EnvironmentChain_BundleVersion" FromRole="EnvironmentChain" ToRole="BundleVersion" />
+          <NavigationProperty Name="Environment" Relationship="AspNetDeployModel.FK_EnvironmentChain_Environment_Next" FromRole="EnvironmentChain" ToRole="Environment" />
+          <NavigationProperty Name="Environment1" Relationship="AspNetDeployModel.FK_EnvironmentChain_Environment_Source" FromRole="EnvironmentChain" ToRole="Environment" />
+        </EntityType>
+        <Association Name="FK_EnvironmentChain_BundleVersion">
+          <End Type="AspNetDeployModel.BundleVersion" Role="BundleVersion" Multiplicity="1" />
+          <End Type="AspNetDeployModel.EnvironmentChain" Role="EnvironmentChain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BundleVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentChain">
+              <PropertyRef Name="BundleVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EnvironmentChain_Environment_Next">
+          <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="1" />
+          <End Type="AspNetDeployModel.EnvironmentChain" Role="EnvironmentChain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentChain">
+              <PropertyRef Name="NextEnvironmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EnvironmentChain_Environment_Source">
+          <End Type="AspNetDeployModel.Environment" Role="Environment" Multiplicity="1" />
+          <End Type="AspNetDeployModel.EnvironmentChain" Role="EnvironmentChain" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Environment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EnvironmentChain">
+              <PropertyRef Name="SourceEnvironmentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2767,6 +2891,7 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="AspNetDeployModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
                 <ScalarProperty Name="ApiKey" ColumnName="ApiKey" />
                 <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
                 <ScalarProperty Name="Role" ColumnName="RoleId" />
@@ -2827,6 +2952,16 @@
                 <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="DataFieldId" ColumnName="DataFieldId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnvironmentChain">
+            <EntityTypeMapping TypeName="AspNetDeployModel.EnvironmentChain">
+              <MappingFragment StoreEntitySet="EnvironmentChain">
+                <ScalarProperty Name="SourceEnvironmentId" ColumnName="SourceEnvironmentId" />
+                <ScalarProperty Name="NextEnvironmentId" ColumnName="NextEnvironmentId" />
+                <ScalarProperty Name="BundleVersionId" ColumnName="BundleVersionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -22,6 +22,7 @@ namespace AspNetDeploy.Model
             this.Properties = new HashSet<BundleVersionProperty>();
             this.DataFields = new HashSet<DataField>();
             this.ChildBundleVersions = new HashSet<BundleVersion>();
+            this.EnvironmentChain = new HashSet<EnvironmentChain>();
         }
     
         public int Id { get; set; }
@@ -41,5 +42,6 @@ namespace AspNetDeploy.Model
         public virtual ICollection<DataField> DataFields { get; set; }
         public virtual ICollection<BundleVersion> ChildBundleVersions { get; set; }
         public virtual BundleVersion ParentBundleVersion { get; set; }
+        public virtual ICollection<EnvironmentChain> EnvironmentChain { get; set; }
     }
 }
