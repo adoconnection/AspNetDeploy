@@ -645,12 +645,11 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("DeploymentSteps.Properties")
                 .First(bv => bv.Id == model.BundleVersionId);
 
-            foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions)
+            foreach (ProjectVersion projectVersion in bundleVersion.ProjectVersions.ToList())
             {
                 if (bundleVersion.DeploymentSteps.All(ds => ds.GetIntProperty("ProjectId") != projectVersion.Id))
                 {
-                    ProjectVersion activeProjectVersion = this.Entities.ProjectVersion.First(pv => pv.Id == projectVersion.Id);
-                    bundleVersion.ProjectVersions.Remove(activeProjectVersion);
+                    bundleVersion.ProjectVersions.Remove(projectVersion);
                 }
             }
 
