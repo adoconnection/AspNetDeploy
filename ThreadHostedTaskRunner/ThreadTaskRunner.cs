@@ -82,7 +82,9 @@ namespace ThreadHostedTaskRunner
                 .Include("Environment")
                 .Where( p => 
                     p.State == PublicationState.Queued &&
-                    !p.Package.Publications.Any( p2 => p2.CreatedDate > p.CreatedDate))
+                    !p.Package.Publications.Any( p2 => 
+                            p2.CreatedDate > p.CreatedDate && 
+                            p2.EnvironmentId == p.EnvironmentId))
                 .ToList();
 
             List<IGrouping<BundleVersion, Publication>> groupedPublications = publications
