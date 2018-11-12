@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
+using AspNetDeploy.WebUI.Models;
 using Environment = AspNetDeploy.Model.Environment;
 
 namespace AspNetDeploy.WebUI.Controllers
@@ -20,6 +21,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Publications.Environment")
                 .Include("BundleVersion.Bundle")
                 .Include("BundleVersion.Packages")
+                .Include("PackageEntry.ProjectVersion.SourceControlVersion.Revisions.RevisionInfos")
                 .Include("ApprovedOnEnvironments")
                 .First(p => p.Id == id);
 
@@ -36,11 +38,37 @@ namespace AspNetDeploy.WebUI.Controllers
             }
             else
             {
-                environments = new List<Environment>();
+                environments = new List<Environment>(); 
             }
 
             this.ViewBag.Package = package;
             this.ViewBag.Environments = environments;
+
+            IList<BundleRevision> revisions = new List<BundleRevision>();
+
+            foreach (IGrouping<SourceControlVersion, PackageEntry> group in package.PackageEntry.GroupBy(e => e.ProjectVersion.SourceControlVersion))
+            {
+                // TODO: create releation to Revision from PackageEntry
+                Revision revision = group.Key.Revisions.FirstOrDefault(r => r.Name == group.First().Revision);
+
+                if (revision == null)
+                {
+                    continue;
+                }
+
+                foreach (RevisionInfo revisionInfo in revision.RevisionInfos.OrderByDescending(i => i.CreatedDate))
+                {
+                    revisions.Add(new BundleRevision
+                    {
+                        CreatedDate = revisionInfo.CreatedDate,
+                        Author = revisionInfo.Author,
+                        Commit = revisionInfo.Message,
+                        SourceName = group.Key.SourceControl.Name
+                    });
+                }
+            }
+
+            this.ViewBag.Revisions = revisions.OrderByDescending(r => r.CreatedDate).ToList();
 
             return this.View();
         }

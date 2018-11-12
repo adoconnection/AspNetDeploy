@@ -19,6 +19,7 @@ namespace AspNetDeploy.Model
             this.ProjectVersions = new HashSet<ProjectVersion>();
             this.Properties = new HashSet<SourceControlVersionProperty>();
             this.ChildSourceControlVersions = new HashSet<SourceControlVersion>();
+            this.Revisions = new HashSet<Revision>();
         }
     
         public int Id { get; set; }
@@ -34,5 +35,6 @@ namespace AspNetDeploy.Model
         public virtual ICollection<SourceControlVersionProperty> Properties { get; set; }
         public virtual ICollection<SourceControlVersion> ChildSourceControlVersions { get; set; }
         public virtual SourceControlVersion ParentSourceControlVersion { get; set; }
+        public virtual ICollection<Revision> Revisions { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace AspNetDeploy.ContinuousIntegration
             AspNetDeployEntities entities = new AspNetDeployEntities();
             SourceControlVersion sourceControlVersion = entities.SourceControlVersion
                 .Include("Properties")
+                .Include("Revisions")
                 .Include("SourceControl.Properties")
                 .First(svc => svc.Id == sourceControlVersionId);
 
@@ -43,6 +44,27 @@ namespace AspNetDeploy.ContinuousIntegration
             }
 
             sourceControlVersion.SetStringProperty("Revision", loadSourcesResult.RevisionId);
+
+            Revision previousRevision = sourceControlVersion.Revisions.OrderByDescending(r => r.CreatedDate).FirstOrDefault();
+
+            Revision newRevision = new Revision
+            {
+                CreatedDate = DateTime.UtcNow,
+                Name = loadSourcesResult.RevisionId,
+                ParentRevision = previousRevision
+            };
+
+            sourceControlVersion.Revisions.Add(newRevision);
+
+            LoadSourcesInfoResult loadSourcesInfoResult = this.LoadSourcesInfo(sourceControlVersion, sourcesFolder);
+
+            newRevision.RevisionInfos = loadSourcesInfoResult.SourcesInfos.Select(i => new RevisionInfo
+            {
+                Author = i.Author,
+                CreatedDate = i.CreatedDate,
+                Message = i.Message
+            }).ToList();
+
             entities.SaveChanges();
 
             this.projectParsingService.UpdateProjects(sourceControlVersionId);
@@ -117,6 +139,12 @@ namespace AspNetDeploy.ContinuousIntegration
         {
             ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
             return repository.LoadSources(sourceControlVersion, sourcesFolder);
+        }
+
+        private LoadSourcesInfoResult LoadSourcesInfo(SourceControlVersion sourceControlVersion, string sourcesFolder)
+        {
+            ISourceControlRepository repository = this.sourceControlRepositoryFactory.Create(sourceControlVersion.SourceControl.Type);
+            return repository.LoadSourcesInfo(sourceControlVersion, sourcesFolder);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace AspNetDeploy.Model
+﻿using System.Collections.Generic;
+
+namespace AspNetDeploy.Model
 {
     public class LoadSourcesResult
     {

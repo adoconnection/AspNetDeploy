@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Model;
 using GitSharp;
@@ -29,6 +30,14 @@ namespace AspNetDeploy.SourceControls.Git
             }
 
             throw new NotImplementedException();
+        }
+
+        public LoadSourcesInfoResult LoadSourcesInfo(SourceControlVersion sourceControlVersion, string path)
+        {
+            return new LoadSourcesInfoResult
+            {
+                SourcesInfos = new List<SourcesInfo>()
+            };
         }
 
         public TestSourceResult TestConnection(SourceControlVersion sourceControlVersion)

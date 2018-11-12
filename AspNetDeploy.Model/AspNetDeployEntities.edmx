@@ -323,6 +323,26 @@
           <Property Name="ResultId" Type="int" Nullable="false" />
           <Property Name="QueuedByUserId" Type="int" />
         </EntityType>
+        <EntityType Name="Revision">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SourceControlId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ParentRevisionId" Type="int" />
+        </EntityType>
+        <EntityType Name="RevisionInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RevisionId" Type="int" Nullable="false" />
+          <Property Name="Message" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Author" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="SourceControl">
           <Key>
             <PropertyRef Name="Id" />
@@ -987,6 +1007,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Revision_Revision">
+          <End Role="Revision" Type="Self.Revision" Multiplicity="0..1" />
+          <End Role="Revision1" Type="Self.Revision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Revision1">
+              <PropertyRef Name="ParentRevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Revision_SourceControlVersion1">
+          <End Role="SourceControlVersion" Type="Self.SourceControlVersion" Multiplicity="1" />
+          <End Role="Revision" Type="Self.Revision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SourceControlVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Revision">
+              <PropertyRef Name="SourceControlId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RevisionInfo_Revision">
+          <End Role="Revision" Type="Self.Revision" Multiplicity="1" />
+          <End Role="RevisionInfo" Type="Self.RevisionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RevisionInfo">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SourceControlProperty_SourceControl">
           <End Role="SourceControl" Type="Self.SourceControl" Multiplicity="1" />
           <End Role="SourceControlProperty" Type="Self.SourceControlProperty" Multiplicity="*" />
@@ -1094,6 +1150,8 @@
           <EntitySet Name="ProjectVersionProperty" EntityType="Self.ProjectVersionProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectVersionToBundleVersion" EntityType="Self.ProjectVersionToBundleVersion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Publication" EntityType="Self.Publication" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Revision" EntityType="Self.Revision" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RevisionInfo" EntityType="Self.RevisionInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControl" EntityType="Self.SourceControl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlProperty" EntityType="Self.SourceControlProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceControlToGroup" EntityType="Self.SourceControlToGroup" Schema="dbo" store:Type="Tables" />
@@ -1299,6 +1357,18 @@
           <AssociationSet Name="FK_Publication_User" Association="Self.FK_Publication_User">
             <End Role="User" EntitySet="User" />
             <End Role="Publication" EntitySet="Publication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Revision_Revision" Association="Self.FK_Revision_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="Revision1" EntitySet="Revision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Revision_SourceControlVersion1" Association="Self.FK_Revision_SourceControlVersion1">
+            <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
+            <End Role="Revision" EntitySet="Revision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RevisionInfo_Revision" Association="Self.FK_RevisionInfo_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="RevisionInfo" EntitySet="RevisionInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_SourceControlProperty_SourceControl" Association="Self.FK_SourceControlProperty_SourceControl">
             <End Role="SourceControl" EntitySet="SourceControl" />
@@ -1554,7 +1624,21 @@
             <End Role="Environment" EntitySet="Environment" />
             <End Role="EnvironmentChain" EntitySet="EnvironmentChain" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Revision" EntityType="AspNetDeployModel.Revision" />
+          <EntitySet Name="RevisionInfo" EntityType="AspNetDeployModel.RevisionInfo" />
+          <AssociationSet Name="FK_Revision_Revision" Association="AspNetDeployModel.FK_Revision_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="Revision1" EntitySet="Revision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Revision_SourceControlVersion1" Association="AspNetDeployModel.FK_Revision_SourceControlVersion1">
+            <End Role="SourceControlVersion" EntitySet="SourceControlVersion" />
+            <End Role="Revision" EntitySet="Revision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RevisionInfo_Revision" Association="AspNetDeployModel.FK_RevisionInfo_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="RevisionInfo" EntitySet="RevisionInfo" />
+          </AssociationSet>
+          </EntityContainer>
                 <EnumType Name="SourceControlType">
           <Member Name="Undefined" Value="0" />
           <Member Name="Svn" Value="1" />
@@ -1772,6 +1856,7 @@
           <NavigationProperty Name="ChildSourceControlVersions" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion" ToRole="SourceControlVersion1" />
           <NavigationProperty Name="ParentSourceControlVersion" Relationship="AspNetDeployModel.FK_SourceControlVersion_SourceControlVersion" FromRole="SourceControlVersion1" ToRole="SourceControlVersion" />
           <Property Name="ArchiveState" Type="AspNetDeployModel.SourceControlVersionArchiveState" Nullable="false" />
+          <NavigationProperty Name="Revisions" Relationship="AspNetDeployModel.FK_Revision_SourceControlVersion1" FromRole="SourceControlVersion" ToRole="Revision" />
         </EntityType>
         <EntityType Name="SourceControlVersionProperty">
           <Key>
@@ -2550,7 +2635,69 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-            </Schema>
+           
+        <EntityType Name="Revision">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SourceControlId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ParentRevisionId" Type="Int32" />
+          <NavigationProperty Name="ChildRevisions" Relationship="AspNetDeployModel.FK_Revision_Revision" FromRole="Revision" ToRole="Revision1" />
+          <NavigationProperty Name="ParentRevision" Relationship="AspNetDeployModel.FK_Revision_Revision" FromRole="Revision1" ToRole="Revision" />
+          <NavigationProperty Name="SourceControlVersion" Relationship="AspNetDeployModel.FK_Revision_SourceControlVersion1" FromRole="Revision" ToRole="SourceControlVersion" />
+          <NavigationProperty Name="RevisionInfos" Relationship="AspNetDeployModel.FK_RevisionInfo_Revision" FromRole="Revision" ToRole="RevisionInfo" />
+        </EntityType>
+        <EntityType Name="RevisionInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RevisionId" Type="Int32" Nullable="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Author" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Revision" Relationship="AspNetDeployModel.FK_RevisionInfo_Revision" FromRole="RevisionInfo" ToRole="Revision" />
+        </EntityType>
+        <Association Name="FK_Revision_Revision">
+          <End Type="AspNetDeployModel.Revision" Role="Revision" Multiplicity="0..1" />
+          <End Type="AspNetDeployModel.Revision" Role="Revision1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Revision1">
+              <PropertyRef Name="ParentRevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Revision_SourceControlVersion1">
+          <End Type="AspNetDeployModel.SourceControlVersion" Role="SourceControlVersion" Multiplicity="1" />
+          <End Type="AspNetDeployModel.Revision" Role="Revision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SourceControlVersion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Revision">
+              <PropertyRef Name="SourceControlId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RevisionInfo_Revision">
+          <End Type="AspNetDeployModel.Revision" Role="Revision" Multiplicity="1" />
+          <End Type="AspNetDeployModel.RevisionInfo" Role="RevisionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RevisionInfo">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
         </edmx:ConceptualModels>
         <!-- C-S mapping content -->
         <edmx:Mappings>
@@ -2966,7 +3113,29 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Revision">
+            <EntityTypeMapping TypeName="AspNetDeployModel.Revision">
+              <MappingFragment StoreEntitySet="Revision">
+                <ScalarProperty Name="ParentRevisionId" ColumnName="ParentRevisionId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SourceControlId" ColumnName="SourceControlId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RevisionInfo">
+            <EntityTypeMapping TypeName="AspNetDeployModel.RevisionInfo">
+              <MappingFragment StoreEntitySet="RevisionInfo">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="RevisionId" ColumnName="RevisionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
             </Mapping>
         </edmx:Mappings>
     </edmx:Runtime>

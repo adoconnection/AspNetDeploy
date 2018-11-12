@@ -193,3 +193,13 @@ H3 > a:hover
     display: inline-block;
     margin-left: 5px;
 }
+
+.commit 
+{
+    padding: 10px;
+    white-space: normal;
+    display: block;
+    text-align: left;
+    border-radius: 10px;
+    background: #fceedb;
+}
