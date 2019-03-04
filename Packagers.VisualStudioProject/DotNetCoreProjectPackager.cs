@@ -17,7 +17,7 @@ namespace Packagers.VisualStudioProject
                 throw new VisualStudioPackagerException("targetFramework not set");
             }
 
-            if (!targetFramework.Value.Equals("netcoreapp2.0", StringComparison.InvariantCultureIgnoreCase))
+            if (!this.IsFrameworkSupported(targetFramework.Value))
             {
                 throw new VisualStudioPackagerException("targetFramework not supported: " + targetFramework.Value);
             }
@@ -27,6 +27,31 @@ namespace Packagers.VisualStudioProject
                 projectRootFolder,
                 Path.Combine("bin", "Release", targetFramework.Value, "publish"),
                 "\\");
+        }
+
+        private bool IsFrameworkSupported(string targetFramework)
+        {
+            if (targetFramework.Equals("netcoreapp2.0", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (targetFramework.Equals("netcoreapp2.1", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (targetFramework.Equals("netcoreapp2.2", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (targetFramework.Equals("netcoreapp2.3", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
