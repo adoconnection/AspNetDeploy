@@ -102,7 +102,7 @@
 
     </div>
 
-    @foreach (BundleVersion bundleVersion in bundle.BundleVersions.Where(bv => !bv.IsDeleted).OrderByDescending( bv => bv.Name))
+    @foreach (BundleVersion bundleVersion in bundle.BundleVersions.Where(bv => !bv.IsDeleted).OrderByDescending( bv => bv.Id))
     {
         <h3>
             @bundleVersion.Name
