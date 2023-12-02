@@ -36,7 +36,7 @@ namespace AspNetDeploy.WebUI.Controllers
                     .ToDictionary(k => k.m, k => k.alive);
             });
 
-            Task<Dictionary<Machine, IServerSummary>> getsummaryTask = (new TaskFactory<Dictionary<Machine, IServerSummary>>()).StartNew(() =>
+            Task<Dictionary<Machine, IServerSummary>> getSummaryTask = (new TaskFactory<Dictionary<Machine, IServerSummary>>()).StartNew(() =>
             {
                 return machines
                     .AsParallel()
@@ -44,10 +44,10 @@ namespace AspNetDeploy.WebUI.Controllers
                     .ToDictionary(k => k.m, k => k.summary);
             });
 
-            Task.WaitAll(isAliveTask, getsummaryTask);
+            Task.WaitAll(isAliveTask, getSummaryTask);
 
             this.ViewBag.MachineStates = isAliveTask.Result;
-            this.ViewBag.MachineSummaries = getsummaryTask.Result;
+            this.ViewBag.MachineSummaries = getSummaryTask.Result;
             this.ViewBag.Environments = environments;
 
             return this.View();

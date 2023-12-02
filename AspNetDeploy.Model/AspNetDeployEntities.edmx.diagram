@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="61eaa0c85af947d68e243b5492cf8488" Name="Diagram1" ZoomLevel="83">
+      <Diagram DiagramId="61eaa0c85af947d68e243b5492cf8488" Name="Diagram1" ZoomLevel="60">
         <EntityTypeShape EntityType="AspNetDeployModel.Bundle" Width="1.5" PointX="14.875" PointY="10.375" />
         <EntityTypeShape EntityType="AspNetDeployModel.BundleVersion" Width="1.5" PointX="10.75" PointY="10.75" />
         <EntityTypeShape EntityType="AspNetDeployModel.DeploymentStep" Width="2" PointX="4.375" PointY="10" />

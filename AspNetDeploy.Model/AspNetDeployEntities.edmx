@@ -174,7 +174,7 @@
           <Property Name="PublicationId" Type="int" Nullable="false" />
           <Property Name="MachineId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="StateId" Type="int" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
           <Property Name="CompletedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="MachinePublicationLog">
@@ -183,7 +183,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MachinePublicationId" Type="int" Nullable="false" />
-          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="Event" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="DeploymentStepId" Type="int" />
           <Property Name="ExceptionId" Type="int" />
@@ -320,7 +320,7 @@
           <Property Name="PackageId" Type="int" Nullable="false" />
           <Property Name="EnvironmentId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ResultId" Type="int" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
           <Property Name="QueuedByUserId" Type="int" />
         </EntityType>
         <EntityType Name="Revision">
@@ -2925,7 +2925,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.Publication">
               <MappingFragment StoreEntitySet="Publication">
                 <ScalarProperty Name="QueuedByUserId" ColumnName="QueuedByUserId" />
-                <ScalarProperty Name="State" ColumnName="ResultId" />
+                <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
                 <ScalarProperty Name="PackageId" ColumnName="PackageId" />
@@ -2957,7 +2957,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublication">
               <MappingFragment StoreEntitySet="MachinePublication">
                 <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
-                <ScalarProperty Name="State" ColumnName="StateId" />
+                <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
                 <ScalarProperty Name="PublicationId" ColumnName="PublicationId" />
@@ -2971,7 +2971,7 @@
                 <ScalarProperty Name="ExceptionId" ColumnName="ExceptionId" />
                 <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Event" ColumnName="EventId" />
+                <ScalarProperty Name="Event" ColumnName="Event" />
                 <ScalarProperty Name="MachinePublicationId" ColumnName="MachinePublicationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

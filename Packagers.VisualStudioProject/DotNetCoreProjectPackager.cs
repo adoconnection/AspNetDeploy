@@ -51,6 +51,16 @@ namespace Packagers.VisualStudioProject
                 return true;
             }
 
+            if (targetFramework.Equals("netcoreapp7.0", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (targetFramework.Equals("net7.0", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
             return false;
         }
     }

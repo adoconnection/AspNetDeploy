@@ -19,8 +19,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             if (filterContext.HttpContext.User.Identity.IsAuthenticated)
             {
-                Guid guid = new Guid(filterContext.HttpContext.User.Identity.Name);
-                User user = this.Entities.User.FirstOrDefault(u => u.Guid == guid);
+                Guid guid = new Guid(filterContext.HttpContext.User.Identity.Name); User user = this.Entities.User.FirstOrDefault(u => u.Guid == guid);
 
                 if (user == null || user.IsDisabled)
                 {

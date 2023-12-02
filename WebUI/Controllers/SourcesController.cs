@@ -246,6 +246,56 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.RedirectToAction("List");
         }
 
+        [HttpGet]
+        public ActionResult AddGit()
+        {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
+            return this.View();
+        }
+
+        [HttpPost]
+        public ActionResult AddGit(AddGitModel model)
+        {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            SourceControl sourceControl = new SourceControl
+            {
+                Type = SourceControlType.Git,
+                Name = model.Name,
+                IsDeleted = false,
+                OrderIndex = this.Entities.SourceControl.Count()
+            };
+
+            sourceControl.SetStringProperty("URL", model.Url.Trim());
+            sourceControl.SetStringProperty("Login", model.Login.Trim());
+            sourceControl.SetStringProperty("AccessToken", model.AccessToken.Trim());
+
+            SourceControlVersion sourceControlVersion = new SourceControlVersion();
+            sourceControlVersion.SourceControl = sourceControl;
+            sourceControlVersion.SetStringProperty("URL", "/");
+
+            TestSourceResult testSourceResult = this.sourceControlManager.TestConnection(sourceControlVersion);
+
+            if (!testSourceResult.IsSuccess)
+            {
+                this.ModelState.AddModelError("URL", testSourceResult.ErrorMessage);
+                return this.View(model);
+            }
+
+            sourceControlVersion.SourceControl = null;
+
+            this.Entities.SourceControl.Add(sourceControl);
+            this.Entities.SaveChanges();
+
+            return this.RedirectToAction("List");
+        }
+
         private ActionResult CreateNewVersionInternal(CreateNewSourceControlVersion model,
             Action<SourceControlVersion> fillProperties)
         {
