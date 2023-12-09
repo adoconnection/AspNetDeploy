@@ -2,10 +2,9 @@
 
 namespace SatelliteService
 {
-    [ServiceContract]
     public interface IMonitoringService
     {
-        [OperationContract]
+        
         ServerSummary GetServerSummary();
     }
 }

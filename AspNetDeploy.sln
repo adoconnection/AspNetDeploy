@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{716AC799-37AF-45F5-8716-8F6F415F3349}"
 EndProject
@@ -162,6 +162,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunners.VsTests", "TestRunners.VsTests\TestRunners.VsTests.csproj", "{671368FE-BFA2-4ABE-8259-A678774FB66C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServices.DotnetCore", "BuildServices.DotnetCore\BuildServices.DotnetCore.csproj", "{111359CD-237A-4F21-8C87-0CE728C77D3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentServices.Grpc", "DeploymentServices.Grpc\DeploymentServices.Grpc.csproj", "{76552135-5512-4A7C-9BA5-E54D39956C36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SatelliteGrpcHost", "SatelliteGrpcHost\SatelliteGrpcHost.csproj", "{20804BEF-367F-49E4-A4AD-88873DC38A13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -395,6 +399,14 @@ Global
 		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -472,8 +484,11 @@ Global
 		{5D8F0748-EB61-4C0B-9019-D695CA57C9E7} = {D9EF607D-D099-48A2-A534-6BD2DA1075B1}
 		{671368FE-BFA2-4ABE-8259-A678774FB66C} = {D9EF607D-D099-48A2-A534-6BD2DA1075B1}
 		{111359CD-237A-4F21-8C87-0CE728C77D3E} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
+		{76552135-5512-4A7C-9BA5-E54D39956C36} = {C930D618-BB7C-4D23-8B84-9B9586BBD662}
+		{20804BEF-367F-49E4-A4AD-88873DC38A13} = {E2599008-7B50-4236-BB6B-55AD26951864}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {5A1640E3-620C-4A77-9672-D5A42DF379A9}
 	EndGlobalSection
 EndGlobal
