@@ -80,6 +80,9 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Diagnostics.EventLog, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.EventLog.8.0.0\lib\net462\System.Diagnostics.EventLog.dll</HintPath>
+    </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
@@ -101,6 +104,9 @@
       <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.ServiceProcess.ServiceController, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ServiceProcess.ServiceController.8.0.0\lib\net462\System.ServiceProcess.ServiceController.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -245,6 +251,7 @@
     <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
+    <Compile Include="Controllers\MachinesController.cs" />
     <Compile Include="Controllers\ProjectVersionsController.cs" />
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\PublicationsController.cs" />
@@ -266,6 +273,8 @@
     <Compile Include="Models\DeploymentSteps\RunVsTestStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\SqlScriptDeploymentStepModel.cs" />
     <Compile Include="Models\EditNewSvnVersion.cs" />
+    <Compile Include="Models\MachineInfo.cs" />
+    <Compile Include="Models\MachineInstanceModel.cs" />
     <Compile Include="Models\Setup\ConnectionStringStepModel.cs" />
     <Compile Include="Models\Setup\DatabaseStructureStepModel.cs" />
     <Compile Include="Models\Setup\UsersStepModel.cs" />
@@ -342,6 +351,8 @@
     <Content Include="Views\BundleVersionDeployment\EditRunTestStep.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Sources\AddGit.cshtml" />
+    <Content Include="Views\Machines\List.cshtml" />
+    <Content Include="Views\Machines\DownloadMachineInstance.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -373,6 +384,10 @@
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MachineServices\MachineServices.csproj">
+      <Project>{f9f51ee4-4e1e-4814-9ec4-80f21bffc69b}</Project>
+      <Name>MachineServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>

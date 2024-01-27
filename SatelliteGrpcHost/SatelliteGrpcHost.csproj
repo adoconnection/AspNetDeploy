@@ -19,8 +19,10 @@
 	<ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="Microsoft.Web.Administration" Version="11.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="6.2.0" />
   </ItemGroup>

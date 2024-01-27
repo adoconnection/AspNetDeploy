@@ -304,7 +304,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Bundle")
                 .Include("ProjectVersions.Project.Properties")
                 .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
-                .Include("ProjectVersions.SourceControlVersion.Revisions.RevisionInfos")
+                .Include("ProjectVersions.SourceControlVersion.Revisions")
                 .Include("DeploymentSteps.Properties") 
                 .Include("DeploymentSteps.MachineRoles")
                 .Include("Packages.Publications.Environment.Machines")

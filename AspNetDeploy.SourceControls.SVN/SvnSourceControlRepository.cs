@@ -205,7 +205,7 @@ namespace AspNetDeploy.SourceControls.SVN
 
         private string GetVersionURI(SourceControlVersion sourceControlVersion)
         {
-            return sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL").TrimStart('/');
+            return sourceControlVersion.SourceControl.GetStringProperty("URL") + "/" + sourceControlVersion.GetStringProperty("URL")?.TrimStart('/');
         }
     }
 }
