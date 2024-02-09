@@ -80,6 +80,10 @@
       <Project>{76552135-5512-4a7c-9ba5-e54d39956c36}</Project>
       <Name>DeploymentServices.Grpc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
+      <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
+      <Name>LocalEnvironment</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj" />
     <ProjectReference Include="..\CertificateBuilder\CertificateBuilder.csproj" />
   </ItemGroup>
 

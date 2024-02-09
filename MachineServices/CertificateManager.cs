@@ -5,56 +5,92 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using AspNetDeploy.Contracts;
+using System.Xml.Linq;
 
 namespace MachineServices
 {
     public class CertificateManager
     {
-        private X509Certificate2 GetOrCreateRootCertificate()
+        private readonly IPathServices _pathServices;
+        public CertificateManager(IPathServices pathServices)
         {
-            CertificateFactory certificateFactory = new CertificateFactory();
-            string rootCertificatePath = Path.Combine(ConfigurationManager.AppSettings["Settings.WorkingFolder"], "Certificates", "Root.pem");
+            this._pathServices = pathServices;
+        }
 
-            try
+        public X509Certificate2 GetRootCertificate(bool isPfx)
+        {
+            string path = this._pathServices.GetRootCertificatePath(isPfx);
+
+            if (!File.Exists(path))
             {
-                return new X509Certificate2(rootCertificatePath, "sdfsd");
+                return null;
             }
-            catch (FileNotFoundException ex)
+
+            if (isPfx)
             {
-                X509Certificate2 rootCertificate = certificateFactory.CreateRootCertificate();
-                byte[] certificateData = rootCertificate.Export(X509ContentType.Pfx, "aspnetdeploy");
-                File.WriteAllBytes(rootCertificatePath, certificateData);
-                return rootCertificate;
+                return new X509Certificate2(path, "aspnetdeploy");
             }
+
+            return new X509Certificate2(X509Certificate.CreateFromCertFile(path));
+        }
+
+        public X509Certificate2 GetClientCertificate()
+        {
+            return new X509Certificate2(this._pathServices.GetClientCertificatePath(), "aspnetdeploy");
         }
 
         public void CreateAndSaveCertificateForMachine()
         {
-            string machineCertificatePath = Path.Combine(ConfigurationManager.AppSettings["Settings.WorkingFolder"], "MachineAgent", "Template", "Certificates", "machineCertificate.pfx");
-            this.CreateAndSaveCertificateInternal(machineCertificatePath);
+            X509Certificate2 rootPublicKey = this.GetRootCertificate(false);
+
+            this.CreateAndSavePfxCertificate(this._pathServices.GetMachineCertificatePath());
+            this.SaveCrt(rootPublicKey, this._pathServices.GetMachineCertificatePath(true));
         }
 
-        public void CreateAndSaveCertificateForBase()
+        public void CreateAndSaveClientCertificate()
         {
-            string baseCertificatePath = Path.Combine(ConfigurationManager.AppSettings["Settings.WorkingFolder"], "Certificates", "machineCertificate.pfx");
-            this.CreateAndSaveCertificateInternal(baseCertificatePath);
+            this.CreateAndSavePfxCertificate(this._pathServices.GetClientCertificatePath());
         }
 
-        private void CreateAndSaveCertificateInternal(string certPath)
+        private void CreateAndSavePfxCertificate(string certPath)
         {
-            X509Certificate2 rootCertificate = this.GetOrCreateRootCertificate();
+            X509Certificate2 rootCertificate = this.GetRootCertificate(true);
             CertificateFactory certificateFactory = new CertificateFactory();
 
-            X509Certificate2 machineCertificate = certificateFactory.CreateCertificate(rootCertificate);
+            X509Certificate2 newCertificate = certificateFactory.CreateCertificate(rootCertificate);
 
-            string machineCertificatePath = Path.Combine(ConfigurationManager.AppSettings["Settings.WorkingFolder"],
-                "MachineAgent", "Template", "Certificates", "machineCertificate.pfx");
+            byte[] certificateData = newCertificate.Export(X509ContentType.Pfx, "aspnetdeploy");
+            File.WriteAllBytes(certPath, certificateData);
+        }
+
+        public void CreateAndSaveRootCertificate()
+        {
+            CertificateFactory certificateFactory = new CertificateFactory();
+
+            Tuple<X509Certificate2, RSA> generatedData = certificateFactory.CreateRootCertificate();
+
+            X509Certificate2 rootCertificate = generatedData.Item1;
+            RSA rootCertPrivateKey = generatedData.Item2;
 
             byte[] certificateData = rootCertificate.Export(X509ContentType.Pfx, "aspnetdeploy");
-            File.WriteAllBytes(certPath, certificateData);
+            File.WriteAllBytes(this._pathServices.GetRootCertificatePath(true), certificateData);
+
+            this.SaveCrt(rootCertificate, this._pathServices.GetRootCertificatePath(false));
+        }
+
+        private void SaveCrt(X509Certificate2 certificate, string path)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(certificate.RawData, Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+            File.WriteAllText(path, builder.ToString());
         }
     }
 }

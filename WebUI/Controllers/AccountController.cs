@@ -69,7 +69,7 @@ namespace AspNetDeploy.WebUI.Controllers
             }
 
             WebClient client = new WebClient();
-            byte[] downloadData = client.DownloadData("http://www.gravatar.com/avatar/" + hash + ".jpg?d=mm&s=30");
+            byte[] downloadData = new byte[1000]; //ЗАТЫЧКА
 
             return this.File(downloadData, "image/jpeg");
         }

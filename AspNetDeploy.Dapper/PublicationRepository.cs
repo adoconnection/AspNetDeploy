@@ -25,7 +25,7 @@ namespace AspNetDeploy.Dapper
                 .Query<Publication, Environment, Package, Publication>(@"
                     SELECT 
                         pub.*,
-                        pub.ResultId State,
+                        pub.State State,
 	                    e.*,
 	                    pack.*
                     FROM Publication pub

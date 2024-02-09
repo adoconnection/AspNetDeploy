@@ -127,6 +127,10 @@
       <Project>{F91D4165-BA2F-4C06-9BE7-2662C0EA7B0E}</Project>
       <Name>BuildServices.NuGet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DeploymentServices.GrpcMonitoring\DeploymentServices.GrpcMonitoring.csproj">
+      <Project>{727cfd87-9757-4ad2-a2e7-2d237252fd63}</Project>
+      <Name>DeploymentServices.GrpcMonitoring</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
       <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
       <Name>LocalEnvironment</Name>

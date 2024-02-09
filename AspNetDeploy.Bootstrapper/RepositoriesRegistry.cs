@@ -13,6 +13,8 @@ using ObjectFactory;
 using Packagers;
 using TestRunners;
 using ThreadHostedTaskRunner;
+using DeploymentServices.GrpcMonitoring;
+using SatelliteMonitor = DeploymentServices.GrpcMonitoring.SatelliteMonitor;
 
 namespace AspNetDeploy.Bootstrapper
 {

@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Ionic.Zip;
 using Ionic.Zlib;
+using LocalEnvironment;
 using MachineServices;
 
 namespace AspNetDeploy.WebUI.Controllers
@@ -75,7 +76,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             machine.URL = model.Uri;
 
-            MachineInstanceFactory machineInstanceFactory = new MachineInstanceFactory();
+            MachineInstanceFactory machineInstanceFactory = new MachineInstanceFactory(new PathServices());
             ZipFile machineInstance = machineInstanceFactory.Create(new MachineConfigModel()
             {
                 IsAuthorizationEnabled = model.IsAuthorizationEnabled,

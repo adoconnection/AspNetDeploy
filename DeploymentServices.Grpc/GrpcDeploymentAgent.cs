@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Xml.Serialization;
 using AspNetDeploy.Contracts;
@@ -12,6 +15,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using GrpcSatellite;
+using MachineServices;
 using Newtonsoft.Json;
 
 namespace DeploymentServices.Grpc
@@ -21,12 +25,28 @@ namespace DeploymentServices.Grpc
         private readonly IVariableProcessor variableProcessor;
         private readonly Deployment.DeploymentClient deploymentClient;
 
-        public GrpcDeploymentAgent(IVariableProcessor variableProcessor, string endpoint, string login, string password)
+        public GrpcDeploymentAgent(IVariableProcessor variableProcessor, IPathServices pathServices, string endpoint, string login, string password)
         {
             this.variableProcessor = variableProcessor;
-            
+
+            CertificateManager certificateManager = new CertificateManager(pathServices);
+
+            X509Certificate2 authority = certificateManager.GetRootCertificate(false);
+            X509Certificate2 clientCertificate = certificateManager.GetClientCertificate();
+
+            var handler = new HttpClientHandler();
+
+            handler.ClientCertificates.Add(clientCertificate);
+            handler.ServerCertificateCustomValidationCallback = (request, cert, chain, errors) =>
+            {
+                return chain.ChainElements
+                    .Cast<X509ChainElement>()
+                    .Any(el => el.Certificate.Thumbprint == authority.Thumbprint);
+            };
+
             var options = new GrpcChannelOptions();
-            var channel = GrpcChannel.ForAddress(new Uri("https://localhost:7142"), options);
+            var channel = GrpcChannel.ForAddress(new Uri(endpoint), options);
+
             this.deploymentClient = new Deployment.DeploymentClient(channel);
         }
 

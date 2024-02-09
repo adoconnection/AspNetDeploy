@@ -385,6 +385,10 @@
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
+      <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
+      <Name>LocalEnvironment</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MachineServices\MachineServices.csproj">
       <Project>{f9f51ee4-4e1e-4814-9ec4-80f21bffc69b}</Project>
       <Name>MachineServices</Name>

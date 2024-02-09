@@ -8,6 +8,8 @@ using AspNetDeploy.Contracts;
 using AspNetDeploy.Dapper;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
+using LocalEnvironment;
+using MachineServices;
 using Newtonsoft.Json;
 using Environment = AspNetDeploy.Model.Environment;
 

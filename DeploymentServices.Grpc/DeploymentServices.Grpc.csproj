@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj" />
+    <ProjectReference Include="..\MachineServices\MachineServices.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

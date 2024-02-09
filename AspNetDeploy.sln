@@ -169,9 +169,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatelliteGrpcHost", "Satell
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Machine", "Machine", "{E2EB1A65-05FD-4984-81EA-CE7D05179543}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineServices", "MachineServices\MachineServices.csproj", "{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineServices", "MachineServices\MachineServices.csproj", "{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertificateBuilder", "CertificateBuilder\CertificateBuilder.csproj", "{4C40AFD7-358C-43A6-91D8-F431797A8048}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CertificateBuilder", "CertificateBuilder\CertificateBuilder.csproj", "{4C40AFD7-358C-43A6-91D8-F431797A8048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentServices.GrpcMonitoring", "DeploymentServices.GrpcMonitoring\DeploymentServices.GrpcMonitoring.csproj", "{727CFD87-9757-4AD2-A2E7-2D237252FD63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -421,6 +423,10 @@ Global
 		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -503,9 +509,10 @@ Global
 		{E2EB1A65-05FD-4984-81EA-CE7D05179543} = {2BAE3B06-63CF-483D-ACA2-6662C78B2422}
 		{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B} = {E2EB1A65-05FD-4984-81EA-CE7D05179543}
 		{4C40AFD7-358C-43A6-91D8-F431797A8048} = {D23AB140-E668-4230-9F9B-A31926E3E199}
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63} = {C930D618-BB7C-4D23-8B84-9B9586BBD662}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5A1640E3-620C-4A77-9672-D5A42DF379A9}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {5A1640E3-620C-4A77-9672-D5A42DF379A9}
 	EndGlobalSection
 EndGlobal

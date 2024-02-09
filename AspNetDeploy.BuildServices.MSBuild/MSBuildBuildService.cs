@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
+using AspNetDeploy.BuildServices.NuGet;
 using AspNetDeploy.Contracts;
+using AspNetDeploy.Contracts.Exceptions;
 using AspNetDeploy.Model;
 using BuildServices.NuGet;
 using Microsoft.Build.Evaluation;
@@ -13,10 +17,12 @@ namespace AspNetDeploy.BuildServices.MSBuild
     public class MSBuildBuildService : IBuildService
     {
         private readonly INugetPackageManager nugetPackageManager;
+        private readonly IPathServices pathServices;
 
         public MSBuildBuildService(IPathServices pathServices)
         {
             this.nugetPackageManager = new NugetPackageManager(pathServices);
+            this.pathServices = pathServices;
         }
 
         public BuildSolutionResult Build(string sourcesFolder, ProjectVersion projectVersion, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, Exception> errorLogger)
@@ -34,39 +40,41 @@ namespace AspNetDeploy.BuildServices.MSBuild
 
         private BuildSolutionResult BuildInternal(string targetFile, Action<string> projectBuildStarted, Action<string, bool, string> projectBuildComplete, Action<string, Exception> errorLogger)
         {
-            ProjectCollection projectCollection = new ProjectCollection();
+            projectBuildStarted(targetFile);
+            string output;
 
-            Dictionary<string, string> globalProperty = new Dictionary<string, string>
+            if (DoMSBuild(this.pathServices.GetMSBuildPath(), targetFile, out output) != 0)
             {
-                {"Configuration", "Release"},
-                {"VisualStudioVersion", "14.0"},
-                //{"Platform", "Any CPU"}
-            };
+                errorLogger(targetFile, new MSBuildException(output));
+                projectBuildComplete(targetFile, false, output);
 
-            BuildRequestData buildRequestData = new BuildRequestData(
-                targetFile,
-                globalProperty,
-                null,
-                new[]
+                return new BuildSolutionResult
                 {
-                    "Rebuild"
-                },
-                null);
+                    IsSuccess = false
+                };
+            }
 
-            BuildParameters buildParameters = new BuildParameters(projectCollection);
-            buildParameters.MaxNodeCount = 4;
-
-            buildParameters.Loggers = new List<ILogger>
-            {
-                new MSBuildLogger(projectBuildStarted, projectBuildComplete, errorLogger)
-            };
-
-            BuildResult buildResult = BuildManager.DefaultBuildManager.Build(buildParameters, buildRequestData);
+            projectBuildComplete(targetFile, true, null);
 
             return new BuildSolutionResult
             {
-                IsSuccess = buildResult.OverallResult == BuildResultCode.Success
+                IsSuccess = true
             };
+        }
+
+        private static int DoMSBuild(string toolPath, string arguments, out string output)
+        {
+            Process process = new Process();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.FileName = toolPath;
+            process.StartInfo.Arguments = arguments;
+
+            process.Start();
+            output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            return process.ExitCode;
         }
 
         private string LatestToolsVersion()
