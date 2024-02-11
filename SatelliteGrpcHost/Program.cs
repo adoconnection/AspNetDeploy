@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
@@ -20,22 +21,20 @@ builder.WebHost.UseKestrel(options =>
     options.Listen(System.Net.IPAddress.Loopback, 7142, listenOptions =>
     {
         var connectionOptions = new HttpsConnectionAdapterOptions();
-        connectionOptions.ServerCertificate = new X509Certificate2("D:\\Limetime\\Deploy\\MachineAgent\\Template\\Certificates\\machineCertificate.pfx", "aspnetdeploy");
-        //connectionOptions.ServerCertificate = new X509Certificate2("D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\server.pfx", "1234");
-
+        connectionOptions.ServerCertificate = new X509Certificate2("D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\machine1.pfx", "aspnetdeploy");
+        
         X509Certificate2 authority = new X509Certificate2(X509Certificate.CreateFromCertFile(
-            "D:\\Limetime\\Deploy\\MachineAgent\\Template\\Certificates\\rootCertificate.crt"));
+            "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.cer"));
 
         connectionOptions.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
         connectionOptions.ClientCertificateValidation = (certificate, chain, errors) =>
         {
-            foreach (X509ChainElement element in chain.ChainElements)
-            {
-                Console.WriteLine(element.Certificate.Thumbprint);
-            }
-
-            return chain.ChainElements
+            bool isValid = chain.ChainElements
                 .Any(el => el.Certificate.Thumbprint == authority.Thumbprint);
+
+            Console.WriteLine("Cert check: " + isValid);
+
+            return isValid;
         };
 
         listenOptions.Protocols = HttpProtocols.Http2;
@@ -43,11 +42,12 @@ builder.WebHost.UseKestrel(options =>
     });
 });
 
-
 var app = builder.Build();
 
+app.UseGrpcWeb();
 // Configure the HTTP request pipeline.
-app.MapGrpcService<DeploymentController>();
+app.MapGrpcService<DeploymentController>().EnableGrpcWeb();
+app.UseHttpsRedirection();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();

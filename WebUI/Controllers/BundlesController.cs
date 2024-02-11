@@ -34,6 +34,10 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult List()
         {
+            //CertificateManager manager = new CertificateManager(new PathServices());
+            //manager.CreateAndSaveClientCertificate();
+            //manager.CreateAndSaveCertificateForMachine();
+
             IList<Bundle> bundles = this.bundleRepository.List();
 
             List<Environment> environments = this.Entities.Environment

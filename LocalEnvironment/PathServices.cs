@@ -42,14 +42,18 @@ namespace LocalEnvironment
         {
             if (isPfx)
             {
-                return this.GetWorkingFolderPath(Path.Combine("Certificates", "caRoot.pfx"));
+                return
+                    "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.pfx";
+                return this.GetWorkingFolderPath(Path.Combine("Certificates", "rootCertificate.pfx"));
             }
 
-            return this.GetWorkingFolderPath(Path.Combine("Certificates", "caRoot.crt"));
+            return "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.cer";
+            return this.GetWorkingFolderPath(Path.Combine("Certificates", "rootCertificate.crt"));
         }
 
         public string GetClientCertificatePath()
         {
+            return "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\client.pfx";
             return this.GetWorkingFolderPath(Path.Combine("Certificates", "clientCertificate.pfx"));
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Xml.Serialization;
@@ -14,9 +15,11 @@ using DeploymentServices;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
+using Grpc.Net.Client.Web;
 using GrpcSatellite;
 using MachineServices;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Tls;
 
 namespace DeploymentServices.Grpc
 {
@@ -24,29 +27,38 @@ namespace DeploymentServices.Grpc
     {
         private readonly IVariableProcessor variableProcessor;
         private readonly Deployment.DeploymentClient deploymentClient;
+        private readonly X509Certificate2 clientCertificate;
+        private readonly X509Certificate2 authority;
 
         public GrpcDeploymentAgent(IVariableProcessor variableProcessor, IPathServices pathServices, string endpoint, string login, string password)
         {
-            this.variableProcessor = variableProcessor;
-
             CertificateManager certificateManager = new CertificateManager(pathServices);
 
-            X509Certificate2 authority = certificateManager.GetRootCertificate(false);
-            X509Certificate2 clientCertificate = certificateManager.GetClientCertificate();
+            this.variableProcessor = variableProcessor;
+            this.authority = certificateManager.GetRootCertificate(false);
+            this.clientCertificate = certificateManager.GetClientCertificate();
+
+            AppContext.SetSwitch("Microsoft.AspNetCore.Server.Kestrel.EnableWindows81Http2", true);
 
             var handler = new HttpClientHandler();
 
             handler.ClientCertificates.Add(clientCertificate);
             handler.ServerCertificateCustomValidationCallback = (request, cert, chain, errors) =>
             {
-                return chain.ChainElements
+                bool isValid = chain.ChainElements
                     .Cast<X509ChainElement>()
-                    .Any(el => el.Certificate.Thumbprint == authority.Thumbprint);
+                    .Any(el => el.Certificate.Thumbprint == this.authority.Thumbprint);
+
+                return isValid;
             };
 
-            var options = new GrpcChannelOptions();
-            var channel = GrpcChannel.ForAddress(new Uri(endpoint), options);
+            var options = new GrpcChannelOptions()
+            {
+                HttpHandler = new GrpcWebHandler(handler),
+            };
 
+            var channel = GrpcChannel.ForAddress(new Uri(endpoint), options);
+            
             this.deploymentClient = new Deployment.DeploymentClient(channel);
         }
 

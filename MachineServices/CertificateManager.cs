@@ -34,7 +34,7 @@ namespace MachineServices
 
             if (isPfx)
             {
-                return new X509Certificate2(path, "aspnetdeploy");
+                return new X509Certificate2(path, "1234");
             }
 
             return new X509Certificate2(X509Certificate.CreateFromCertFile(path));
