@@ -10,7 +10,7 @@ namespace CertificateHelpers
         {
             return store.Certificates
                 .Cast<X509Certificate2>()
-                .FirstOrDefault(certificate => certificate.FriendlyName.ToLowerInvariant() == friendlyName.ToLowerInvariant());
+                .FirstOrDefault(certificate => certificate.FriendlyName.ToLowerInvariant().Contains(friendlyName.ToLowerInvariant()));
         }
 
         public static X509Certificate2 FirstOrDefault(this X509Certificate2Collection collection, Func<X509Certificate2, bool> predicate)
