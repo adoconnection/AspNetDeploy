@@ -8,7 +8,7 @@ namespace AspNetDeploy.Variables
 {
     public class VariableProcessorFactory : IVariableProcessorFactory
     {
-        public IVariableProcessor Create(int bundleVersionId, int machineId)
+        public IVariableProcessor Create(int packageId, int machineId)
         {
             AspNetDeployEntities entities = new AspNetDeployEntities();
 
@@ -18,12 +18,16 @@ namespace AspNetDeploy.Variables
                 .Where( df => !df.IsDeleted && df.Mode == DataFieldMode.Global)
                 .ToList();
 
+            Package package = entities.Package
+                .Include("BundleVersion")
+                .First(p => p.Id == packageId);
+
             BundleVersion bundleVersion = entities.BundleVersion
                 .Include("Bundle")
                 .Include("ParentBundleVersion")
                 .Include("DataFields.DataFieldValues.Environment")
                 .Include("DataFields.DataFieldValues.Machine")
-                .First(bv => bv.Id == bundleVersionId);
+                .First(bv => bv.Id == package.BundleVersionId);
 
             List<DataField> bundleDataFields = bundleVersion.DataFields
                 .Where( df => !df.IsDeleted)
@@ -32,7 +36,7 @@ namespace AspNetDeploy.Variables
             int environmentId = entities.Machine.First(m => m.Id == machineId).Environments.First().Id;
 
             IDictionary<string, string> dataFieldsDictionary = this.CreateDataFieldsDictionary(machineId, globalDataFields, bundleDataFields, environmentId);
-            IDictionary<string, string> environmentDictionary = this.CreateEnvironmentDictionary(bundleVersion);
+            IDictionary<string, string> environmentDictionary = this.CreateEnvironmentDictionary(package);
 
             return new VariableProcessor(dataFieldsDictionary, environmentDictionary, new Dictionary<string, Func<string, string>>()
             {
@@ -89,18 +93,27 @@ namespace AspNetDeploy.Variables
             return dataFieldsDictionary;
         }
 
-        private IDictionary<string, string> CreateEnvironmentDictionary(BundleVersion bundleVersion)
+        private IDictionary<string, string> CreateEnvironmentDictionary(Package package)
         {
+
+
             IDictionary<string, string> environmentDictionary = new Dictionary<string, string>();
 
-            environmentDictionary.Add("version", bundleVersion.Name);
+            environmentDictionary.Add("version", package.BundleVersion.Name);
 
-            environmentDictionary.Add("year", DateTime.Now.Year.ToString());
+            environmentDictionary.Add("date.ticks", DateTime.Now.Ticks.ToString());
+            environmentDictionary.Add("date.day", DateTime.Now.Day.ToString("00"));
+            environmentDictionary.Add("date.month", DateTime.Now.Month.ToString("00"));
+            environmentDictionary.Add("date.year", DateTime.Now.Year.ToString());
+            environmentDictionary.Add("package.id", package.Id.ToString());
+            environmentDictionary.Add("package.day", package.CreatedDate.Year.ToString());
+            environmentDictionary.Add("package.month", package.CreatedDate.Year.ToString());
+            environmentDictionary.Add("package.year", package.CreatedDate.Year.ToString());
 
-            environmentDictionary.Add("version.previous", bundleVersion.ParentBundleVersion != null ? bundleVersion.ParentBundleVersion.Name : "");
-            environmentDictionary.Add("previousversion",  bundleVersion.ParentBundleVersion != null ? bundleVersion.ParentBundleVersion.Name : "");
+            environmentDictionary.Add("version.previous", package.BundleVersion.ParentBundleVersion != null ? package.BundleVersion.ParentBundleVersion.Name : "");
+            environmentDictionary.Add("previousversion", package.BundleVersion.ParentBundleVersion != null ? package.BundleVersion.ParentBundleVersion.Name : "");
 
-            environmentDictionary.Add("bundle", bundleVersion.Bundle.Name);
+            environmentDictionary.Add("bundle", package.BundleVersion.Bundle.Name);
             return environmentDictionary;
         }
     }

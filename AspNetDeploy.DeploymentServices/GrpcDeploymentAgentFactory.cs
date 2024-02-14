@@ -1,5 +1,4 @@
 ﻿using AspNetDeploy.Contracts;
-using AspNetDeploy.DeploymentServices.WCFSatellite;
 using AspNetDeploy.Model;
 using DeploymentServices.Grpc;
 using LocalEnvironment;
@@ -16,9 +15,9 @@ namespace AspNetDeploy.DeploymentServices
             this.variableProcessorFactory = variableProcessorFactory;
         }
 
-        public IDeploymentAgent Create(Machine machine, BundleVersion bundleVersion)
+        public IDeploymentAgent Create(Machine machine, Package package)
         {
-            IVariableProcessor variableProcessor = this.variableProcessorFactory.Create(bundleVersion.Id, machine.Id);
+            IVariableProcessor variableProcessor = this.variableProcessorFactory.Create(package.Id, machine.Id);
             return new GrpcDeploymentAgent(variableProcessor, new PathServices(),  machine.URL, machine.Login, machine.Password);
         }
     }

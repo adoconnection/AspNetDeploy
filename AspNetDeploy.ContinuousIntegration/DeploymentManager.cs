@@ -120,7 +120,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         {
                             this.LogMachinePublicationStep(machinePublication, deploymentStep, entities, MachinePublicationLogEvent.DeploymentStepExecuting);
 
-                            IVariableProcessor variableProcessor = this.variableProcessorFactory.Create(publication.Package.BundleVersionId, machine.Id);
+                            IVariableProcessor variableProcessor = this.variableProcessorFactory.Create(publication.PackageId, machine.Id);
                             ProjectVersion projectVersion = publication.Package.BundleVersion.ProjectVersions.First(pv => pv.Id == deploymentStep.GetIntProperty("ProjectId"));
 
                             IProjectTestRunner projectTestRunner = this.projectTestRunnerFactory.Create(projectVersion.ProjectType, variableProcessor);
@@ -379,7 +379,7 @@ namespace AspNetDeploy.ContinuousIntegration
 
             foreach (Machine machine in affectedMachines)
             {
-                agents[machine] = this.deploymentAgentFactory.Create(machine, package.BundleVersion);
+                agents[machine] = this.deploymentAgentFactory.Create(machine, package);
             }
 
             return agents;

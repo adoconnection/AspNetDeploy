@@ -2,6 +2,6 @@
 {
     public interface IVariableProcessorFactory
     {
-        IVariableProcessor Create(int bundleVersionId, int machineId);
+        IVariableProcessor Create(int packageId, int machineId);
     }
 }
