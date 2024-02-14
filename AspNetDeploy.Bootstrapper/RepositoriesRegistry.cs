@@ -13,6 +13,8 @@ using ObjectFactory;
 using Packagers;
 using TestRunners;
 using ThreadHostedTaskRunner;
+using DeploymentServices.GrpcMonitoring;
+using SatelliteMonitor = DeploymentServices.GrpcMonitoring.SatelliteMonitor;
 
 namespace AspNetDeploy.Bootstrapper
 {
@@ -28,7 +30,7 @@ namespace AspNetDeploy.Bootstrapper
             this.Map<IBuildServiceFactory, BuildServiceFactory>(LifecycleType.Application);
             this.Map<IProjectPackagerFactory, ProjectPackagerFactory>(LifecycleType.Application);
             this.Map<IPathServices, PathServices>(LifecycleType.Application);
-            this.Map<IDeploymentAgentFactory, DeploymentAgentFactory>(LifecycleType.Application);
+            this.Map<IDeploymentAgentFactory, GrpcDeploymentAgentFactory>(LifecycleType.Application);
             this.Map<IProjectTestRunnerFactory, ProjectTestRunnerFactory>(LifecycleType.Application);
             this.Map<IVariableProcessorFactory, VariableProcessorFactory>();
             this.Map<ISatelliteMonitor, SatelliteMonitor>();

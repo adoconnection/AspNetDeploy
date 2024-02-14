@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "SatelliteGrpcHost": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5092;https://localhost:7142",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

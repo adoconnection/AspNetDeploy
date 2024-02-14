@@ -30,12 +30,12 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            if (Directory.Exists((string) this.configuration.destination))
+            if (Directory.Exists((string) this.configuration.Destination))
             {
                 this.destinationExists = true;
             }
 
-            switch (((string)this.configuration.mode).ToLower())
+            switch (((string)this.configuration.Mode).ToLower())
             {
                 case "replace":
                     this.RunReplace();
@@ -52,8 +52,8 @@ namespace SatelliteService.Operations
         private void RunAppend()
         {
             packageRepository.ExtractProject(
-                (int)this.configuration.projectId,
-                (string)this.configuration.destination,
+                (int)this.configuration.ProjectId,
+                (string)this.configuration.Destination,
                 (entryDestinationPath, isDirectory) =>
                 {
                     if (isDirectory)
@@ -90,12 +90,12 @@ namespace SatelliteService.Operations
 
         private void RunReplace()
         {
-            this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
-            DirectoryHelper.DeleteContents((string) this.configuration.destination);
+            this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.Destination);
+            DirectoryHelper.DeleteContents((string) this.configuration.Destination);
 
             packageRepository.ExtractProject(
-                (int)this.configuration.projectId,
-                (string)this.configuration.destination,
+                (int)this.configuration.ProjectId,
+                (string)this.configuration.Destination,
                 (entryDestinationPath, isDirectory) => { });
         }
 
@@ -104,7 +104,7 @@ namespace SatelliteService.Operations
         {
             if (this.destinationExists)
             {
-                switch (((string)this.configuration.mode).ToLower())
+                switch (((string)this.configuration.Mode).ToLower())
                 {
                     case "replace":
                         this.RollbackReplace();

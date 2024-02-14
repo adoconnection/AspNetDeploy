@@ -38,6 +38,7 @@ namespace LocalEnvironment
                     Directory.CreateDirectory(workingFolder);
                     Directory.CreateDirectory(Path.Combine(workingFolder, "Packages"));
                     Directory.CreateDirectory(Path.Combine(workingFolder, "Sources"));
+                    Directory.CreateDirectory(Path.Combine(workingFolder, "MachineAgent"));
                 }
                 catch (Exception e)
                 {

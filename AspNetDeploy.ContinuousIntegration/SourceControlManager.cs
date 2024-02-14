@@ -54,6 +54,8 @@ namespace AspNetDeploy.ContinuousIntegration
                 ParentRevision = previousRevision
             };
 
+            entities.Revision.Add(newRevision);
+
             sourceControlVersion.Revisions.Add(newRevision);
 
             LoadSourcesInfoResult loadSourcesInfoResult = this.LoadSourcesInfo(sourceControlVersion, sourcesFolder);

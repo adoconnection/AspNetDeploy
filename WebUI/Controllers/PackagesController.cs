@@ -152,7 +152,6 @@ namespace AspNetDeploy.WebUI.Controllers
             publication.EnvironmentId = environmentid;
             publication.PackageId = id;
             publication.State = PublicationState.Queued;
-
             this.Entities.Publication.Add(publication);
             this.Entities.SaveChanges();
 

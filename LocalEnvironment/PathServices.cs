@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using AspNetDeploy.Contracts;
 using AspNetDeploy.Contracts.Exceptions;
 
@@ -30,6 +31,42 @@ namespace LocalEnvironment
         public string GetNpmPath()
         {
             return ConfigurationManager.AppSettings["Settings.NpmBinary"];
+        }
+
+        public string GetMSBuildPath()
+        {
+            return "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe"; //Затычка
+        }
+
+        public string GetRootCertificatePath(bool isPfx = true)
+        {
+            if (isPfx)
+            {
+                return
+                    "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.pfx";
+                return this.GetWorkingFolderPath(Path.Combine("Certificates", "rootCertificate.pfx"));
+            }
+
+            return "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.cer";
+            return this.GetWorkingFolderPath(Path.Combine("Certificates", "rootCertificate.crt"));
+        }
+
+        public string GetClientCertificatePath()
+        {
+            return "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\client.pfx";
+            return this.GetWorkingFolderPath(Path.Combine("Certificates", "clientCertificate.pfx"));
+        }
+
+        public string GetMachineCertificatePath(bool isRoot = false)
+        {
+            if (isRoot)
+            {
+                return this.GetWorkingFolderPath(Path.Combine("MachineAgent", "Template", "Certificates",
+                    "rootCertificate.crt"));
+            }
+
+            return this.GetWorkingFolderPath(Path.Combine("MachineAgent", "Template", "Certificates",
+                "machineCertificate.pfx"));
         }
 
         private string GetWorkingFolderPath(string path)

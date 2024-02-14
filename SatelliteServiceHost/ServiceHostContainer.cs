@@ -65,6 +65,7 @@ namespace SatelliteServiceHost
 
                         if (this.ServiceHost.State == CommunicationState.Faulted || this.ServiceHost.State == CommunicationState.Closed)
                         {
+                            Console.WriteLine("sdccsdc");
                             this.StartService();
                         }
 

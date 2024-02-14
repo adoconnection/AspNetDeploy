@@ -54,7 +54,7 @@
           <Property Name="TypeId" Type="int" Nullable="false" />
           <Property Name="Key" Type="nvarchar" MaxLength="4000" Nullable="false" />
           <Property Name="IsSensitive" Type="bit" Nullable="false" />
-          <Property Name="ModeId" Type="int" Nullable="false" />
+          <Property Name="Mode" Type="int" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="DataFieldToBundleVersion">
@@ -83,7 +83,7 @@
           <Property Name="DeploymentStepId" Type="int" />
           <Property Name="BundleVersionId" Type="int" Nullable="false" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
-          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DeploymentStepProperty">
           <Key>
@@ -174,7 +174,7 @@
           <Property Name="PublicationId" Type="int" Nullable="false" />
           <Property Name="MachineId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="StateId" Type="int" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
           <Property Name="CompletedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="MachinePublicationLog">
@@ -183,7 +183,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MachinePublicationId" Type="int" Nullable="false" />
-          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="Event" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="DeploymentStepId" Type="int" />
           <Property Name="ExceptionId" Type="int" />
@@ -290,7 +290,7 @@
           <Property Name="ProjectId" Type="int" Nullable="false" />
           <Property Name="SourceControlVersionId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="ProjectTypeId" Type="int" Nullable="false" />
+          <Property Name="ProjectType" Type="int" Nullable="false" />
           <Property Name="SolutionFile" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="ProjectFile" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
@@ -320,7 +320,7 @@
           <Property Name="PackageId" Type="int" Nullable="false" />
           <Property Name="EnvironmentId" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ResultId" Type="int" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
           <Property Name="QueuedByUserId" Type="int" />
         </EntityType>
         <EntityType Name="Revision">
@@ -349,7 +349,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="OrderIndex" Type="int" Nullable="false" />
         </EntityType>
@@ -400,7 +400,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Role" Type="int" Nullable="false" />
           <Property Name="IsDisabled" Type="bit" Nullable="false" />
           <Property Name="ApiKey" Type="nvarchar" MaxLength="50" />
           <Property Name="IsOnline" Type="bit" Nullable="false" />
@@ -2731,7 +2731,7 @@
           <EntitySetMapping Name="DeploymentStep">
             <EntityTypeMapping TypeName="AspNetDeployModel.DeploymentStep">
               <MappingFragment StoreEntitySet="DeploymentStep">
-                <ScalarProperty Name="Type" ColumnName="TypeId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="BundleVersionId" ColumnName="BundleVersionId" />
                 <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
@@ -2812,7 +2812,7 @@
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="ProjectFile" ColumnName="ProjectFile" />
                 <ScalarProperty Name="SolutionFile" ColumnName="SolutionFile" />
-                <ScalarProperty Name="ProjectType" ColumnName="ProjectTypeId" />
+                <ScalarProperty Name="ProjectType" ColumnName="ProjectType" />
                 <ScalarProperty Name="SourceControlVersionId" ColumnName="SourceControlVersionId" />
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -2824,7 +2824,7 @@
               <MappingFragment StoreEntitySet="SourceControl">
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="Type" ColumnName="TypeId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -2925,7 +2925,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.Publication">
               <MappingFragment StoreEntitySet="Publication">
                 <ScalarProperty Name="QueuedByUserId" ColumnName="QueuedByUserId" />
-                <ScalarProperty Name="State" ColumnName="ResultId" />
+                <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EnvironmentId" ColumnName="EnvironmentId" />
                 <ScalarProperty Name="PackageId" ColumnName="PackageId" />
@@ -2957,7 +2957,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.MachinePublication">
               <MappingFragment StoreEntitySet="MachinePublication">
                 <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
-                <ScalarProperty Name="State" ColumnName="StateId" />
+                <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
                 <ScalarProperty Name="PublicationId" ColumnName="PublicationId" />
@@ -2971,7 +2971,7 @@
                 <ScalarProperty Name="ExceptionId" ColumnName="ExceptionId" />
                 <ScalarProperty Name="DeploymentStepId" ColumnName="DeploymentStepId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Event" ColumnName="EventId" />
+                <ScalarProperty Name="Event" ColumnName="Event" />
                 <ScalarProperty Name="MachinePublicationId" ColumnName="MachinePublicationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -3009,7 +3009,7 @@
             <EntityTypeMapping TypeName="AspNetDeployModel.DataField">
               <MappingFragment StoreEntitySet="DataField">
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="Mode" ColumnName="ModeId" />
+                <ScalarProperty Name="Mode" ColumnName="Mode" />
                 <ScalarProperty Name="IsSensitive" ColumnName="IsSensitive" />
                 <ScalarProperty Name="Key" ColumnName="Key" />
                 <ScalarProperty Name="TypeId" ColumnName="TypeId" />
@@ -3041,7 +3041,7 @@
                 <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
                 <ScalarProperty Name="ApiKey" ColumnName="ApiKey" />
                 <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
-                <ScalarProperty Name="Role" ColumnName="RoleId" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

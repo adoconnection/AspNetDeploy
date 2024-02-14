@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml.Linq;
 using CertificateHelpers;
 using Microsoft.Web.Administration;
+using Newtonsoft.Json;
 using SatelliteService.Contracts;
 using SatelliteService.Helpers;
 
@@ -34,31 +35,31 @@ namespace SatelliteService.Operations
         {
             using (ServerManager serverManager = new ServerManager())
             {
-                this.StopSite(serverManager, (string) this.configuration.siteName);
+                this.StopSite(serverManager, (string) this.configuration.SiteName);
 
-                if (Directory.Exists((string) this.configuration.destination))
+                if (Directory.Exists((string) this.configuration.Destination))
                 {
-                    this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.destination);
-                    DirectoryHelper.DeleteContents((string) this.configuration.destination);
+                    this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.Destination);
+                    DirectoryHelper.DeleteContents((string) this.configuration.Destination);
                 }
 
                 packageRepository.ExtractProject(
-                    (int) this.configuration.projectId,
-                    (string) this.configuration.destination);
+                    (int) this.configuration.ProjectId,
+                    (string) this.configuration.Destination);
 
-                Site site = this.Site(serverManager, (string) this.configuration.siteName);
+                Site site = this.Site(serverManager, (string) this.configuration.SiteName);
                 //this.backupSiteConfigurationGuid = this.BackupRepository.StoreObject(site);
 
-                ApplicationPool applicationPool = this.ApplicationPool(serverManager, (string) this.configuration.applicationPoolName);
-                Application application = this.Application(serverManager, site, (string) this.configuration.destination);
+                ApplicationPool applicationPool = this.ApplicationPool(serverManager, (string) this.configuration.ApplicationPoolName);
+                Application application = this.Application(serverManager, site, (string) this.configuration.Destination);
 
-                site.Applications["/"].VirtualDirectories["/"].PhysicalPath = (string) this.configuration.destination;
-                site.ApplicationDefaults.ApplicationPoolName = (string) configuration.applicationPoolName;
+                site.Applications["/"].VirtualDirectories["/"].PhysicalPath = (string) this.configuration.Destination;
+                site.ApplicationDefaults.ApplicationPoolName = (string) configuration.ApplicationPoolName;
                 site.ServerAutoStart = true;
                 applicationPool.AutoStart = true;
                 applicationPool.ManagedRuntimeVersion = "v4.0";
 
-                string webConfigPath = Path.Combine((string) this.configuration.destination, "web.config");
+                string webConfigPath = Path.Combine((string) this.configuration.Destination, "web.config");
 
                 if (File.Exists(webConfigPath))
                 {
@@ -72,7 +73,7 @@ namespace SatelliteService.Operations
 
                 site.Bindings.Clear();
 
-                foreach (dynamic bindingConfig in configuration.bindings)
+                foreach (dynamic bindingConfig in JsonConvert.DeserializeObject<IEnumerable<dynamic>>(configuration.Bindings))
                 {
                     Binding binding = site.Bindings.CreateElement();
 
@@ -114,7 +115,7 @@ namespace SatelliteService.Operations
             {
                 using (ServerManager serverManager = new ServerManager())
                 {
-                    this.StartSite(serverManager, (string) this.configuration.siteName);
+                    this.StartSite(serverManager, (string) this.configuration.SiteName);
                     serverManager.CommitChanges();
                 }
             }

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AspNetDeploy.Contracts\AspNetDeploy.Contracts.csproj" />
+    <ProjectReference Include="..\DeploymentServices.Grpc\DeploymentServices.Grpc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ServiceModel">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.ServiceModel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -19,7 +19,7 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            SqlConnection sqlConnection = new SqlConnection((string)configuration.connectionString);
+            SqlConnection sqlConnection = new SqlConnection((string)configuration.ConnectionString);
 
             sqlConnection.Open();
 
@@ -28,7 +28,7 @@ namespace SatelliteService.Operations
                        {0}
                   COMMIT TRANSACTION";
 
-            SqlCommand command = new SqlCommand(string.Format(commandTemplate, (string)configuration.command), sqlConnection);
+            SqlCommand command = new SqlCommand(string.Format(commandTemplate, (string)configuration.Command), sqlConnection);
 
             command.ExecuteNonQuery();
             sqlConnection.Close();

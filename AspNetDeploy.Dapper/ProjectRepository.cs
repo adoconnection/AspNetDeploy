@@ -20,25 +20,25 @@ namespace AspNetDeploy.Dapper
             Dictionary<int, ProjectVersion> projectVersionLookup = new Dictionary<int, ProjectVersion>();
 
             this.dataContext.Connection.Query<ProjectVersion, ProjectVersionProperty, Project, ProjectVersion>(@"
-SELECT 
-    pv.Id, 
-    pv.Name, 
-    pv.ProjectId, 
-    pv.SourceControlVersionId, 
-    pv.ProjectTypeId ProjectType, 
-    pv.SolutionFile, 
-    pv.ProjectFile, 
-    pv.IsDeleted,
-    pvp.Id, 
-    pvp.ProjectVersionId, 
-    pvp.[Key] [Key], 
-    pvp.[Value] [Value],
-    p.*
-FROM ProjectVersion pv
-JOIN Project p ON pv.ProjectId = p.Id
-LEFT JOIN ProjectVersionProperty pvp ON pv.Id = pvp.ProjectVersionId
-LEFT JOIN SourceControlVersion scv ON pv.SourceControlVersionId = scv.Id
-WHERE scv.IsArchivedId != 2 OR scv.IsArchivedId IS NULL
+            SELECT 
+                pv.Id, 
+                pv.Name, 
+                pv.ProjectId, 
+                pv.SourceControlVersionId, 
+                pv.ProjectType ProjectType, 
+                pv.SolutionFile, 
+                pv.ProjectFile, 
+                pv.IsDeleted,
+                pvp.Id, 
+                pvp.ProjectVersionId, 
+                pvp.[Key] [Key], 
+                pvp.[Value] [Value],
+                p.*
+            FROM ProjectVersion pv
+            JOIN Project p ON pv.ProjectId = p.Id
+            LEFT JOIN ProjectVersionProperty pvp ON pv.Id = pvp.ProjectVersionId
+            LEFT JOIN SourceControlVersion scv ON pv.SourceControlVersionId = scv.Id
+            WHERE scv.IsArchivedId != 2 OR scv.IsArchivedId IS NULL
                 ", (pv, pvp, p) =>
                 {
                     ProjectVersion projectVersion;
@@ -93,7 +93,7 @@ SELECT
     pv.Name, 
     pv.ProjectId, 
     pv.SourceControlVersionId,
-    pv.ProjectTypeId ProjectType, 
+    pv.ProjectType ProjectType, 
     pv.SolutionFile, 
     pv.ProjectFile, 
     pv.IsDeleted,

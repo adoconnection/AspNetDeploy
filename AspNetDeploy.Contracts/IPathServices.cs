@@ -7,5 +7,10 @@
         string GetProjectPackagePath(int projectId, string revisionId);
         string GetNugetPath();
         string GetNpmPath();
+        string GetMSBuildPath();
+        string GetClientCertificatePath();
+        string GetRootCertificatePath(bool isPfx = true);
+        string GetMachineCertificatePath(bool isRoot = false);
+
     }
 }

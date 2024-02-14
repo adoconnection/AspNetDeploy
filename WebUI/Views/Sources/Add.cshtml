@@ -19,12 +19,15 @@
                 <a href="@Url.Action("AddSvn")" class="list-group-item">
                     <h3><img src="~/Resources/Layout/Images/Icons/SVN-Icon.jpg" /> SVN</h3>
                 </a>
-               @* <a href="@Url.Action("Add", new { sourceControlType = SourceControlType.Git })" class="list-group-item">
-        <h3><img src="~/Resources/Layout/Images/Icons/Git-Icon.png" /> Git</h3>
-    </a>
-    <a href="@Url.Action("Add", new { sourceControlType = SourceControlType.FileSystem })" class="list-group-item">
-        <h3><span class="empty"></span>File system</h3>
-    </a>*@
+                <a href="@Url.Action("AddGit")" class="list-group-item">
+                    <h3><img src="https://www.pinclipart.com/picdir/big/534-5340847_github-logos-download-github-svg-icon-clipart.png" /> Git</h3>
+                </a>
+                @* <a href="@Url.Action("Add", new { sourceControlType = SourceControlType.Git })" class="list-group-item">
+            <h3><img src="~/Resources/Layout/Images/Icons/Git-Icon.png" /> Git</h3>
+        </a>
+        <a href="@Url.Action("Add", new { sourceControlType = SourceControlType.FileSystem })" class="list-group-item">
+            <h3><span class="empty"></span>File system</h3>
+        </a>*@
             </div>
         </div>
     </div>

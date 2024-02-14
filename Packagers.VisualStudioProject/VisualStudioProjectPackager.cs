@@ -52,6 +52,11 @@ namespace Packagers.VisualStudioProject
             {
                 if (string.IsNullOrEmpty(customFileName))
                 {
+                    if (zipFile.ContainsEntry(filePath))
+                    {
+                        return;
+                    }
+
                     zipFile.AddFile(filePath, customArchiveDirectory ?? directoryPathInArchive);
                 }
                 else

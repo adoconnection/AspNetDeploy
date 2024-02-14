@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{716AC799-37AF-45F5-8716-8F6F415F3349}"
 EndProject
@@ -162,6 +162,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunners.VsTests", "TestRunners.VsTests\TestRunners.VsTests.csproj", "{671368FE-BFA2-4ABE-8259-A678774FB66C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServices.DotnetCore", "BuildServices.DotnetCore\BuildServices.DotnetCore.csproj", "{111359CD-237A-4F21-8C87-0CE728C77D3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeploymentServices.Grpc", "DeploymentServices.Grpc\DeploymentServices.Grpc.csproj", "{76552135-5512-4A7C-9BA5-E54D39956C36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatelliteGrpcHost", "SatelliteGrpcHost\SatelliteGrpcHost.csproj", "{20804BEF-367F-49E4-A4AD-88873DC38A13}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Machine", "Machine", "{E2EB1A65-05FD-4984-81EA-CE7D05179543}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineServices", "MachineServices\MachineServices.csproj", "{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CertificateBuilder", "CertificateBuilder\CertificateBuilder.csproj", "{4C40AFD7-358C-43A6-91D8-F431797A8048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentServices.GrpcMonitoring", "DeploymentServices.GrpcMonitoring\DeploymentServices.GrpcMonitoring.csproj", "{727CFD87-9757-4AD2-A2E7-2D237252FD63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -395,6 +407,26 @@ Global
 		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{111359CD-237A-4F21-8C87-0CE728C77D3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76552135-5512-4A7C-9BA5-E54D39956C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20804BEF-367F-49E4-A4AD-88873DC38A13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C40AFD7-358C-43A6-91D8-F431797A8048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -472,8 +504,15 @@ Global
 		{5D8F0748-EB61-4C0B-9019-D695CA57C9E7} = {D9EF607D-D099-48A2-A534-6BD2DA1075B1}
 		{671368FE-BFA2-4ABE-8259-A678774FB66C} = {D9EF607D-D099-48A2-A534-6BD2DA1075B1}
 		{111359CD-237A-4F21-8C87-0CE728C77D3E} = {0D24E791-9F14-46DF-AE2D-BD45D08CFE31}
+		{76552135-5512-4A7C-9BA5-E54D39956C36} = {C930D618-BB7C-4D23-8B84-9B9586BBD662}
+		{20804BEF-367F-49E4-A4AD-88873DC38A13} = {E2599008-7B50-4236-BB6B-55AD26951864}
+		{E2EB1A65-05FD-4984-81EA-CE7D05179543} = {2BAE3B06-63CF-483D-ACA2-6662C78B2422}
+		{F9F51EE4-4E1E-4814-9EC4-80F21BFFC69B} = {E2EB1A65-05FD-4984-81EA-CE7D05179543}
+		{4C40AFD7-358C-43A6-91D8-F431797A8048} = {D23AB140-E668-4230-9F9B-A31926E3E199}
+		{727CFD87-9757-4AD2-A2E7-2D237252FD63} = {C930D618-BB7C-4D23-8B84-9B9586BBD662}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {5A1640E3-620C-4A77-9672-D5A42DF379A9}
 	EndGlobalSection
 EndGlobal

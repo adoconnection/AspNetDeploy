@@ -1,0 +1,106 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcSatellite";
+
+import "google/protobuf/empty.proto";
+
+package DeploymentServicesClient;
+
+service Deployment {
+  rpc IsReady (google.protobuf.Empty) returns (IsReadyResponse);
+
+  rpc BeginPublication(BeginPublicationRequest) returns (DeploymentServiceBasicResponse);
+
+  rpc ExecuteNextOperation(google.protobuf.Empty) returns (DeploymentServiceBasicResponse);
+
+  rpc Complete(google.protobuf.Empty) returns (DeploymentServiceBasicResponse);
+
+  rpc UploadPackageBuffer(stream UploadPackageBufferRequest) returns (google.protobuf.Empty);
+
+  rpc ResetPackage(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  rpc DeployWebSite(DeployWebSiteRequest) returns (google.protobuf.Empty); 
+
+  rpc ProcessConfigFile(ProccesConfigFileRequest) returns (google.protobuf.Empty);
+
+  rpc CopyFiles(CopyFilesRequest) returns (google.protobuf.Empty);
+
+  rpc UpdateHostsFile(UpdateHostsFileRequest) returns (google.protobuf.Empty);
+
+  rpc RunSQLScripts(RunSQLScriptsRequest) returns (google.protobuf.Empty);
+
+  rpc ApplyDacPac(ApplyDacPacRequest) returns (google.protobuf.Empty);
+
+  rpc Rollback(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  rpc GetLastException(google.protobuf.Empty) returns (GetLastExceptionResponse);
+}
+
+message IsReadyResponse{
+	bool isReady = 1;
+}
+
+message DeploymentServiceBasicResponse{
+	bool isSuccess = 1;
+}
+
+message BeginPublicationRequest{
+	int32 publicationId = 1;
+}
+
+message UploadPackageBufferRequest{
+	bytes buffer = 1;
+}
+
+message DeployWebSiteRequest{
+	string destination = 1;
+	string siteName = 2;
+	string applicationPoolName = 3;
+	int32 projectId = 4;
+	string bindings = 5;
+}
+
+message ProccesConfigFileRequest{
+	string file = 1;
+	string content = 2;
+}
+
+message CopyFilesRequest{
+	string destination = 1;
+	int32 projectId = 2;
+	string mode = 3;
+}
+
+message UpdateHostsFileRequest{
+	string configurationJson = 1;
+}
+
+message RunSQLScriptsRequest{
+	string connectionString = 1;
+	string command = 2;
+}
+
+message ApplyDacPacRequest{
+	string dacPacFilename = 1;
+	string connectionString = 2;
+	string targetDatabase = 3;
+	int32 projectId = 4;
+	bool backupDatabaseBeforeChanges = 5;
+	bool blockOnPossibleDataLos = 6;
+}
+
+message ExceptionDataInfo{
+	string name = 1;
+	string value = 2;
+	bool isProperty = 3;
+} 
+
+message GetLastExceptionResponse{
+	string typeName = 1;
+	string assemblyQualifiedTypeName = 2;
+	string message = 3;
+	string source = 4;
+	string stackTrace = 5;
+	repeated ExceptionDataInfo exceptionData= 6;
+	GetLastExceptionResponse innerException = 7;
+}

@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AspNetDeploy.WebUI</RootNamespace>
     <AssemblyName>AspNetDeploy.WebUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <Use64BitIISExpress />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +45,9 @@
       <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
@@ -62,8 +66,8 @@
     <Reference Include="MvcSiteMapProvider.WebActivator">
       <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.15\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpSvn">
       <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.dll</HintPath>
@@ -71,27 +75,57 @@
     <Reference Include="SharpSvn.UI">
       <HintPath>..\packages\SharpSvn.1.9-x64.1.8991.3359.105\lib\net40\SharpSvn.UI.dll</HintPath>
     </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Diagnostics.EventLog, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.EventLog.8.0.0\lib\net462\System.Diagnostics.EventLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.ServiceProcess.ServiceController, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ServiceProcess.ServiceController.8.0.0\lib\net462\System.ServiceProcess.ServiceController.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivatorEx">
       <HintPath>..\packages\WebActivatorEx.2.0.1\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web.Razor">
@@ -217,6 +251,7 @@
     <Compile Include="Controllers\EnvironmentsController.cs" />
     <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
+    <Compile Include="Controllers\MachinesController.cs" />
     <Compile Include="Controllers\ProjectVersionsController.cs" />
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\PublicationsController.cs" />
@@ -238,10 +273,13 @@
     <Compile Include="Models\DeploymentSteps\RunVsTestStepModel.cs" />
     <Compile Include="Models\DeploymentSteps\SqlScriptDeploymentStepModel.cs" />
     <Compile Include="Models\EditNewSvnVersion.cs" />
+    <Compile Include="Models\MachineInfo.cs" />
+    <Compile Include="Models\MachineInstanceModel.cs" />
     <Compile Include="Models\Setup\ConnectionStringStepModel.cs" />
     <Compile Include="Models\Setup\DatabaseStructureStepModel.cs" />
     <Compile Include="Models\Setup\UsersStepModel.cs" />
     <Compile Include="Models\Setup\WorkingFolderStepModel.cs" />
+    <Compile Include="Models\SourceControls\AddGitModel.cs" />
     <Compile Include="Models\SourceControls\AddSvnModel.cs" />
     <Compile Include="Models\VariableAddModel.cs" />
     <Compile Include="Models\Binding.cs" />
@@ -311,6 +349,10 @@
     <Content Include="Views\Sources\AddSvn.cshtml" />
     <Content Include="Views\Bundles\VersionVariables.cshtml" />
     <Content Include="Views\BundleVersionDeployment\EditRunTestStep.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Sources\AddGit.cshtml" />
+    <Content Include="Views\Machines\List.cshtml" />
+    <Content Include="Views\Machines\DownloadMachineInstance.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -342,6 +384,14 @@
     <ProjectReference Include="..\AspNetDeploy.Model\AspNetDeploy.Model.csproj">
       <Project>{B22A302A-153F-4B7B-91EF-877412D3EFBB}</Project>
       <Name>AspNetDeploy.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LocalEnvironment\LocalEnvironment.csproj">
+      <Project>{F713EDD4-1699-4792-9894-658200428E3B}</Project>
+      <Name>LocalEnvironment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MachineServices\MachineServices.csproj">
+      <Project>{f9f51ee4-4e1e-4814-9ec4-80f21bffc69b}</Project>
+      <Name>MachineServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectFactory\ObjectFactory.csproj">
       <Project>{F5CBAA93-C1C9-43C5-9AB6-8AC2F9DB7741}</Project>

@@ -23,7 +23,7 @@ namespace AspNetDeploy.Dapper
                     SELECT 
                         sc.Id, 
                         sc.Name, 
-                        sc.TypeId AS Type, 
+                        sc.Type AS Type, 
                         sc.IsDeleted, 
                         sc.OrderIndex, 
                         scv.Id, 

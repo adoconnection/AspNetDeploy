@@ -40,6 +40,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
             binding.UseDefaultWebProxy = true;
 
             binding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
+            binding.Security.Mode = SecurityMode.None;
 
             this.deploymentClient = new DeploymentServiceClient(binding, new EndpointAddress(new Uri(endpoint + "/DeploymentService")));
             this.deploymentClient.ClientCredentials.UserName.UserName = login;
@@ -233,7 +234,7 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
         private void ProcessWebSiteDeploymentStep(DeploymentStep deploymentStep)
         {
-            dynamic bindings = JsonConvert.DeserializeObject(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.Bindings")));
+            dynamic bindings = JsonConvert.DeserializeObject(this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.Bindings"))??"[]");
 
             string configuration = JsonConvert.SerializeObject(new
             {

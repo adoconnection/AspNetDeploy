@@ -8,6 +8,8 @@ using AspNetDeploy.Contracts;
 using AspNetDeploy.Dapper;
 using AspNetDeploy.Model;
 using AspNetDeploy.WebUI.Models;
+using LocalEnvironment;
+using MachineServices;
 using Newtonsoft.Json;
 using Environment = AspNetDeploy.Model.Environment;
 
@@ -32,6 +34,10 @@ namespace AspNetDeploy.WebUI.Controllers
 
         public ActionResult List()
         {
+            //CertificateManager manager = new CertificateManager(new PathServices());
+            //manager.CreateAndSaveClientCertificate();
+            //manager.CreateAndSaveCertificateForMachine();
+
             IList<Bundle> bundles = this.bundleRepository.List();
 
             List<Environment> environments = this.Entities.Environment
@@ -304,7 +310,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 .Include("Bundle")
                 .Include("ProjectVersions.Project.Properties")
                 .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
-                .Include("ProjectVersions.SourceControlVersion.Revisions.RevisionInfos")
+                .Include("ProjectVersions.SourceControlVersion.Revisions")
                 .Include("DeploymentSteps.Properties") 
                 .Include("DeploymentSteps.MachineRoles")
                 .Include("Packages.Publications.Environment.Machines")
