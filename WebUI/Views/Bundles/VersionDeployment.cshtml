@@ -30,16 +30,16 @@
         <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
         <li role="presentation"><a href="@Url.Action("VersionVariables", new { id = bundleVersion.Id })">Local variables</a></li>
     </ul>
-    
+
     <hr />
 
     @RenderSteps(bundleVersion, bundleVersion.DeploymentSteps)
-    
+
     @if (bundleVersion.DeploymentSteps.Count > 0)
     {
         <hr />
     }
-    
+
     <a class="btn btn-default" href="@Url.Action("AddStep", "BundleVersionDeployment", new { id = bundleVersion.Id})">Add step</a>
 
 </div>
@@ -47,11 +47,11 @@
 @helper RenderSteps(BundleVersion bundleVersion, IEnumerable<DeploymentStep> steps)
 {
     int stepCounter = 0;
-    
+
     foreach (DeploymentStep deploymentStep in steps.OrderBy(ds => ds.OrderIndex))
     {
         stepCounter++;
-        
+
         switch (deploymentStep.Type)
         {
             case DeploymentStepType.DeployWebSite:
@@ -59,31 +59,31 @@
                 break;
 
             case DeploymentStepType.RunPowerShellScript:
-            @RenderRunPowerShellScript(bundleVersion, deploymentStep, stepCounter)
+                @RenderRunPowerShellScript(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.CopyFiles:
-            @RenderCopyFilesStep(bundleVersion, deploymentStep, stepCounter)
+                @RenderCopyFilesStep(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.Configuration:
-            @RenderConfigurationStep(bundleVersion, deploymentStep, stepCounter)
+                @RenderConfigurationStep(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.UpdateHostsFile:
-            @RenderHostsStep(bundleVersion, deploymentStep, stepCounter)
+                @RenderHostsStep(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.RunSQLScript:
-            @RenderSQLStep(bundleVersion, deploymentStep, stepCounter)
+                @RenderSQLStep(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.DeployDacpac:
-            @RenderDacpacStep(bundleVersion, deploymentStep, stepCounter)
+                @RenderDacpacStep(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             case DeploymentStepType.RunVsTests:
-            @RenderRunVsTestsStep(bundleVersion, deploymentStep, stepCounter)
+                @RenderRunVsTestsStep(bundleVersion, deploymentStep, stepCounter)
                 break;
 
             default:
@@ -92,23 +92,23 @@
         }
 
 
-        <br/>
+        <br />
     }
 }
 
 @helper RenderControlButtons(BundleVersion bundleVersion, DeploymentStep deploymentStep)
 {
     if (this.ViewBag.AllowedActions.Contains(UserRoleAction.DeploymentChangeSteps))
-            {
-         <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-             <img src="~/Resources/Layout/Images/Icons/up16.png" />
-         </a>
-         <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-             <img src="~/Resources/Layout/Images/Icons/down16.png" />
-         </a>
-         <a class="btn btn-default" href="@Url.Action("EditStep", "BundleVersionDeployment", new {id = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
-             <img src="~/Resources/Layout/Images/Icons/settings16.png" />
-         </a>
+    {
+        <a class="btn btn-default" href="@Url.Action("MoveUp", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+            <img src="~/Resources/Layout/Images/Icons/up16.png" />
+        </a>
+        <a class="btn btn-default" href="@Url.Action("MoveDown", "BundleVersionDeployment", new {bundleVersionId = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+            <img src="~/Resources/Layout/Images/Icons/down16.png" />
+        </a>
+        <a class="btn btn-default" href="@Url.Action("EditStep", "BundleVersionDeployment", new {id = bundleVersion.Id, deploymentStepId = deploymentStep.Id})">
+            <img src="~/Resources/Layout/Images/Icons/settings16.png" />
+        </a>
     }
 }
 
@@ -127,44 +127,54 @@
     <div class="row text-muted">
         <div class="col-md-6">
             <ul>
-                <li>Roles:
-                                
+                <li>
+                    Roles:
+
                     @foreach (MachineRole role in deploymentStep.MachineRoles)
                     {
                         <span class="label label-default">@role.Name</span>
                     }
                 </li>
                 <li>Project: @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
-                <li>Destination: @deploymentStep.GetStringProperty("IIS.DestinationPath")</li>
-                <li>Enabled AppOffilne page: @deploymentStep.GetStringProperty("EnabledAppOffilnePage")</li>
-                <li>Bindings:
-                    @if (deploymentStep.GetDynamicProperty("IIS.Bindings") != null)
+                <li>Destination: <code>@deploymentStep.GetStringProperty("IIS.DestinationPath")</code></li>
+                <li>AppOffilne page: @deploymentStep.GetStringProperty("AppOffilnePage")</li>
+                <li>
+                    Bindings:
+                    @try
                     {
-                        <ul>
-                            @foreach (dynamic binding in deploymentStep.GetDynamicProperty("IIS.Bindings"))
-                            {
-                                <li>@binding.protocol, @binding.host, @binding.port
-
-                                @if (!string.IsNullOrEmpty((string)binding.certificateName) || !string.IsNullOrEmpty((string)binding.IP))
+                        if (deploymentStep.GetDynamicProperty("IIS.Bindings") != null)
+                        {
+                            <ul>
+                                @foreach (dynamic binding in deploymentStep.GetDynamicProperty("IIS.Bindings"))
                                 {
-                                    <ul>
-                                        @if (!string.IsNullOrEmpty((string)binding.certificateName))
+                                    <li>
+                                        @binding.protocol, @binding.host, @binding.port
+
+                                        @if (!string.IsNullOrEmpty((string)binding.certificateName) || !string.IsNullOrEmpty((string)binding.IP))
                                         {
-                                            <li>Certificate: @binding.certificateName</li>
+                                            <ul>
+                                                @if (!string.IsNullOrEmpty((string)binding.certificateName))
+                                                {
+                                                    <li>Certificate: @binding.certificateName</li>
+                                                }
+                                                @if (!string.IsNullOrEmpty((string)binding.IP))
+                                                {
+                                                    <li>IP: @binding.IP</li>
+                                                }
+                                            </ul>
                                         }
-                                        @if (!string.IsNullOrEmpty((string)binding.IP))
-                                        {
-                                            <li>IP: @binding.IP</li>
-                                        }
-                                    </ul>
+                                    </li>
                                 }
-                                </li>
-                            }
-                        </ul>
+                            </ul>
+                        }
+                        else
+                        {
+                            <span>not set</span>
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        <span>not set</span>
+                        <pre>@deploymentStep.GetStringProperty("IIS.Bindings")</pre>
                     }
                 </li>
             </ul>
@@ -187,8 +197,9 @@
     <div class="row text-muted">
         <div class="col-md-6">
             <ul>
-                <li>Roles:
-                                
+                <li>
+                    Roles:
+
                     @foreach (MachineRole role in deploymentStep.MachineRoles)
                     {
                         <span class="label label-default">@role.Name</span>
@@ -197,7 +208,7 @@
                 <li>Project: @projectVersion.SourceControlVersion.SourceControl.Name / @projectVersion.SourceControlVersion.Name / @projectVersion.Name</li>
                 <li>Stop on failure: @deploymentStep.GetStringProperty("StopOnFailure")</li>
                 <li>Filters: @deploymentStep.GetStringProperty("FiltersJson")</li>
-                 
+
             </ul>
         </div>
     </div>
@@ -218,8 +229,9 @@
     <div class="row text-muted">
         <div class="col-md-12">
             <ul>
-                <li>Roles:
-                                
+                <li>
+                    Roles:
+
                     @foreach (MachineRole role in deploymentStep.MachineRoles)
                     {
                         <span class="label label-default">@role.Name</span>
@@ -258,7 +270,7 @@
 @helper RenderCopyFilesStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
     ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
-    
+
     <h3>
         <div class="row">
             <div class="col-sm-7">
@@ -369,7 +381,7 @@
             <ul>
                 @foreach (string file in deploymentStep.GetStringProperties("File"))
                 {
-                    <li>File: @file</li>
+                    <li>File: <code>@file</code></li>
                 }
                 <li>
                     Roles:
@@ -381,20 +393,20 @@
                 </li>
                 <li>
                     <div>content</div>
-                    
+
                     <pre>@deploymentStep.GetStringProperty("SetValues")</pre>
-@*
-                    @if ( != null)
-                    {
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                @foreach (dynamic node in deploymentStep.GetDynamicProperty("SetValues").Properties())
-                                {
-                                    @ConfigurationRecursiveWriter(node)
-                                }
+                    @*
+                        @if ( != null)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    @foreach (dynamic node in deploymentStep.GetDynamicProperty("SetValues").Properties())
+                                    {
+                                        @ConfigurationRecursiveWriter(node)
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }*@
+                        }*@
                 </li>
 
             </ul>
@@ -415,11 +427,11 @@
     }
 
     <div>
-        
+
         @if (node is JProperty)
         {
             @node.Name
-    
+
             if (node.Value is JValue)
             {
                 @: : <pre>@node.Value</pre>
