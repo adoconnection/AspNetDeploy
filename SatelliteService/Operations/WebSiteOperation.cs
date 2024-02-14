@@ -98,6 +98,7 @@ namespace SatelliteService.Operations
                             {
                                 binding.CertificateHash = certificate.GetCertHash();
                                 binding.CertificateStoreName = store.Name;
+                                binding.SslFlags = (SslFlags) bindingConfig.sslFlags;
 
                                 site.Bindings.Add(binding);
                             }
