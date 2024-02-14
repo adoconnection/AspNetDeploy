@@ -62,13 +62,14 @@ namespace AspNetDeploy.BuildServices.MSBuild
             };
         }
 
-        private static int DoMSBuild(string toolPath, string arguments, out string output)
+        private static int DoMSBuild(string toolPath, string targetFile, out string output)
         {
             Process process = new Process();
             process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(targetFile);
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.FileName = toolPath;
-            process.StartInfo.Arguments = arguments;
+            process.StartInfo.Arguments = string.Format("\"{0}\" /t:Clean;Rebuild", targetFile);
 
             process.Start();
             output = process.StandardOutput.ReadToEnd();
