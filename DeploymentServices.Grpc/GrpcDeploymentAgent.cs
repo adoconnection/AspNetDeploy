@@ -18,6 +18,7 @@ using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using GrpcSatellite;
 using MachineServices;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Tls;
 
@@ -38,11 +39,8 @@ namespace DeploymentServices.Grpc
             this.authority = certificateManager.GetRootCertificate(false);
             this.clientCertificate = certificateManager.GetClientCertificate();
 
-            AppContext.SetSwitch("Microsoft.AspNetCore.Server.Kestrel.EnableWindows81Http2", true);
-
             var handler = new HttpClientHandler();
 
-            handler.ClientCertificates.Add(clientCertificate);
             handler.ServerCertificateCustomValidationCallback = (request, cert, chain, errors) =>
             {
                 bool isValid = chain.ChainElements
@@ -51,10 +49,15 @@ namespace DeploymentServices.Grpc
 
                 return isValid;
             };
+            handler.ClientCertificates.Add(clientCertificate);
+            handler.SslProtocols = SslProtocols.Tls;
+
+            GrpcWebHandler grpcWebHandler = new GrpcWebHandler(handler);
+            grpcWebHandler.HttpVersion = new Version(1, 0);
 
             var options = new GrpcChannelOptions()
             {
-                HttpHandler = new GrpcWebHandler(handler),
+                HttpHandler = grpcWebHandler
             };
 
             var channel = GrpcChannel.ForAddress(new Uri(endpoint), options);
