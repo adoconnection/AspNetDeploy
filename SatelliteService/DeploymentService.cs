@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
@@ -127,6 +128,11 @@ namespace SatelliteService
             this.lastException = null;
 
             Console.WriteLine("Publication complete");
+
+            CleanupHelper.CleanupFolder(ConfigurationManager.AppSettings["LocalBackups.AutoCleanupDays"], ConfigurationManager.AppSettings["BackupsPath"]);
+            CleanupHelper.CleanupFolder(ConfigurationManager.AppSettings["Packages.AutoCleanupDays"], ConfigurationManager.AppSettings["PackagesPath"]);
+
+            Console.WriteLine("Cleanup complete");
 
             return true;
         }

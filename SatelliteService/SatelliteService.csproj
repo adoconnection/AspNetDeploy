@@ -247,6 +247,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CleanupHelper.cs" />
     <Compile Include="ConfigSourceValidator.cs" />
     <Compile Include="DeploymentService.cs" />
     <Compile Include="DriveInfo.cs" />

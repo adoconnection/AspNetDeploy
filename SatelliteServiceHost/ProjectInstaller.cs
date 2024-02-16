@@ -75,6 +75,9 @@ namespace SatelliteServiceHost
             UpdateAppSettings(configuration, "LocalBackups.CompressionLevel", "BestCompression");
             UpdateAppSettings(configuration, "Service.URI", "https://" + uri.Host + ":" + uri.Port + "/AspNetDeploySatellite");
 
+            UpdateAppSettings(configuration, "LocalBackups.AutoCleanupDays", "10");
+            UpdateAppSettings(configuration, "Packages.AutoCleanupDays", "10");
+
             configuration.Save(ConfigurationSaveMode.Modified);
 
             Process process = Process.Start(
