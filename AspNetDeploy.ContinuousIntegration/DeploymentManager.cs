@@ -173,7 +173,7 @@ namespace AspNetDeploy.ContinuousIntegration
                         catch (Exception e)
                         {
                             e.Data.Add("Deployment step id", deploymentStep.Id);
-                            e.Data.Add("Deployment ttep index", i + 1);
+                            e.Data.Add("Deployment step index", i + 1);
                             e.Data.Add("Machine name", machine.Name);
 
                             this.RecordException(entities, null, e);

@@ -97,6 +97,16 @@ namespace SatelliteServiceHost
 
             process.WaitForExit();
 
+            process = Process.Start(
+                new ProcessStartInfo
+                {
+                    FileName = "netsh",
+                    Arguments = "advfirewall firewall add rule name= \"AspNetDeploy\" dir=in action=allow protocol=TCP localport=" + uri.Port,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                });
+
+            process.WaitForExit();
+
             try
             {
                 ServiceController serviceController = new ServiceController(this.serviceInstaller1.ServiceName);

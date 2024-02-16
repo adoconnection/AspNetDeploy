@@ -24,7 +24,7 @@ namespace SatelliteGrpcHost.Services
 
         public override Task<IsReadyResponse> IsReady(Empty request, ServerCallContext context)
         {
-            Console.WriteLine("wdscsc");
+            Console.WriteLine("IsReady");
 
             return Task.FromResult( new IsReadyResponse()
             {

@@ -13,7 +13,7 @@ namespace SatelliteConsoleHost
     {
         public static bool Close = false;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             ObjectFactoryConfigurator.Configure();
 

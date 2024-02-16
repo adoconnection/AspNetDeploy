@@ -69,7 +69,7 @@ namespace AspNetDeploy.BuildServices.MSBuild
             process.StartInfo.WorkingDirectory = Path.GetDirectoryName(targetFile);
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.FileName = toolPath;
-            process.StartInfo.Arguments = string.Format("\"{0}\" /t:Clean;Rebuild", targetFile);
+            process.StartInfo.Arguments = string.Format("\"{0}\" /t:Restore;Clean;Rebuild -p:Configuration=Release", targetFile);
 
             process.Start();
             output = process.StandardOutput.ReadToEnd();

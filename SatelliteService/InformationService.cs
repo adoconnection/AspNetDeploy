@@ -1,10 +1,13 @@
-﻿namespace SatelliteService
+﻿using System.ServiceModel;
+
+namespace SatelliteService
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class InformationService : IInformationService
     {
         public int GetVersion()
         {
-            return 20180329;
+            return 20240216;
         }
     }
 }

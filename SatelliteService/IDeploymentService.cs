@@ -2,65 +2,52 @@
 
 namespace SatelliteService
 {
+    [ServiceContract]
     public interface IDeploymentService
     {
-        
+        [OperationContract]
         bool IsReady();
 
-        
+        [OperationContract]
         bool BeginPublication(int publicationId);
 
-        
+        [OperationContract]
         bool ExecuteNextOperation();
 
-        
+        [OperationContract]
         bool Complete();
 
-        
+        [OperationContract]
         bool Rollback();
 
-        
+        [OperationContract]
         void UploadPackageBuffer(byte[] buffer);
 
-        
+        [OperationContract]
         void ResetPackage();
 
-        
+        [OperationContract]
         void DeployWebSite(string json);
 
-        void DeployWebSite(dynamic config);
-
-        
+        [OperationContract]
         void ProcessConfigFile(string json);
 
-        void ProcessConfigFile(dynamic config);
-
-        
+        [OperationContract]
         void RunPowerShellScript(string json);
 
-        void RunPowerShellScript(dynamic config);
-
-        
+        [OperationContract]
         void CopyFiles(string json);
 
-        void CopyFiles(dynamic config);
-
-        
+        [OperationContract]
         void UpdateHostsFile(string json);
 
-        void UpdateHostsFile(dynamic config);
-
-        
+        [OperationContract]
         void RunSQLScript(string json);
 
-        void RunSQLScript(dynamic config);
-
-        
+        [OperationContract]
         void ApplyDacpac(string jsonConfig);
 
-        void ApplyDacpac(dynamic config);
-
-        
+        [OperationContract]
         ExceptionInfo GetLastException();
     }
 }

@@ -10,6 +10,7 @@ using SatelliteService.Operations;
 
 namespace SatelliteService
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class DeploymentService : IDeploymentService
     {
         private int activePublicationId;
@@ -39,7 +40,6 @@ namespace SatelliteService
         {
             return 100;
         }
-
 
         public ExceptionInfo GetLastException()
         {
@@ -114,7 +114,7 @@ namespace SatelliteService
                 }
 
                 this.Rollback();
-                
+
                 return false;
             }
         }
@@ -173,27 +173,10 @@ namespace SatelliteService
             this.queuedOperations.Add(operation);
         }
 
-        public void DeployWebSite(dynamic config)
-        {
-            string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
-            WebSiteOperation operation = new WebSiteOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
-            operation.Configure(config);
-
-            this.queuedOperations.Add(operation);
-        }
-
         public void ProcessConfigFile(string jsonConfig)
         {
             ConfigOperation operation = new ConfigOperation(this.backupRepository);
             operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
-
-            this.queuedOperations.Add(operation);
-        }
-
-        public void ProcessConfigFile(dynamic config)
-        {
-            ConfigOperation operation = new ConfigOperation(this.backupRepository);
-            operation.Configure(config);
 
             this.queuedOperations.Add(operation);
         }
@@ -203,25 +186,11 @@ namespace SatelliteService
             throw new System.NotImplementedException();
         }
 
-        public void RunPowerShellScript(dynamic config)
-        {
-            throw new NotImplementedException();
-        }
-
         public void CopyFiles(string jsonConfig)
         {
             string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
             CopyFilesOperation operation = new CopyFilesOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
             operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
-
-            this.queuedOperations.Add(operation);
-        }
-
-        public void CopyFiles(dynamic config)
-        {
-            string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
-            CopyFilesOperation operation = new CopyFilesOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
-            operation.Configure(config);
 
             this.queuedOperations.Add(operation);
         }
@@ -234,26 +203,10 @@ namespace SatelliteService
             this.queuedOperations.Add(operation);
         }
 
-        public void UpdateHostsFile(dynamic config)
-        {
-            UpdateHostsOperation operation = new UpdateHostsOperation(this.backupRepository);
-            operation.Configure(config);
-
-            this.queuedOperations.Add(operation);
-        }
-
         public void RunSQLScript(string jsonConfig)
         {
             RunSQLScriptOperation operation = new RunSQLScriptOperation(this.backupRepository);
             operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
-
-            this.queuedOperations.Add(operation);
-        }
-
-        public void RunSQLScript(dynamic config)
-        {
-            RunSQLScriptOperation operation = new RunSQLScriptOperation(this.backupRepository);
-            operation.Configure(config);
 
             this.queuedOperations.Add(operation);
         }
@@ -263,15 +216,6 @@ namespace SatelliteService
             string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
             DacpacOperation operation = new DacpacOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
             operation.Configure(JsonConvert.DeserializeObject(jsonConfig));
-
-            this.queuedOperations.Add(operation);
-        }
-
-        public void ApplyDacpac(dynamic config)
-        {
-            string packagePath = pathRepository.GetPackagePath(this.activePublicationId);
-            DacpacOperation operation = new DacpacOperation(this.backupRepository, this.packageRepositoryFactory.Create(packagePath));
-            operation.Configure(config);
 
             this.queuedOperations.Add(operation);
         }

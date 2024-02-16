@@ -40,7 +40,6 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
             binding.UseDefaultWebProxy = true;
 
             binding.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
-            binding.Security.Mode = SecurityMode.None;
 
             this.deploymentClient = new DeploymentServiceClient(binding, new EndpointAddress(new Uri(endpoint + "/DeploymentService")));
             this.deploymentClient.ClientCredentials.UserName.UserName = login;
@@ -184,12 +183,12 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             string configuration = JsonConvert.SerializeObject(new
             {
-                dacpacFileName = "database.dacpac",
-                connectionString = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConnectionString")),
-                targetDatabase = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("TargetDatabase")),
-                projectId = deploymentStep.GetIntProperty("ProjectId"),
-                backupDatabaseBeforeChanges = (bool)customConfig.backupDatabaseBeforeChanges,
-                blockOnPossibleDataLoss = (bool)customConfig.blockOnPossibleDataLoss,
+                DacpacFileName = "database.dacpac",
+                ConnectionString = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConnectionString")),
+                TargetDatabase = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("TargetDatabase")),
+                ProjectId = deploymentStep.GetIntProperty("ProjectId"),
+                BackupDatabaseBeforeChanges = (bool)customConfig.backupDatabaseBeforeChanges,
+                BlockOnPossibleDataLoss = (bool)customConfig.blockOnPossibleDataLoss,
             });
 
             this.deploymentClient.ApplyDacpac(configuration);
@@ -199,8 +198,8 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
         {
             string configuration = JsonConvert.SerializeObject(new
             {
-                connectionString = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConnectionString")),
-                command = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("Command")),
+                ConnectionString = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("ConnectionString")),
+                Command = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("Command")),
             });
 
             this.deploymentClient.RunSQLScript(configuration);
@@ -224,9 +223,9 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             string configuration = JsonConvert.SerializeObject(new
             {
-                destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("DestinationPath")),
-                projectId = deploymentStep.GetIntProperty("ProjectId"),
-                mode = mode
+                Destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("DestinationPath")),
+                ProjectId = deploymentStep.GetIntProperty("ProjectId"),
+                Mode = mode
             });
 
             this.deploymentClient.CopyFiles(configuration);
@@ -238,11 +237,11 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
 
             string configuration = JsonConvert.SerializeObject(new
             {
-                destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.DestinationPath")),
-                siteName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
-                applicationPoolName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
-                projectId = deploymentStep.GetIntProperty("ProjectId"),
-                bindings = ((IEnumerable<dynamic>)bindings)
+                Destination = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.DestinationPath")),
+                SiteName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
+                ApplicationPoolName = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("IIS.SiteName")),
+                ProjectId = deploymentStep.GetIntProperty("ProjectId"),
+                Bindings = ((IEnumerable<dynamic>)bindings)
             });
 
             this.deploymentClient.DeployWebSite(configuration);
@@ -252,8 +251,8 @@ namespace AspNetDeploy.DeploymentServices.WCFSatellite
         {
             string configuration = JsonConvert.SerializeObject(new
             {
-                file = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("File")),
-                content = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("SetValues"))
+                File = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("File")),
+                Content = this.variableProcessor.ProcessValue(deploymentStep.GetStringProperty("SetValues"))
             });
 
             this.deploymentClient.ProcessConfigFile(configuration);

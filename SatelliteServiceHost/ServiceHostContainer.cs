@@ -19,7 +19,7 @@ namespace SatelliteServiceHost
         private readonly bool isMetadataEnabled;
         private readonly string certificateName;
 
-        private Thread monithringThread;
+        private Thread monitoringThread;
 
         public ServiceHostContainer(Type serviceType, Type interfaceType, Uri endpointUri, Uri metadataEndpointUri, bool isAuthorizationEnabled, bool isMetadataEnabled, string certificateName)
         {
@@ -41,12 +41,12 @@ namespace SatelliteServiceHost
 
         public void StartMonitoring()
         {
-            this.monithringThread = new Thread(this.Watcher());
+            this.monitoringThread = new Thread(this.Watcher());
         }
 
         public void Stop()
         {
-            this.monithringThread.Abort();
+            this.monitoringThread.Abort();
             this.ServiceHost.Close();
         }
 
@@ -65,7 +65,6 @@ namespace SatelliteServiceHost
 
                         if (this.ServiceHost.State == CommunicationState.Faulted || this.ServiceHost.State == CommunicationState.Closed)
                         {
-                            Console.WriteLine("sdccsdc");
                             this.StartService();
                         }
 

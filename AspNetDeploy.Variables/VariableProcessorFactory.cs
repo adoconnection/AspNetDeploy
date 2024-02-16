@@ -97,23 +97,22 @@ namespace AspNetDeploy.Variables
         {
 
 
-            IDictionary<string, string> environmentDictionary = new Dictionary<string, string>();
+            IDictionary<string, string> environmentDictionary = new Dictionary<string, string>
+            {
+                { "version", package.BundleVersion.Name },
+                { "date.ticks", DateTime.Now.Ticks.ToString() },
+                { "date.day", DateTime.Now.Day.ToString("00") },
+                { "date.month", DateTime.Now.Month.ToString("00") },
+                { "date.year", DateTime.Now.Year.ToString() },
+                { "package.id", package.Id.ToString() },
+                { "package.day", package.CreatedDate.Day.ToString() },
+                { "package.month", package.CreatedDate.Month.ToString() },
+                { "package.year", package.CreatedDate.Year.ToString() },
+                { "version.previous", package.BundleVersion.ParentBundleVersion != null ? package.BundleVersion.ParentBundleVersion.Name : "" },
+                { "previousversion", package.BundleVersion.ParentBundleVersion != null ? package.BundleVersion.ParentBundleVersion.Name : "" },
+                { "bundle", package.BundleVersion.Bundle.Name }
+            };
 
-            environmentDictionary.Add("version", package.BundleVersion.Name);
-
-            environmentDictionary.Add("date.ticks", DateTime.Now.Ticks.ToString());
-            environmentDictionary.Add("date.day", DateTime.Now.Day.ToString("00"));
-            environmentDictionary.Add("date.month", DateTime.Now.Month.ToString("00"));
-            environmentDictionary.Add("date.year", DateTime.Now.Year.ToString());
-            environmentDictionary.Add("package.id", package.Id.ToString());
-            environmentDictionary.Add("package.day", package.CreatedDate.Year.ToString());
-            environmentDictionary.Add("package.month", package.CreatedDate.Year.ToString());
-            environmentDictionary.Add("package.year", package.CreatedDate.Year.ToString());
-
-            environmentDictionary.Add("version.previous", package.BundleVersion.ParentBundleVersion != null ? package.BundleVersion.ParentBundleVersion.Name : "");
-            environmentDictionary.Add("previousversion", package.BundleVersion.ParentBundleVersion != null ? package.BundleVersion.ParentBundleVersion.Name : "");
-
-            environmentDictionary.Add("bundle", package.BundleVersion.Bundle.Name);
             return environmentDictionary;
         }
     }

@@ -25,25 +25,25 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            this.backupConfigGuid = this.BackupRepository.StoreFile((string)configuration.file);
+            this.backupConfigGuid = this.BackupRepository.StoreFile((string)configuration.File);
 
-            if (this.IsXml((string) configuration.file))
+            if (this.IsXml((string) configuration.File))
             {
                 XmlDocument target = new XmlDocument();
-                target.Load((string)configuration.file);
+                target.Load((string)configuration.File);
 
                 XmlDocument source = new XmlDocument();
-                source.LoadXml((string)configuration.content);
+                source.LoadXml((string)configuration.Content);
 
                 XmlMerger xmlMerger = new XmlMerger(target, new Dictionary<string, object>());
                 xmlMerger.ApplyChanges(source);
 
-                target.Save((string)configuration.file);
+                target.Save((string)configuration.File);
             }
             else
             {
-                JObject target = JObject.Parse(File.ReadAllText((string)this.configuration.file));
-                JObject source = JObject.Parse((string)configuration.content);
+                JObject target = JObject.Parse(File.ReadAllText((string)this.configuration.File));
+                JObject source = JObject.Parse((string)configuration.Content);
 
                 JsonMergeSettings jsonMergeSettings = new JsonMergeSettings
                 {
@@ -52,7 +52,7 @@ namespace SatelliteService.Operations
 
                 target.Merge(source, jsonMergeSettings);
 
-                File.WriteAllText((string)configuration.file, target.ToString());
+                File.WriteAllText((string)configuration.File, target.ToString());
             }
         }
 

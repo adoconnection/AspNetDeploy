@@ -76,6 +76,7 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -89,7 +90,9 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="SatelliteServiceContainer.cs" />
+    <Compile Include="SatelliteServiceContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SatelliteServiceContainer.Designer.cs">
       <DependentUpon>SatelliteServiceContainer.cs</DependentUpon>
     </Compile>

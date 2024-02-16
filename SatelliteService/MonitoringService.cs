@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using WUApiLib;
 
 namespace SatelliteService
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class MonitoringService : IMonitoringService
     {
         public ServerSummary GetServerSummary()

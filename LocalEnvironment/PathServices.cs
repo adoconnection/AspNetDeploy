@@ -35,38 +35,32 @@ namespace LocalEnvironment
 
         public string GetMSBuildPath()
         {
-            return "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe"; //Затычка
+            return @"C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"; //Затычка
         }
 
         public string GetRootCertificatePath(bool isPfx = true)
         {
             if (isPfx)
             {
-                return
-                    "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.pfx";
-                return this.GetWorkingFolderPath(Path.Combine("Certificates", "rootCertificate.pfx"));
+                return this.GetWorkingFolderPath("Certificates\\root.pfx");
             }
 
-            return "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\root.cer";
-            return this.GetWorkingFolderPath(Path.Combine("Certificates", "rootCertificate.crt"));
+            return this.GetWorkingFolderPath("Certificates\\root.cer");
         }
 
         public string GetClientCertificatePath()
         {
-            return "D:\\Limetime\\ConsoleApps\\CertGenerator\\CertGenerator\\Resources\\New\\client.pfx";
-            return this.GetWorkingFolderPath(Path.Combine("Certificates", "clientCertificate.pfx"));
+            return this.GetWorkingFolderPath("Certificates\\client.pfx");
         }
 
         public string GetMachineCertificatePath(bool isRoot = false)
         {
             if (isRoot)
             {
-                return this.GetWorkingFolderPath(Path.Combine("MachineAgent", "Template", "Certificates",
-                    "rootCertificate.crt"));
+                return this.GetWorkingFolderPath(Path.Combine("MachineAgent", "Template", "Certificates", "rootCertificate.crt"));
             }
 
-            return this.GetWorkingFolderPath(Path.Combine("MachineAgent", "Template", "Certificates",
-                "machineCertificate.pfx"));
+            return this.GetWorkingFolderPath(Path.Combine("MachineAgent", "Template", "Certificates", "machineCertificate.pfx"));
         }
 
         private string GetWorkingFolderPath(string path)

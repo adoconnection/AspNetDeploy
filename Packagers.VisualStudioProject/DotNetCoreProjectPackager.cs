@@ -56,7 +56,22 @@ namespace Packagers.VisualStudioProject
                 return true;
             }
 
+            if (targetFramework.Equals("net5.0", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (targetFramework.Equals("net6.0", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
             if (targetFramework.Equals("net7.0", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (targetFramework.Equals("net8.0", StringComparison.InvariantCultureIgnoreCase))
             {
                 return true;
             }

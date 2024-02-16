@@ -73,7 +73,7 @@ namespace SatelliteService.Operations
 
                 site.Bindings.Clear();
 
-                foreach (dynamic bindingConfig in JsonConvert.DeserializeObject<IEnumerable<dynamic>>(configuration.Bindings))
+                foreach (dynamic bindingConfig in configuration.Bindings)
                 {
                     Binding binding = site.Bindings.CreateElement();
 
@@ -195,7 +195,7 @@ namespace SatelliteService.Operations
 
         private void StopSite(ServerManager iisManager, string siteName)
         {
-            Site site = iisManager.Sites[siteName];
+            Site site = iisManager.Sites.FirstOrDefault(s => s.Name.Equals(siteName, StringComparison.InvariantCultureIgnoreCase));
 
             if (site == null)
             {
@@ -252,7 +252,7 @@ namespace SatelliteService.Operations
 
         private void StartSite(ServerManager iisManager, string siteName)
         {
-            Site site = iisManager.Sites[siteName];
+            Site site = iisManager.Sites.FirstOrDefault(s => s.Name.Equals(siteName, StringComparison.InvariantCultureIgnoreCase));
 
             if (site == null)
             {

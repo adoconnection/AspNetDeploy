@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -45,35 +46,44 @@ namespace Packagers.VisualStudioProject
 
         protected static void AddProjectFile(ZipFile zipFile, string projectRootFolder, string file, string customArchiveDirectory = null, string customFileName = null)
         {
-            string filePath = Path.Combine(projectRootFolder, file);
-            string directoryPathInArchive = Path.GetDirectoryName(file);
-
-            if (File.Exists(filePath))
+            try
             {
-                if (string.IsNullOrEmpty(customFileName))
-                {
-                    if (zipFile.ContainsEntry(filePath))
-                    {
-                        return;
-                    }
+                string filePath = Path.Combine(projectRootFolder, file);
+                string directoryPathInArchive = Path.GetDirectoryName(file);
 
-                    zipFile.AddFile(filePath, customArchiveDirectory ?? directoryPathInArchive);
-                }
-                else
+                if (File.Exists(filePath))
                 {
-                    string entryName;
-
-                    if (!string.IsNullOrEmpty(customArchiveDirectory))
+                    if (string.IsNullOrEmpty(customFileName))
                     {
-                        entryName = Path.Combine(customArchiveDirectory, customFileName);
+                        if (zipFile.ContainsEntry(filePath))
+                        {
+                            return;
+                        }
+
+                        zipFile.AddFile(filePath, customArchiveDirectory ?? directoryPathInArchive);
                     }
                     else
                     {
-                        entryName = customFileName;
-                    }
+                        string entryName;
 
-                    zipFile.AddEntry(entryName, File.ReadAllBytes(filePath));
+                        if (!string.IsNullOrEmpty(customArchiveDirectory))
+                        {
+                            entryName = Path.Combine(customArchiveDirectory, customFileName);
+                        }
+                        else
+                        {
+                            entryName = customFileName;
+                        }
+
+                        zipFile.AddEntry(entryName, File.ReadAllBytes(filePath));
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                e.Data.Add("projectRootFolder", projectRootFolder);
+                e.Data.Add("file", file);
+                throw;
             }
         }
     }
