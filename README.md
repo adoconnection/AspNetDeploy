@@ -1,14 +1,18 @@
 AspNetDeploy ![Sources](http://ad-resources.personal.ado.me.uk/vs-loading-colored-24.gif)
 ============
+**No code open source CI + deploy tool to cover you ASP.NET app build, test and deploy form A to Z**
 
-CI + deploy service for ASP.NET 4.5+ applications
+* NET Framework / NET8
+* Windows / Linux environments
+
+<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-overview.png"/>
+
 
 Features
 ============
-* Zero scripting approach
+* No code
 * Multi tenant environments
-* Several active versions support
-* Build and deploy service in one box
+* Concurrent versions
 * Builtin monitoring
 * Automatic VS projects recognition
 * Websites, file packages, MSSQL DACPAC updates etc.
@@ -16,39 +20,31 @@ Features
 
 Sources
 ============
-Here you manage all your source code sources.
-AspNetDeploy will analyze your sources, split it on separate projects and make them ready to be deployed.
+* GIT
+* SVN
+* Local file system
+* Parse visual studio solutions and projects
 
-![Sources](http://ad-resources.personal.ado.me.uk/sources-list.PNG)
+<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-sources.png" />
+  
 
-
-Bundles
+Build, package, bundle
 ============
-Bunbles is a way you publish projects. One bundle is a set of projects to be deployed at once.
+* msbuild (requires VS2022 community edition installed)
+* dotnet build
+* npm
 
-![Bundles](http://ad-resources.personal.ado.me.uk/bundles-list.PNG)
-
-![Deployment steps](http://ad-resources.personal.ado.me.uk/deployment-steps.PNG)
-![Deployment step types](http://ad-resources.personal.ado.me.uk/deployment-step-types.PNG)
-![Deployment step web](http://ad-resources.personal.ado.me.uk/deployment-step-web.PNG)
+<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-build.png" />
 
 
-Environments
+
+Deploy
 ============
-Environments is a list of destinations where you deploy your bundles. Environments are linked together. 
-Once you pushed bundle to Test environment you can now push it further to Staging etc.
+* Multiple environments
+* Multiple tantents
+* Multiple machines
+* Windows Server
+* Linux (coming)
+* Docker (coming)
 
-![Environments](http://ad-resources.personal.ado.me.uk/environments-list.PNG)
-
-Available roles
-* Developers
-* Testers
-* Publishers
-
-![Approve](http://ad-resources.personal.ado.me.uk/publications-approvement.PNG)
-
-Satellite setup
-============
-Satellite listens for AspNetDeploy commands over secure connection and apply chenges to current server
-![satellite setup](http://ad-resources.personal.ado.me.uk/satellite-config.PNG)
-
+<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-deploy.png" />
