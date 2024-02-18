@@ -61,8 +61,7 @@ namespace AspNetDeploy.Model {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GO
-        ////****** Object:  Table [dbo].[AspNetDeployException]    Script Date: 14 Jan 16 16:49:26 ******/
+        ///   Looks up a localized string similar to /****** Object:  Table [dbo].[AspNetDeployException]    Script Date: 18.02.2024 18:43:56 ******/
         ///SET ANSI_NULLS ON
         ///GO
         ///SET QUOTED_IDENTIFIER ON
@@ -74,9 +73,7 @@ namespace AspNetDeploy.Model {
         ///	[ExceptionId] [int] NOT NULL,
         ///	[TimeStamp] [datetime] NOT NULL,
         ///	[UserId] [int] NULL,
-        /// CONSTRAINT [PK_AspNetDeployException] PRIMARY KEY CLUSTERED 
-        ///(
-        ///	[Id [rest of string was truncated]&quot;;.
+        /// CONSTRAINT [PK_AspNetDeployException] PRIMARY KEY CLUSTER [rest of string was truncated]&quot;;.
         /// </summary>
         public static string InitializationScript {
             get {

@@ -118,8 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InitializationScript" xml:space="preserve">
-    <value>GO
-/****** Object:  Table [dbo].[AspNetDeployException]    Script Date: 14 Jan 16 16:49:26 ******/
+    <value>/****** Object:  Table [dbo].[AspNetDeployException]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -134,11 +133,11 @@ CREATE TABLE [dbo].[AspNetDeployException](
  CONSTRAINT [PK_AspNetDeployException] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Bundle]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Bundle]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -154,11 +153,11 @@ CREATE TABLE [dbo].[Bundle](
  CONSTRAINT [PK_Bundle] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[BundleVersion]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[BundleVersion]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -177,11 +176,11 @@ CREATE TABLE [dbo].[BundleVersion](
  CONSTRAINT [PK_BundleVersion] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[BundleVersionProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[BundleVersionProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -196,11 +195,11 @@ CREATE TABLE [dbo].[BundleVersionProperty](
  CONSTRAINT [PK_BundleVersionProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[DataField]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[DataField]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -212,16 +211,16 @@ CREATE TABLE [dbo].[DataField](
 	[TypeId] [int] NOT NULL,
 	[Key] [nvarchar](4000) NOT NULL,
 	[IsSensitive] [bit] NOT NULL,
-	[ModeId] [int] NOT NULL,
+	[Mode] [int] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_ProjectConfigurationField] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[DataFieldToBundleVersion]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[DataFieldToBundleVersion]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -235,11 +234,11 @@ CREATE TABLE [dbo].[DataFieldToBundleVersion](
 (
 	[DataFieldId] ASC,
 	[BundleVersionId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[DataFieldValue]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[DataFieldValue]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -250,50 +249,16 @@ CREATE TABLE [dbo].[DataFieldValue](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[DataFieldId] [int] NOT NULL,
 	[Value] [nvarchar](max) NULL,
+	[EnvironmentId] [int] NULL,
+	[MachineId] [int] NULL,
  CONSTRAINT [PK_ProjectConfigurationValue] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[DataFieldValueToEnvironment]    Script Date: 14 Jan 16 16:49:26 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DataFieldValueToEnvironment]') AND type in (N'U'))
-BEGIN
-CREATE TABLE [dbo].[DataFieldValueToEnvironment](
-	[EnvironmentId] [int] NOT NULL,
-	[DataFieldValueId] [int] NOT NULL,
- CONSTRAINT [PK_ProjectConfigurationValueToEnvironment] PRIMARY KEY CLUSTERED 
-(
-	[EnvironmentId] ASC,
-	[DataFieldValueId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-END
-GO
-/****** Object:  Table [dbo].[DataFieldValueToMachine]    Script Date: 14 Jan 16 16:49:26 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DataFieldValueToMachine]') AND type in (N'U'))
-BEGIN
-CREATE TABLE [dbo].[DataFieldValueToMachine](
-	[MachineId] [int] NOT NULL,
-	[DataFieldValueId] [int] NOT NULL,
- CONSTRAINT [PK_DataFieldValueToMachine] PRIMARY KEY CLUSTERED 
-(
-	[MachineId] ASC,
-	[DataFieldValueId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-END
-GO
-/****** Object:  Table [dbo].[DeploymentStep]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[DeploymentStep]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -305,15 +270,15 @@ CREATE TABLE [dbo].[DeploymentStep](
 	[DeploymentStepId] [int] NULL,
 	[BundleVersionId] [int] NOT NULL,
 	[OrderIndex] [int] NOT NULL,
-	[TypeId] [int] NOT NULL,
+	[Type] [int] NOT NULL,
  CONSTRAINT [PK_DeploymentStep] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[DeploymentStepProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[DeploymentStepProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -328,11 +293,11 @@ CREATE TABLE [dbo].[DeploymentStepProperty](
  CONSTRAINT [PK_DeploymentStepProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[DeploymentStepToMachineRole]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[DeploymentStepToMachineRole]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -346,11 +311,11 @@ CREATE TABLE [dbo].[DeploymentStepToMachineRole](
 (
 	[DeploymentStepId] ASC,
 	[MachineRoleId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Environment]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Environment]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -363,11 +328,11 @@ CREATE TABLE [dbo].[Environment](
  CONSTRAINT [PK_Environment] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[EnvironmentProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[EnvironmentProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -382,11 +347,11 @@ CREATE TABLE [dbo].[EnvironmentProperty](
  CONSTRAINT [PK_EnvironmentProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Exception]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Exception]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -403,11 +368,11 @@ CREATE TABLE [dbo].[Exception](
  CONSTRAINT [PK_Exception] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[ExceptionData]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[ExceptionData]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -423,11 +388,11 @@ CREATE TABLE [dbo].[ExceptionData](
  CONSTRAINT [PK_ExceptionData] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Group]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Group]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -441,11 +406,11 @@ CREATE TABLE [dbo].[Group](
  CONSTRAINT [PK_Group] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Machine]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Machine]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -461,11 +426,11 @@ CREATE TABLE [dbo].[Machine](
  CONSTRAINT [PK_Machine] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MachinePublication]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[MachinePublication]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -477,16 +442,16 @@ CREATE TABLE [dbo].[MachinePublication](
 	[PublicationId] [int] NOT NULL,
 	[MachineId] [int] NOT NULL,
 	[CreatedDate] [datetime] NOT NULL,
-	[StateId] [int] NOT NULL,
+	[State] [int] NOT NULL,
 	[CompletedDate] [datetime] NULL,
  CONSTRAINT [PK_MachinePublication] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MachinePublicationLog]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[MachinePublicationLog]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -496,18 +461,33 @@ BEGIN
 CREATE TABLE [dbo].[MachinePublicationLog](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[MachinePublicationId] [int] NOT NULL,
-	[EventId] [int] NOT NULL,
+	[Event] [int] NOT NULL,
 	[CreatedDate] [datetime] NOT NULL,
 	[DeploymentStepId] [int] NULL,
 	[ExceptionId] [int] NULL,
  CONSTRAINT [PK_MachinePublicationLog] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MachinePublicationProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[MachinePublicationLogProperty]    Script Date: 18.02.2024 18:43:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MachinePublicationLogProperty]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[MachinePublicationLogProperty](
+	[Id] [int] NOT NULL,
+	[MachinePublicationLogId] [int] NOT NULL,
+	[Key] [nvarchar](1000) NULL,
+	[Value] [nvarchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+/****** Object:  Table [dbo].[MachinePublicationProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -522,11 +502,11 @@ CREATE TABLE [dbo].[MachinePublicationProperty](
  CONSTRAINT [PK_MachinePublicationProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MachineRole]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[MachineRole]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -539,11 +519,11 @@ CREATE TABLE [dbo].[MachineRole](
  CONSTRAINT [PK_MachineRole] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MachineToEnvironment]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[MachineToEnvironment]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -557,11 +537,11 @@ CREATE TABLE [dbo].[MachineToEnvironment](
 (
 	[MachineId] ASC,
 	[EnvironmentId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MachineToMachineRole]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[MachineToMachineRole]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -575,11 +555,11 @@ CREATE TABLE [dbo].[MachineToMachineRole](
 (
 	[MachineId] ASC,
 	[MachineRoleId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[NextEnvironment]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[NextEnvironment]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -593,11 +573,11 @@ CREATE TABLE [dbo].[NextEnvironment](
 (
 	[SourceEnvironmentId] ASC,
 	[NextEnvironmentId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Package]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Package]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -612,11 +592,11 @@ CREATE TABLE [dbo].[Package](
  CONSTRAINT [PK_Package] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[PackageApprovedOnEnvironment]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[PackageApprovedOnEnvironment]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -632,11 +612,11 @@ CREATE TABLE [dbo].[PackageApprovedOnEnvironment](
 (
 	[PackageId] ASC,
 	[EnvironmentId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[PackageEntry]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[PackageEntry]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -651,11 +631,11 @@ CREATE TABLE [dbo].[PackageEntry](
 (
 	[PackageId] ASC,
 	[ProjectVersionId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Project]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Project]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -670,11 +650,11 @@ CREATE TABLE [dbo].[Project](
  CONSTRAINT [PK_Project] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[ProjectProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[ProjectProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -689,11 +669,11 @@ CREATE TABLE [dbo].[ProjectProperty](
  CONSTRAINT [PK_ProjectProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[ProjectToBundle]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[ProjectToBundle]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -707,11 +687,11 @@ CREATE TABLE [dbo].[ProjectToBundle](
 (
 	[ProjectId] ASC,
 	[BundleId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[ProjectVersion]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[ProjectVersion]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -723,18 +703,18 @@ CREATE TABLE [dbo].[ProjectVersion](
 	[ProjectId] [int] NOT NULL,
 	[SourceControlVersionId] [int] NOT NULL,
 	[Name] [nvarchar](1000) NOT NULL,
-	[ProjectTypeId] [int] NOT NULL,
+	[ProjectType] [int] NOT NULL,
 	[SolutionFile] [nvarchar](1000) NOT NULL,
 	[ProjectFile] [nvarchar](1000) NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_ProjectVersion] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[ProjectVersionProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[ProjectVersionProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -749,11 +729,11 @@ CREATE TABLE [dbo].[ProjectVersionProperty](
  CONSTRAINT [PK_ProjectVersionProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[ProjectVersionToBundleVersion]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[ProjectVersionToBundleVersion]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -767,11 +747,11 @@ CREATE TABLE [dbo].[ProjectVersionToBundleVersion](
 (
 	[ProjectVersionId] ASC,
 	[BundleVersionId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Publication]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Publication]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -783,16 +763,16 @@ CREATE TABLE [dbo].[Publication](
 	[PackageId] [int] NOT NULL,
 	[EnvironmentId] [int] NOT NULL,
 	[CreatedDate] [datetime] NOT NULL,
-	[ResultId] [int] NOT NULL,
 	[QueuedByUserId] [int] NULL,
+	[State] [int] NOT NULL,
  CONSTRAINT [PK_Publication] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Revision]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Revision]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -802,36 +782,38 @@ BEGIN
 CREATE TABLE [dbo].[Revision](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[SourceControlId] [int] NOT NULL,
-	[Number] [nvarchar](150) NOT NULL,
+	[Name] [nvarchar](150) NOT NULL,
 	[CreatedDate] [datetime] NOT NULL,
 	[Author] [nvarchar](150) NULL,
+	[ParentRevisionId] [int] NULL,
  CONSTRAINT [PK_Revision] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[RevisionEntry]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[RevisionInfo]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[RevisionEntry]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[RevisionInfo]') AND type in (N'U'))
 BEGIN
-CREATE TABLE [dbo].[RevisionEntry](
+CREATE TABLE [dbo].[RevisionInfo](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[RevisionId] [int] NOT NULL,
-	[TypeId] [int] NOT NULL,
-	[Name] [nvarchar](1000) NOT NULL,
+	[Author] [nvarchar](1000) NULL,
+	[Message] [nvarchar](1000) NULL,
+	[CreatedDate] [datetime] NULL,
  CONSTRAINT [PK_RevisionEntry] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[SourceControl]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[SourceControl]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -841,17 +823,17 @@ BEGIN
 CREATE TABLE [dbo].[SourceControl](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](1000) NOT NULL,
-	[TypeId] [int] NOT NULL,
+	[Type] [int] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[OrderIndex] [int] NOT NULL,
  CONSTRAINT [PK_SourceControl] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[SourceControlProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[SourceControlProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -866,11 +848,11 @@ CREATE TABLE [dbo].[SourceControlProperty](
  CONSTRAINT [PK_SourceControlProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[SourceControlToGroup]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[SourceControlToGroup]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -884,11 +866,11 @@ CREATE TABLE [dbo].[SourceControlToGroup](
 (
 	[SourceControlId] ASC,
 	[GroupId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[SourceControlVersion]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[SourceControlVersion]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -906,11 +888,11 @@ CREATE TABLE [dbo].[SourceControlVersion](
  CONSTRAINT [PK_SourceControlVersion] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[SourceControlVersionProperty]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[SourceControlVersionProperty]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -925,11 +907,31 @@ CREATE TABLE [dbo].[SourceControlVersionProperty](
  CONSTRAINT [PK_SourceControlVersionProperty] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[TestStep]    Script Date: 18.02.2024 18:43:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TestStep]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[TestStep](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[BundleVersionId] [int] NOT NULL,
+	[ProjectId] [int] NOT NULL,
+	[RunTypeId] [int] NOT NULL,
+	[ResultJson] [nvarchar](max) NULL,
+ CONSTRAINT [PK_TestStep] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+/****** Object:  Table [dbo].[User]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -942,17 +944,18 @@ CREATE TABLE [dbo].[User](
 	[Name] [nvarchar](100) NOT NULL,
 	[Email] [nvarchar](100) NOT NULL,
 	[Password] [nvarchar](100) NOT NULL,
-	[RoleId] [int] NOT NULL,
+	[Role] [int] NOT NULL,
 	[IsDisabled] [bit] NOT NULL,
 	[ApiKey] [nvarchar](50) NULL,
+	[IsOnline] [bit] NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Version]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[Version]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -967,11 +970,11 @@ CREATE TABLE [dbo].[Version](
  CONSTRAINT [PK_Version] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[VersionToVersion]    Script Date: 14 Jan 16 16:49:26 ******/
+/****** Object:  Table [dbo].[VersionToVersion]    Script Date: 18.02.2024 18:43:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -985,7 +988,7 @@ CREATE TABLE [dbo].[VersionToVersion](
 (
 	[PreviousVersionId] ASC,
 	[NextVersionId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
 GO
@@ -993,85 +996,76 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF
 BEGIN
 ALTER TABLE [dbo].[Bundle] ADD  CONSTRAINT [DF_Bundle_IsSingleInstance]  DEFAULT ((0)) FOR [IsSingleInstance]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Bundle_OrderIndex]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[Bundle] ADD  CONSTRAINT [DF_Bundle_OrderIndex]  DEFAULT ((0)) FOR [OrderIndex]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_BundleVersion_OrderIndex]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[BundleVersion] ADD  CONSTRAINT [DF_BundleVersion_OrderIndex]  DEFAULT ((0)) FOR [OrderIndex]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_BundleVersion_IsHead]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[BundleVersion] ADD  CONSTRAINT [DF_BundleVersion_IsHead]  DEFAULT ((0)) FOR [IsHead]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_BundleVersion_IsDeleted]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[BundleVersion] ADD  CONSTRAINT [DF_BundleVersion_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_BundleVersion_IsArchived]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[BundleVersion] ADD  CONSTRAINT [DF_BundleVersion_IsArchived]  DEFAULT ((0)) FOR [IsArchived]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_DataField_IsDeleted]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[DataField] ADD  CONSTRAINT [DF_DataField_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Machine_Login]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[Machine] ADD  CONSTRAINT [DF_Machine_Login]  DEFAULT ('') FOR [Login]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Machine_Password]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[Machine] ADD  CONSTRAINT [DF_Machine_Password]  DEFAULT ('') FOR [Password]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_PackageApprovedOnEnvironment_ApprovedById]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[PackageApprovedOnEnvironment] ADD  CONSTRAINT [DF_PackageApprovedOnEnvironment_ApprovedById]  DEFAULT ((0)) FOR [ApprovedByUserId]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_SourceControl_OrderIndex]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[SourceControl] ADD  CONSTRAINT [DF_SourceControl_OrderIndex]  DEFAULT ((0)) FOR [OrderIndex]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_SourceControlVersion_OrderIndex]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[SourceControlVersion] ADD  CONSTRAINT [DF_SourceControlVersion_OrderIndex]  DEFAULT ((0)) FOR [OrderIndex]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_SourceControlVersion_IsHead]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[SourceControlVersion] ADD  CONSTRAINT [DF_SourceControlVersion_IsHead]  DEFAULT ((0)) FOR [IsHead]
 END
-
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_SourceControlVersion_IsArchived]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[SourceControlVersion] ADD  CONSTRAINT [DF_SourceControlVersion_IsArchived]  DEFAULT ((0)) FOR [IsArchivedId]
 END
-
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_User_IsOnline]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[User] ADD  CONSTRAINT [DF_User_IsOnline]  DEFAULT ((0)) FOR [IsOnline]
+END
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_AspNetDeployException_Exception]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetDeployException]'))
 ALTER TABLE [dbo].[AspNetDeployException]  WITH CHECK ADD  CONSTRAINT [FK_AspNetDeployException_Exception] FOREIGN KEY([ExceptionId])
@@ -1125,40 +1119,27 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValue_DataField]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValue]'))
 ALTER TABLE [dbo].[DataFieldValue]  WITH CHECK ADD  CONSTRAINT [FK_DataFieldValue_DataField] FOREIGN KEY([DataFieldId])
 REFERENCES [dbo].[DataField] ([Id])
+ON DELETE CASCADE
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValue_DataField]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValue]'))
 ALTER TABLE [dbo].[DataFieldValue] CHECK CONSTRAINT [FK_DataFieldValue_DataField]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValueToEnvironment_DataFieldValue]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToEnvironment]'))
-ALTER TABLE [dbo].[DataFieldValueToEnvironment]  WITH CHECK ADD  CONSTRAINT [FK_DataFieldValueToEnvironment_DataFieldValue] FOREIGN KEY([DataFieldValueId])
-REFERENCES [dbo].[DataFieldValue] ([Id])
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValueToEnvironment_DataFieldValue]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToEnvironment]'))
-ALTER TABLE [dbo].[DataFieldValueToEnvironment] CHECK CONSTRAINT [FK_DataFieldValueToEnvironment_DataFieldValue]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProjectConfigurationValueToEnvironment_Environment]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToEnvironment]'))
-ALTER TABLE [dbo].[DataFieldValueToEnvironment]  WITH CHECK ADD  CONSTRAINT [FK_ProjectConfigurationValueToEnvironment_Environment] FOREIGN KEY([EnvironmentId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValue_Environment]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValue]'))
+ALTER TABLE [dbo].[DataFieldValue]  WITH CHECK ADD  CONSTRAINT [FK_DataFieldValue_Environment] FOREIGN KEY([EnvironmentId])
 REFERENCES [dbo].[Environment] ([Id])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProjectConfigurationValueToEnvironment_Environment]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToEnvironment]'))
-ALTER TABLE [dbo].[DataFieldValueToEnvironment] CHECK CONSTRAINT [FK_ProjectConfigurationValueToEnvironment_Environment]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValue_Environment]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValue]'))
+ALTER TABLE [dbo].[DataFieldValue] CHECK CONSTRAINT [FK_DataFieldValue_Environment]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValueToMachine_DataFieldValue]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToMachine]'))
-ALTER TABLE [dbo].[DataFieldValueToMachine]  WITH CHECK ADD  CONSTRAINT [FK_DataFieldValueToMachine_DataFieldValue] FOREIGN KEY([DataFieldValueId])
-REFERENCES [dbo].[DataFieldValue] ([Id])
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValueToMachine_DataFieldValue]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToMachine]'))
-ALTER TABLE [dbo].[DataFieldValueToMachine] CHECK CONSTRAINT [FK_DataFieldValueToMachine_DataFieldValue]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValueToMachine_Machine]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToMachine]'))
-ALTER TABLE [dbo].[DataFieldValueToMachine]  WITH CHECK ADD  CONSTRAINT [FK_DataFieldValueToMachine_Machine] FOREIGN KEY([MachineId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValue_Machine]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValue]'))
+ALTER TABLE [dbo].[DataFieldValue]  WITH CHECK ADD  CONSTRAINT [FK_DataFieldValue_Machine] FOREIGN KEY([MachineId])
 REFERENCES [dbo].[Machine] ([Id])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValueToMachine_Machine]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValueToMachine]'))
-ALTER TABLE [dbo].[DataFieldValueToMachine] CHECK CONSTRAINT [FK_DataFieldValueToMachine_Machine]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DataFieldValue_Machine]') AND parent_object_id = OBJECT_ID(N'[dbo].[DataFieldValue]'))
+ALTER TABLE [dbo].[DataFieldValue] CHECK CONSTRAINT [FK_DataFieldValue_Machine]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DeploymentStep_BundleVersion]') AND parent_object_id = OBJECT_ID(N'[dbo].[DeploymentStep]'))
-ALTER TABLE [dbo].[DeploymentStep]  WITH CHECK ADD  CONSTRAINT [FK_DeploymentStep_BundleVersion] FOREIGN KEY([BundleVersionId])
+ALTER TABLE [dbo].[DeploymentStep]  WITH NOCHECK ADD  CONSTRAINT [FK_DeploymentStep_BundleVersion] FOREIGN KEY([BundleVersionId])
 REFERENCES [dbo].[BundleVersion] ([Id])
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_DeploymentStep_BundleVersion]') AND parent_object_id = OBJECT_ID(N'[dbo].[DeploymentStep]'))
@@ -1240,6 +1221,13 @@ REFERENCES [dbo].[MachinePublication] ([Id])
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MachinePublicationLog_MachinePublication]') AND parent_object_id = OBJECT_ID(N'[dbo].[MachinePublicationLog]'))
 ALTER TABLE [dbo].[MachinePublicationLog] CHECK CONSTRAINT [FK_MachinePublicationLog_MachinePublication]
+GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MachinePublicationLogProperty_MachinePublicationLog]') AND parent_object_id = OBJECT_ID(N'[dbo].[MachinePublicationLogProperty]'))
+ALTER TABLE [dbo].[MachinePublicationLogProperty]  WITH CHECK ADD  CONSTRAINT [FK_MachinePublicationLogProperty_MachinePublicationLog] FOREIGN KEY([MachinePublicationLogId])
+REFERENCES [dbo].[MachinePublicationLog] ([Id])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MachinePublicationLogProperty_MachinePublicationLog]') AND parent_object_id = OBJECT_ID(N'[dbo].[MachinePublicationLogProperty]'))
+ALTER TABLE [dbo].[MachinePublicationLogProperty] CHECK CONSTRAINT [FK_MachinePublicationLogProperty_MachinePublicationLog]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MachinePublicationProperty_MachinePublication]') AND parent_object_id = OBJECT_ID(N'[dbo].[MachinePublicationProperty]'))
 ALTER TABLE [dbo].[MachinePublicationProperty]  WITH CHECK ADD  CONSTRAINT [FK_MachinePublicationProperty_MachinePublication] FOREIGN KEY([MachinePublicationId])
@@ -1416,19 +1404,19 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Publication_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[Publication]'))
 ALTER TABLE [dbo].[Publication] CHECK CONSTRAINT [FK_Publication_User]
 GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Revision_Revision]') AND parent_object_id = OBJECT_ID(N'[dbo].[Revision]'))
+ALTER TABLE [dbo].[Revision]  WITH CHECK ADD  CONSTRAINT [FK_Revision_Revision] FOREIGN KEY([ParentRevisionId])
+REFERENCES [dbo].[Revision] ([Id])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Revision_Revision]') AND parent_object_id = OBJECT_ID(N'[dbo].[Revision]'))
+ALTER TABLE [dbo].[Revision] CHECK CONSTRAINT [FK_Revision_Revision]
+GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Revision_SourceControl]') AND parent_object_id = OBJECT_ID(N'[dbo].[Revision]'))
 ALTER TABLE [dbo].[Revision]  WITH CHECK ADD  CONSTRAINT [FK_Revision_SourceControl] FOREIGN KEY([SourceControlId])
-REFERENCES [dbo].[SourceControl] ([Id])
+REFERENCES [dbo].[Revision] ([Id])
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Revision_SourceControl]') AND parent_object_id = OBJECT_ID(N'[dbo].[Revision]'))
 ALTER TABLE [dbo].[Revision] CHECK CONSTRAINT [FK_Revision_SourceControl]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_RevisionEntry_Revision]') AND parent_object_id = OBJECT_ID(N'[dbo].[RevisionEntry]'))
-ALTER TABLE [dbo].[RevisionEntry]  WITH CHECK ADD  CONSTRAINT [FK_RevisionEntry_Revision] FOREIGN KEY([RevisionId])
-REFERENCES [dbo].[Revision] ([Id])
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_RevisionEntry_Revision]') AND parent_object_id = OBJECT_ID(N'[dbo].[RevisionEntry]'))
-ALTER TABLE [dbo].[RevisionEntry] CHECK CONSTRAINT [FK_RevisionEntry_Revision]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_SourceControlProperty_SourceControl]') AND parent_object_id = OBJECT_ID(N'[dbo].[SourceControlProperty]'))
 ALTER TABLE [dbo].[SourceControlProperty]  WITH CHECK ADD  CONSTRAINT [FK_SourceControlProperty_SourceControl] FOREIGN KEY([SourceControlId])
@@ -1471,6 +1459,13 @@ REFERENCES [dbo].[SourceControlVersion] ([Id])
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_SourceControlVersionProperty_SourceControlVersion]') AND parent_object_id = OBJECT_ID(N'[dbo].[SourceControlVersionProperty]'))
 ALTER TABLE [dbo].[SourceControlVersionProperty] CHECK CONSTRAINT [FK_SourceControlVersionProperty_SourceControlVersion]
+GO
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_TestStep_BundleVersion]') AND parent_object_id = OBJECT_ID(N'[dbo].[TestStep]'))
+ALTER TABLE [dbo].[TestStep]  WITH CHECK ADD  CONSTRAINT [FK_TestStep_BundleVersion] FOREIGN KEY([BundleVersionId])
+REFERENCES [dbo].[BundleVersion] ([Id])
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_TestStep_BundleVersion]') AND parent_object_id = OBJECT_ID(N'[dbo].[TestStep]'))
+ALTER TABLE [dbo].[TestStep] CHECK CONSTRAINT [FK_TestStep_BundleVersion]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_VersionToVersion_Version]') AND parent_object_id = OBJECT_ID(N'[dbo].[VersionToVersion]'))
 ALTER TABLE [dbo].[VersionToVersion]  WITH CHECK ADD  CONSTRAINT [FK_VersionToVersion_Version] FOREIGN KEY([PreviousVersionId])
