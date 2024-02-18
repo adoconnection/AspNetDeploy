@@ -48,3 +48,11 @@ Deploy
 * Docker (coming)
 
 <img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-deploy.png" />
+
+
+Environments
+============
+* Same bundle version is promoted across environments of your coice
+* Team members with DEV, QA and SRE roles share responsibility for bundle testing and rolling out to public
+
+<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-environments.png" />
