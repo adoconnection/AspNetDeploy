@@ -6,6 +6,8 @@ DEPLOILKA / AspNetDeploy 2024
 * Windows / Linux environments
 * Build, Test and Deploy in one tool
 
+Every single star makes maintainer happy! ⭐
+
 ![Bundles](https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/bundles.gif)
 
 
