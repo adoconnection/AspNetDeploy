@@ -4,6 +4,7 @@ DEPLOILKA / AspNetDeploy
 
 * NET Framework / NET8
 * Windows / Linux environments
+* Build, Test and Deploy in one tool
 
 ![Bundles](https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/bundles.gif)
 
