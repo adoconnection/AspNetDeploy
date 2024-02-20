@@ -40,7 +40,8 @@ namespace AspNetDeploy.Variables
 
             return new VariableProcessor(dataFieldsDictionary, environmentDictionary, new Dictionary<string, Func<string, string>>()
             {
-                { "domainSafe".ToLower(), s => s.Replace(".", "-") }
+                { "domainSafe".ToLower(), s => s.Replace(".", "-") },
+                { "escapePath".ToLower(), s => s.Replace("\\", "\\\\") },
             });
         }
 

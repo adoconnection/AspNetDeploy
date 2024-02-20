@@ -12,13 +12,13 @@ namespace AspNetDeploy.Variables
 
         private readonly IDictionary<string, string> dataFieldsDictionary;
         private readonly IDictionary<string, string> environmentDictionary;
-        private readonly IDictionary<string, Func<string, string>> modifiersdictionary;
+        private readonly IDictionary<string, Func<string, string>> modifiersDictionary;
 
-        public VariableProcessor(IDictionary<string, string> dataFieldsDictionary, IDictionary<string, string> environmentDictionary, IDictionary<string, Func<string, string>> modifiersdictionary)
+        public VariableProcessor(IDictionary<string, string> dataFieldsDictionary, IDictionary<string, string> environmentDictionary, IDictionary<string, Func<string, string>> modifiersDictionary)
         {
             this.dataFieldsDictionary = dataFieldsDictionary;
             this.environmentDictionary = environmentDictionary;
-            this.modifiersdictionary = modifiersdictionary;
+            this.modifiersDictionary = modifiersDictionary;
         }
 
         public string ProcessValue(string value)
@@ -49,12 +49,12 @@ namespace AspNetDeploy.Variables
 
                 if (variableType == "var")
                 {
-                    return this.ProcessMatch(nestedVariableNames, variableName, match.Value, this.dataFieldsDictionary, this.modifiersdictionary, modifiers);
+                    return this.ProcessMatch(nestedVariableNames, variableName, match.Value, this.dataFieldsDictionary, this.modifiersDictionary, modifiers);
                 }
                 
                 if (variableType == "env")
                 {
-                    return this.ProcessMatch(nestedVariableNames, variableName, match.Value, this.environmentDictionary, this.modifiersdictionary, modifiers);
+                    return this.ProcessMatch(nestedVariableNames, variableName, match.Value, this.environmentDictionary, this.modifiersDictionary, modifiers);
                 }
 
                 return match.Value;
