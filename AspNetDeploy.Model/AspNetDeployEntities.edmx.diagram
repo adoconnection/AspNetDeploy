@@ -90,6 +90,7 @@
         <AssociationConnector Association="AspNetDeployModel.FK_Revision_Revision" />
         <AssociationConnector Association="AspNetDeployModel.FK_Revision_SourceControlVersion1" />
         <AssociationConnector Association="AspNetDeployModel.FK_RevisionInfo_Revision" />
+        <AssociationConnector Association="AspNetDeployModel.FK_Revision_SourceControl" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

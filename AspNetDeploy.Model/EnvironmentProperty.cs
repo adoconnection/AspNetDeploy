@@ -7,28 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
 namespace AspNetDeploy.Model
 {
-
-using System;
+    using System;
     using System.Collections.Generic;
     
-public partial class EnvironmentProperty
-{
-
-    public int Id { get; set; }
-
-    public int EnvironmentId { get; set; }
-
-    public string Key { get; set; }
-
-    public string Value { get; set; }
-
-
-
-    public virtual Environment Environment { get; set; }
-
-}
-
+    public partial class EnvironmentProperty
+    {
+        public int Id { get; set; }
+        public int EnvironmentId { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+    
+        public virtual Environment Environment { get; set; }
+    }
 }
