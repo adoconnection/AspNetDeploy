@@ -68,10 +68,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 hash = GetMD5(user.Email);
             }
 
-            WebClient client = new WebClient();
-            byte[] downloadData = new byte[1000]; //ЗАТЫЧКА
-
-            return this.File(downloadData, "image/jpeg");
+            return this.Redirect("https://www.gravatar.com/avatar/" + hash + ".jpg?d=mm&s=30");
         }
 
         private string GetMD5(string inputString)
