@@ -5,18 +5,21 @@ AspNetDeploy ![Sources](http://ad-resources.personal.ado.me.uk/vs-loading-colore
 * NET Framework / NET8
 * Windows / Linux environments
 
-<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-overview.png"/>
+Articles
+===========
+* Part 3 (coming soon)
+* Part 2 (coming soon)
+* [🧑‍🎓 Alexander Selishchev: AspNetDeploy 2024 Part 1](https://www.codeproject.com/Tips/5377735/AspNetDeploy-2024-Part-1-The-Demo)
+* [🧑‍🎓 Alexander Selishchev: AspNetDeploy 2015 Preview](https://www.codeproject.com/Articles/992572/AspNetDeploy-CI-plus-Deployment-tool-preview)
 
 
-Features
-============
+Overview
+===========
 * No code
 * Multi tenant environments
 * Concurrent versions
-* Builtin monitoring
-* Automatic VS projects recognition
-* Websites, file packages, MSSQL DACPAC updates etc.
-* Environment variables
+* Monitoring
+<img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-overview.png"/>
 
 Sources
 ============
