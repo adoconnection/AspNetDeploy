@@ -1,4 +1,4 @@
-![Logo](https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/logo-48.png) DEPLOILKA / AspNetDeploy 
+DEPLOILKA / AspNetDeploy 
 ============
 **No code open source CI + deploy tool to cover you ASP.NET app build, test and deploy form A to Z**
 
