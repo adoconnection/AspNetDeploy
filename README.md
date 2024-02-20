@@ -1,4 +1,4 @@
-DEPLOILKA / AspNetDeploy 
+DEPLOILKA / AspNetDeploy 2024
 ============
 **No code open source CI + CD tool to cover you ASP.NET app build, test and deploy form A to Z**
 
