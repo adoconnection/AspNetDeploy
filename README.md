@@ -26,8 +26,7 @@ Sources
 * GIT
 * SVN
 * Local file system
-* Parse visual studio solutions and projects
-
+* Visual Studio solution parser
 <img src="https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/slide-sources.png" />
   
 
