@@ -1,9 +1,12 @@
-![Sources](https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/logo-48.png) DEPLOILKA / AspNetDeploy 
+![Logo](https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/logo-48.png) DEPLOILKA / AspNetDeploy 
 ============
 **No code open source CI + deploy tool to cover you ASP.NET app build, test and deploy form A to Z**
 
 * NET Framework / NET8
 * Windows / Linux environments
+
+![Bundles](https://github.com/adoconnection/AspNetDeploy/blob/master/Screenshots/bundles.gif)
+
 
 Articles
 ===========
