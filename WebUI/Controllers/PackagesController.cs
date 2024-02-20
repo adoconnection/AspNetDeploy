@@ -73,13 +73,13 @@ namespace AspNetDeploy.WebUI.Controllers
             return this.View();
         }
 
-        public ActionResult Approve(int id, int environmentid)
+        public ActionResult Approve(int id, int environmentId)
         {
             Package package = this.Entities.Package
                 .Include("ApprovedOnEnvironments")
                 .First(p => p.Id == id);
 
-            Environment environment = this.Entities.Environment.First( e => e.Id == environmentid);
+            Environment environment = this.Entities.Environment.First( e => e.Id == environmentId);
 
             if (!environment.GetBoolProperty("AllowTestDeployment", false))
             {

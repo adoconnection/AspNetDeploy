@@ -63,6 +63,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             user.Name = model.Name;
             user.Email = model.Email;
+            user.ThemeId = model.ThemeId;
 
             user.Role = model.Role;
 
@@ -112,6 +113,7 @@ namespace AspNetDeploy.WebUI.Controllers
             user.Email = model.Email;
             user.IsDisabled = model.IsDisabled;
             user.Password = model.Password;
+            user.ThemeId = model.ThemeId;
 
             user.Guid = Guid.NewGuid();
 
