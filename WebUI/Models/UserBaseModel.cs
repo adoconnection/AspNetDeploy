@@ -7,7 +7,7 @@ namespace AspNetDeploy.WebUI.Models
     public class UserBaseModel
     {
         [Required]
-        [Display(Name = "Имя")]
+        [Display(Name = "Display name")]
         public string Name { get; set; }
 
         [Required]
@@ -17,11 +17,15 @@ namespace AspNetDeploy.WebUI.Models
 
 
         [Required]
-        [Display(Name = "Заблокировать")]
+        [Display(Name = "Is disabled")]
         public bool IsDisabled { get; set; }
 
         [Required]
-        [Display(Name = "Роль")]
+        [Display(Name = "Role")]
         public UserRole Role { get; set; }
+
+        [Required]
+        [Display(Name = "Theme")]
+        public string ThemeId { get; set; }
     }
 }

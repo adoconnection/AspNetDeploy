@@ -7,9 +7,9 @@ namespace AspNetDeploy.WebUI.Models
         [Required]
         public int Id { get; set; }
 
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        [StringLength(100, ErrorMessage = "Должен быть не менее 6 символов", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Must be at least 6 ", MinimumLength = 6)]
         public string Password { get; set; }
     }
 }
