@@ -16,19 +16,19 @@
                 @switch (sourceControl.Type)
                 {
                     case SourceControlType.Svn:
-                        <small>SVN</small>
+                        <span class="badge rounded-pill text-bg-secondary">SVN</span>
                         break;
 
                     case SourceControlType.Git:
-                        <small>Git</small>
+                        <span class="badge rounded-pill text-bg-secondary">Git</span>
                         break;
 
                     case SourceControlType.FileSystem:
-                        <small>File system</small>
+                        <span class="badge rounded-pill text-bg-secondary">File system</span>
                         break;
 
                     default:
-                        <small>Other</small>
+                        <span class="badge rounded-pill text-bg-secondary">Other</span>
                         break;
                 }
             </div>

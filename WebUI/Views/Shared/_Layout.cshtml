@@ -1,76 +1,128 @@
 ﻿@using System.Configuration
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>@Page.Title</title>
-        <link href="~/Resources/Layout/bootstrap.min.css" rel="stylesheet" />
-        <link href="~/Resources/Layout/Images/favicon.ico" rel="shortcut icon" />
-        <link href="~/Resources/Layout/site.css" rel="stylesheet" />
-        <script src="~/Resources/JavaScripts/jquery-1.9.0.min.js"></script>
-        <script src="~/Resources/JavaScripts/bootstrap.min.js"></script>
-        <script src="~/Resources/JavaScripts/Common.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        @RenderSection("Scripts", false)
-    </head>
-    <body class="@this.ViewBag.PageClass">
-        
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="@Url.Action("List", "Bundles")" class="navbar-brand">ASP.NET Deploy</a>
-                </div>
-                <div class="navbar-collapse collapse">
+<head>
+    <title>@Page.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="~/Resources/Layout/Images/favicon.ico" rel="shortcut icon" />
+    <link href="~/Resources/Layout/site.css" rel="stylesheet" />
 
-                    @Html.MvcSiteMap().Menu(false)
-                    
-                    
+    @if (this.ViewBag.ActiveUser != null && this.ViewBag.ActiveUser.ThemeId != null)
+    {
+        <link href="~/Resources/Layout/@(this.ViewBag.ActiveUser.ThemeId).css" rel="stylesheet" />
+    }
+    else
+    {
+        <link href="~/Resources/Layout/@(ConfigurationManager.AppSettings["DefaultTheme"]).css" rel="stylesheet" />
+    }
 
-                    <ul class="nav navbar-nav navbar-right">
+    <script src="~/Resources/JavaScripts/jquery-1.9.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="~/Resources/JavaScripts/Common.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @RenderSection("Scripts", false)
+</head>
+<body class="@this.ViewBag.PageClass">
 
-                        @if (this.Request.IsAuthenticated)
-                        {
-                            if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ManageUsers))
-                            {
-                                <li>@Html.ActionLink("Users", "List", "Users")</li>
-                            }
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="~/Resources/Layout/Images/logo-48.png" /> <span>@(ConfigurationManager.AppSettings["Brand"] ?? "DEPLOILKA")</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                @*<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
 
-                            if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ViewLogs))
-                            {
-                                <li>@Html.ActionLink("Logs", "List", "Logs")</li>
-                            }
-
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="@Url.Action("Avatar", "Account", new { id = this.ViewBag.ActiveUser.Id })" class="img-circle avatar" />
-                                    @this.ViewBag.ActiveUser.Name <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>@Html.ActionLink("Log out", "LogOut", "Account")</li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li>@Html.ActionLink("Log in", "Login", "Account")</li>
-                        }
+                    </ul>*@
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item @(this.ViewContext.RouteData.Values["Controller"].ToString() == "Sources" ? "active" : "") ">
+                            <a class="nav-link" href="@Url.Action("List", "Sources")" title="Sources">Sources</a>
+                        </li>
+                        <li class="nav-item @(this.ViewContext.RouteData.Values["Controller"].ToString() == "Bundles" ? "active" : "")">
+                            <a class="nav-link" href="@Url.Action("List", "Bundles")" title="Bundles">Bundles</a>
+                        </li>
+                        <li class="nav-item @(this.ViewContext.RouteData.Values["Controller"].ToString() == "Environments" ? "active" : "")">
+                            <a class="nav-link" href="@Url.Action("List", "Environments")" title="Environments">Environments</a>
+                        </li>
                     </ul>
+
+                </ul>
+
+                @*@Html.MvcSiteMap().Menu(false)*@
+
+                @*<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link disabled">Disabled</a>
+                        </li>
+                    </ul>*@
+                <ul class="navbar-nav navbar-right mb-2 mb-lg-0">
                     @if (!bool.Parse(ConfigurationManager.AppSettings["Settings.EnableTaskRunner"] ?? "false"))
                     {
-                        <p class="navbar-text navbar-right">Task runner: <b class="text-warning" title="To enable set AppSettings.Settings.EnableTaskRunner = true">offline</b></p>
+                        <span class="navbar-text">
+                            Task runner: <b class="text-warning" title="To enable set AppSettings.Settings.EnableTaskRunner = true">offline</b>
+                        </span>
                     }
-                    
 
-                </div>
+                    @if (this.Request.IsAuthenticated)
+                    {
+                        if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ManageUsers))
+                        {
+                            <li class="nav-item @(this.ViewContext.RouteData.Values["Controller"].ToString() == "Users" ? "active" : "")">
+                                <a class="nav-link" href="@Url.Action("List", "Users")">Users</a>
+                            </li>
+                        }
+
+                        if (this.ViewBag.AllowedActions.Contains(UserRoleAction.ViewLogs))
+                        {
+                            <li class="nav-item @(this.ViewContext.RouteData.Values["Controller"].ToString() == "Logs" ? "active" : "")">
+                                <a class="nav-link" href="@Url.Action("List", "Logs")">Logs</a>
+                            </li>
+                        }
+
+
+
+                        <li class="nav-item dropdown">
+
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @this.ViewBag.ActiveUser.Name <b class="caret"></b>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Log out</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Login", "Account")">Log in</a></li>
+                    }
+                </ul>
             </div>
         </div>
-        
-        <div class="pageWrapper">
-            @RenderBody()
-        </div>
-    </body>
+    </nav>
+
+    <div class="pageWrapper">
+        @RenderBody()
+    </div>
+</body>
 </html>

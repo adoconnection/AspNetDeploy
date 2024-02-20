@@ -20,16 +20,13 @@
         </div>
     </h1>
 
-    <hr />
-
-    <ul class="nav nav-pills" role="tablist">
-        <li role="presentation"><a href="@Url.Action("VersionProjects", "Bundles", new { id = bundleVersion.Id })">Projects</a></li>
-        <li role="presentation" class="active"><a href="#">Deployment process</a></li>
-        <li role="presentation"><a href="@Url.Action("VersionPackages", "Bundles", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+    <ul class="nav nav-pills">
+        <li class="nav-item "><a class="nav-link" href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
+        <li class="nav-item active"><a class="nav-link" href="#">Deployment process</a></li>
+        <li class="nav-item "><a class="nav-link" href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+        <li class="nav-item"><a class="nav-link" href="@Url.Action("VersionVariables", new { id = bundleVersion.Id })">Local variables</a></li>
     </ul>
-    
-    <hr />
-    
+    <br/>
     <h3>Add step</h3>
     
     <p>

@@ -12,54 +12,62 @@
     <h1>
         <div class="row">
             <div class="col-md-10">
-                @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
+                @bundleVersion.Bundle.Name @bundleVersion.Name <span class="badge rounded-pill text-bg-secondary">Bundle</span>
             </div>
-            <div class="col-md-2 text-right">
-                <button class="btn btn-default btn-lg">Configure</button>
-            </div>
+            @*<div class="col-md-2 text-right">
+            <button class="btn btn-default btn-lg">Configure</button>
+        </div>*@
         </div>
     </h1>
+    <br/>
 
-    <hr />
-    
-    <ul class="nav nav-pills" role="tablist">
-        <li role="presentation"><a href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
-        <li role="presentation"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
-        <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
-        <li role="presentation" class="active"><a href="#">Local variables</a></li>
+    <ul class="nav nav-pills">
+        <li class="nav-item "><a class="nav-link" href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
+        <li class="nav-item "><a class="nav-link" href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+        <li class="nav-item active"><a class="nav-link" href="#">Local variables</a></li>
     </ul>
     
-    <hr />
-
-    <h3>Variables</h3>
-    
     <br/>
-    <table class="table">
-        <tbody>
-        @{
-            List<DataField> dataFields = bundleVersion.DataFields.Where(df => !df.IsDeleted).ToList();
-
-            List<IGrouping<string, DataField>> groups = dataFields
-                .Where(df => df.Key.Contains("."))
-                .GroupBy(df => df.Key.Substring(0, df.Key.IndexOf(".", System.StringComparison.InvariantCulture)))
-                .OrderBy(g => g.Key)
-                .ToList();
-        }
-
-        @foreach (var group in groups)
+    
+    
+    <div class="section">
+        @if (bundleVersion.DataFields.Count(df => !df.IsDeleted) == 0)
         {
-            @RenderVariables(group)
-            <tr>
-                <th><br/><br/></th>
-                <th><br/></th>
-            </tr>
+            <div >No local bundle version variables</div>
         }
+        else
+        {
+            <table class="table">
+                <tbody>
+                @{
+                    List<DataField> dataFields = bundleVersion.DataFields.Where(df => !df.IsDeleted).ToList();
 
-        @RenderVariables(dataFields.Where(df => !df.Key.Contains(".")))
+                    List<IGrouping<string, DataField>> groups = dataFields
+                        .Where(df => df.Key.Contains("."))
+                        .GroupBy(df => df.Key.Substring(0, df.Key.IndexOf(".", System.StringComparison.InvariantCulture)))
+                        .OrderBy(g => g.Key)
+                        .ToList();
+                }
 
-        </tbody>
-    </table>
+                @foreach (var group in groups)
+                {
+                    @RenderVariables(group)
+                    <tr>
+                        <th><br/><br/></th>
+                        <th><br/></th>
+                    </tr>
+                }
 
+                @RenderVariables(dataFields.Where(df => !df.Key.Contains(".")))
+
+                </tbody>
+            </table>
+        }
+        
+
+    </div>
+   
 </div>
 
 @helper RenderVariables(IEnumerable<DataField> dataFields)

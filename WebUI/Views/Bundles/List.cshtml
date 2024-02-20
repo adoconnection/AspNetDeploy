@@ -8,173 +8,173 @@
 }
 
 <div class="container">
-    
+
 
     @foreach (BundleInfo bundleInfo in this.ViewBag.Bundles)
     {
-        <h1>
-            @Html.ActionLink(bundleInfo.Bundle.Name, "Details", new { id = bundleInfo.Bundle.Id })
-        </h1>
-        <hr />
+        <div class="box bundle">
+            <h1>
+                @Html.ActionLink(bundleInfo.Bundle.Name, "Details", new { id = bundleInfo.Bundle.Id })
+            </h1>
+            @foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo)
+            {
+                bool isFeature = bundleVersionInfo.BundleVersion.GetBoolProperty("IsFeature");
 
-        foreach (BundleVersionInfo bundleVersionInfo in bundleInfo.BundleVersionsInfo)
-        {
-            bool isFeature = bundleVersionInfo.BundleVersion.GetBoolProperty("IsFeature");
 
-            <h3>
-                @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionPackages", new { id = bundleVersionInfo.BundleVersion.Id })
 
-                @if (bundleVersionInfo.BundleVersion.IsHead)
-                {
-                    <small>Head</small>
-                }
-
-                @if (isFeature)
-                {
-                    <small>/ Feature</small>
-                }
-
-                @if (bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
-                {
-                    <small>/ Auto deploy to @bundleVersionInfo.Environments.Where(e => e.Id == bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment")).Select( e => e.Name).FirstOrDefault()</small>
-                }
-
-                <span id="@("idBundleVersionState" + bundleVersionInfo.BundleVersion.Id)">
-                    <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
-                    <small class="status" style="display: none;"></small>
-                </span>
-
-            </h3>
-
-            <div id="@("idBundleVersionProgress" + bundleVersionInfo.BundleVersion.Id)" class="progress" style="display: none; height: 7px;">
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                    <span class="sr-only"></span>
+                <div id="@("idBundleVersionProgress" + bundleVersionInfo.BundleVersion.Id)" class="progress mb-3" style="display: none; height: 7px;">
+                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only"></span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-6">
+                <div class="row">
+                    <div class="col d-flex flex-column" style="justify-content: center">
 
-                    @if (bundleVersionInfo.ProjectsVersionsInfo.Count == 0)
-                    {
-                        <a href="@Url.Action("AddStep", "BundleVersionDeployment", new { id = bundleVersionInfo.BundleVersion.Id, deploymentStepType = DeploymentStepType.DeployWebSite })">Add project</a>
-                    }
-                    else
-                    {
-                        foreach (ProjectVersionInfo projectVersionInfo in bundleVersionInfo.ProjectsVersionsInfo)
-                        {
-                            ProjectVersion projectVersion = projectVersionInfo.ProjectVersion;
-                            SourceControlVersion sourceControlVersion = projectVersionInfo.SourceControlVersion;
-                            SourceControl sourceControl = projectVersionInfo.SourceControl;
-                            bool isArchived = sourceControlVersion.ArchiveState != SourceControlVersionArchiveState.Normal;
-                            string stringProperty = projectVersion.GetStringProperty("LastBuildResult", null);
-                            
+                        <h2>
+                            @Html.ActionLink(bundleVersionInfo.BundleVersion.Name, "VersionPackages", new { id = bundleVersionInfo.BundleVersion.Id })
 
-                            <div>
-                                <small class="@(isArchived ? "text-muted" : "")">
-                                    @sourceControl.Name / @sourceControlVersion.Name / @projectVersion.Name
-                                    
-                                    @if (isArchived)
-                                    {
-                                        <span>(archived)</span>
-                                    }
-
-                                    <span id="@("idProjectVersionState" + projectVersion.Id)">
-                                        <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
-                                        <span class="status text-muted @(stringProperty != null && stringProperty == "Error" ? "error" : "")">@(stringProperty != null && stringProperty == "Error" ? "Build error" : "")</span>
-                                    </span>
-                                </small>
-                            </div>
-                        }
-                    }
-
-                </div>
-                
-                <br class="visible-xs" />
-
-                <div class="col-sm-6 text-center">
-                    
-                    @foreach (Environment environment in bundleVersionInfo.Environments)
-                    {
-                        bool isTest = environment.GetBoolProperty("AllowTestDeployment", true);
-
-                        if (isFeature && !isTest)
-                        {
-                            continue;
-                        }
-
-                        <div class="col-xs-4 col-sm-3">
-                            <div>
-                                @environment.Name
-                            </div>
-                            
-                            @if (!bundleVersionInfo.Publications.ContainsKey(environment.Id))
+                            @if (bundleVersionInfo.BundleVersion.IsHead)
                             {
-                                <img src="~/Resources/Layout/Images/Icons/box-empty64.png"/>
+                                <span class="badge rounded-pill text-bg-secondary">Head</span>
                             }
-                            else
+
+                            @if (isFeature)
                             {
-                                IEnumerable<Publication> publications = bundleVersionInfo.Publications[environment.Id];
-                                Publication publication = publications.OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+                                <span class="badge rounded-pill text-bg-secondary">Feature</span>
+                            }
 
-
-                                if (publication == null)
+                            @*
+                                @if (bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
                                 {
-                                    <img src="~/Resources/Layout/Images/Icons/box-empty64.png"/>
+                                    <span class="badge rounded-pill text-bg-secondary">Auto deploy to @bundleVersionInfo.Environments.Where(e => e.Id == bundleVersionInfo.BundleVersion.GetIntProperty("AutoDeployToEnvironment")).Select(e => e.Name).FirstOrDefault()</span>
                                 }
-                                else
-                                {
-                                    switch (publication.State)
-                                    {
-                                        case PublicationState.Complete:
-                                            <img src="~/Resources/Layout/Images/Icons/Package-Accept-64.png"/>
-                                            break;
-                                        case PublicationState.Error:
-                                            <img src="~/Resources/Layout/Images/Icons/Package-Warning64.png"/>
-                                            break;
-                                        case PublicationState.InProgress:
-                                            <img src="~/Resources/Layout/Images/Icons/Package-Progress64.png"/>
-                                            break;
-                                        default:
-                                            <img src="~/Resources/Layout/Images/Icons/package64.png"/>
-                                            break;
-                                    }
+                            *@
 
-                                    <div><small class="text-muted">@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy")</small>
+                            <span id="@("idBundleVersionState" + bundleVersionInfo.BundleVersion.Id)">
+                                <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                <small class="status" style="display: none;"></small>
+                            </span>
+
+                        </h2>
+
+                        @if (bundleVersionInfo.ProjectsVersionsInfo.Count == 0)
+                        {
+                            <a href="@Url.Action("AddStep", "BundleVersionDeployment", new { id = bundleVersionInfo.BundleVersion.Id, deploymentStepType = DeploymentStepType.DeployWebSite })">Add project</a>
+                        }
+                        else
+                        {
+                            foreach (ProjectVersionInfo projectVersionInfo in bundleVersionInfo.ProjectsVersionsInfo)
+                            {
+                                ProjectVersion projectVersion = projectVersionInfo.ProjectVersion;
+                                SourceControlVersion sourceControlVersion = projectVersionInfo.SourceControlVersion;
+                                SourceControl sourceControl = projectVersionInfo.SourceControl;
+                                bool isArchived = sourceControlVersion.ArchiveState != SourceControlVersionArchiveState.Normal;
+                                string stringProperty = projectVersion.GetStringProperty("LastBuildResult", null);
+
+
+                                <div>
+                                    <small class="@(isArchived ? "text-muted" : "")">
+                                        @sourceControl.Name / @sourceControlVersion.Name / @projectVersion.Name
+
+                                        @if (isArchived)
+                                        {
+                                            <span>(archived)</span>
+                                        }
+
+                                        <span id="@("idProjectVersionState" + projectVersion.Id)">
+                                            <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                            <span class="status text-muted @(stringProperty != null && stringProperty == "Error" ? "error" : "")">@(stringProperty != null && stringProperty == "Error" ? "Build error" : "")</span>
+                                        </span>
+                                    </small>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                    <div class="col text-center">
+                        <div class="row">
+                            @foreach (Environment environment in bundleVersionInfo.Environments)
+                            {
+                                bool isTest = environment.GetBoolProperty("AllowTestDeployment", true);
+
+                                if (isFeature && !isTest)
+                                {
+                                    continue;
+                                }
+
+                                <div class="col-lg-4">
+                                    <div>
+                                        @environment.Name
                                     </div>
-                                }
+                                    <div>
+                                        @if (!bundleVersionInfo.Publications.ContainsKey(environment.Id))
+                                        {
+                                            <div style="padding: 20px;">
+                                                <img src="~/Resources/Layout/Images/Icons/box-empty64.png" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            IEnumerable<Publication> publications = bundleVersionInfo.Publications[environment.Id];
+                                            Publication publication = publications.OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+
+
+                                            if (publication == null)
+                                            {
+                                                <div style="padding: 20px;">
+                                                    <img src="~/Resources/Layout/Images/Icons/box-empty64.png" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="position-relative" style="padding: 8px;">
+                                                    <img src="~/Resources/Layout/Images/Icons/package64.png" />
+                                                </div>
+
+                                                <div class="text-nowrap">
+
+                                                    @switch (publication.State)
+                                                    {
+                                                        case PublicationState.Complete:
+                                                            <span class="badge rounded-pill text-bg-success">OK</span>
+                                                            break;
+                                                        case PublicationState.Error:
+                                                            <span class="badge rounded-pill text-bg-danger">Error</span>
+                                                            break;
+                                                        case PublicationState.InProgress:
+                                                            <span class="badge rounded-pill text-bg-info">Deplying</span>
+                                                            break;
+                                                        case PublicationState.Queued:
+                                                            <span class="badge rounded-pill text-bg-info">Queued</span>
+                                                            break;
+                                                    }
+
+                                                    <span class="badge rounded-pill text-bg-dark">pack.@publication.PackageId</span>
+                                                </div>
+
+                                                <div class="text-nowrap">
+                                                    <small class="text-muted">@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy")</small>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+
                             }
 
-                        </div>
-
-                        
-                    }
-
-                </div>
-            </div>
-
-            <br />
-
-        }
-
-
-       @* foreach (ProjectVersionInfo projectInfo in bundleInfo.ProjectsInfo)
-        {
-            <div class="row machine">
-                <div class="col-sm-8 col-md-6">
-                    <div class="name">
-                        <div>
-                            @projectInfo.Project.SourceControl.Name / @projectInfo.Project.Name
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    
-                </div>
-            </div>
-        }
-        *@
-    <br />
+
+                <br />
+
+            }
+
+        </div>
+
     }
 
 </div>

@@ -1,173 +1,175 @@
 ﻿@using AspNetDeploy.WebUI.Models
 @using Environment = AspNetDeploy.Model.Environment
 @{
-	ViewBag.Title = "Index";
-	ViewBag.PageClass = "bundlesPage";
+    ViewBag.Title = "Index";
+    ViewBag.PageClass = "bundlesPage";
 
-	Layout = "~/Views/Shared/_Layout.cshtml";
-	IList<Environment> environments = this.ViewBag.Environments;
-	Package package = this.ViewBag.Package;
-	BundleVersion bundleVersion = package.BundleVersion;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    IList<Environment> environments = this.ViewBag.Environments;
+    Package package = this.ViewBag.Package;
+    BundleVersion bundleVersion = package.BundleVersion;
 
-	IList<BundleRevision> revisions = this.ViewBag.Revisions;
+    IList<BundleRevision> revisions = this.ViewBag.Revisions;
 }
 <div class="container">
-	<div class="">
-		@Html.ActionLink("Back", "VersionPackages", "Bundles", new {id = bundleVersion.Id}, null)
-	</div>
-	<h1>
-		<div class="row">
-			<div class="col-md-10">
-				Package @package.Id – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm")
-			</div>
-		</div>
-	</h1>
-	<div>
-		@bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
-	</div>
-	<hr/>
-	
-	<h3>Changes</h3>
-	
-	@if (!revisions.Any())
-	{
-		<p>No changes</p>
-	}
-	else
-	{
-		<div>
-			@foreach (BundleRevision revision in revisions)
-			{
-				<div class="row">
-					<div class="col-md-5">
-						<span class="small">@revision.CreatedDate.ToLocalTime().ToString("dd MMMM yyyy H:mm") \ @revision.SourceName \ @revision.Author</span>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-5">
-						<div class="commit">
-							@revision.Commit
-						</div>
-					</div>
-				</div>
-				<br/>
-			}
+    <div class="">
+        @Html.ActionLink("Back", "VersionPackages", "Bundles", new { id = bundleVersion.Id }, null)
+    </div>
 
-		</div>	
-	}
+    <div class="section">
+        <h1>
+            <div class="row">
+                <div class="col-md-10">
+                    Package @package.Id – @package.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @package.CreatedDate.ToLocalTime().ToString("H:mm")
+                </div>
+            </div>
+        </h1>
+        @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
 
-	<hr/>
+        <br />
+        <br />
+        <h2>Changes</h2>
 
-	@foreach (Environment environment in environments)
-	{
-		PackageApprovedOnEnvironment packageApprovedOnEnvironment = environment.ApprovedPackages.FirstOrDefault(a => a.Package == package);
-		bool approvedOnEnvironment = packageApprovedOnEnvironment != null;
+        @if (!revisions.Any())
+        {
+            <p>No changes</p>
+        }
+        else
+        {
+            <div>
+                @foreach (BundleRevision revision in revisions)
+                {
+                    <div class="row">
+                        <div class="col-md-5">
+                            <span class="small">@revision.CreatedDate.ToLocalTime().ToString("dd MMMM yyyy H:mm") \ @revision.SourceName \ @revision.Author</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="commit">
+                                @revision.Commit
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                }
 
-		<h3>
-			@environment.Name
+            </div>
+        }
 
-		</h3>
+    </div>
 
-		IList<Publication> publications = environment.Publications.Where(p => p.Package == package).OrderByDescending(p => p.CreatedDate).ToList();
+    @foreach (Environment environment in environments)
+    {
+        IList<Publication> publications = environment.Publications.Where(p => p.Package == package).OrderByDescending(p => p.CreatedDate).ToList();
 
-		<div class="row">
-			<div class="col-sm-6">
-				@if (approvedOnEnvironment)
-				{
-					<div><span class="label label-success">Approved</span> by @packageApprovedOnEnvironment.ApprovedBy.Name</div>
-				}
-			</div>
-			<div class="col-sm-6">
-				@if (publications.Count > 0)
-				{
-					if (approvedOnEnvironment)
-					{
-						<a class="btn btn-default" href="@Url.Action("Reject", new {id = package.Id, environmentId = environment.Id})">Reject</a>
-					}
-					else
-					{
-						<a class="btn btn-default" href="@Url.Action("Approve", new {id = package.Id, environmentId = environment.Id})">Approve</a>
-					}
-				}
-			</div>
-		</div>
+        PackageApprovedOnEnvironment packageApprovedOnEnvironment = environment.ApprovedPackages.FirstOrDefault(a => a.Package == package);
+        bool approvedOnEnvironment = packageApprovedOnEnvironment != null;
 
-		<br/>
+        <div class="box">
 
-		<div class="row">
-			<div class="col-sm-6">
+            <h2>
+                @environment.Name
+            </h2>
 
+            <div class="row">
+                <div class="col-sm-6">
+                    @if (approvedOnEnvironment)
+                    {
+                        <div><span class="badge text-bg-success">Approved</span> by @packageApprovedOnEnvironment.ApprovedBy.Name</div>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    @if (publications.Count > 0)
+                    {
+                        if (approvedOnEnvironment)
+                        {
+                            <a class="btn btn-dark" href="@Url.Action("Reject", new {id = package.Id, environmentId = environment.Id})">Reject</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-dark" href="@Url.Action("Approve", new {id = package.Id, environmentId = environment.Id})">Approve</a>
+                        }
+                    }
+                </div>
+            </div>
 
-				@if (publications.Count > 0)
-				{
-					<table class="table">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Date</th>
-								<th>State</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (Publication publication in publications)
-							{
-								<tr>
-									<td>@Html.ActionLink(publication.Id.ToString(), "Details", "Publications", new {id = publication.Id}, null)</td>
-									<td>@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @publication.CreatedDate.ToLocalTime().ToString("H:mm")</td>
-									<td>@publication.State</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				}
-				else
-				{
-					<p>No publications</p>
-				}
-			</div>
-			<div class="col-sm-6">
+            <br />
+
+            <div class="row">
+                <div class="col-sm-6">
 
 
-				@if (publications.Count > 0)
-				{
-					if (publications.First().State != PublicationState.Complete && publications.First().State != PublicationState.Queued)
-					{
-						<a class="btn btn-default" href="@Url.Action("Schedule", new {id = package.Id, environmentId = environment.Id})">Deploy now</a>
-					}
+                    @if (publications.Count > 0)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>State</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Publication publication in publications)
+                                {
+                                    <tr>
+                                        <td>@Html.ActionLink(publication.Id.ToString(), "Details", "Publications", new { id = publication.Id }, null)</td>
+                                        <td>@publication.CreatedDate.ToLocalTime().ToString("d MMMM yyyy"), @publication.CreatedDate.ToLocalTime().ToString("H:mm")</td>
+                                        <td>@publication.State</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No publications</p>
+                    }
+                </div>
+                <div class="col-sm-6">
 
-					if (publications.First().State == PublicationState.Queued)
-					{
-						<a class="btn btn-default" href="@Url.Action("Cancel", new {id = package.Id, environmentId = environment.Id})">Cancel</a>
-					}
-				}
-				else
-				{
-					bool isFeature = package.BundleVersion.GetBoolProperty("IsFeature"); // ishead means the same as isfeature
 
-					bool isApprovedForDeploy = environment.PreviousEnvironment.Count == 0 || environment.PreviousEnvironment.Any(pe => pe.ApprovedPackages.Any(p => p.Package == package));
-					bool isEligableForDeploy = (!package.BundleVersion.IsHead && !isFeature) || environment.GetBoolProperty("AllowTestDeployment");
+                    @if (publications.Count > 0)
+                    {
+                        if (publications.First().State != PublicationState.Complete && publications.First().State != PublicationState.Queued)
+                        {
+                            <a class="btn btn-primary" href="@Url.Action("Schedule", new {id = package.Id, environmentId = environment.Id})">Deploy now</a>
+                        }
 
-					if (isApprovedForDeploy && isEligableForDeploy)
-					{
-						<a class="btn btn-default" href="@Url.Action("Schedule", new {id = package.Id, environmentId = environment.Id})">
-							@if (environment.PreviousEnvironment.Count == 0)
-							{
-								<span>Deploy now</span>
-							}
-							else
-							{
-								<span>Promote now</span>
-							}
-						</a>
-					}
-				}
+                        if (publications.First().State == PublicationState.Queued)
+                        {
+                            <a class="btn btn-primary" href="@Url.Action("Cancel", new {id = package.Id, environmentId = environment.Id})">Cancel</a>
+                        }
+                    }
+                    else
+                    {
+                        bool isFeature = package.BundleVersion.GetBoolProperty("IsFeature"); // ishead means the same as isfeature
 
-			</div>
-		</div>
+                        bool homeEnvironment = package.BundleVersion.GetIntProperty("HomeEnvironment") == environment.Id;
+                        bool isApprovedForDeploy = homeEnvironment || environment.PreviousEnvironment.Count == 0 || environment.PreviousEnvironment.Any(pe => pe.ApprovedPackages.Any(p => p.Package == package));
+                        bool isEligableForDeploy = (!package.BundleVersion.IsHead && !isFeature) || environment.GetBoolProperty("AllowTestDeployment");
 
-		<br/>
-		<hr/>
-	}
+                        if (isApprovedForDeploy && isEligableForDeploy)
+                        {
+                            <a class="btn btn-primary" href="@Url.Action("Schedule", new {id = package.Id, environmentId = environment.Id})">
+                                @if (environment.PreviousEnvironment.Count == 0)
+                                {
+                                    <span>Deploy now</span>
+                                }
+                                else
+                                {
+                                    <span>Promote now</span>
+                                }
+                            </a>
+                        }
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    }
 
 
 </div>

@@ -9,168 +9,151 @@
 
     @foreach (SourceControlInfo sourceControlInfo in this.ViewBag.SourceControls)
     {
-        <h1 id="@("idSourceControl" + sourceControlInfo.SourceControl.Id)">
-            @Html.ActionLink(sourceControlInfo.SourceControl.Name, "Details", new { id = sourceControlInfo.SourceControl.Id })
-            @switch (sourceControlInfo.SourceControl.Type)
-            {
-                case SourceControlType.Svn:
-                    <small>SVN</small>
-                    break;
+        <div class="box">
+            <h1 id="@("idSourceControl" + sourceControlInfo.SourceControl.Id)">
+                @Html.ActionLink(sourceControlInfo.SourceControl.Name, "Details", new { id = sourceControlInfo.SourceControl.Id })
+                @*@switch (sourceControlInfo.SourceControl.Type)
+                {
+                    case SourceControlType.Svn:
+                        <span class="badge rounded-pill text-bg-light">SVN</span>
+                        break;
 
-                case SourceControlType.Git:
-                <small>Git</small>
-                    break;
+                    case SourceControlType.Git:
+                        <span class="badge rounded-pill text-bg-light">Git</span>
+                        break;
 
-                case SourceControlType.FileSystem:
-                <small>File system</small>
-                    break;
+                    case SourceControlType.FileSystem:
+                        <span class="badge rounded-pill text-bg-light">File system</span>
+                        break;
 
-                default:
-                <small>Other</small>
-                    break;
-            }
-            
-        </h1>
+                    default:
+                        <span class="badge rounded-pill text-bg-light">Other</span>
+                        break;
+                }*@
 
-        <hr />
+            </h1>
 
-        <div class="row">
-            @{
-                int index = 0;
-            }
+            <div class="row">
+                @{
+                    int index = 0;
+                }
 
-            @foreach (SourceControlVersionInfo sourceControlVersionInfo in sourceControlInfo.SourceControlVersionsInfo)
-            {
-                IEnumerable<IGrouping<string, ProjectVersionInfo>> groups = sourceControlVersionInfo.ProjectVersionsInfo.GroupBy(pvs => pvs.ProjectVersion.SolutionFile);
+                @foreach (SourceControlVersionInfo sourceControlVersionInfo in sourceControlInfo.SourceControlVersionsInfo)
+                {
+                    IEnumerable<IGrouping<string, ProjectVersionInfo>> groups = sourceControlVersionInfo.ProjectVersionsInfo.GroupBy(pvs => pvs.ProjectVersion.SolutionFile);
 
-                <div class="col-sm-6">
-                    <h3>
-                        @sourceControlVersionInfo.SourceControlVersion.Name
+                    <div class="col-sm-6">
+                        <h2>
+                            @sourceControlVersionInfo.SourceControlVersion.Name
 
-                        @if (sourceControlVersionInfo.SourceControlVersion.IsHead)
-                        {
-                            <small>Head</small>
-                        }
-                        
-                        @if (sourceControlVersionInfo.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archived)
-                        {
-                            <small>Archived</small>
-                        }
-                    
-                        <span id="@("idSourceControlVersion" + sourceControlVersionInfo.SourceControlVersion.Id)">
-                            <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />    
-                            <small class="status" style="display: none;"></small>
-                        </span>
-
-                    </h3>
-
-                    @foreach (IGrouping<string, ProjectVersionInfo> group in groups)
-                    {
-                        foreach (ProjectVersionInfo projectVersionInfo in group.OrderBy( p => p.ProjectVersion.ProjectType).ThenBy( p => p.ProjectVersion.Name))
-                        {
-                            bool hasWeb = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Web);
-                            bool hasTest = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Test);
-                            bool hasConsole = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Console);
-                            bool hasDatabase = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Database);
-                            bool hasZip = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.ZipArchive);
-                            bool hasGulp  = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.GulpFile);
-                            double lastBuildDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastBuildDuration");
-                            double lastPackageDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastPackageDuration");
-
-                            if (hasWeb || hasTest || hasConsole || hasDatabase || hasZip || hasGulp)
+                            @if (sourceControlVersionInfo.SourceControlVersion.IsHead)
                             {
-                                <div>
-                                    <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersionInfo.ProjectVersion.Id })">
-                                        @if (hasWeb)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
-                                        }
-                                        @if (hasTest)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
-                                        }
-                                        @if (hasConsole)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/VsConsoleProject.PNG" />
-                                        }
-                                        @if (hasDatabase)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/VsDatabaseProject.PNG" />
-                                        }
-                                        @if (hasZip)
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/zip32.png" />
-                                        }
+                                <span class="badge rounded-pill text-bg-light">Head</span>
+                            }
 
-                                        @projectVersionInfo.ProjectVersion.Name
+                            @if (sourceControlVersionInfo.SourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Archived)
+                            {
+                                <span class="badge rounded-pill text-bg-light">Archived</span>
+                            }
+
+                            <span id="@("idSourceControlVersion" + sourceControlVersionInfo.SourceControlVersion.Id)">
+                                <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                <small class="status" style="display: none;"></small>
+                            </span>
+
+                        </h2>
+
+                        @foreach (IGrouping<string, ProjectVersionInfo> group in groups)
+                        {
+                            foreach (ProjectVersionInfo projectVersionInfo in group.OrderBy(p => p.ProjectVersion.ProjectType).ThenBy(p => p.ProjectVersion.Name))
+                            {
+                                bool hasWeb = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Web);
+                                bool hasTest = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Test);
+                                bool hasConsole = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Console);
+                                bool hasDatabase = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.Database);
+                                bool hasZip = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.ZipArchive);
+                                bool hasGulp = projectVersionInfo.ProjectVersion.ProjectType.HasFlag(ProjectType.GulpFile);
+                                double lastBuildDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastBuildDuration");
+                                double lastPackageDuration = projectVersionInfo.ProjectVersion.GetDoubleProperty("LastPackageDuration");
+
+                                if (hasWeb || hasTest || hasConsole || hasDatabase || hasZip || hasGulp)
+                                {
+                                    <div class="project">
+                                        <a href="@Url.Action("Details", "ProjectVersions", new { id = projectVersionInfo.ProjectVersion.Id })">
+                                            @if (hasWeb)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/VsWebProject.PNG" />
+                                            }
+                                            @if (hasTest)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/VsTestProject.png" />
+                                            }
+                                            @if (hasConsole)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/VsConsoleProject.PNG" />
+                                            }
+                                            @if (hasDatabase)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/VsDatabaseProject.PNG" />
+                                            }
+                                            @if (hasZip)
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/zip32.png" />
+                                            }
+
+                                            <span>@projectVersionInfo.ProjectVersion.Name</span>
+
+                                        </a>
 
                                         @if (projectVersionInfo.ProjectVersion.BundleVersions.Count > 0)
                                         {
                                             <img src="~/Resources/Layout/Images/Icons/box16-2.png" />
                                         }
-                                        else if (!projectVersionInfo.ProjectVersion.Project.GetBoolProperty("NotForDeployment"))
-                                        {
-                                            <img src="~/Resources/Layout/Images/Icons/new16.png" />
-                                        }
-                                        
+                                        @*else if (!projectVersionInfo.ProjectVersion.Project.GetBoolProperty("NotForDeployment"))
+                                            {
+                                                <img src="~/Resources/Layout/Images/Icons/new16.png" />
+                                            }*@
 
-                                        @if (lastBuildDuration > 5)
+
+                                        @if (lastBuildDuration > 0)
                                         {
-                                            <small class="text-danger"><b>build time @lastBuildDuration.ToString("#.0") sec</b></small>
-                                        } 
-                                        else if (lastBuildDuration > 1)
+                                            <span class="badge rounded-pill text-bg-dark">build time @lastBuildDuration.ToString("#.0") sec</span>
+                                        }
+
+
+                                        @if (lastPackageDuration > 0)
                                         {
-                                            <small class="text-warning">build time @lastBuildDuration.ToString("#.0") sec</small>
+                                            <span class="badge rounded-pill text-bg-dark">package time @lastPackageDuration.ToString("#.0") sec</span>
                                         }
                                         else
                                         {
                                         }
-                                    
-                                        @if (lastPackageDuration > 30)
-                                        {
-                                            if (lastBuildDuration > 1)
-                                            {
-                                                <span>&nbsp;&nbsp;</span>
-                                            }
-                                            <small class="text-danger"><b>package time @lastPackageDuration.ToString("#.0") sec</b></small>
-                                        }
-                                        else if (lastPackageDuration > 5)
-                                        {
-                                            if (lastBuildDuration > 1)
-                                            {
-                                                <span>&nbsp;&nbsp;</span>
-                                            }
-                                            <small class="text-warning">package time @lastPackageDuration.ToString("#.0") sec</small>
-                                        }
-                                        else
-                                        {
-                                        }
-                                    
+
                                         <span id="@("idProjectVersion" + projectVersionInfo.ProjectVersion.Id)">
                                             <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
                                             <small class="status text-muted" style="display: none;"></small>
                                         </span>
-                                    </a>
-                                </div>
+                                    </div>
+                                }
                             }
+                            @*<div class="col-sm-6">
+                                    <img src="~/Resources/Layout/Images/Icons/VsSolution.png" />
+                                    @group.Key
+                                </div>*@
                         }
-                        @*<div class="col-sm-6">
-                            <img src="~/Resources/Layout/Images/Icons/VsSolution.png" />
-                            @group.Key
-                        </div>*@
+                    </div>
+
+                    index++;
+
+                    if (index % 2 == 0 && index > 1)
+                    {
+                        <br style="clear: both;" />
                     }
-                </div>
+                }
+            </div>
 
-                index++;
-
-                if (index % 2 == 0 && index > 1)
-                {
-                    <br style="clear: both;"/>    
-                } 
-            }
+            <br />
         </div>
-
-        <br />
     }
 
 </div>

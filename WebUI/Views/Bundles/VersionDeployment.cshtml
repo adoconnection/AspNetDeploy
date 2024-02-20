@@ -14,24 +14,24 @@
     <h1>
         <div class="row">
             <div class="col-md-10">
-                @bundleVersion.Bundle.Name @bundleVersion.Name <small>Bundle</small>
+                @bundleVersion.Bundle.Name @bundleVersion.Name <span class="badge rounded-pill text-bg-secondary">Bundle</span>
             </div>
-            <div class="col-md-2 text-right">
-                <button class="btn btn-default btn-lg">Configure</button>
-            </div>
+            @*<div class="col-md-2 text-end">
+                    <button class="btn btn-default btn-lg">Configure</button>
+                </div>*@
         </div>
     </h1>
+    <br />
 
-    <hr />
 
-    <ul class="nav nav-pills" role="tablist">
-        <li role="presentation"><a href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
-        <li role="presentation" class="active"><a href="@Url.Action("VersionDeployment", new { id = bundleVersion.Id })">Deployment process</a></li>
-        <li role="presentation"><a href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
-        <li role="presentation"><a href="@Url.Action("VersionVariables", new { id = bundleVersion.Id })">Local variables</a></li>
+    <ul class="nav nav-pills">
+        <li class="nav-item "><a class="nav-link" href="@Url.Action("VersionProjects", new { id = bundleVersion.Id })">Projects</a></li>
+        <li class="nav-item active"><a class="nav-link" href="#">Deployment process</a></li>
+        <li class="nav-item "><a class="nav-link" href="@Url.Action("VersionPackages", new { id = bundleVersion.Id })">Packages & Publications</a></li>
+        <li class="nav-item"><a class="nav-link" href="@Url.Action("VersionVariables", new { id = bundleVersion.Id })">Local variables</a></li>
     </ul>
 
-    <hr />
+
 
     @RenderSteps(bundleVersion, bundleVersion.DeploymentSteps)
 
@@ -52,47 +52,46 @@
     {
         stepCounter++;
 
-        switch (deploymentStep.Type)
-        {
-            case DeploymentStepType.DeployWebSite:
-                @RednerDeployWebSiteStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+        <div class="box">
+            @switch (deploymentStep.Type)
+            {
+                case DeploymentStepType.DeployWebSite:
+                    @RednerDeployWebSiteStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.RunPowerShellScript:
-                @RenderRunPowerShellScript(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.RunPowerShellScript:
+                    @RenderRunPowerShellScript(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.CopyFiles:
-                @RenderCopyFilesStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.CopyFiles:
+                    @RenderCopyFilesStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.Configuration:
-                @RenderConfigurationStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.Configuration:
+                    @RenderConfigurationStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.UpdateHostsFile:
-                @RenderHostsStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.UpdateHostsFile:
+                    @RenderHostsStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.RunSQLScript:
-                @RenderSQLStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.RunSQLScript:
+                    @RenderSQLStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.DeployDacpac:
-                @RenderDacpacStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.DeployDacpac:
+                    @RenderDacpacStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            case DeploymentStepType.RunVsTests:
-                @RenderRunVsTestsStep(bundleVersion, deploymentStep, stepCounter)
-                break;
+                case DeploymentStepType.RunVsTests:
+                    @RenderRunVsTestsStep(bundleVersion, deploymentStep, stepCounter)
+                    break;
 
-            default:
-                <div>Unknown step</div>
-                break;
-        }
-
-
-        <br />
+                default:
+                    <div>Unknown step</div>
+                    break;
+            }
+        </div>
     }
 }
 
@@ -116,14 +115,14 @@
 {
     ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
 
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Deploy: @deploymentStep.GetStringProperty("IIS.SiteName") <small>IIS</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-6">
             <ul>
@@ -186,14 +185,14 @@
 {
     ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
 
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Run Tests: @deploymentStep.GetStringProperty("Step.Title") <small>Tests</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-6">
             <ul>
@@ -218,14 +217,14 @@
 {
     ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
 
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Dacpac: @deploymentStep.GetStringProperty("Step.Title") <small>DACPAC</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-12">
             <ul>
@@ -257,28 +256,28 @@
 
 @helper RenderRunPowerShellScript(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Script: @deploymentStep.GetStringProperty("Step.Title") <small>PowerShell</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
 }
 
 @helper RenderCopyFilesStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
     ProjectVersion projectVersion = bundleVersion.ProjectVersions.First(p => p.Id == deploymentStep.GetIntProperty("ProjectId", 0));
 
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Deploy files: @deploymentStep.GetStringProperty("Step.Title") <small>ZIP</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-6">
             <ul>
@@ -303,14 +302,14 @@
 
 @helper RenderHostsStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Update hosts: @deploymentStep.GetStringProperty("Step.Title") <small>HOSTS</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-12">
             <ul>
@@ -334,14 +333,14 @@
 
 @helper RenderSQLStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Run SQL: @deploymentStep.GetStringProperty("Step.Title") <small>SQL</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-12">
             <ul>
@@ -368,14 +367,14 @@
 
 @helper RenderConfigurationStep(BundleVersion bundleVersion, DeploymentStep deploymentStep, int stepCounter)
 {
-    <h3>
+    <h2>
         <div class="row">
             <div class="col-sm-7">
                 @(stepCounter). Config: @deploymentStep.GetStringProperty("Step.Title") <small>Configuration</small>
             </div>
-            <div class="col-sm-5 text-right">@RenderControlButtons(bundleVersion, deploymentStep)</div>
+            <div class="col-sm-5 text-end">@RenderControlButtons(bundleVersion, deploymentStep)</div>
         </div>
-    </h3>
+    </h2>
     <div class="row text-muted">
         <div class="col-md-12">
             <ul>

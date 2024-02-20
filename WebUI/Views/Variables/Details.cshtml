@@ -14,86 +14,88 @@
     <h1>
         <div class="row">
             <div class="col-md-10">
-                @dataField.Key 
+                @dataField.Key
+
+                <span class="badge rounded-pill text-bg-secondary">Variable</span>
+
                 @if (dataField.IsSensitive)
                 {
-                    <small>Sensitive</small>
+                    <span class="badge rounded-pill text-bg-secondary">Sensitive</span>
                 }
-                
+
             </div>
            
         </div>
     </h1>
 
-    <hr />
     
     @foreach (Environment environment in environments)
     {
         bool hideSensitiveValues = environment.GetBoolProperty("HideSensitiveValues");
         
-        <h3>@Html.ActionLink(environment.Name, "Details", "Environments",new { id = environment.Id}, null)</h3>
-        <div class="row">
-            <div class="col-sm-10">
-                @{
-                    var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
-                }
-                
-                @if (dataFieldValues.Count == 0)
-                {
-                    <span>&mdash;</span>
-                }
-                else
-                {
-                    foreach (DataFieldValue dataFieldValue in dataFieldValues.Where( dfv => dfv.MachineId == null))
-                    {
-                        if (string.IsNullOrWhiteSpace(dataFieldValue.Value))
-                        {
-                            continue;
-                        }
-
-                        if (dataField.IsSensitive && hideSensitiveValues)
-                        {
-                            <code>••••••••••••••••••••••••••••••</code>
-                        }
-                        else
-                        {
-                            <code>@dataFieldValue.Value</code>
-                        }
+        <div class="section">
+            <h2>@Html.ActionLink(environment.Name, "Details", "Environments", new { id = environment.Id }, null)</h2>
+            <div class="row">
+                <div class="col-sm-10">
+                    @{
+                        var dataFieldValues = environment.DataFieldValues.Where(dfv => dfv.DataFieldId == dataField.Id).ToList();
                     }
-                }
-                <br />
-                <br />
-                <ul class="list-unstyled">
-                    @foreach (Machine machine in environment.Machines)
-                    {
-                        <li>
-                            <div>
-                                @machine.Name – <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id, machineId = machine.Id })">Alter</a>
-                            </div>
 
-                            @foreach (DataFieldValue dataFieldValue in dataFieldValues.Where( dfv => dfv.MachineId == machine.Id))
+                    @if (dataFieldValues.Count == 0)
+                    {
+                        <span>&mdash;</span>
+                    }
+                    else
+                    {
+                        foreach (DataFieldValue dataFieldValue in dataFieldValues.Where(dfv => dfv.MachineId == null))
+                        {
+                            if (string.IsNullOrWhiteSpace(dataFieldValue.Value))
                             {
-                                if (string.IsNullOrWhiteSpace(dataFieldValue.Value))
-                                {
-                                    continue;
-                                }
-
-                                if (dataField.IsSensitive && hideSensitiveValues)
-                                {
-                                    <pre>••••••••••••••••••••••••••••••</pre>
-                                }
-                                else
-                                {
-                                    <pre>@dataFieldValue.Value</pre>
-                                }
+                                continue;
                             }
-                        </li>
-                    }
-                </ul>
 
-            </div>
-            <div class="col-sm-2">
-                <a href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id })">Edit</a>
+                            if (dataField.IsSensitive && hideSensitiveValues)
+                            {
+                                <code>••••••••••••••••••••••••••••••</code>
+                            }
+                            else
+                            {
+                                <code>@dataFieldValue.Value</code>
+                            }
+                        }
+                    }
+                    <ul class="list-unstyled">
+                        @foreach (Machine machine in environment.Machines)
+                        {
+                            <li>
+                                <div class="mt-2">
+                                    @machine.Name <a class="btn btn-primary" href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id, machineId = machine.Id })">Alter</a>
+                                </div>
+
+                                @foreach (DataFieldValue dataFieldValue in dataFieldValues.Where(dfv => dfv.MachineId == machine.Id))
+                                {
+                                    if (string.IsNullOrWhiteSpace(dataFieldValue.Value))
+                                    {
+                                        continue;
+                                    }
+
+                                    if (dataField.IsSensitive && hideSensitiveValues)
+                                    {
+                                        <pre>••••••••••••••••••••••••••••••</pre>
+                                    }
+                                    else
+                                    {
+                                        <pre>@dataFieldValue.Value</pre>
+                                    }
+                                }
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-primary" href="@Url.Action("Edit", "Variables", new { id = dataField.Id, environmentId = environment.Id })">Edit</a>
+                </div>
             </div>
         </div>
     }

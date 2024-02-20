@@ -1,0 +1,38 @@
+﻿body
+{
+    background-color: #f3f3f2;
+    --bs-navbar-brand-margin-end: 2rem !important;  
+}
+
+
+.box,
+.section
+{
+    padding: 20px 40px;
+    border-radius: 22px;
+    margin: 20px 0;
+    background-color: #ffffff;
+}
+
+
+.navbar-brand
+{
+    font-weight: 900;
+    font-size: 26px;
+    line-height: 40px;
+    margin-right: 2rem;
+}
+
+
+.navbar .navbar-brand span
+{
+    display: none;
+}
+
+code
+{
+    display: block;
+    background-color: #fff;
+    padding: 20px 40px;
+    white-space: break-spaces;
+}

@@ -6,10 +6,15 @@
 }
 
 <div class="container">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">@Html.ActionLink("Users", "List")</li>
+            <li class="breadcrumb-item active" aria-current="page">@this.Model.Name</li>
+        </ol>
+    </nav>
 
-    <div>@Html.ActionLink("Назад", "List")</div>
-
-    <h1>Изменить пользователя</h1>
+    <h1>Edit user</h1>
     <hr />
     @using (Html.BeginForm("Edit", "Users", new { }, FormMethod.Post, new { Class = "form-horizontal" }))
     {
@@ -19,52 +24,52 @@
         <div class="row">
             <div class="col-md-7 ">
 
-                <div class="form-group">
-                    <label for="UserName" class="col-sm-4 control-label">Название</label>
-                    <div class="col-sm-8">
-                        @Html.TextBoxFor(m => m.Name, new { Class = "form-control", placeholder = "Название" })
-                        @Html.ValidationMessageFor(m => m.Name)
-                    </div>
+                <div class="mb-3">
+                    <label for="Name" class="form-label">Display name</label>
+                    @Html.TextBoxFor(m => m.Name, new { Class = "form-control", placeholder = "Название" })
+                    @Html.ValidationMessageFor(m => m.Name)
                 </div>
 
-                <div class="form-group">
-                    <label for="UserName" class="col-sm-4 control-label">Email</label>
-                    <div class="col-sm-8">
-                        @Html.TextBoxFor(m => m.Email, new { Class = "form-control", placeholder = "Email" })
-                        @Html.ValidationMessageFor(m => m.Email)
-                    </div>
+
+                <div class="mb-3">
+                    <label for="Email" class="col-sm-4 control-label">Email</label>
+                    @Html.TextBoxFor(m => m.Email, new { Class = "form-control", placeholder = "Email" })
+                    @Html.ValidationMessageFor(m => m.Email)
                 </div>
 
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">Роль</label>
-                    <div class="col-sm-8">
-                        @Html.EnumDropDownListFor(m => m.Role, new { Class = "form-control", placeholder = "Роль" })
-                        @Html.ValidationMessageFor(m => m.Role)
-                    </div>
+                <div class="mb-3">
+                    <label class="col-sm-4 control-label">Role</label>
+                    @Html.EnumDropDownListFor(m => m.Role, new { Class = "form-control", placeholder = "Роль" })
+                    @Html.ValidationMessageFor(m => m.Role)
                 </div>
 
-                <div class="form-group">
-                    <label for="UserName" class="col-sm-4 control-label">Новый пароль</label>
-                    <div class="col-sm-8">
-                        @Html.PasswordFor(m => m.Password, new { Class = "form-control", placeholder = "Новый пароль" })
-                        @Html.ValidationMessageFor(m => m.Password)
-                        <p class="text-muted">не менее 6 символов</p>
-                    </div>
+                <div class="mb-3">
+                    <label for="Password" class="col-sm-4 control-label">Password</label>
+                    @Html.PasswordFor(m => m.Password, new { Class = "form-control", placeholder = "new password" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                    <p class="text-muted">at least 6 characters</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="col-sm-4 control-label">Role</label>
+                    @Html.DropDownListFor(m => m.ThemeId,new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Text = "Theme 1 - white", Value = "theme1"},
+                        new SelectListItem() { Text = "Theme 2 - cream", Value = "theme2"},
+                    }, new { Class = "form-control", placeholder = "Theme" })
+                    @Html.ValidationMessageFor(m => m.Role)
+                </div>
+
+                <div class="mb-3 form-check">
+                    @Html.CheckBoxFor(m => m.IsDisabled, new { Class = "form-check-input" })
+                    <label class="form-check-label" for="IsDisabled">
+                        Is disabled
+                    </label>
                 </div>
 
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-8">
-                        <div class="checkbox">
-                            <label>
-                                @Html.CheckBoxFor(m => m.IsDisabled, new { placeholder = "Название" }) Заблокировать
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-8">
-                        <button type="submit" class="btn btn-default">Сохранить</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>

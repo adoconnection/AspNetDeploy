@@ -8,81 +8,81 @@
         <div class="col-md-6">
             <h1>Users</h1>
         </div>
-        <div class="col-md-6 text-right">
-            <a href="@Url.Action("Add")" class="btn btn-default">New user</a>
+        <div class="col-md-6">
+            <a href="@Url.Action("Add")" class="btn btn-primary  float-end">New user</a>
 
         </div>
     </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Sate</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (User user in this.ViewBag.Users)
-            {
-                <tr class="@(user.IsDisabled ? "text-muted" : "")">
-                    <td>
-                        @user.Id
-                    </td>
-                    <td>
-                        <div>@Html.ActionLink(user.Name, "Edit", new { id = user.Id })</div>
-                        <small>@user.Email</small>
-                    </td>
-                    <td>
-                        @switch (user.Role)
-                        {
-                            case UserRole.Observer:
-                                <span>Observer</span>
-                                break;
-
-                            case UserRole.Developer:
-                            <span>Developer</span>
-                                break;
-
-                            case UserRole.PowerDeveloper:
-                            <span>Power Developer</span>
-                                break;
-
-                            case UserRole.Tester:
-                            <span>Tester</span>
-                                break;
-
-                            case UserRole.Publisher:
-                            <span>Publisher</span>
-                                break;
-
-                            case UserRole.Admin:
-                            <span>Admin</span>
-                                break;
-
-                            case UserRole.Undefined:
-                            <span>–</span>
-                                break;
-                        }
-                    </td>
-
-
-                    <td>
-                        @if (user.IsDisabled)
-                        {
-                            <span>Blocked</span>
-                        }
-                        else
-                        {
-                            <text>Active</text>
-                        }
-                    </td>
-
+    <div class="box">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Sate</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (User user in this.ViewBag.Users)
+                {
+                    <tr class="@(user.IsDisabled ? "text-muted" : "")">
+                        <td>
+                            @user.Id
+                        </td>
+                        <td>
+                            <div>@Html.ActionLink(user.Name, "Edit", new { id = user.Id })</div>
+                            <small>@user.Email</small>
+                        </td>
+                        <td>
+                            @switch (user.Role)
+                            {
+                                case UserRole.Observer:
+                                    <span>Observer</span>
+                                    break;
 
+                                case UserRole.Developer:
+                                    <span>Developer</span>
+                                    break;
+
+                                case UserRole.PowerDeveloper:
+                                    <span>Power Developer</span>
+                                    break;
+
+                                case UserRole.Tester:
+                                    <span>Tester</span>
+                                    break;
+
+                                case UserRole.Publisher:
+                                    <span>Publisher</span>
+                                    break;
+
+                                case UserRole.Admin:
+                                    <span>Admin</span>
+                                    break;
+
+                                case UserRole.Undefined:
+                                    <span>–</span>
+                                    break;
+                            }
+                        </td>
+
+
+                        <td>
+                            @if (user.IsDisabled)
+                            {
+                                <span>Blocked</span>
+                            }
+                            else
+                            {
+                                <text>Active</text>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 

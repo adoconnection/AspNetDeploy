@@ -1,0 +1,46 @@
+﻿body
+{
+}
+
+.section,
+.box
+{
+    padding: 20px 40px;
+    border-radius: 22px;
+    margin: 20px 0;
+    background-color: #ffffff;
+    box-shadow: 0 0 12px 0px #dbdbdb;
+}
+
+.navbar > .container
+{
+    display: flex;
+    flex-wrap: inherit;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+}
+
+.navbar .navbar-brand img
+{
+    height: 32px;
+    margin-right: 16px;
+    vertical-align: text-bottom;
+}
+
+.commit
+{
+    padding: 10px;
+    white-space: normal;
+    display: block;
+    text-align: left;
+    border-radius: 10px;
+    background: #fceedb;
+}
+
+pre
+{
+    background-color: #fafafa;
+    padding: 8px;
+    word-wrap: break-word;
+}

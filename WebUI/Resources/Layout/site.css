@@ -4,19 +4,135 @@
     margin-bottom: 100px;
 }
 
+.navbar
+{
+    margin-top: 32px;
+}
+
+.navbar-brand
+{
+    font-weight: 900;
+    font-size: 26px;
+    line-height: 40px;
+}
+
+
+.pageWrapper
+{
+    margin-top: 32px;
+}
+
+.nav-pills .nav-link
+{
+    color: #000;
+}
+
+.nav-item
+{
+    border: 2px solid transparent;
+}
+
+.nav-item.active
+{
+    border: 2px solid #000;
+}
+
+.nav-item.active a
+{
+    color: #000;
+    font-weight: 800;
+}
+
+
+.nav-item a
+{
+    padding: 8px 24px !important;
+
+}
+
 H1 a,
 H2 a,
 H3 a
 {
     color: #000;
     border-bottom: none;
+    text-decoration: none;
 }
+
 H1 > a:hover,
 H2 > a:hover,
 H3 > a:hover
 {
     text-decoration: none;
+    color: #000;
 }
+
+
+h1
+{
+    font-size: 30px;
+}
+
+h2
+{
+    font-size: 20px;
+}
+
+.sourcesPage h1,
+.environmentsPage h1
+{
+    margin-bottom: 16px;
+}
+
+.environmentsPage .col-gauges
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.environmentsPage .machine .name,
+.sourcesPage .project .name
+{
+    background-color: #F5F5F5;
+    padding: 16px;
+}
+
+
+.environmentsPage .machine + .machine,
+.sourcesPage .project + .project
+{
+    margin-top: 8px;
+}
+
+.sourcesPage .project a
+{
+    color: #000;
+    text-decoration: none;
+}
+
+.sourcesPage .project a span
+{
+    text-decoration: underline;
+}
+
+.environmentsPage .gauge .title
+{
+    display: flex;
+    margin-bottom: 7px;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: small;
+}
+
+
+.loadingIcon
+{
+    height: 16px;
+}
+
+
+/*
 
 
 .btn
@@ -25,20 +141,11 @@ H3 > a:hover
 }
 
 
-.pageWrapper
-{
-    margin-top: 70px;
-}
 
 .pageWrapper a
 {
     color: #000;
     border-bottom: 1px solid #e1e1e1;
-}
-
-.loadingIcon
-{
-    height: 16px;
 }
 
 .pageWrapper h1 > a,
@@ -65,20 +172,8 @@ H3 > a:hover
     border-bottom: none;
 }
 
-.environmentsPage .machine + .machine,
-.sourcesPage .project + .project
-{
-    margin-top: 3px;
-}
 
 
-
-.environmentsPage .machine .name,
-.sourcesPage .project .name
-{
-    background-color: #F5F5F5;
-    padding: 8px;
-}
 
 
 .navbar-nav .avatar
@@ -112,7 +207,7 @@ H3 > a:hover
 
 }
 
-/********** diagrams **********/
+/********** diagrams *********!1!
 
 .diagram
 {
@@ -160,7 +255,7 @@ H3 > a:hover
   border-radius: 2px;
 }
 
-/* Creates a small triangle extender for the tooltip */
+/* Creates a small triangle extender for the tooltip !1!
 .d3-tip:after 
 {
   box-sizing: border-box;
@@ -174,7 +269,7 @@ H3 > a:hover
   text-align: center;
 }
 
-/* Style northward tooltips differently */
+/* Style northward tooltips differently !1!
 .d3-tip.n:after 
 {
   margin: -1px 0 0 0;
@@ -202,4 +297,4 @@ H3 > a:hover
     text-align: left;
     border-radius: 10px;
     background: #fceedb;
-}
+}*/
