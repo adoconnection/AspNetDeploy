@@ -129,6 +129,8 @@
                                             }
                                             else
                                             {
+                                                bool hasNewerVersion = bundleVersionInfo.Publications.Values.Any(e => e.Any(p => p.Package.CreatedDate > publication.Package.CreatedDate));
+
                                                 <div class="position-relative" style="padding: 8px;">
                                                     <img src="~/Resources/Layout/Images/Icons/package64.png" />
                                                 </div>
@@ -151,7 +153,7 @@
                                                             break;
                                                     }
 
-                                                    <span class="badge rounded-pill text-bg-dark">pack.@publication.PackageId</span>
+                                                    <span class="badge rounded-pill @(hasNewerVersion ? "text-bg-light" : "text-bg-dark")">pack.@publication.PackageId</span>
                                                 </div>
 
                                                 <div class="text-nowrap">
