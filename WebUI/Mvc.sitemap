@@ -11,7 +11,6 @@
             <mvcSiteMapNode title="Details" controller="Bundles" action="Details"/>
         </mvcSiteMapNode>
         <mvcSiteMapNode title="Environments" controller="Environments" action="List"/>
-        <mvcSiteMapNode title="Machines" controller="Machines" action="List"/>
     </mvcSiteMapNode>
 
 
