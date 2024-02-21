@@ -35,31 +35,31 @@ namespace SatelliteService.Operations
         {
             using (ServerManager serverManager = new ServerManager())
             {
-                this.StopSite(serverManager, (string) this.configuration.SiteName);
+                this.StopSite(serverManager, (string)this.configuration.SiteName);
 
-                if (Directory.Exists((string) this.configuration.Destination))
+                if (Directory.Exists((string)this.configuration.Destination))
                 {
-                    this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string) this.configuration.Destination);
-                    DirectoryHelper.DeleteContents((string) this.configuration.Destination);
+                    this.backupDirectoryGuid = this.BackupRepository.StoreDirectory((string)this.configuration.Destination);
+                    DirectoryHelper.DeleteContents((string)this.configuration.Destination);
                 }
 
                 packageRepository.ExtractProject(
-                    (int) this.configuration.ProjectId,
-                    (string) this.configuration.Destination);
+                    (int)this.configuration.ProjectId,
+                    (string)this.configuration.Destination);
 
-                Site site = this.Site(serverManager, (string) this.configuration.SiteName);
+                Site site = this.Site(serverManager, (string)this.configuration.SiteName);
                 //this.backupSiteConfigurationGuid = this.BackupRepository.StoreObject(site);
 
-                ApplicationPool applicationPool = this.ApplicationPool(serverManager, (string) this.configuration.ApplicationPoolName);
-                Application application = this.Application(serverManager, site, (string) this.configuration.Destination);
+                ApplicationPool applicationPool = this.ApplicationPool(serverManager, (string)this.configuration.ApplicationPoolName);
+                Application application = this.Application(serverManager, site, (string)this.configuration.Destination);
 
-                site.Applications["/"].VirtualDirectories["/"].PhysicalPath = (string) this.configuration.Destination;
-                site.ApplicationDefaults.ApplicationPoolName = (string) configuration.ApplicationPoolName;
+                site.Applications["/"].VirtualDirectories["/"].PhysicalPath = (string)this.configuration.Destination;
+                site.ApplicationDefaults.ApplicationPoolName = (string)configuration.ApplicationPoolName;
                 site.ServerAutoStart = true;
                 applicationPool.AutoStart = true;
                 applicationPool.ManagedRuntimeVersion = "v4.0";
 
-                string webConfigPath = Path.Combine((string) this.configuration.Destination, "web.config");
+                string webConfigPath = Path.Combine((string)this.configuration.Destination, "web.config");
 
                 if (File.Exists(webConfigPath))
                 {
@@ -77,10 +77,10 @@ namespace SatelliteService.Operations
                 {
                     Binding binding = site.Bindings.CreateElement();
 
-                    string ip = (string) bindingConfig.IP;
+                    string ip = (string)bindingConfig.IP;
 
-                    binding.Protocol = (string) bindingConfig.protocol;
-                    binding.BindingInformation = (string.IsNullOrWhiteSpace(ip) ? "" : ip) + ":" + (int) bindingConfig.port + ":" + (string) bindingConfig.host;
+                    binding.Protocol = (string)bindingConfig.protocol;
+                    binding.BindingInformation = (string.IsNullOrWhiteSpace(ip) ? "" : ip) + ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
 
                     switch (binding.Protocol.ToLower())
                     {
@@ -88,23 +88,40 @@ namespace SatelliteService.Operations
                             site.Bindings.Add(binding);
                             break;
 
-                        default:
-                        {
-                            X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
-                            store.Open(OpenFlags.OpenExistingOnly);
-                            X509Certificate2 certificate = store.FindByFriendlyName((string) bindingConfig.certificateName);
-
-                            if (certificate != null)
+                        case "https":
                             {
-                                binding.CertificateHash = certificate.GetCertHash();
-                                binding.CertificateStoreName = store.Name;
-                                binding.SslFlags = (SslFlags) bindingConfig.sslFlags;
+                                X509Store store1 = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+                                X509Store store2 = new X509Store("WebHosting", StoreLocation.LocalMachine);
 
-                                site.Bindings.Add(binding);
+                                store1.Open(OpenFlags.OpenExistingOnly);
+                                store2.Open(OpenFlags.OpenExistingOnly);
+
+                                X509Certificate2 certificate1 = store1.FindByFriendlyName((string)bindingConfig.certificateName);
+
+                                if (certificate1 != null)
+                                {
+                                    binding.CertificateHash = certificate1.GetCertHash();
+                                    binding.CertificateStoreName = store1.Name;
+                                    binding.SslFlags = (SslFlags)bindingConfig.sslFlags;
+
+                                    site.Bindings.Add(binding);
+                                }
+
+                                X509Certificate2 certificate2 = store2.FindByFriendlyName((string)bindingConfig.certificateName);
+
+                                if (certificate2 != null)
+                                {
+                                    binding.CertificateHash = certificate2.GetCertHash();
+                                    binding.CertificateStoreName = store2.Name;
+                                    binding.SslFlags = (SslFlags)bindingConfig.sslFlags;
+
+                                    site.Bindings.Add(binding);
+                                }
+
+
+                                store1.Close();
+                                store2.Close();
                             }
-
-                            store.Close();
-                        }
                             break;
                     }
                 }
@@ -116,7 +133,7 @@ namespace SatelliteService.Operations
             {
                 using (ServerManager serverManager = new ServerManager())
                 {
-                    this.StartSite(serverManager, (string) this.configuration.SiteName);
+                    this.StartSite(serverManager, (string)this.configuration.SiteName);
                     serverManager.CommitChanges();
                 }
             }
@@ -222,7 +239,7 @@ namespace SatelliteService.Operations
 
             ThreadService.SleepUntil(() => site.State == ObjectState.Stopped, 3);
 
-            List<string> appPoolNames = site.Applications.Select( app => app.ApplicationPoolName).Distinct().ToList();
+            List<string> appPoolNames = site.Applications.Select(app => app.ApplicationPoolName).Distinct().ToList();
 
             foreach (string appPoolName in appPoolNames)
             {
@@ -247,7 +264,7 @@ namespace SatelliteService.Operations
                 }
             }
 
-            ThreadService.SleepUntil(() => appPoolNames.All( a => iisManager.ApplicationPools[a].State == ObjectState.Stopped), 3);
+            ThreadService.SleepUntil(() => appPoolNames.All(a => iisManager.ApplicationPools[a].State == ObjectState.Stopped), 3);
         }
 
         private void StartSite(ServerManager iisManager, string siteName)
