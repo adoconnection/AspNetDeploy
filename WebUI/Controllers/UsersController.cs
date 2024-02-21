@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using AspNetDeploy.Contracts;
@@ -35,7 +36,8 @@ namespace AspNetDeploy.WebUI.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 IsDisabled = user.IsDisabled,
-                Role = user.Role
+                Role = user.Role,
+                ThemeId = user.ThemeId ?? ConfigurationManager.AppSettings["DefaultTheme"]
             };
 
             return this.View(model);

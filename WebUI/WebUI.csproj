@@ -157,6 +157,8 @@
     <Content Include="Resources\JavaScripts\Ace\autocomplete\popup.js" />
     <Content Include="Resources\JavaScripts\Ace\autocomplete\text_completer.js" />
     <Content Include="Resources\JavaScripts\Ace\autocomplete\util.js" />
+    <Content Include="Resources\JavaScripts\bootstrap.js" />
+    <Content Include="Resources\JavaScripts\bootstrap.min.js" />
     <Content Include="Resources\JavaScripts\Common.js" />
     <Content Include="Resources\JavaScripts\d3\tip.js" />
     <Content Include="Resources\JavaScripts\Editor.js" />
@@ -172,6 +174,7 @@
     <Content Include="Resources\JavaScripts\Ace\snippets.js" />
     <Content Include="Resources\JavaScripts\Ace\theme-textmate.js" />
     <Content Include="Resources\JavaScripts\shortcut.js" />
+    <Content Include="Resources\Layout\bootstrap-utilities.min.css" />
     <Content Include="Resources\Layout\Images\favicon.ico" />
     <Content Include="Resources\Layout\bootstrap-theme.css" />
     <Content Include="Resources\Layout\bootstrap-theme.min.css" />
@@ -191,8 +194,6 @@
     <None Include="Properties\PublishProfiles\123.pubxml" />
     <None Include="Properties\PublishProfiles\Rain.pubxml" />
     <None Include="Resources\JavaScripts\jquery-1.9.0.intellisense.js" />
-    <Content Include="Resources\JavaScripts\bootstrap.js" />
-    <Content Include="Resources\JavaScripts\bootstrap.min.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.js" />
     <Content Include="Resources\JavaScripts\jquery-1.9.0.min.js" />
     <Content Include="Resources\Layout\Images\Help\SvnUrl.png" />
@@ -221,11 +222,16 @@
     <Content Include="Resources\Layout\Images\Icons\VsDatabaseProject.png" />
     <Content Include="Resources\Layout\Images\Icons\VsSolution.png" />
     <Content Include="Resources\Layout\Images\Icons\VsTestProject.png" />
+    <Content Include="Resources\Layout\Images\logo-48.png" />
+    <Content Include="Resources\Layout\Images\logo.png" />
+    <Content Include="Resources\Layout\Images\logo64.png" />
     <Content Include="Resources\Layout\Images\vs-loading-colored.gif" />
     <Content Include="Resources\Layout\Images\vs-loading.gif" />
     <Content Include="Resources\Layout\Images\Icons\VsClassProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsConsoleProject.PNG" />
     <Content Include="Resources\Layout\Images\Icons\VsWebProject.PNG" />
+    <Content Include="Resources\Layout\theme1.css" />
+    <Content Include="Resources\Layout\theme2.css" />
     <Content Include="Resources\Layout\site.css" />
     <Content Include="Resources\JavaScripts\d3\d3.js" />
     <Content Include="Resources\JavaScripts\d3\d3.min.js" />
