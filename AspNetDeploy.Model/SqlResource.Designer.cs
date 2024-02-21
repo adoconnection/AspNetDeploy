@@ -61,7 +61,7 @@ namespace AspNetDeploy.Model {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /****** Object:  Table [dbo].[AspNetDeployException]    Script Date: 18.02.2024 18:43:56 ******/
+        ///   Looks up a localized string similar to /****** Object:  Table [dbo].[AspNetDeployException]    Script Date: 22.02.2024 1:11:19 ******/
         ///SET ANSI_NULLS ON
         ///GO
         ///SET QUOTED_IDENTIFIER ON
@@ -73,7 +73,7 @@ namespace AspNetDeploy.Model {
         ///	[ExceptionId] [int] NOT NULL,
         ///	[TimeStamp] [datetime] NOT NULL,
         ///	[UserId] [int] NULL,
-        /// CONSTRAINT [PK_AspNetDeployException] PRIMARY KEY CLUSTER [rest of string was truncated]&quot;;.
+        /// CONSTRAINT [PK_AspNetDeployException] PRIMARY KEY CLUSTERE [rest of string was truncated]&quot;;.
         /// </summary>
         public static string InitializationScript {
             get {
