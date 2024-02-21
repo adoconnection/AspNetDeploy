@@ -132,7 +132,7 @@
 
                     @if (publications.Count > 0)
                     {
-                        if (publications.First().State != PublicationState.Complete && publications.First().State != PublicationState.Queued)
+                        if (/*publications.First().State != PublicationState.Complete &&*/ publications.First().State != PublicationState.Queued)
                         {
                             <a class="btn btn-primary" href="@Url.Action("Schedule", new {id = package.Id, environmentId = environment.Id})">Deploy now</a>
                         }
