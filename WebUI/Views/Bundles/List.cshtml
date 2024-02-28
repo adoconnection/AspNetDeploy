@@ -81,12 +81,11 @@
                                         {
                                             <span>(archived)</span>
                                         }
-
-                                        <span id="@("idProjectVersionState" + projectVersion.Id)">
-                                            <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
-                                            <span class="status text-muted @(stringProperty != null && stringProperty == "Error" ? "error" : "")">@(stringProperty != null && stringProperty == "Error" ? "Build error" : "")</span>
-                                        </span>
                                     </small>
+                                    <span id="@("idProjectVersionState" + projectVersion.Id)">
+                                        <img class="loadingIcon" src="~/Resources/Layout/Images/vs-loading-colored.gif" style="display: none;" />
+                                        <span class=" @(stringProperty != null && stringProperty == "Error" ? "badge rounded-pill text-bg-danger" : "")">@(stringProperty != null && stringProperty == "Error" ? "Build error" : "")</span>
+                                    </span>
                                 </div>
                             }
                         }
@@ -129,7 +128,14 @@
                                             }
                                             else
                                             {
-                                                bool hasNewerVersion = bundleVersionInfo.Publications.Values.Any(e => e.Any(p => p.Package.CreatedDate > publication.Package.CreatedDate));
+                                                bool hasNewerVersion = bundleInfo.Bundle.IsSingleInstance
+                                                    ? bundleInfo.BundleVersionsInfo.SelectMany(bv => bv.Publications).Select(p => p.Value).Any(e => e.Any(p => p.Package.CreatedDate > publication.Package.CreatedDate))
+                                                    : bundleVersionInfo.Publications.Values.Any(e => e.Any(p => p.Package.CreatedDate > publication.Package.CreatedDate));
+
+                                                bool hasNewerPublication = bundleInfo.Bundle.IsSingleInstance
+                                                    ? bundleInfo.BundleVersionsInfo.SelectMany(bv => bv.Publications).Select(p => p.Value).Any(e => e.Any(p => p.EnvironmentId == publication.EnvironmentId && p.CreatedDate > publication.CreatedDate))
+                                                    : bundleVersionInfo.Publications.Values.Any(e => e.Any(p => p.EnvironmentId == publication.EnvironmentId && p.CreatedDate > publication.CreatedDate));
+
 
                                                 <div class="position-relative" style="padding: 8px;">
                                                     <img src="~/Resources/Layout/Images/Icons/package64.png" />
@@ -140,7 +146,14 @@
                                                     @switch (publication.State)
                                                     {
                                                         case PublicationState.Complete:
-                                                            <span class="badge rounded-pill text-bg-success">OK</span>
+                                                            if (!bundleInfo.Bundle.IsSingleInstance)
+                                                            {
+                                                                <span class="badge rounded-pill text-bg-success">OK</span>
+                                                            }
+                                                            else if (!hasNewerPublication)
+                                                            {
+                                                                <span class="badge rounded-pill text-bg-success">OK</span>
+                                                            }
                                                             break;
                                                         case PublicationState.Error:
                                                             <span class="badge rounded-pill text-bg-danger">Error</span>

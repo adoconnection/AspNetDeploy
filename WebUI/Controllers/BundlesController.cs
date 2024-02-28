@@ -67,7 +67,7 @@ namespace AspNetDeploy.WebUI.Controllers
                 BundleVersionsInfo = b.BundleVersions
                     .Where(bv => !bv.IsDeleted)
                     .OrderByDescending(bv => bv.Id)
-                    .Take(2)
+                    .Take(3)
                     .Select(bv =>
                     {
                         BundleVersionInfo bundleVersionInfo = new BundleVersionInfo()
@@ -192,6 +192,11 @@ namespace AspNetDeploy.WebUI.Controllers
             if (sourceBundleVersion.GetIntProperty("AutoDeployToEnvironment") > 0)
             {
                 newBundleVersion.SetStringProperty("AutoDeployToEnvironment", sourceBundleVersion.GetIntProperty("AutoDeployToEnvironment").ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (sourceBundleVersion.Bundle.IsSingleInstance)
+            {
+                sourceBundleVersion.RemoveProperty("AutoDeployToEnvironment");
             }
 
             if (sourceBundleVersion.GetIntProperty("HomeEnvironment") > 0)

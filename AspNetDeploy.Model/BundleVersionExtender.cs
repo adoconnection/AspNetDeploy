@@ -79,5 +79,15 @@ namespace AspNetDeploy.Model
 
             property.Value = value;
         }
+
+        public void RemoveProperty(string key)
+        {
+            BundleVersionProperty property = this.Properties.FirstOrDefault(p => p.Key.ToLower() == key.ToLower());
+
+            if (property != null)
+            {
+                this.Properties.Remove(property);
+            }
+        }
     }
 }

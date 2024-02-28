@@ -42,7 +42,7 @@
                 {
                     IEnumerable<IGrouping<string, ProjectVersionInfo>> groups = sourceControlVersionInfo.ProjectVersionsInfo.GroupBy(pvs => pvs.ProjectVersion.SolutionFile);
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <h2>
                             @sourceControlVersionInfo.SourceControlVersion.Name
 
@@ -117,13 +117,13 @@
 
                                         @if (lastBuildDuration > 0)
                                         {
-                                            <span class="badge rounded-pill text-bg-dark">build time @lastBuildDuration.ToString("#.0") sec</span>
+                                            <span class="badge rounded-pill text-bg-dark">build @lastBuildDuration.ToString("#.0") sec</span>
                                         }
 
 
                                         @if (lastPackageDuration > 0)
                                         {
-                                            <span class="badge rounded-pill text-bg-dark">package time @lastPackageDuration.ToString("#.0") sec</span>
+                                            <span class="badge rounded-pill text-bg-dark">pack @lastPackageDuration.ToString("#.0") sec</span>
                                         }
                                         else
                                         {

@@ -8,12 +8,23 @@
     IList<Environment> environments = this.ViewBag.Environments;
     BundleVersion bundleVersion = this.ViewBag.BundleVersion;
 
-    List<Publication> allPublications = bundleVersion.Packages.SelectMany(p => p.Publications).OrderByDescending(p => p.CreatedDate).ToList();
 
     IList<Package> orderedPackages = bundleVersion.Packages.OrderByDescending(p => p.CreatedDate).ToList();
     Package latestPackage = orderedPackages.FirstOrDefault();
 
     IList<BundleRevision> revisions = this.ViewBag.Revisions;
+
+    List<Publication> allPublications;
+
+    if (bundleVersion.Bundle.IsSingleInstance)
+    {
+        allPublications = bundleVersion.Bundle.BundleVersions.SelectMany(bv => bv.Packages).SelectMany(p => p.Publications).OrderByDescending(p => p.CreatedDate).ToList();
+    }
+    else
+    {
+        allPublications = bundleVersion.Packages.SelectMany(p => p.Publications).OrderByDescending(p => p.CreatedDate).ToList();
+    }
+
 }
 
 <div class="container">
@@ -126,6 +137,9 @@
                         {
                             List<Publication> packagePublications = package.Publications.Where(p => p.EnvironmentId == environment.Id).ToList();
                             Publication latestPackagePublication = packagePublications.OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+
+                            
+
 
                             Publication latestSuccessPublication = allPublications.Where(p => p.State == PublicationState.Complete).FirstOrDefault(p => p.Environment == environment);
 
