@@ -196,7 +196,7 @@ namespace AspNetDeploy.WebUI.Controllers
 
             if (sourceBundleVersion.Bundle.IsSingleInstance)
             {
-                sourceBundleVersion.RemoveProperty("AutoDeployToEnvironment");
+                sourceBundleVersion.SetStringProperty("AutoDeployToEnvironment", null);
             }
 
             if (sourceBundleVersion.GetIntProperty("HomeEnvironment") > 0)
