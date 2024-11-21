@@ -162,31 +162,38 @@
             {
                 "Idle": {
                     loadingIcon: false,
-                    text: ''
+                    text: '',
+                    css: 'status text-muted'
                 },
                 "DeployingQueued": {
                     loadingIcon: false,
-                    text: 'Deploying queued'
+                    text: 'Deploying queued',
+                    css: 'status text-muted'
                 },
                 "Deploying": {
                     loadingIcon: true,
-                    text: 'Deploying'
+                    text: 'Deploying',
+                    css: 'status text-muted'
                 },
                 "Uploading": {
                     loadingIcon: true,
-                    text: 'Uploading'
+                    text: 'Uploading',
+                    css: 'status text-muted'
                 },
                 "Installing": {
                     loadingIcon: false,
-                    text: 'Installing'
+                    text: 'Installing',
+                    css: 'status text-muted'
                 },
                 "Finalizing": {
                     loadingIcon: false,
-                    text: 'Finalizing'
+                    text: 'Finalizing',
+                    css:'status text-muted'
                 },
                 "Error": {
                     loadingIcon: false,
-                    text: 'Error'
+                    text: 'Error',
+                    css: 'badge rounded-pill text-bg-danger'
                 }
             }
 
@@ -208,6 +215,7 @@
                 if (newState.text)
                 {
                     statusBox.text(newState.text);
+                    statusBox.attr("class", newState.css);
                 }
             }
 
