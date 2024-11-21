@@ -7,7 +7,7 @@ namespace SatelliteService
     {
         public int GetVersion()
         {
-            return 20240216;
+            return 20240417;
         }
     }
 }
