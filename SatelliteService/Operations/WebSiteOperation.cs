@@ -79,6 +79,11 @@ namespace SatelliteService.Operations
 
                     string ip = (string)bindingConfig.IP;
 
+                    if (ip != null && ip.Contains(":")) // ipv6
+                    {
+                        ip = "[" + ip + "]";
+                    }
+
                     binding.Protocol = (string)bindingConfig.protocol;
                     binding.BindingInformation = (string.IsNullOrWhiteSpace(ip) ? "" : ip) + ":" + (int)bindingConfig.port + ":" + (string)bindingConfig.host;
 
