@@ -197,9 +197,29 @@ namespace AspNetDeploy.SourceControls.SVN
 
         public void Archive(SourceControlVersion sourceControlVersion, string path)
         {
-            if (Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
-                Directory.Delete(path, true);
+                return;
+            }
+
+            this.DisableReadOnly(new DirectoryInfo(path));
+
+            Directory.Delete(path, true);
+        }
+
+        private void DisableReadOnly(DirectoryInfo directory)
+        {
+            foreach (var file in directory.GetFiles())
+            {
+                if (file.IsReadOnly)
+                {
+                    file.IsReadOnly = false;
+                }
+            }
+
+            foreach (var subdirectory in directory.GetDirectories())
+            {
+                this.DisableReadOnly(subdirectory);
             }
         }
 
