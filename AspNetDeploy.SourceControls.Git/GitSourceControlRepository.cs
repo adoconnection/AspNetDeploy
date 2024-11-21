@@ -99,6 +99,8 @@ namespace AspNetDeploy.SourceControls.Git
         {
             Directory.CreateDirectory(path);
 
+            string branch = sourceControlVersion.GetStringProperty("Branch");
+
             var cloneOptions = new CloneOptions
             {
                 CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
@@ -106,6 +108,7 @@ namespace AspNetDeploy.SourceControls.Git
                     Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
                     Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
                 },
+                BranchName = branch
             };
 
             Repository.Clone(sourceControlVersion.SourceControl.GetStringProperty("URL"), path, cloneOptions);
@@ -114,6 +117,29 @@ namespace AspNetDeploy.SourceControls.Git
 
             using (var repo = new Repository(path))
             {
+                // Ensure we are on the correct branch
+                Branch localBranch = repo.Branches[branch];
+
+                if (localBranch == null)
+                {
+                    // Fetch the branch if not present locally
+                    Commands.Fetch(repo, "origin", new[] { branch }, new FetchOptions
+                    {
+                        CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
+                        {
+                            Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                            Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
+                        }
+                    }, null);
+
+                    // Create and checkout the branch locally
+                    localBranch = repo.CreateBranch(branch, repo.Branches[$"origin/{branch}"].Tip);
+                    repo.Branches.Update(localBranch, b => b.TrackedBranch = $"refs/remotes/origin/{branch}");
+                }
+
+                // Checkout the branch
+                Commands.Checkout(repo, localBranch);
+
                 id = repo.Commits.QueryBy(new CommitFilter()).First().Id;
             }
 
@@ -125,36 +151,58 @@ namespace AspNetDeploy.SourceControls.Git
 
         private LoadSourcesResult LoadSourcesWithUpdate(SourceControlVersion sourceControlVersion, string path)
         {
-            ObjectId id = ObjectId.Zero;
+            // Get the branch to update
+            string branch = sourceControlVersion.GetStringProperty("Branch");
 
-            FetchOptions fetchOptions = new FetchOptions()
+            using (var repo = new Repository(path))
             {
-                CredentialsProvider = (url, fromUrl, types) => new UsernamePasswordCredentials()
+                // Ensure the branch exists locally
+                Branch localBranch = repo.Branches[branch];
+
+                if (localBranch == null)
                 {
-                    Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
-                    Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
+                    // If the branch is missing locally, fetch it and create a tracking branch
+                    Commands.Fetch(repo, "origin", new[] { branch }, new FetchOptions
+                    {
+                        CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
+                        {
+                            Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                            Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
+                        }
+                    }, null);
+
+                    localBranch = repo.CreateBranch(branch, repo.Branches[$"origin/{branch}"].Tip);
+                    repo.Branches.Update(localBranch, b => b.TrackedBranch = $"refs/remotes/origin/{branch}");
                 }
-            };
 
-            using (Repository repo = new Repository(path))
-            {
-                string remoteName = repo.Head.RemoteName;
-                Remote remote = repo.Network.Remotes[remoteName];
-
-                Commands.Fetch(repo, remoteName, remote.FetchRefSpecs.Select(rf => rf.Specification), fetchOptions, "");
-
-                foreach (Branch branch in repo.Branches)
+                // Check out the branch if it's not already checked out
+                if (repo.Head.FriendlyName != branch)
                 {
-                    MergeResult merge = repo.Merge(branch, new Signature("Dnaiw", "email", DateTimeOffset.Now), new MergeOptions());
+                    Commands.Checkout(repo, localBranch);
                 }
 
-                id = repo.Commits.QueryBy(new CommitFilter()).First().Id;
+                // Pull the latest changes
+                Commands.Pull(repo, new Signature("AspNetDeploy", "system@example.com", DateTimeOffset.Now), new PullOptions
+                {
+                    FetchOptions = new FetchOptions
+                    {
+                        CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
+                        {
+                            Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                            Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
+                        }
+                    }
+                });
+
+                // Get the latest commit ID
+                ObjectId id = repo.Commits.First().Id;
+
+                // Return the result with the latest commit ID
+                return new LoadSourcesResult
+                {
+                    RevisionId = id.ToString(),
+                };
             }
-
-            return new LoadSourcesResult()
-            {
-                RevisionId = id.ToString(),
-            };
         }
     }
 }
