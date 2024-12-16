@@ -187,6 +187,7 @@ namespace SatelliteService.Helpers
                 {
                     continue;
                 }
+
                 if (changeAttribute.Name.ToLower() == "collectionkeyname")
                 {
                     continue;
@@ -194,6 +195,11 @@ namespace SatelliteService.Helpers
 
                 if (initialNode.Attributes != null)
                 {
+                    if (changeAttribute.Value?.ToLower() == "aspnetdeploy-delete-attribute")
+                    {
+                        initialNode.Attributes.Remove(initialNode.Attributes[changeAttribute.Name]);
+                    }
+
                     if (initialNode.Attributes[changeAttribute.Name] == null)
                     {
                         XmlAttribute xmlAttribute = initialNode.OwnerDocument.CreateAttribute(changeAttribute.Name);

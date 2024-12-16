@@ -13,6 +13,7 @@ namespace SatelliteService.Operations
     {
         private dynamic configuration;
         private Guid? backupConfigGuid = null;
+        private string targetFile;
 
         public ConfigOperation(IBackupRepository backupRepository) : base(backupRepository)
         {
@@ -25,25 +26,42 @@ namespace SatelliteService.Operations
 
         public override void Run()
         {
-            this.backupConfigGuid = this.BackupRepository.StoreFile((string)configuration.File);
+            this.targetFile = (string)configuration.File;
+            string content = configuration.Content;
 
-            if (this.IsXml((string) configuration.File))
+            if (File.Exists(targetFile))
+            {
+                this.backupConfigGuid = this.BackupRepository.StoreFile(targetFile);
+            }
+
+            if (this.IsContentXml(content))
             {
                 XmlDocument target = new XmlDocument();
-                target.Load((string)configuration.File);
+
+                if (File.Exists(targetFile))
+                {
+                    target.Load(targetFile);
+                }
 
                 XmlDocument source = new XmlDocument();
-                source.LoadXml((string)configuration.Content);
+                source.LoadXml(content);
 
                 XmlMerger xmlMerger = new XmlMerger(target, new Dictionary<string, object>());
                 xmlMerger.ApplyChanges(source);
 
-                target.Save((string)configuration.File);
+                target.Save(targetFile);
             }
             else
             {
-                JObject target = JObject.Parse(File.ReadAllText((string)this.configuration.File));
-                JObject source = JObject.Parse((string)configuration.Content);
+                if (!File.Exists(targetFile))
+                {
+                    File.WriteAllText(targetFile, content);
+                    return;
+                }
+
+                string sourceText = File.ReadAllText(targetFile);
+                JObject target = JObject.Parse(string.IsNullOrWhiteSpace(sourceText) ? "{}" : sourceText);
+                JObject source = JObject.Parse(content);
 
                 JsonMergeSettings jsonMergeSettings = new JsonMergeSettings
                 {
@@ -52,7 +70,7 @@ namespace SatelliteService.Operations
 
                 target.Merge(source, jsonMergeSettings);
 
-                File.WriteAllText((string)configuration.File, target.ToString());
+                File.WriteAllText(targetFile, target.ToString());
             }
         }
 
@@ -62,13 +80,17 @@ namespace SatelliteService.Operations
             {
                 this.BackupRepository.RestoreFile(this.backupConfigGuid.Value);
             }
+            else if (!string.IsNullOrWhiteSpace(this.targetFile))
+            {
+                File.Delete(this.targetFile);
+            }
         }
 
-        private bool IsXml(string text)
+        private bool IsFileXml(string path)
         {
             try
             {
-                XDocument xDocument = XDocument.Load(text);
+                XDocument xDocument = XDocument.Load(path);
             }
             catch (Exception e)
             {
@@ -76,6 +98,11 @@ namespace SatelliteService.Operations
             }
 
             return true;
+        }
+
+        private bool IsContentXml(string content)
+        {
+            return content.TrimStart().StartsWith("<");
         }
     }
 }
