@@ -48,6 +48,7 @@
             break;
 
         case SourceControlType.Git:
+            @RenderGit(sourceControl)
             break;
 
         case SourceControlType.FileSystem:
@@ -84,6 +85,45 @@
                 <dl class="dl-horizontal">
                     <dt>URL</dt>
                     <dd>@sourceControlVersion.GetStringProperty("URL")</dd>
+                    <dt>Revision</dt>
+                    <dd>@sourceControlVersion.GetStringProperty("Revision")</dd>
+                </dl>
+            </div>
+            <div class="col-sm-5 text-right">
+                @if (sourceControlVersion.ArchiveState == SourceControlVersionArchiveState.Normal)
+                {
+                    <a href="@Url.Action("ArchiveVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Archive</a>
+                }
+                <a href="@Url.Action("CreateNewVersion", new {id = sourceControlVersion.Id})" class="btn btn-default btn-lg">Create new version</a>
+            </div>
+        </div>
+
+        <hr />
+    }
+}
+
+@helper RenderGit(SourceControl sourceControl)
+{
+    <dl class="dl-horizontal">
+        <dt>URL</dt>
+        <dd>@sourceControl.GetStringProperty("URL")</dd>
+        <dt>Login</dt>
+        <dd>@sourceControl.GetStringProperty("Login")</dd>
+        @*<dt>Password</dt>
+            <dd>@sourceControl.GetStringProperty("Password")</dd>*@
+    </dl>
+
+    <hr />
+
+    foreach (SourceControlVersion sourceControlVersion in sourceControl.SourceControlVersions.OrderByDescending(bv => bv.Id))
+    {
+        @RenderName(sourceControlVersion)
+
+        <div class="row">
+            <div class="col-sm-7">
+                <dl class="dl-horizontal">
+                    <dt>Branch</dt>
+                    <dd>@sourceControlVersion.GetStringProperty("Branch")</dd>
                     <dt>Revision</dt>
                     <dd>@sourceControlVersion.GetStringProperty("Revision")</dd>
                 </dl>

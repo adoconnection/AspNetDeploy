@@ -160,6 +160,11 @@ namespace AspNetDeploy.WebUI.Controllers
                 return this.View("CreateNewVersionSVN");
             }
 
+            if (sourceControlVersion.SourceControl.Type == SourceControlType.Git)
+            {
+                return this.View("CreateNewVersionGit");
+            }
+
             if (sourceControlVersion.SourceControl.Type == SourceControlType.FileSystem)
             {
                 return this.View("CreateNewVersionFileSystem");
@@ -175,6 +180,15 @@ namespace AspNetDeploy.WebUI.Controllers
 
             this.CheckPermission(UserRoleAction.VersionCreate);
             return CreateNewVersionInternal(model, scv => scv.SetStringProperty("URL", model.NewVersionURL.Trim('/')));
+        }
+
+        [HttpPost]
+        public ActionResult CreateNewGitVersion(CreateNewGitVersion model)
+        {
+            this.CheckPermission(UserRoleAction.SourceVersionsManage);
+
+            this.CheckPermission(UserRoleAction.VersionCreate);
+            return CreateNewVersionInternal(model, scv => scv.SetStringProperty("Branch", model.NewVersionBranch.Trim('/')));
         }
 
         [HttpPost]

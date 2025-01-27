@@ -269,6 +269,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BundleRevision.cs" />
+    <Compile Include="Models\CreateNewGitVersion.cs" />
     <Compile Include="Models\CreateNewSourceControlVersion.cs" />
     <Compile Include="Models\CreateNewSvnVersion.cs" />
     <Compile Include="Models\CreateNewFileSystemVersion.cs" />
@@ -359,6 +360,7 @@
     <Content Include="Views\Sources\AddGit.cshtml" />
     <Content Include="Views\Machines\List.cshtml" />
     <Content Include="Views\Machines\DownloadMachineInstance.cshtml" />
+    <Content Include="Views\Sources\CreateNewVersionGit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
