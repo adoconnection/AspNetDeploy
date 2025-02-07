@@ -38,6 +38,14 @@ namespace AspNetDeploy.ContinuousIntegration
             string sourcesFolder = this.pathServices.GetSourceControlVersionPath(sourceControl.Id, sourceControlVersion.Id);
             LoadSourcesResult loadSourcesResult = this.LoadSources(sourceControlVersion, sourcesFolder);
 
+            if (loadSourcesResult.IsMissing && sourceControlVersion.ArchiveState != SourceControlVersionArchiveState.Archived && sourceControlVersion.ArchiveState != SourceControlVersionArchiveState.Archiving)
+            {
+                sourceControlVersion.ArchiveState = SourceControlVersionArchiveState.Archiving;
+                entities.SaveChanges();
+
+                return new UpdateAndParseResult();
+            }
+
             if (loadSourcesResult.RevisionId == sourceControlVersion.GetStringProperty("Revision"))
             {
                 return new UpdateAndParseResult();

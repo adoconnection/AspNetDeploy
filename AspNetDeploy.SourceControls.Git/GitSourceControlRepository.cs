@@ -182,17 +182,27 @@ namespace AspNetDeploy.SourceControls.Git
                 }
 
                 // Pull the latest changes
-                Commands.Pull(repo, new Signature("AspNetDeploy", "system@example.com", DateTimeOffset.Now), new PullOptions
+                try
                 {
-                    FetchOptions = new FetchOptions
+                    Commands.Pull(repo, new Signature("AspNetDeploy", "system@example.com", DateTimeOffset.Now), new PullOptions
                     {
-                        CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
+                        FetchOptions = new FetchOptions
                         {
-                            Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
-                            Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
+                            CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
+                            {
+                                Username = sourceControlVersion.SourceControl.GetStringProperty("Login"),
+                                Password = sourceControlVersion.SourceControl.GetStringProperty("AccessToken")
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                catch (MergeFetchHeadNotFoundException e)
+                {
+                    return new LoadSourcesResult
+                    {
+                        IsMissing = true
+                    };
+                }
 
                 // Get the latest commit ID
                 ObjectId id = repo.Commits.First().Id;
