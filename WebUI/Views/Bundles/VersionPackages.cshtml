@@ -14,16 +14,18 @@
 
     IList<BundleRevision> revisions = this.ViewBag.Revisions;
 
-    List<Publication> allPublications;
+    Dictionary<int, int> activePublications = this.ViewBag.ActivePublications;
 
-    if (bundleVersion.Bundle.IsSingleInstance)
-    {
-        allPublications = bundleVersion.Bundle.BundleVersions.SelectMany(bv => bv.Packages).SelectMany(p => p.Publications).OrderByDescending(p => p.CreatedDate).ToList();
-    }
-    else
-    {
-        allPublications = bundleVersion.Packages.SelectMany(p => p.Publications).OrderByDescending(p => p.CreatedDate).ToList();
-    }
+    //DateTime publicationsSince = DateTime.Now.AddMonths(-2);
+
+    //if (bundleVersion.Bundle.IsSingleInstance)
+    //{
+    //    allPublications = bundleVersion.Bundle.BundleVersions.SelectMany(bv => bv.Packages).SelectMany(p => p.Publications).Where(p => p.CreatedDate > publicationsSince).OrderByDescending(p => p.CreatedDate).ToList();
+    //}
+    //else
+    //{
+    //    allPublications = bundleVersion.Packages.SelectMany(p => p.Publications).OrderByDescending(p => p.CreatedDate).ToList();
+    //}
 
 }
 
@@ -138,20 +140,28 @@
                             List<Publication> packagePublications = package.Publications.Where(p => p.EnvironmentId == environment.Id).ToList();
                             Publication latestPackagePublication = packagePublications.OrderByDescending(p => p.CreatedDate).FirstOrDefault();
 
-                            
 
 
-                            Publication latestSuccessPublication = allPublications.Where(p => p.State == PublicationState.Complete).FirstOrDefault(p => p.Environment == environment);
+
+                            //Publication latestSuccessPublication = allPublications.Where(p => p.State == PublicationState.Complete).FirstOrDefault(p => p.Environment == environment);
 
                             bool isActiveOnEnvironment = false;
 
-                            if (latestSuccessPublication != null)
+                            if (activePublications.ContainsKey(environment.Id))
                             {
-                                if (latestSuccessPublication.Package == package)
+                                if (activePublications[environment.Id] == package.Id)
                                 {
                                     isActiveOnEnvironment = true;
                                 }
                             }
+
+                            //if (latestSuccessPublication != null)
+                            //{
+                            //    if (latestSuccessPublication.Package == package)
+                            //    {
+                            //        isActiveOnEnvironment = true;
+                            //    }
+                            //}
 
                             bool isQueued = latestPackagePublication != null && latestPackagePublication.State == PublicationState.Queued;
                             bool isInProgress = latestPackagePublication != null && latestPackagePublication.State == PublicationState.InProgress;
