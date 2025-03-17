@@ -312,14 +312,6 @@ namespace AspNetDeploy.WebUI.Controllers
         public ActionResult VersionPackages(int id)
         { 
             BundleVersion bundleVersion = this.Entities.BundleVersion 
-                .Include("Bundle")
-                .Include("ProjectVersions.Project.Properties")
-                .Include("ProjectVersions.SourceControlVersion.SourceControl.Properties")
-                .Include("ProjectVersions.SourceControlVersion.Revisions")
-                .Include("DeploymentSteps.Properties") 
-                .Include("DeploymentSteps.MachineRoles")
-                .Include("Packages.Publications.Environment.Machines")
-                .Include("Packages.ApprovedOnEnvironments")
                 .First( b => b.Id == id);
 
             IList<Environment> environments = this.Entities.Environment
@@ -364,6 +356,27 @@ namespace AspNetDeploy.WebUI.Controllers
             }
 
             this.ViewBag.Revisions = revisions.OrderByDescending(r => r.CreatedDate).ToList();
+
+            DateTime publicationsSince = DateTime.Now.AddMonths(-2);
+            Dictionary<int, int> activePublications = new Dictionary<int, int>();
+
+            foreach (Environment environment in environments)
+            {
+                Publication activePublication = this.Entities.BundleVersion
+                    .Where(bv => bv.BundleId == bundleVersion.BundleId)
+                    .SelectMany(bv => bv.Packages)
+                    .SelectMany(bv => bv.Publications)
+                    .Where(p => p.EnvironmentId == environment.Id && p.State == PublicationState.Complete)
+                    .OrderByDescending(p => p.CreatedDate)
+                    .FirstOrDefault();
+
+                if (activePublication != null)
+                {
+                    activePublications.Add(environment.Id, activePublication.PackageId);
+                }
+            }
+
+            this.ViewBag.ActivePublications = activePublications;
 
             return this.View();
         }
